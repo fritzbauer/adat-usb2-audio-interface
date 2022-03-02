@@ -1,0 +1,71 @@
+[*]
+[*] GTKWave Analyzer v3.3.106 (w)1999-2020 BSI
+[*] Wed Mar  2 14:18:18 2022
+[*]
+[dumpfile] "/home/rouven/Computer/Coden/Audio/adat-usb2-audio-interface/gateware/test_FixedPointFIRFilterTest_test_fir.vcd"
+[dumpfile_mtime] "Wed Mar  2 14:09:14 2022"
+[dumpfile_size] 3746107
+[savefile] "/home/rouven/Computer/Coden/Audio/adat-usb2-audio-interface/gateware/test_FixedPointFIRFilterTest_test_fir2.gtkw"
+[timestart] 0
+[size] 1850 1011
+[pos] -89 -89
+*-26.000000 103200000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] bench.
+[sst_width] 227
+[signals_width] 435
+[sst_expanded] 1
+[sst_vpaned_height] 284
+@28
+bench.top.clk
+bench.top.fsm_state
+bench.top.enable_in
+bench.top.ready_out
+@22
+bench.top.signal_in[23:0]
+bench.top.ix[10:0]
+@24
+bench.top.offset[9:0]
+@22
+bench.top.samples_memory_w_addr[9:0]
+@28
+bench.top.samples_memory_w_en
+@22
+bench.top.samples_memory_w_data[23:0]
+bench.top.a1[23:0]
+bench.top.a2[23:0]
+bench.top.a3[23:0]
+bench.top.a4[23:0]
+bench.top.b1[23:0]
+bench.top.b2[23:0]
+bench.top.b3[23:0]
+bench.top.b4[23:0]
+@23
+bench.top.madd1[23:0]
+@22
+bench.top.madd2[23:0]
+bench.top.madd3[23:0]
+bench.top.madd4[23:0]
+bench.top.samples_memory_r_addr[9:0]
+bench.top.samples_memory_r_addr$1[9:0]
+bench.top.samples_memory_r_addr$2[9:0]
+bench.top.samples_memory_r_addr$3[9:0]
+bench.top.samples_memory_r_data[23:0]
+bench.top.samples_memory_r_data$1[23:0]
+bench.top.samples_memory_r_data$2[23:0]
+bench.top.samples_memory_r_data$3[23:0]
+bench.top.signal_stream_out__payload[23:0]
+@28
+bench.top.signal_stream_out__valid
+@22
+bench.top.taps_memory_r_addr[9:0]
+bench.top.taps_memory_r_addr$1[9:0]
+bench.top.taps_memory_r_addr$2[9:0]
+bench.top.taps_memory_r_addr$3[9:0]
+bench.top.taps_memory_r_data[23:0]
+bench.top.taps_memory_r_data$1[23:0]
+bench.top.taps_memory_r_data$2[23:0]
+bench.top.taps_memory_r_data$3[23:0]
+@28
+bench.top.taps_memory_w_en
+[pattern_trace] 1
+[pattern_trace] 0

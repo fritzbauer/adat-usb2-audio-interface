@@ -35,6 +35,7 @@ from bundle_demultiplexer    import BundleDemultiplexer
 from stereopair_extractor    import StereoPairExtractor
 from requesthandlers         import UAC2RequestHandlers
 from debug                   import setup_ila, add_debug_led_array
+from fir_convolver           import FIRConvolver
 
 from usb_descriptors import USBDescriptors
 
@@ -49,7 +50,7 @@ class USB2AudioInterface(Elaboratable):
     USB1_MAX_PACKET_SIZE = int(224 * 4 + USB2_MAX_PACKET_SIZE)
     INPUT_CDC_FIFO_DEPTH = 256 * 4
 
-    USE_ILA             = False
+    USE_ILA             = True
     ILA_MAX_PACKET_SIZE = 512
 
     USE_DEBUG_LED_ARRAY = True
@@ -405,8 +406,10 @@ class USB2AudioInterface(Elaboratable):
             dac2_extractor.selected_channel_in.eq(Mux(usb1_no_channels == 2, 0, 2)),
         ]
 
-        self.wire_up_dac(m, usb1_to_channel_stream, dac1_extractor, dac1, lrclk, dac1_pads)
-        self.wire_up_dac(m, usb1_to_channel_stream, dac2_extractor, dac2, lrclk, dac2_pads)
+        m.submodules.fir = fir = FIRConvolver(48000,24,24,2000)
+
+        self.wire_up_dac(m, usb1_to_channel_stream, dac1_extractor, dac1, lrclk, dac1_pads, fir)
+        self.wire_up_dac(m, usb1_to_channel_stream, dac2_extractor, dac2, lrclk, dac2_pads, None)
 
         #
         # USB => output FIFO level debug signals
@@ -622,7 +625,7 @@ class USB2AudioInterface(Elaboratable):
                 usb2_sof_counter, usb2_to_usb1_fifo_level, usb2_to_usb1_fifo_depth)
 
 
-    def wire_up_dac(self, m, usb_to_channel_stream, dac_extractor, dac, lrclk, dac_pads):
+    def wire_up_dac(self, m, usb_to_channel_stream, dac_extractor, dac, lrclk, dac_pads, fir):
         # wire up DAC extractor
         m.d.comb += [
             dac_extractor.channel_stream_in.valid.eq(   usb_to_channel_stream.channel_stream_out.valid
@@ -631,9 +634,22 @@ class USB2AudioInterface(Elaboratable):
             dac_extractor.channel_stream_in.channel_nr.eq(usb_to_channel_stream.channel_stream_out.channel_nr),
         ]
 
+        if fir:
+            print("FIR")
+            m.d.comb += [
+                fir.signal_in.eq(dac_extractor.channel_stream_out.payload),
+                fir.enable_in.eq(dac_extractor.channel_stream_out.valid & dac_extractor.channel_stream_out.last),
+                dac_extractor.channel_stream_out.ready.eq(fir.ready_out),
+                dac.stream_in.stream_eq(fir.signal_out)
+            ]
+        else:
+            print("No FIR")
+            m.d.comb += dac.stream_in.stream_eq(dac_extractor.channel_stream_out)
+
         # wire up DAC/ADC
         m.d.comb += [
-            dac.stream_in.stream_eq(dac_extractor.channel_stream_out),
+            #dac.stream_in.stream_eq(dac_extractor.channel_stream_out),
+
 
             # wire up DAC/ADC
             # in I2S, everything happens on the negedge
@@ -651,8 +667,8 @@ class USB2AudioInterface(Elaboratable):
         ]
 
 if __name__ == "__main__":
-    os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceCycloneIV"
-    #os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceCycloneV"
+    #os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceCycloneIV"
+    os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceCycloneV"
     #os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceCyclone10"
     #os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceArtix7"
     top_level_cli(USB2AudioInterface)
