@@ -82,61 +82,40 @@ class FIRConvolver(Elaboratable):
 
     def insert(self, m: Module, value: int, offset: int, memory: WritePort):
         m.d.sync += offset.eq(offset+1)
-        with m.If(offset == self.tapcount//self.slices):
+        with m.If(offset == self.tapcount):
             m.d.sync += offset.eq(1)
         #memory[offset] = value
         m.d.sync += [
             memory.data.eq(self.signal_in.payload),
-            memory.addr.eq(offset-1),
+            memory.addr.eq(offset),
             memory.en.eq(1)
         ]
 
     def get_at(self, m: Module, index: int, offset: int, memory: ReadPort):
         with m.If((offset - 1) - index >= 0):
-            m.d.comb += memory.addr.eq((offset - 1) - index-1)
+            m.d.comb += memory.addr.eq((offset - 1) - index)
         with m.Else():
-            m.d.comb += memory.addr.eq((offset - 1) - index-1 + self.tapcount)
+            m.d.comb += memory.addr.eq((offset - 1) - index + self.tapcount)
 
     def elaborate(self, platform) -> Module:
         m = Module()
 
         taps_write_port = self.taps.write_port()
+        m.submodules += taps_write_port
+
         samples_write_port = self.samples.write_port()
+        m.submodules += samples_write_port
 
         taps_read_ports = Array(self.taps.read_port(domain='comb') for i in range(self.slices))
+        m.submodules += taps_read_ports
+
         samples_read_ports = Array(self.samples.read_port(domain='comb') for i in range(self.slices))
-        #taps_read_ports = []
-        #samples_read_ports = []
+        m.submodules += samples_read_ports
+
         a_values = Array(Signal(signed(self.bitwidth),name=f"a{i}") for i in range(self.slices))
         b_values = Array(Signal(signed(self.bitwidth),name=f"b{i}") for i in range(self.slices))
         madd_values = Array(Signal(signed(self.bitwidth + self.fraction_width),name=f"madd{i}") for i in range(self.slices))
-        #b_values = []
-        #madd_values = []
 
-        m.submodules += taps_read_ports
-        m.submodules += taps_write_port
-        m.submodules += samples_read_ports
-        m.submodules += samples_write_port
-
-
-
-        #taps_read_port1 = self.taps.read_port(domain='comb')
-        #taps_read_port2 = self.taps.read_port(domain='comb')
-        #taps_read_port3 = self.taps.read_port(domain='comb')
-        #taps_read_port4 = self.taps.read_port(domain='comb')
-        #m.submodules += [taps_write_port, taps_read_port1, taps_read_port2, taps_read_port3, taps_read_port4]
-
-
-        #samples_read_port1 = self.samples.read_port(domain='comb')
-        #samples_read_port2 = self.samples.read_port(domain='comb')
-        #samples_read_port3 = self.samples.read_port(domain='comb')
-        #samples_read_port4 = self.samples.read_port(domain='comb')
-        #m.submodules += [samples_write_port, samples_read_port1,samples_read_port2,samples_read_port3,samples_read_port4]
-
-        #n = 1024 #len(self.taps)
-        #self.slices = 4
-        #width = self.bitwidth + self.fraction_width
-        #taps = Array(Const(n, signed(width)) for n in self.taps)
 
         # we use the array indices flipped, ascending from zero
         # so x[0] is x_n, x[1] is x_n-
@@ -149,25 +128,8 @@ class FIRConvolver(Elaboratable):
             taps_write_port.en.eq(0),
             self.signal_out.valid.eq(0),
         ]
-        #if self.mac_loop:
+
         ix = Signal(range(self.tapcount + 1))
-        #madd1 = Signal(signed(self.bitwidth + self.fraction_width))
-        #madd1a = Signal.like(madd1)
-        #madd1b = Signal.like(madd1)
-        #madd2 = Signal.like(madd1)
-        #madd3 = Signal.like(madd1)
-        #madd4 = Signal.like(madd1)
-        #madd5 = Signal(signed(self.bitwidth))
-        #a1 = Signal(signed(self.bitwidth))
-        #a2 = Signal.like(a1)
-        #a3 = Signal.like(a1)
-        #a4 = Signal.like(a1)
-        #a5 = Signal.like(a1)
-        #b1 = Signal(signed(self.bitwidth))
-        #b2 = Signal.like(b1)
-        #b3 = Signal.like(b1)
-        #b4 = Signal.like(b1)
-        #b5 = Signal.like(b1)
         offset = Signal(Shape.cast(range(self.tapcount)).width)  #Signal(unsigned(range(self.tapcount)))
 
         for i in range(self.slices):
@@ -178,27 +140,7 @@ class FIRConvolver(Elaboratable):
                 b_values[i].eq(taps_read_ports[i].data),
             ]
 
-
-        #self.get_at(m, ix + 0, offset=offset, memory=samples_read_port1)
-        #self.get_at(m, ix + self.tapcount // self.slices * 1, offset=offset, memory=samples_read_port2)
-        #self.get_at(m, ix + self.tapcount // self.slices * 2, offset=offset, memory=samples_read_port3)
-        #self.get_at(m, ix + self.tapcount // self.slices * 3, offset=offset, memory=samples_read_port4)
-
-        m.d.comb += [
-            self.signal_in.ready.eq(0),
-            #taps_read_port1.addr.eq(ix + 0),
-            #taps_read_port2.addr.eq(ix + self.tapcount // self.slices * 1),
-            #taps_read_port3.addr.eq(ix + self.tapcount // self.slices * 2),
-            #taps_read_port4.addr.eq(ix + self.tapcount // self.slices * 3),
-            #a1.eq(samples_read_port1.data),
-            #a2.eq(samples_read_port2.data),
-            #a3.eq(samples_read_port3.data),
-            #a4.eq(samples_read_port4.data),
-            #b1.eq(taps_read_port1.data),
-            #b2.eq(taps_read_port2.data),
-            #b3.eq(taps_read_port3.data),
-            #b4.eq(taps_read_port4.data),
-        ]
+        m.d.comb += self.signal_in.ready.eq(0)
 
         with m.FSM(reset="IDLE"):
             with m.State("IDLE"):
@@ -206,13 +148,8 @@ class FIRConvolver(Elaboratable):
                 with m.If(self.signal_in.valid & self.signal_in.last): #only convolve right channel
                     self.insert(m, self.signal_in, offset=offset, memory=samples_write_port)
 
-                    m.d.sync += [
-                        ix.eq(0),
-                        #madd1.eq(0),
-                        #madd2.eq(0),
-                        #madd3.eq(0),
-                        #madd4.eq(0),
-                    ]
+                    m.d.sync += ix.eq(0)
+
                     for i in range(self.slices):
                         madd_values[i].eq(0)
 
@@ -230,7 +167,7 @@ class FIRConvolver(Elaboratable):
                 for i in range(self.slices):
                     m.d.sync += madd_values[i].eq(madd_values[i] + (a_values[i] * b_values[i]))
 
-                with m.If(ix == self.tapcount//self.slices):
+                with m.If(ix == self.tapcount//self.slices - 1):
                     m.next = "OUTPUT"
                 with m.Else():
                     m.d.sync += ix.eq(ix + 1)
@@ -239,8 +176,8 @@ class FIRConvolver(Elaboratable):
                 sumS = Signal(self.bitwidth+self.fraction_width)
                 sum = 0
                 for i in range(self.slices):
-                    #sum.eq(sum+madd_values[i])
                     sum += madd_values[i]
+
                 m.d.comb += sumS.eq(sum)
                 m.d.sync += [
                     self.signal_out.payload.eq(sum >> self.fraction_width),
@@ -278,7 +215,6 @@ class FixedPointFIRFilterTest(GatewareTestCase):
         min = -max
         yield dut.signal_in.last.eq(1)
         yield dut.signal_in.valid.eq(1)
-        #for _ in range(20): yield
         yield dut.signal_in.payload.eq(max)
         yield from self.wait_ready(dut)
         yield dut.signal_in.payload.eq(2222)
@@ -288,7 +224,6 @@ class FixedPointFIRFilterTest(GatewareTestCase):
         yield dut.signal_in.valid.eq(1)
         for _ in range(60): yield
         yield dut.signal_in.payload.eq(0)
-        #for _ in range(100): yield
         for i in range(10):
            yield dut.signal_in.payload.eq(i)
            yield from self.wait_ready(dut)
