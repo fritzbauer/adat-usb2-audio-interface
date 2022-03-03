@@ -33,7 +33,7 @@ def add_debug_led_array(v):
         m.d.sync += adat1_underflow_count.eq(adat1_underflow_count + 1)
 
     spi = platform.request("spi")
-    m.submodules.led_display  = led_display = SerialLEDArray(divisor=10, init_delay=24e6, no_modules=2)
+    m.submodules.led_display  = led_display = SerialLEDArray(divisor=10, init_delay=24e6, no_modules=4)
 
     rx_level_bars = []
     for i in range(1, 5):
@@ -42,9 +42,9 @@ def add_debug_led_array(v):
         m.d.comb += rx_level_bar.value_in.eq(bundle_multiplexer.levels[i - 1])
         rx_level_bars.append(rx_level_bar)
 
-    m.submodules.in_bar       = in_to_usb_fifo_bar  = NumberToBitBar(0, self.INPUT_CDC_FIFO_DEPTH, 8)
-    m.submodules.in_fifo_bar  = channels_to_usb_bar = NumberToBitBar(0, 2 * self.USB1_MAX_PACKET_SIZE, 8)
-    m.submodules.out_fifo_bar = out_fifo_bar        = NumberToBitBar(0, usb1_to_output_fifo_depth, 8)
+    m.submodules.in_bar       = in_to_usb_fifo_bar  = NumberToBitBar(0, self.INPUT_CDC_FIFO_DEPTH, 32)
+    m.submodules.in_fifo_bar  = channels_to_usb_bar = NumberToBitBar(0, 2 * self.USB1_MAX_PACKET_SIZE, 32)
+    m.submodules.out_fifo_bar = out_fifo_bar        = NumberToBitBar(0, usb1_to_output_fifo_depth, 32)
 
     m.d.comb += [
         # LED bar displays
@@ -120,6 +120,7 @@ def setup_ila(v, ila_max_packet_size):
     usb2_to_usb1_midi_fifo       = v['usb2_to_usb1_midi_fifo']
 
     dac1_extractor               = v['dac1_extractor']
+    fir                          = v['fir']
 
     adat_clock = Signal()
     m.d.comb += adat_clock.eq(ClockSignal("adat"))
@@ -505,10 +506,53 @@ def setup_ila(v, ila_max_packet_size):
         dac1_extractor.channel_stream_out.last,
     ]
 
+    fir_signal_in_valid = Signal()
+    fir_signal_in_first = Signal()
+    fir_signal_in_last = Signal()
+    fir_signal_in_ready = Signal()
+    fir_signal_in_payload = Signal(signed(24))
+    fir_signal_out_valid = Signal()
+    fir_signal_out_first = Signal()
+    fir_signal_out_last = Signal()
+    fir_signal_out_payload = Signal(24)
+    fir_signal_out_ready = Signal()
+
+    m.d.comb += [
+        fir_signal_in_valid.eq(fir.signal_in.valid),
+        fir_signal_in_first.eq(fir.signal_in.first),
+        fir_signal_in_last.eq(fir.signal_in.last),
+        fir_signal_in_payload.eq(fir.signal_in.payload),
+        fir_signal_in_ready.eq(fir.signal_in.ready),
+        fir_signal_out_valid.eq(fir.signal_out.valid),
+        fir_signal_out_first.eq(fir.signal_out.first),
+        fir_signal_out_last.eq(fir.signal_out.last),
+        fir_signal_out_payload.eq(fir.signal_out.payload),
+        fir_signal_out_ready.eq(fir.signal_out.ready),
+    ]
+
+    fir_debug = [
+        fir_signal_in_valid,
+        fir_signal_in_first,
+        fir_signal_in_last,
+        fir_signal_in_payload,
+        fir_signal_in_ready,
+        fir_signal_out_valid,
+        fir_signal_out_first,
+        fir_signal_out_last,
+        fir_signal_out_payload,
+        fir_signal_out_ready,
+        dac1_extractor.channel_stream_out.payload,
+        dac1_extractor.channel_stream_out.valid,
+        dac1_extractor.channel_stream_out.ready,
+        dac1_extractor.channel_stream_out.first,
+        dac1_extractor.channel_stream_out.last,
+    ]
+
+
     #
     # signals to trace
     #
-    signals = channels_to_usb_debug
+    signals = fir_debug
 
     signals_bits = sum([s.width for s in signals])
     m.submodules.ila = ila = \
@@ -532,7 +576,7 @@ def setup_ila(v, ila_max_packet_size):
     m.d.comb += [
         stream_ep.stream.stream_eq(ila.stream),
         # ila.enable.eq(input_or_output_active | garbage | usb_frame_borders),
-        ila.trigger.eq(1),
+        ila.trigger.eq(dac1_extractor.channel_stream_out.payload != 0),
         ila.enable .eq(input_or_output_active),
     ]
 

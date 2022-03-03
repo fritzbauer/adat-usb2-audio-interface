@@ -637,11 +637,12 @@ class USB2AudioInterface(Elaboratable):
         if fir:
             print("FIR")
             m.d.comb += [
-                fir.signal_in.eq(dac_extractor.channel_stream_out.payload),
-                fir.enable_in.eq(dac_extractor.channel_stream_out.valid & dac_extractor.channel_stream_out.last),
-                dac_extractor.channel_stream_out.ready.eq(fir.ready_out),
+                fir.signal_in.stream_eq(dac_extractor.channel_stream_out),
+                #fir.enable_in.eq(dac_extractor.channel_stream_out.valid),
+                #dac_extractor.channel_stream_out.ready.eq(fir.signal_in.ready),
                 dac.stream_in.stream_eq(fir.signal_out)
             ]
+            #m.d.comb += dac.stream_in.stream_eq(dac_extractor.channel_stream_out)
         else:
             print("No FIR")
             m.d.comb += dac.stream_in.stream_eq(dac_extractor.channel_stream_out)
