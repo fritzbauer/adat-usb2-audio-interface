@@ -44,19 +44,25 @@ class FIRConvolver(Elaboratable):
         #else:
         #    raise TypeError('cutoff_freq parameter must be int or list of start/stop band frequencies')
         # convert to fixed point representation
-        self.tapcount = 64
+        self.tapcount = 32
         self.slices = 4
-        taps = signal.firwin(self.tapcount,2000,pass_zero='lowpass',fs=48000)
+        #taps = signal.firwin(self.tapcount,2000,pass_zero='lowpass',fs=48000)
+        taps = [0] * self.tapcount
+        taps = [
+            0.5,0.4,0.3,0.2,0.1,0.09,0.08,0.07,0.06,0.05,0.04,0.03,0.02,0.01,
+            0.5/2, 0.4/2, 0.3/2, 0.2/2, 0.1/2, 0.09/2, 0.08/2, 0.07/2, 0.06/2, 0.05/2, 0.04/2, 0.03/2, 0.02/2, 0.01/2
+        ]
+        #taps[0] = 1 >> 24
         self.bitwidth = bitwidth
         self.fraction_width = fraction_width
         assert bitwidth <= fraction_width, f"Bitwidth {bitwidth} must not exceed {fraction_width}"
 
         self.taps = Memory(width=self.bitwidth, depth=self.tapcount, name="taps_memory")
         self.taps.init = taps_fp = [int(x * 2**(fraction_width)) for x in taps]
-
         self.samples = Memory(width=self.bitwidth, depth=self.tapcount, name="samples_memory")
 
         self.mac_loop = mac_loop
+        self.fsmState = Signal(5)
 
         if verbose:
             if type(cutoff_freq) == int:
@@ -126,7 +132,7 @@ class FIRConvolver(Elaboratable):
         m.d.sync += [
             samples_write_port.en.eq(0),
             taps_write_port.en.eq(0),
-            self.signal_out.valid.eq(0),
+            #self.signal_out.valid.eq(0),
         ]
 
         ix = Signal(range(self.tapcount + 1))
@@ -144,26 +150,33 @@ class FIRConvolver(Elaboratable):
 
         with m.FSM(reset="IDLE"):
             with m.State("IDLE"):
+                m.d.sync += self.fsmState.eq(1)
                 m.d.comb += self.signal_in.ready.eq(1)
+                m.d.sync += self.signal_out.valid.eq(0)
                 with m.If(self.signal_in.valid & self.signal_in.last): #only convolve right channel
                     self.insert(m, self.signal_in, offset=offset, memory=samples_write_port)
 
                     m.d.sync += ix.eq(0)
 
                     for i in range(self.slices):
-                        madd_values[i].eq(0)
+                        m.d.sync += madd_values[i].eq(0)
 
                     m.next = "STORE"
                 with m.Elif(self.signal_in.valid & self.signal_in.first): #just forward unmodified left channel for now
                     m.d.sync += [
                         self.signal_out.payload.eq(self.signal_in.payload),
+                        #self.signal_out.payload.eq(0), #only for debugging; generate silence
                         self.signal_out.valid.eq(1),
                         self.signal_out.first.eq(1),
                         self.signal_out.last.eq(0),
                     ]
             with m.State("STORE"):
+                m.d.sync += self.fsmState.eq(2)
+                m.d.sync += self.signal_out.valid.eq(0)
                 m.next = "MAC"
             with m.State("MAC"):
+                m.d.sync += self.fsmState.eq(3)
+                m.d.sync += self.signal_out.valid.eq(0)
                 for i in range(self.slices):
                     m.d.sync += madd_values[i].eq(madd_values[i] + (a_values[i] * b_values[i]))
 
@@ -173,6 +186,7 @@ class FIRConvolver(Elaboratable):
                     m.d.sync += ix.eq(ix + 1)
 
             with m.State("OUTPUT"):
+                m.d.sync += self.fsmState.eq(4)
                 sumS = Signal(self.bitwidth+self.fraction_width)
                 sum = 0
                 for i in range(self.slices):
@@ -181,10 +195,12 @@ class FIRConvolver(Elaboratable):
                 m.d.comb += sumS.eq(sum)
                 m.d.sync += [
                     self.signal_out.payload.eq(sum >> self.fraction_width),
+                    #self.signal_out.payload.eq(sum),
                     self.signal_out.valid.eq(1),
                     self.signal_out.first.eq(0),
                     self.signal_out.last.eq(1),
                 ]
+                #m.d.sync += self.signal_in.ready.eq(1)
                 m.next = "IDLE"
 
         return m

@@ -516,6 +516,7 @@ def setup_ila(v, ila_max_packet_size):
     fir_signal_out_last = Signal()
     fir_signal_out_payload = Signal(24)
     fir_signal_out_ready = Signal()
+    fir_fsm_state = Signal(5)
 
     m.d.comb += [
         fir_signal_in_valid.eq(fir.signal_in.valid),
@@ -528,24 +529,22 @@ def setup_ila(v, ila_max_packet_size):
         fir_signal_out_last.eq(fir.signal_out.last),
         fir_signal_out_payload.eq(fir.signal_out.payload),
         fir_signal_out_ready.eq(fir.signal_out.ready),
+        fir_fsm_state.eq(fir.fsmState),
     ]
 
     fir_debug = [
+        fir_signal_in_ready,
         fir_signal_in_valid,
         fir_signal_in_first,
         fir_signal_in_last,
         fir_signal_in_payload,
-        fir_signal_in_ready,
         fir_signal_out_valid,
         fir_signal_out_first,
         fir_signal_out_last,
         fir_signal_out_payload,
         fir_signal_out_ready,
-        dac1_extractor.channel_stream_out.payload,
-        dac1_extractor.channel_stream_out.valid,
-        dac1_extractor.channel_stream_out.ready,
-        dac1_extractor.channel_stream_out.first,
-        dac1_extractor.channel_stream_out.last,
+        dac1_extractor.level,
+        fir_fsm_state
     ]
 
 
@@ -576,7 +575,9 @@ def setup_ila(v, ila_max_packet_size):
     m.d.comb += [
         stream_ep.stream.stream_eq(ila.stream),
         # ila.enable.eq(input_or_output_active | garbage | usb_frame_borders),
-        ila.trigger.eq(dac1_extractor.channel_stream_out.payload != 0),
+        ila.trigger.eq(fir_signal_in_valid & fir_signal_in_last),
+        #ila.trigger.eq(dac1_extractor.channel_stream_out.payload != 0 & fir_signal_in_valid & fir_signal_in_last),
+        #ila.trigger.eq(fir.signal_in.ready),
         ila.enable .eq(input_or_output_active),
     ]
 

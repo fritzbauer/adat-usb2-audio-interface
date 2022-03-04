@@ -406,7 +406,7 @@ class USB2AudioInterface(Elaboratable):
             dac2_extractor.selected_channel_in.eq(Mux(usb1_no_channels == 2, 0, 2)),
         ]
 
-        m.submodules.fir = fir = FIRConvolver(48000,24,24,2000)
+        m.submodules.fir = fir = DomainRenamer("usb")(FIRConvolver(48000,24,24,2000))
 
         self.wire_up_dac(m, usb1_to_channel_stream, dac1_extractor, dac1, lrclk, dac1_pads, fir)
         self.wire_up_dac(m, usb1_to_channel_stream, dac2_extractor, dac2, lrclk, dac2_pads, None)
