@@ -35,7 +35,7 @@ from bundle_demultiplexer    import BundleDemultiplexer
 from stereopair_extractor    import StereoPairExtractor
 from requesthandlers         import UAC2RequestHandlers
 from debug                   import setup_ila, add_debug_led_array
-from fir_convolver           import FIRConvolver
+from stereo_firfilter           import StereoFIRFilter
 
 from usb_descriptors import USBDescriptors
 
@@ -406,7 +406,7 @@ class USB2AudioInterface(Elaboratable):
             dac2_extractor.selected_channel_in.eq(Mux(usb1_no_channels == 2, 0, 2)),
         ]
 
-        m.submodules.fir = fir = DomainRenamer("usb")(FIRConvolver(48000,24,24,2000))
+        m.submodules.fir = fir = DomainRenamer("usb")(StereoFIRFilter(samplerate=48000, clockspeed=60e6, bitwidth=24, verbose=True))
 
         self.wire_up_dac(m, usb1_to_channel_stream, dac1_extractor, dac1, lrclk, dac1_pads, fir)
         self.wire_up_dac(m, usb1_to_channel_stream, dac2_extractor, dac2, lrclk, dac2_pads, None)
@@ -638,11 +638,8 @@ class USB2AudioInterface(Elaboratable):
             print("FIR")
             m.d.comb += [
                 fir.signal_in.stream_eq(dac_extractor.channel_stream_out),
-                #fir.enable_in.eq(dac_extractor.channel_stream_out.valid),
-                #dac_extractor.channel_stream_out.ready.eq(fir.signal_in.ready),
                 dac.stream_in.stream_eq(fir.signal_out)
             ]
-            #m.d.comb += dac.stream_in.stream_eq(dac_extractor.channel_stream_out)
         else:
             print("No FIR")
             m.d.comb += dac.stream_in.stream_eq(dac_extractor.channel_stream_out)
