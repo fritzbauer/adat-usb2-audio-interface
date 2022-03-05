@@ -12,64 +12,44 @@ from amlib.stream import StreamInterface
 
 from amlib.test       import GatewareTestCase, sync_test_case
 
-class FIRConvolver(Elaboratable):
+class FixedPointFIRFilterMemory(Elaboratable):
     def __init__(self,
                  samplerate:     int,
+                 clockspeed:     int,
+                 fir:            [],
                  bitwidth:       int=24,
                  fraction_width: int=24,
-                 cutoff_freq:    int=20000,
-                 filter_order:   int=24,
-                 filter_type:    str='lowpass',
-                 weight:         list=None,
-                 mac_loop:       bool=True,
                  verbose:        bool=True) -> None:
 
-        #self.enable_in  = Signal()
-        #self.ready_out  = Signal()
-        self.signal_in  = StreamInterface(name="signal_stream_in", payload_width=bitwidth)#Signal(signed(bitwidth))
-        #self.signal_out = Signal(signed(bitwidth))
-        self.signal_out = StreamInterface(name="signal_stream_out", payload_width=bitwidth)
+        self.enable_in  = Signal() #to figure out that the input is valid
+        self.signal_in  = Signal(signed(bitwidth))
 
-        #if type(cutoff_freq) == int:
-        cutoff = cutoff_freq / samplerate
-        #    taps = signal.firwin(filter_order, cutoff, fs=samplerate, pass_zero=filter_type, window='hamming')
-        #elif type(cutoff_freq) == list and len(cutoff_freq) == 2:
-        #    Fs = samplerate
-        #    Fpb = cutoff_freq[0]
-        #    Fsb = cutoff_freq[1]
-        #    bands = np.array([0., Fpb/Fs, Fsb/Fs, .5])
-        #    pass_zero = filter_type == True or filter_type == 'lowpass'
-        #    desired = [1, 0] if pass_zero else [0, 1]
-        #    taps = signal.remez(filter_order, bands, desired, weight)
-        #else:
-        #    raise TypeError('cutoff_freq parameter must be int or list of start/stop band frequencies')
+        self.ready_out = Signal()  # to signal whether we are able to receive input
+        self.valid_out  = Signal() #to signal that the output signal is valid
+        self.signal_out = Signal(signed(bitwidth))
+
         # convert to fixed point representation
-        self.tapcount = 32
+        self.tapcount = len(fir) #128
         self.slices = 4
         #taps = signal.firwin(self.tapcount,2000,pass_zero='lowpass',fs=48000)
-        taps = [0] * self.tapcount
-        taps = [
-            0.5,0.4,0.3,0.2,0.1,0.09,0.08,0.07,0.06,0.05,0.04,0.03,0.02,0.01,
-            0.5/2, 0.4/2, 0.3/2, 0.2/2, 0.1/2, 0.09/2, 0.08/2, 0.07/2, 0.06/2, 0.05/2, 0.04/2, 0.03/2, 0.02/2, 0.01/2
-        ]
+        #taps = [0] * self.tapcount
+        #taps = [
+        #    0.5,0.4,0.3,0.2,0.1,0.09,0.08,0.07,0.06,0.05,0.04,0.03,0.02,0.01,
+        #    0.5/2, 0.4/2, 0.3/2, 0.2/2, 0.1/2, 0.09/2, 0.08/2, 0.07/2, 0.06/2, 0.05/2, 0.04/2, 0.03/2, 0.02/2, 0.01/2
+        #]
         #taps[0] = 1 >> 24
         self.bitwidth = bitwidth
         self.fraction_width = fraction_width
         assert bitwidth <= fraction_width, f"Bitwidth {bitwidth} must not exceed {fraction_width}"
 
         self.taps = Memory(width=self.bitwidth, depth=self.tapcount, name="taps_memory")
-        self.taps.init = taps_fp = [int(x * 2**(fraction_width)) for x in taps]
+        self.taps.init = taps_fp = [int(x * 2**(fraction_width)) for x in fir]
         self.samples = Memory(width=self.bitwidth, depth=self.tapcount, name="samples_memory")
 
-        self.mac_loop = mac_loop
-        self.fsmState = Signal(5)
+        self.fsmState = Signal(5) # for ILA debugging
 
         if verbose:
-            if type(cutoff_freq) == int:
-                print(f"{filter_order}-order windowed FIR with cutoff: {cutoff * samplerate}")
-            else:
-                print(f"{filter_order}-order FIR with start/stop band: {cutoff_freq} weight: {weight}")
-            print(f"taps: {pformat(taps)}")
+            print(f"taps: {pformat(fir)}")
             print(f"taps ({bitwidth}.{fraction_width} fixed point): {taps_fp}\n")
 
         def conversion_error(coeff, fp_coeff):
@@ -80,7 +60,7 @@ class FIRConvolver(Elaboratable):
             return fp_error
 
         num_coefficients = len(taps_fp)
-        conversion_errors = [abs(conversion_error(taps[i], taps_fp[i])) for i in range(num_coefficients)]
+        conversion_errors = [abs(conversion_error(fir[i], taps_fp[i])) for i in range(num_coefficients)]
         if verbose:
             print("a, fixed point conversion errors: {}".format(conversion_errors))
         for i in range(num_coefficients):
@@ -90,13 +70,16 @@ class FIRConvolver(Elaboratable):
         m.d.sync += offset.eq(offset+1)
         with m.If(offset == self.tapcount):
             m.d.sync += offset.eq(1)
-        #memory[offset] = value
         m.d.sync += [
-            memory.data.eq(self.signal_in.payload),
+            memory.data.eq(self.signal_in),
             memory.addr.eq(offset),
             memory.en.eq(1)
         ]
 
+    # we use the array indices flipped, ascending from zero
+    # so x[0] is x_n, x[1] is x_n-
+    # 1, x[2] is x_n-2 ...
+    # in other words: higher indices are past values, 0 is most recent
     def get_at(self, m: Module, index: int, offset: int, memory: ReadPort):
         with m.If((offset - 1) - index >= 0):
             m.d.comb += memory.addr.eq((offset - 1) - index)
@@ -122,17 +105,9 @@ class FIRConvolver(Elaboratable):
         b_values = Array(Signal(signed(self.bitwidth),name=f"b{i}") for i in range(self.slices))
         madd_values = Array(Signal(signed(self.bitwidth + self.fraction_width),name=f"madd{i}") for i in range(self.slices))
 
-
-        # we use the array indices flipped, ascending from zero
-        # so x[0] is x_n, x[1] is x_n-
-        # 1, x[2] is x_n-2 ...
-        # in other words: higher indices are past values, 0 is most recent
-        #x = Array(Signal(signed(width), name=f"x{i}") for i in range(n))
-
         m.d.sync += [
             samples_write_port.en.eq(0),
             taps_write_port.en.eq(0),
-            #self.signal_out.valid.eq(0),
         ]
 
         ix = Signal(range(self.tapcount + 1))
@@ -146,14 +121,15 @@ class FIRConvolver(Elaboratable):
                 b_values[i].eq(taps_read_ports[i].data),
             ]
 
-        m.d.comb += self.signal_in.ready.eq(0)
+        m.d.comb += self.ready_out.eq(0)
+        #m.d.sync += self.valid_out.eq(0)
 
         with m.FSM(reset="IDLE"):
             with m.State("IDLE"):
                 m.d.sync += self.fsmState.eq(1)
-                m.d.comb += self.signal_in.ready.eq(1)
-                m.d.sync += self.signal_out.valid.eq(0)
-                with m.If(self.signal_in.valid & self.signal_in.last): #only convolve right channel
+                m.d.comb += self.ready_out.eq(1)
+
+                with m.If(self.enable_in):
                     self.insert(m, self.signal_in, offset=offset, memory=samples_write_port)
 
                     m.d.sync += ix.eq(0)
@@ -162,21 +138,13 @@ class FIRConvolver(Elaboratable):
                         m.d.sync += madd_values[i].eq(0)
 
                     m.next = "STORE"
-                with m.Elif(self.signal_in.valid & self.signal_in.first): #just forward unmodified left channel for now
-                    m.d.sync += [
-                        self.signal_out.payload.eq(self.signal_in.payload),
-                        #self.signal_out.payload.eq(0), #only for debugging; generate silence
-                        self.signal_out.valid.eq(1),
-                        self.signal_out.first.eq(1),
-                        self.signal_out.last.eq(0),
-                    ]
             with m.State("STORE"):
                 m.d.sync += self.fsmState.eq(2)
-                m.d.sync += self.signal_out.valid.eq(0)
+                m.d.sync += self.valid_out.eq(0)
                 m.next = "MAC"
             with m.State("MAC"):
                 m.d.sync += self.fsmState.eq(3)
-                m.d.sync += self.signal_out.valid.eq(0)
+                m.d.sync += self.valid_out.eq(0)
                 for i in range(self.slices):
                     m.d.sync += madd_values[i].eq(madd_values[i] + (a_values[i] * b_values[i]))
 
@@ -187,18 +155,15 @@ class FIRConvolver(Elaboratable):
 
             with m.State("OUTPUT"):
                 m.d.sync += self.fsmState.eq(4)
-                sumS = Signal(self.bitwidth+self.fraction_width)
+                sumSignal = Signal(self.bitwidth + self.fraction_width)
                 sum = 0
                 for i in range(self.slices):
                     sum += madd_values[i]
 
-                m.d.comb += sumS.eq(sum)
+                m.d.comb += sumSignal.eq(sum)
                 m.d.sync += [
-                    self.signal_out.payload.eq(sum >> self.fraction_width),
-                    #self.signal_out.payload.eq(sum),
-                    self.signal_out.valid.eq(1),
-                    self.signal_out.first.eq(0),
-                    self.signal_out.last.eq(1),
+                    self.signal_out.eq(sum >> self.fraction_width),
+                    self.valid_out.eq(1),
                 ]
                 #m.d.sync += self.signal_in.ready.eq(1)
                 m.next = "IDLE"
@@ -207,8 +172,8 @@ class FIRConvolver(Elaboratable):
 
 
 class FixedPointFIRFilterTest(GatewareTestCase):
-    FRAGMENT_UNDER_TEST = FIRConvolver
-    FRAGMENT_ARGUMENTS = dict(samplerate=48000)
+    FRAGMENT_UNDER_TEST = FixedPointFIRFilterMemory
+    FRAGMENT_ARGUMENTS = dict(samplerate=48000,clockspeed=60e6,fir=signal.firwin(32, cutoff=2000, pass_zero='lowpass', fs=48000))
 
     def wait(self, n_cycles: int):
         for _ in range(n_cycles):
@@ -218,8 +183,8 @@ class FixedPointFIRFilterTest(GatewareTestCase):
         waitcount = 0
         #ready = yield dut.ready_out
         #while (ready == 0):
-        yield print(dut.signal_in.ready)
-        while (yield dut.signal_in.ready == 0):
+        yield print(dut.ready_out)
+        while (yield dut.ready_out == 0):
             waitcount += 1
             yield from self.wait(1)
         print("Waitcount {}".format(waitcount))
@@ -229,24 +194,23 @@ class FixedPointFIRFilterTest(GatewareTestCase):
         dut = self.dut
         max = int(2**15 - 1)
         min = -max
-        yield dut.signal_in.last.eq(1)
-        yield dut.signal_in.valid.eq(1)
-        yield dut.signal_in.payload.eq(max)
+        yield dut.enable_in.eq(1)
+        yield dut.signal_in.eq(max)
         yield from self.wait_ready(dut)
-        yield dut.signal_in.payload.eq(2222)
+        yield dut.signal_in.eq(2222)
         for _ in range(5): yield
-        yield dut.signal_in.valid.eq(0)
+        yield dut.enable_in.eq(0)
         for _ in range(60): yield
-        yield dut.signal_in.valid.eq(1)
+        yield dut.enable_in.eq(1)
         for _ in range(60): yield
-        yield dut.signal_in.payload.eq(0)
+        yield dut.signal_in.eq(0)
         for i in range(10):
-           yield dut.signal_in.payload.eq(i)
+           yield dut.signal_in.eq(i)
            yield from self.wait_ready(dut)
-           yield dut.signal_in.payload.eq(i*10)
+           yield dut.signal_in.eq(i*10)
            yield from self.wait_ready(dut)
-           yield dut.signal_in.payload.eq(i*20)
+           yield dut.signal_in.eq(i*20)
            yield from self.wait_ready(dut)
-           yield dut.signal_in.payload.eq(i*30)
+           yield dut.signal_in.eq(i*30)
            yield from self.wait_ready(dut)
            print("end of loop")
