@@ -44,14 +44,14 @@ class FIRConvolver(Elaboratable):
         #else:
         #    raise TypeError('cutoff_freq parameter must be int or list of start/stop band frequencies')
         # convert to fixed point representation
-        self.tapcount = 32
+        self.tapcount = 128
         self.slices = 4
-        #taps = signal.firwin(self.tapcount,2000,pass_zero='lowpass',fs=48000)
-        taps = [0] * self.tapcount
-        taps = [
-            0.5,0.4,0.3,0.2,0.1,0.09,0.08,0.07,0.06,0.05,0.04,0.03,0.02,0.01,
-            0.5/2, 0.4/2, 0.3/2, 0.2/2, 0.1/2, 0.09/2, 0.08/2, 0.07/2, 0.06/2, 0.05/2, 0.04/2, 0.03/2, 0.02/2, 0.01/2
-        ]
+        taps = signal.firwin(self.tapcount,2000,pass_zero='lowpass',fs=48000)
+        #taps = [0] * self.tapcount
+        #taps = [
+        #    0.5,0.4,0.3,0.2,0.1,0.09,0.08,0.07,0.06,0.05,0.04,0.03,0.02,0.01,
+        #    0.5/2, 0.4/2, 0.3/2, 0.2/2, 0.1/2, 0.09/2, 0.08/2, 0.07/2, 0.06/2, 0.05/2, 0.04/2, 0.03/2, 0.02/2, 0.01/2
+        #]
         #taps[0] = 1 >> 24
         self.bitwidth = bitwidth
         self.fraction_width = fraction_width
