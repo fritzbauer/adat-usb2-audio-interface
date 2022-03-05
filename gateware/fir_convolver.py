@@ -44,9 +44,10 @@ class FIRConvolver(Elaboratable):
         #else:
         #    raise TypeError('cutoff_freq parameter must be int or list of start/stop band frequencies')
         # convert to fixed point representation
-        self.tapcount = 128
+        self.tapcount = 129
         self.slices = 4
         taps = signal.firwin(self.tapcount,2000,pass_zero='lowpass',fs=48000)
+        taps2 = signal.firwin(self.tapcount, 3000, pass_zero='highpass', fs=48000)
         #taps = [0] * self.tapcount
         #taps = [
         #    0.5,0.4,0.3,0.2,0.1,0.09,0.08,0.07,0.06,0.05,0.04,0.03,0.02,0.01,
@@ -60,6 +61,10 @@ class FIRConvolver(Elaboratable):
         self.taps = Memory(width=self.bitwidth, depth=self.tapcount, name="taps_memory")
         self.taps.init = taps_fp = [int(x * 2**(fraction_width)) for x in taps]
         self.samples = Memory(width=self.bitwidth, depth=self.tapcount, name="samples_memory")
+        self.samples2 = Memory(width=self.bitwidth, depth=self.tapcount, name="samples2_memory")
+
+        self.taps2 = Memory(width=self.bitwidth, depth=self.tapcount, name="taps_memory")
+        self.taps2.init = taps2_fp = [int(x * 2 ** (fraction_width)) for x in taps2]
 
         self.mac_loop = mac_loop
         self.fsmState = Signal(5)
@@ -110,17 +115,20 @@ class FIRConvolver(Elaboratable):
         m.submodules += taps_write_port
 
         samples_write_port = self.samples.write_port()
-        m.submodules += samples_write_port
+        samples2_write_port = self.samples2.write_port()
+        m.submodules += [samples_write_port,samples2_write_port]
 
         taps_read_ports = Array(self.taps.read_port(domain='comb') for i in range(self.slices))
-        m.submodules += taps_read_ports
+        taps2_read_ports = Array(self.taps.read_port(domain='comb') for i in range(self.slices))
+        m.submodules += [taps_read_ports, taps2_read_ports]
 
         samples_read_ports = Array(self.samples.read_port(domain='comb') for i in range(self.slices))
-        m.submodules += samples_read_ports
+        samples2_read_ports = Array(self.samples2.read_port(domain='comb') for i in range(self.slices))
+        m.submodules += [samples_read_ports, samples2_read_ports]
 
-        a_values = Array(Signal(signed(self.bitwidth),name=f"a{i}") for i in range(self.slices))
-        b_values = Array(Signal(signed(self.bitwidth),name=f"b{i}") for i in range(self.slices))
-        madd_values = Array(Signal(signed(self.bitwidth + self.fraction_width),name=f"madd{i}") for i in range(self.slices))
+        a_values = Array(Signal(signed(self.bitwidth),name=f"a{i}") for i in range(self.slices*2))
+        b_values = Array(Signal(signed(self.bitwidth),name=f"b{i}") for i in range(self.slices*2))
+        madd_values = Array(Signal(signed(self.bitwidth + self.fraction_width),name=f"madd{i}") for i in range(self.slices*2))
 
 
         # we use the array indices flipped, ascending from zero
@@ -131,6 +139,7 @@ class FIRConvolver(Elaboratable):
 
         m.d.sync += [
             samples_write_port.en.eq(0),
+            samples2_write_port.en.eq(0),
             taps_write_port.en.eq(0),
             #self.signal_out.valid.eq(0),
         ]
@@ -140,10 +149,14 @@ class FIRConvolver(Elaboratable):
 
         for i in range(self.slices):
             self.get_at(m, ix + self.tapcount // self.slices * i, offset=offset, memory=samples_read_ports[i])
+            self.get_at(m, ix + self.tapcount // self.slices * i, offset=offset, memory=samples2_read_ports[i])
             m.d.comb += [
                 taps_read_ports[i].addr.eq(ix + self.tapcount // self.slices * i),
+                taps2_read_ports[i].addr.eq(ix + self.tapcount // self.slices * i),
                 a_values[i].eq(samples_read_ports[i].data),
+                a_values[i+self.slices].eq(samples2_read_ports[i].data),
                 b_values[i].eq(taps_read_ports[i].data),
+                b_values[i+self.slices].eq(taps2_read_ports[i].data),
             ]
 
         m.d.comb += self.signal_in.ready.eq(0)
@@ -153,23 +166,18 @@ class FIRConvolver(Elaboratable):
                 m.d.sync += self.fsmState.eq(1)
                 m.d.comb += self.signal_in.ready.eq(1)
                 m.d.sync += self.signal_out.valid.eq(0)
-                with m.If(self.signal_in.valid & self.signal_in.last): #only convolve right channel
+                with m.If(self.signal_in.valid & self.signal_in.last): # convolve right channel
                     self.insert(m, self.signal_in, offset=offset, memory=samples_write_port)
 
                     m.d.sync += ix.eq(0)
 
-                    for i in range(self.slices):
+                    for i in range(self.slices*2):
                         m.d.sync += madd_values[i].eq(0)
 
                     m.next = "STORE"
-                with m.Elif(self.signal_in.valid & self.signal_in.first): #just forward unmodified left channel for now
-                    m.d.sync += [
-                        self.signal_out.payload.eq(self.signal_in.payload),
-                        #self.signal_out.payload.eq(0), #only for debugging; generate silence
-                        self.signal_out.valid.eq(1),
-                        self.signal_out.first.eq(1),
-                        self.signal_out.last.eq(0),
-                    ]
+                with m.Elif(self.signal_in.valid & self.signal_in.first): #left channel
+                    self.insert(m, self.signal_in, offset=offset, memory=samples2_write_port)
+
             with m.State("STORE"):
                 m.d.sync += self.fsmState.eq(2)
                 m.d.sync += self.signal_out.valid.eq(0)
@@ -177,7 +185,7 @@ class FIRConvolver(Elaboratable):
             with m.State("MAC"):
                 m.d.sync += self.fsmState.eq(3)
                 m.d.sync += self.signal_out.valid.eq(0)
-                for i in range(self.slices):
+                for i in range(self.slices*2):
                     m.d.sync += madd_values[i].eq(madd_values[i] + (a_values[i] * b_values[i]))
 
                 with m.If(ix == self.tapcount//self.slices - 1):
@@ -187,20 +195,37 @@ class FIRConvolver(Elaboratable):
 
             with m.State("OUTPUT"):
                 m.d.sync += self.fsmState.eq(4)
-                sumS = Signal(self.bitwidth+self.fraction_width)
-                sum = 0
+                sumSignalL = Signal(self.bitwidth+self.fraction_width)
+                sumSignalR = Signal.like(sumSignalL)
+                sumL = 0
+                sumR = 0
                 for i in range(self.slices):
-                    sum += madd_values[i]
+                    sumL += madd_values[i]
+                    sumR += madd_values[i+self.slices]
 
-                m.d.comb += sumS.eq(sum)
+                m.d.comb += [
+                    sumSignalL.eq(sumL),
+                    sumSignalR.eq(sumR)
+                ]
                 m.d.sync += [
-                    self.signal_out.payload.eq(sum >> self.fraction_width),
+                    self.signal_out.payload.eq(sumSignalL >> self.fraction_width),
                     #self.signal_out.payload.eq(sum),
+                    self.signal_out.valid.eq(1),
+                    self.signal_out.first.eq(1),
+                    self.signal_out.last.eq(0),
+                ]
+                #m.d.sync += self.signal_in.ready.eq(1)
+
+                m.next = "OUT_RIGHT"
+
+            with m.State("OUT_RIGHT"):
+                m.d.sync += [
+                    self.signal_out.payload.eq(sumSignalR >> self.fraction_width),
+                    # self.signal_out.payload.eq(sum),
                     self.signal_out.valid.eq(1),
                     self.signal_out.first.eq(0),
                     self.signal_out.last.eq(1),
                 ]
-                #m.d.sync += self.signal_in.ready.eq(1)
                 m.next = "IDLE"
 
         return m
