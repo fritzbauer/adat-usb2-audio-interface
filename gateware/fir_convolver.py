@@ -26,8 +26,10 @@ class FIRConvolver(Elaboratable):
         # convert to fixed point representation
         self.tapcount = 64
         self.slices = 4
+        self.slice_size = self.tapcount // self.slices
+
         taps = signal.firwin(self.tapcount,2000,pass_zero='lowpass',fs=48000)
-        taps2 = signal.firwin(self.tapcount-1, 3000, pass_zero='highpass', fs=48000)
+        taps2 = signal.firwin(self.tapcount, 500, pass_zero='lowpass', fs=48000)
         #taps2 = signal.firwin(self.tapcount-1, 3000, pass_zero='highpass', fs=48000)
         #taps = [0] * self.tapcount
         #taps = [
@@ -39,14 +41,20 @@ class FIRConvolver(Elaboratable):
         self.fraction_width = fraction_width
         assert bitwidth <= fraction_width, f"Bitwidth {bitwidth} must not exceed {fraction_width}"
 
-        self.taps = Memory(width=self.bitwidth, depth=self.tapcount, name="taps_memory")
-        self.taps.init = taps_fp = [int(x * 2**(fraction_width)) for x in taps]
+        taps_fp = [int(x * 2 ** (fraction_width)) for x in taps]
+        taps2_fp = [int(x * 2 ** (fraction_width)) for x in taps2]
 
-        self.taps2 = Memory(width=self.bitwidth, depth=self.tapcount, name="taps2_memory")
-        self.taps2.init = taps2_fp = [int(x * 2 ** (fraction_width)) for x in taps2]
+        self.taps_memories, self.taps2_memories, self.samples_memories, self.samples2_memories = [],[],[],[]
 
-        self.samples = Memory(width=self.bitwidth, depth=self.tapcount, name="samples_memory")
-        self.samples2 = Memory(width=self.bitwidth, depth=self.tapcount, name="samples2_memory")
+        for i in range(self.slices):
+            self.taps_memories.append(Memory(width=self.bitwidth, depth=self.slice_size, name=f"taps_memory{i}"))
+            self.taps_memories[i].init = taps_fp[i*self.slice_size:(i+1)*self.slice_size]
+            self.taps2_memories.append(Memory(width=self.bitwidth, depth=self.slice_size, name=f"taps2_memory{i}"))
+            self.taps2_memories[i].init = taps2_fp[i * self.slice_size:(i + 1) * self.slice_size]
+
+            self.samples_memories.append(Memory(width=self.bitwidth, depth=self.slice_size, name=f"samples_memory{i}"))
+            self.samples2_memories.append(Memory(width=self.bitwidth, depth=self.slice_size, name=f"samples2_memory{i}"))
+
 
         self.fsm_state_out = Signal(5)
 
@@ -64,47 +72,58 @@ class FIRConvolver(Elaboratable):
         for i in range(num_coefficients):
             assert (conversion_errors[i] < 1.0)
 
-    def insert(self, m: Module, value: int, offset: int, memory: WritePort):
+    def insert(self, m: Module, value: int, offset: int, memories):
         m.d.sync += offset.eq(offset+1)
         with m.If(offset == self.tapcount):
             m.d.sync += offset.eq(1)
-
+        #memory_port_number = Signal(self.slices)
+        #m.d.comb += memory_port_number.eq(offset // self.slice_size)
+        memory_port_number = offset // self.slice_size
+        index = offset % self.slice_size
         m.d.comb += [
-            memory.data.eq(self.signal_in.payload),
-            memory.addr.eq(offset),
-            memory.en.eq(1)
+            memories[memory_port_number].data.eq(self.signal_in.payload),
+            memories[memory_port_number].addr.eq(index),
+            memories[memory_port_number].en.eq(1)
         ]
 
     # we use the array indices flipped, ascending from zero
     # so x[0] is x_n, x[1] is x_n-
     # 1, x[2] is x_n-2 ...
     # in other words: higher indices are past values, 0 is most recent
-    def get_at(self, m: Module, index: int, offset: int, memory: ReadPort):
-        with m.If((offset - 1) - index >= 0):
-            m.d.comb += memory.addr.eq((offset - 1) - index)
+    def get_at(self, m: Module, index: int, offset: int, memories: []):
+        get_at_index = (offset - 1) - index
+        with m.If(get_at_index <  0):
+            get_at_index = (offset - 1) - index + self.tapcount
+
+            #slice = Signal(self.slices)
+            #m.d.comb += slice.eq(get_at_index // self.slice_size)
+            memory_port_number = get_at_index // self.slice_size
+            index = get_at_index % self.slice_size
+            m.d.comb += memories[memory_port_number].addr.eq(index)
         with m.Else():
-            m.d.comb += memory.addr.eq((offset - 1) - index + self.tapcount)
+            # slice = Signal(self.slices)
+            # m.d.comb += slice.eq(get_at_index // self.slice_size)
+            memory_port_number = get_at_index // self.slice_size
+            index = get_at_index % self.slice_size
+            m.d.comb += memories[memory_port_number].addr.eq(index)
+
 
     def elaborate(self, platform) -> Module:
         m = Module()
 
-        samples_write_port = self.samples.write_port()
-        samples2_write_port = self.samples2.write_port()
-        m.submodules += [samples_write_port,samples2_write_port]
+        taps_read_ports, taps2_read_ports, samples_write_ports, samples2_write_ports, samples_read_ports, samples2_read_ports = [], [], [], [], [], []
 
-        taps_read_ports = Array(self.taps.read_port(domain='comb') for i in range(self.slices))
-        taps2_read_ports = Array(self.taps2.read_port(domain='comb') for i in range(self.slices))
-        m.submodules += [taps_read_ports, taps2_read_ports]
-
-        samples_read_ports = Array(self.samples.read_port(domain='comb') for i in range(self.slices))
-        samples2_read_ports = Array(self.samples2.read_port(domain='comb') for i in range(self.slices))
-        m.submodules += [samples_read_ports, samples2_read_ports]
+        taps_read_ports = Array(self.taps_memories[i].read_port() for i in range(self.slices))
+        taps2_read_ports = Array(self.taps2_memories[i].read_port() for i in range(self.slices))
+        samples_write_ports = Array(self.samples_memories[i].write_port() for i in range(self.slices))
+        samples2_write_ports = Array(self.samples2_memories[i].write_port() for i in range(self.slices))
+        samples_read_ports = Array(self.samples_memories[i].read_port() for i in range(self.slices))
+        samples2_read_ports = Array(self.samples2_memories[i].read_port() for i in range(self.slices))
+        m.submodules += [taps_read_ports, taps2_read_ports, samples_write_ports, samples2_write_ports, samples_read_ports, samples2_read_ports]
 
         a_values = Array(Signal(signed(self.bitwidth),name=f"a{i}") for i in range(self.slices*2))
         b_values = Array(Signal(signed(self.bitwidth),name=f"b{i}") for i in range(self.slices*2))
         madd_values = Array(Signal(signed(self.bitwidth + self.fraction_width),name=f"madd{i}") for i in range(self.slices*2))
-
-        slice_size = Const(self.tapcount // self.slices)
 
         sumSignalL = Signal(self.bitwidth + self.fraction_width)
         sumSignalR = Signal.like(sumSignalL)
@@ -114,16 +133,16 @@ class FIRConvolver(Elaboratable):
             #samples2_write_port.en.eq(0),
             #self.signal_out.valid.eq(0),
         ]
+        for i in range(self.slices):
+            m.d.comb += [
+                samples_write_ports[i].en.eq(0),
+                samples2_write_ports[i].en.eq(0),
+            ]
 
-        m.d.comb += [
-            samples_write_port.en.eq(0),
-            samples2_write_port.en.eq(0),
-            self.signal_out.valid.eq(0),
-        ]
-
+        m.d.comb += self.signal_out.valid.eq(0)
         ix = Signal(range(self.tapcount + 1))
         offset = Signal(Shape.cast(range(self.tapcount)).width)
-
+        offset2 = Signal.like(offset)
 
         m.d.comb += self.signal_in.ready.eq(0)
 
@@ -132,7 +151,7 @@ class FIRConvolver(Elaboratable):
                 m.d.comb += self.fsm_state_out.eq(1)
                 m.d.comb += self.signal_in.ready.eq(1)
                 with m.If(self.signal_in.valid & self.signal_in.last): # convolve right channel
-                    self.insert(m, self.signal_in, offset=offset, memory=samples_write_port)
+                    self.insert(m, self.signal_in, offset=offset, memories=samples_write_ports)
 
                     m.d.sync += ix.eq(0)
 
@@ -141,35 +160,36 @@ class FIRConvolver(Elaboratable):
 
                     m.next = "STORE"
                 with m.Elif(self.signal_in.valid & self.signal_in.first): #left channel
-                    self.insert(m, self.signal_in, offset=offset, memory=samples2_write_port)
+                    self.insert(m, self.signal_in, offset=offset2, memories=samples2_write_ports)
 
             with m.State("STORE"):
                 m.d.comb += self.fsm_state_out.eq(2)
+
 
                 m.next = "MAC"
             with m.State("MAC"):
                 m.d.comb += self.fsm_state_out.eq(3)
 
                 for i in range(self.slices):
-                    self.get_at(m, ix + slice_size * i, offset=offset, memory=samples_read_ports[i])
-                    self.get_at(m, ix + slice_size * i, offset=offset, memory=samples2_read_ports[i])
+                    self.get_at(m, ix + self.slice_size * i, offset=offset, memories=samples_read_ports)
+                    self.get_at(m, ix + self.slice_size * i, offset=offset2, memories=samples2_read_ports)
                     m.d.comb += [
-                        taps_read_ports[i].addr.eq(ix + slice_size * i),
-                        taps2_read_ports[i].addr.eq(ix + slice_size * i),
+                        taps_read_ports[i].addr.eq(ix),
+                        taps2_read_ports[i].addr.eq(ix),
                         a_values[i].eq(samples_read_ports[i].data),
                         a_values[i + self.slices].eq(samples2_read_ports[i].data),
                         b_values[i].eq(taps_read_ports[i].data),
                         b_values[i + self.slices].eq(taps2_read_ports[i].data),
                     ]
 
-                for i in range(self.slices*2):
-                    m.d.sync += madd_values[i].eq(madd_values[i] + (a_values[i] * b_values[i]))
+                #for i in range(self.slices*2):
+                #    m.d.sync += madd_values[i].eq(madd_values[i] + (a_values[i] * b_values[i]))
                 # this is probably it - if it fits in the available LABS:
-                #for i in range(self.slices):
-                #    m.d.sync += madd_values[i].eq(madd_values[i] + (a_values[i] * b_values[i]) + (a_values[i+self.slices] * b_values[i+self.slices]))
-                #    m.d.sync += madd_values[i+self.slices].eq(madd_values[i] + (a_values[i+self.slices] * b_values[i]) + (a_values[i] * b_values[i+self.slices]))
+                for i in range(self.slices):
+                    m.d.sync += madd_values[i].eq(madd_values[i] + (a_values[i] * b_values[i]) + (a_values[i+self.slices] * b_values[i+self.slices]))
+                    m.d.sync += madd_values[i+self.slices].eq(madd_values[i] + (a_values[i+self.slices] * b_values[i]) + (a_values[i] * b_values[i+self.slices]))
 
-                with m.If(ix == slice_size - 1):
+                with m.If(ix == self.slice_size - 1):
                     sumL = 0
                     sumR = 0
                     for i in range(self.slices):
