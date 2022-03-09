@@ -10,6 +10,7 @@ from amaranth.sim import Tick
 from pprint import pformat
 import numpy as np
 from amlib.stream import StreamInterface
+from scipy.io import wavfile
 
 from amlib.test       import GatewareTestCase, sync_test_case
 
@@ -24,7 +25,7 @@ class FIRConvolver(Elaboratable):
         self.signal_out = StreamInterface(name="signal_stream_out", payload_width=bitwidth)
 
         # convert to fixed point representation
-        self.tapcount = 64
+        self.tapcount = 2800
         self.slices = 4
         self.slice_size = self.tapcount // self.slices
 
@@ -39,10 +40,14 @@ class FIRConvolver(Elaboratable):
         self.fraction_width = fraction_width
         assert bitwidth <= fraction_width, f"Bitwidth {bitwidth} must not exceed {fraction_width}"
 
-        taps = signal.firwin(self.tapcount,2000,pass_zero='lowpass',fs=48000)
-        taps2 = signal.firwin(self.tapcount, 500, pass_zero='lowpass', fs=48000)
-        taps_fp = [int(x * 2 ** (fraction_width)) for x in taps]
-        taps2_fp = [int(x * 2 ** (fraction_width)) for x in taps2]
+        #For testing
+        #taps = signal.firwin(self.tapcount,2000,pass_zero='lowpass',fs=48000)
+        #taps2 = signal.firwin(self.tapcount, 500, pass_zero='lowpass', fs=48000)
+        sample_rate, sig = wavfile.read("IR.wav")
+
+        assert  sample_rate == samplerate, f"Unsupported samplerate {sample_rate} for IR file expected {samplerate}"
+        taps_fp = sig[:self.tapcount,0]
+        taps2_fp = sig[:self.tapcount,1]
 
         #self.taps_memories, self.taps2_memories, self.samples_memories, self.samples2_memories = [],[],[],[]
 #
@@ -60,25 +65,13 @@ class FIRConvolver(Elaboratable):
         self.samples_memories = Array(Memory(width=self.bitwidth, depth=self.slice_size+1, name=f"samples_memory{i}") for i in range(self.slices))
         self.samples2_memories = Array(Memory(width=self.bitwidth, depth=self.slice_size+1, name=f"samples2_memory{i}") for i in range(self.slices))
 
+
         for i in range(self.slices):
             self.taps_memories[i].init = taps_fp[i * self.slice_size:(i + 1) * self.slice_size]
             self.taps2_memories[i].init = taps2_fp[i * self.slice_size:(i + 1) * self.slice_size]
 
         self.fsm_state_out = Signal(5)
 
-        def conversion_error(coeff, fp_coeff):
-            val = 2**(bitwidth - 1)
-            fp_product = fp_coeff * val
-            fp_result  = fp_product >> fraction_width
-            fp_error   = fp_result - (coeff * val)
-            return fp_error
-
-        num_coefficients = len(taps_fp)
-        conversion_errors = [abs(conversion_error(taps[i], taps_fp[i])) for i in range(num_coefficients)]
-        if verbose:
-            print("a, fixed point conversion errors: {}".format(conversion_errors))
-        for i in range(num_coefficients):
-            assert (conversion_errors[i] < 1.0)
 
     def insert(self, m: Module, value: int, offset_var, memories: [], slice: int, sample_index: int):
         m.d.sync += offset_var.eq(offset_var+1)
@@ -86,11 +79,11 @@ class FIRConvolver(Elaboratable):
             m.d.sync += offset_var.eq(1)
         #memory_port_number = Signal(self.slices)
         #m.d.comb += memory_port_number.eq(offset // self.slice_size)
-        m.d.sync += [
+        m.d.comb += [
             slice.eq(offset_var // self.slice_size),
             sample_index.eq(offset_var % self.slice_size),
         ]
-        m.d.sync += [
+        m.d.comb += [
             memories[slice].data.eq(self.signal_in.payload),
             memories[slice].addr.eq(sample_index),
             memories[slice].en.eq(1)
@@ -104,13 +97,13 @@ class FIRConvolver(Elaboratable):
         #get_at_index = (offset_var - 1) - index
         with m.If(((offset_var - 1) - index) >=  0):
 
-            m.d.sync += [
+            m.d.comb += [
                 slice.eq(((offset_var - 1) - index) // self.slice_size),
                 sample_index.eq(((offset_var - 1) - index) % self.slice_size),
                 memories[slice].addr.eq(sample_index),
             ]
         with m.Else():
-            m.d.sync += [
+            m.d.comb += [
                 slice.eq(((offset_var - 1) - index + self.tapcount) // self.slice_size),
                 sample_index.eq(((offset_var - 1) - index + self.tapcount) % self.slice_size),
                 memories[slice].addr.eq(sample_index),
@@ -153,7 +146,7 @@ class FIRConvolver(Elaboratable):
             #self.signal_out.valid.eq(0),
         ]
         for i in range(self.slices):
-            m.d.sync += [
+            m.d.comb += [
                 samples_write_ports[i].en.eq(0),
                 samples2_write_ports[i].en.eq(0),
             ]
@@ -210,12 +203,12 @@ class FIRConvolver(Elaboratable):
                         b_values[i + self.slices].eq(taps2_read_ports[i].data),
                     ]
 
-                for i in range(self.slices*2):
-                    m.d.sync += madd_values[i].eq(madd_values[i] + (a_values[i] * b_values[i]))
+                #for i in range(self.slices*2):
+                #    m.d.sync += madd_values[i].eq(madd_values[i] + (a_values[i] * b_values[i]))
                 # this is probably it - if it fits in the available LABS:
-                #for i in range(self.slices):
-                #    m.d.sync += madd_values[i].eq(madd_values[i] + (a_values[i] * b_values[i]) + (a_values[i+self.slices] * b_values[i+self.slices]))
-                #    m.d.sync += madd_values[i+self.slices].eq(madd_values[i] + (a_values[i+self.slices] * b_values[i]) + (a_values[i] * b_values[i+self.slices]))
+                for i in range(self.slices):
+                    m.d.sync += madd_values[i].eq(madd_values[i] + (a_values[i] * b_values[i]) + (a_values[i+self.slices] * b_values[i+self.slices]))
+                    m.d.sync += madd_values[i+self.slices].eq(madd_values[i] + (a_values[i+self.slices] * b_values[i]) + (a_values[i] * b_values[i+self.slices]))
 
                 with m.If(ix == self.slice_size - 1):
                     sumL = 0
@@ -315,7 +308,7 @@ class FixedPointFIRFilterTest(GatewareTestCase):
             yield dut.signal_in.valid.eq(1)
             yield dut.signal_in.first.eq(1)
             yield dut.signal_in.last.eq(0)
-            yield dut.signal_in.payload.eq(1+100)
+            yield dut.signal_in.payload.eq(i+100)
             yield Tick()
             yield from self.wait_ready(dut)
             yield dut.signal_in.valid.eq(1)
