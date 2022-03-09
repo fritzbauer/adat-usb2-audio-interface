@@ -407,10 +407,10 @@ class USB2AudioInterface(Elaboratable):
             dac2_extractor.selected_channel_in.eq(Mux(usb1_no_channels == 2, 0, 2)),
         ]
 
-        fir_led = Signal(reset=1)
-        m.submodules.fir = fir = DomainRenamer("usb")(FIRConvolver(48000,24,24,True))
+        enableFir = Signal(reset=1)
+        m.submodules.fir = fir = DomainRenamer("usb")(FIRConvolver(48000,60e6,24))
 
-        self.wire_up_dac(m, usb1_to_channel_stream, dac1_extractor, dac1, lrclk, dac1_pads, fir, platform.request("core_button")[0], fir_led)
+        self.wire_up_dac(m, usb1_to_channel_stream, dac1_extractor, dac1, lrclk, dac1_pads, fir, platform.request("core_button")[0], enableFir)
         self.wire_up_dac(m, usb1_to_channel_stream, dac2_extractor, dac2, lrclk, dac2_pads)
 
         #
@@ -461,7 +461,7 @@ class USB2AudioInterface(Elaboratable):
             leds.active2.eq(usb2.tx_activity_led | usb2.rx_activity_led),
             leds.suspended2.eq(usb2.suspended),
             leds.usb1.eq(usb_aux1.vbus),
-            leds.usb2.eq(fir_led),
+            leds.usb2.eq(enableFir),
         ]
         m.d.comb += [getattr(leds, f"sync{i + 1}").eq(adat_receivers[i].synced_out) for i in range(4)]
 
@@ -627,7 +627,7 @@ class USB2AudioInterface(Elaboratable):
                 usb2_sof_counter, usb2_to_usb1_fifo_level, usb2_to_usb1_fifo_depth)
 
 
-    def wire_up_dac(self, m, usb_to_channel_stream, dac_extractor, dac, lrclk, dac_pads, fir=None, button=None, led=None):
+    def wire_up_dac(self, m, usb_to_channel_stream, dac_extractor, dac, lrclk, dac_pads, fir=None, button=None, enableFir=None):
         # wire up DAC extractor
         m.d.comb += [
             dac_extractor.channel_stream_in.valid.eq(   usb_to_channel_stream.channel_stream_out.valid
@@ -637,14 +637,13 @@ class USB2AudioInterface(Elaboratable):
         ]
 
         if fir:
-            print("FIR")
             m.submodules.debouncer = debouncer = Debouncer()
             m.d.comb += debouncer.btn.eq(button)
 
             with m.If(debouncer.btn_up):
-                m.d.sync += led.eq(~led)
+                m.d.sync += enableFir.eq(~enableFir)
 
-            with m.If(led):
+            with m.If(enableFir):
                 m.d.comb += [
                     fir.signal_in.stream_eq(dac_extractor.channel_stream_out),
                     dac.stream_in.stream_eq(fir.signal_out)
@@ -652,14 +651,10 @@ class USB2AudioInterface(Elaboratable):
             with m.Else():
                 m.d.comb += dac.stream_in.stream_eq(dac_extractor.channel_stream_out)
         else:
-            print("No FIR")
             m.d.comb += dac.stream_in.stream_eq(dac_extractor.channel_stream_out)
 
         # wire up DAC/ADC
         m.d.comb += [
-            #dac.stream_in.stream_eq(dac_extractor.channel_stream_out),
-
-
             # wire up DAC/ADC
             # in I2S, everything happens on the negedge
             # the easiest way to achieve this, is to invert
