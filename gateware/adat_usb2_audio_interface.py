@@ -407,10 +407,20 @@ class USB2AudioInterface(Elaboratable):
             dac2_extractor.selected_channel_in.eq(Mux(usb1_no_channels == 2, 0, 2)),
         ]
 
-        enableFir = Signal(reset=1)
+        enable_fir = Signal(reset=1)
         m.submodules.fir = fir = DomainRenamer("usb")(FIRConvolver(48000,60e6,24))
 
-        self.wire_up_dac(m, usb1_to_channel_stream, dac1_extractor, dac1, lrclk, dac1_pads, fir, platform.request("core_button")[0], enableFir)
+        m.submodules.debouncer = debouncer = Debouncer()
+        m.submodules.debouncer2 = debouncer2 = Debouncer()
+        m.d.comb += [
+            debouncer.btn.eq(platform.request("core_button")[0]),
+            debouncer2.btn.eq(usb1_class_request_handler.enable_convolution)
+        ]
+
+        with m.If(debouncer.btn_up | debouncer2.btn_up):
+            m.d.sync += enable_fir.eq(~enable_fir)
+
+        self.wire_up_dac(m, usb1_to_channel_stream, dac1_extractor, dac1, lrclk, dac1_pads, fir, enable_fir)
         self.wire_up_dac(m, usb1_to_channel_stream, dac2_extractor, dac2, lrclk, dac2_pads)
 
         #
@@ -461,7 +471,7 @@ class USB2AudioInterface(Elaboratable):
             leds.active2.eq(usb2.tx_activity_led | usb2.rx_activity_led),
             leds.suspended2.eq(usb2.suspended),
             leds.usb1.eq(usb_aux1.vbus),
-            leds.usb2.eq(enableFir),
+            leds.usb2.eq(enable_fir),
         ]
         m.d.comb += [getattr(leds, f"sync{i + 1}").eq(adat_receivers[i].synced_out) for i in range(4)]
 
@@ -627,7 +637,7 @@ class USB2AudioInterface(Elaboratable):
                 usb2_sof_counter, usb2_to_usb1_fifo_level, usb2_to_usb1_fifo_depth)
 
 
-    def wire_up_dac(self, m, usb_to_channel_stream, dac_extractor, dac, lrclk, dac_pads, fir=None, button=None, enableFir=None):
+    def wire_up_dac(self, m, usb_to_channel_stream, dac_extractor, dac, lrclk, dac_pads, fir=None, enable_fir=None):
         # wire up DAC extractor
         m.d.comb += [
             dac_extractor.channel_stream_in.valid.eq(   usb_to_channel_stream.channel_stream_out.valid
@@ -637,13 +647,7 @@ class USB2AudioInterface(Elaboratable):
         ]
 
         if fir:
-            m.submodules.debouncer = debouncer = Debouncer()
-            m.d.comb += debouncer.btn.eq(button)
-
-            with m.If(debouncer.btn_up):
-                m.d.sync += enableFir.eq(~enableFir)
-
-            with m.If(enableFir):
+            with m.If(enable_fir):
                 m.d.comb += [
                     fir.signal_in.stream_eq(dac_extractor.channel_stream_out),
                     dac.stream_in.stream_eq(fir.signal_out)
