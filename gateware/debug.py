@@ -121,6 +121,7 @@ def setup_ila(v, ila_max_packet_size):
 
     dac1_extractor               = v['dac1_extractor']
     fir                          = v['fir']
+    enable_fir                   = v['enable_fir']
 
     adat_clock = Signal()
     m.d.comb += adat_clock.eq(ClockSignal("adat"))
@@ -516,7 +517,7 @@ def setup_ila(v, ila_max_packet_size):
     fir_signal_out_last = Signal()
     fir_signal_out_payload = Signal(24)
     fir_signal_out_ready = Signal()
-    fir_fsm_state = Signal(5)
+    fir_fsm_state_out = Signal(5)
 
     m.d.comb += [
         fir_signal_in_valid.eq(fir.signal_in.valid),
@@ -529,10 +530,15 @@ def setup_ila(v, ila_max_packet_size):
         fir_signal_out_last.eq(fir.signal_out.last),
         fir_signal_out_payload.eq(fir.signal_out.payload),
         fir_signal_out_ready.eq(fir.signal_out.ready),
-        fir_fsm_state.eq(fir.fsmState),
+        fir_fsm_state_out.eq(fir.fsm_state_out),
     ]
 
     fir_debug = [
+        dac1_extractor.channel_stream_out.payload,
+        dac1_extractor.channel_stream_out.valid,
+        dac1_extractor.channel_stream_out.ready,
+        dac1_extractor.channel_stream_out.first,
+        dac1_extractor.channel_stream_out.last,
         fir_signal_in_ready,
         fir_signal_in_valid,
         fir_signal_in_first,
@@ -544,7 +550,8 @@ def setup_ila(v, ila_max_packet_size):
         fir_signal_out_payload,
         fir_signal_out_ready,
         dac1_extractor.level,
-        fir_fsm_state
+        fir_fsm_state_out,
+        enable_fir
     ]
 
 
@@ -575,8 +582,9 @@ def setup_ila(v, ila_max_packet_size):
     m.d.comb += [
         stream_ep.stream.stream_eq(ila.stream),
         # ila.enable.eq(input_or_output_active | garbage | usb_frame_borders),
-        ila.trigger.eq(fir_signal_in_valid & fir_signal_in_last),
-        #ila.trigger.eq(dac1_extractor.channel_stream_out.payload != 0 & fir_signal_in_valid & fir_signal_in_last),
+        #ila.trigger.eq(fir_signal_in_valid),
+        #ila.trigger.eq(fir_signal_in_valid & fir_signal_in_last),
+        ila.trigger.eq(dac1_extractor.channel_stream_out.payload != 0 & fir_signal_in_valid),
         #ila.trigger.eq(fir.signal_in.ready),
         ila.enable .eq(input_or_output_active),
     ]

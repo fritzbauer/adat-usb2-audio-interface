@@ -11,6 +11,7 @@ from usb_descriptors import USBDescriptors
 
 class VendorRequests(IntEnum):
     ILA_STOP_CAPTURE = 0
+    TOGGLE_CONVOLUTION = 1
 
 class UAC2RequestHandlers(USBRequestHandler):
     """ request handlers to implement UAC2 functionality. """
@@ -20,12 +21,15 @@ class UAC2RequestHandlers(USBRequestHandler):
         self.output_interface_altsetting_nr = Signal(3)
         self.input_interface_altsetting_nr  = Signal(3)
         self.interface_settings_changed     = Signal()
+        self.enable_convolution             = Signal()
 
     def elaborate(self, platform):
         m = Module()
 
         interface         = self.interface
         setup             = self.interface.setup
+
+        m.d.comb += self.enable_convolution.eq(0)
 
         m.submodules.transmitter = transmitter = \
             StreamSerializer(data_length=14, domain="usb", stream_type=USBInStreamInterface, max_length_width=14)
@@ -124,10 +128,17 @@ class UAC2RequestHandlers(USBRequestHandler):
 
         with m.Elif(setup.type == USBRequestType.VENDOR):
             with m.Switch(setup.request):
+                with m.Case(VendorRequests.TOGGLE_CONVOLUTION):
+                    m.d.comb += self.enable_convolution.eq(1)
+                    #m.d.usb += self.enable_convolution.eq(~self.enable_convolution)
+                    # ... and ACK our status stage.
+                    with m.If(interface.status_requested | interface.data_requested):
+                       m.d.comb += interface.handshakes_out.ack.eq(1)
+                    #m.d.comb += self.interface.handshakes_out.stall.eq(1)
+                    #pass
                 with m.Case(VendorRequests.ILA_STOP_CAPTURE):
                     # TODO - will be implemented when needed
                     pass
-
                 with m.Default():
                     m.d.comb += self.interface.handshakes_out.stall.eq(1)
 
