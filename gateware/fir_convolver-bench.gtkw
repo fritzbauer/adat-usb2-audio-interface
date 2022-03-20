@@ -1,83 +1,57 @@
 [*]
 [*] GTKWave Analyzer v3.3.106 (w)1999-2020 BSI
-[*] Mon Mar  7 12:24:23 2022
+[*] Sun Mar 20 20:07:43 2022
 [*]
 [dumpfile] "/home/rouven/Computer/Coden/Audio/adat-usb2-audio-interface/gateware/test_FixedPointFIRFilterTest_test_fir.vcd"
-[dumpfile_mtime] "Mon Mar  7 10:47:08 2022"
-[dumpfile_size] 992418
+[dumpfile_mtime] "Sun Mar 20 20:00:15 2022"
+[dumpfile_size] 0
 [savefile] "/home/rouven/Computer/Coden/Audio/adat-usb2-audio-interface/gateware/fir_convolver-bench.gtkw"
-[timestart] 8819180
-[size] 1850 1011
+[timestart] 801900
+[size] 1680 1013
 [pos] -1 -1
-*-14.000000 8893400 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-16.000000 812000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] bench.
 [sst_width] 304
 [signals_width] 435
 [sst_expanded] 1
-[sst_vpaned_height] 284
+[sst_vpaned_height] 285
 @28
 bench.top.clk
 bench.top.fsm_state
-bench.top.signal_stream_in__first
-bench.top.signal_stream_in__last
-@22
+@24
+bench.top.offset[6:0]
+bench.top.ix[7:0]
+@420
 bench.top.signal_stream_in__payload[23:0]
-@28
-bench.top.signal_stream_in__ready
-@29
-bench.top.signal_stream_in__valid
-@28
-bench.top.samples_memory_w_en
-@22
-bench.top.samples_memory_w_data[23:0]
-@28
-bench.top.samples2_memory_w_en
-@22
-bench.top.samples2_memory_w_data[23:0]
-bench.top.a0[23:0]
-bench.top.a1[23:0]
-bench.top.a2[23:0]
-bench.top.a3[23:0]
-bench.top.a4[23:0]
-bench.top.a5[23:0]
-bench.top.a6[23:0]
-bench.top.a7[23:0]
-bench.top.b0[23:0]
-bench.top.b1[23:0]
-bench.top.b2[23:0]
-bench.top.b3[23:0]
-bench.top.b4[23:0]
-bench.top.b5[23:0]
-bench.top.b6[23:0]
-bench.top.b7[23:0]
-bench.top.madd0[47:0]
-bench.top.madd1[47:0]
-bench.top.madd2[47:0]
-bench.top.madd3[47:0]
-bench.top.madd4[47:0]
-bench.top.madd5[47:0]
-bench.top.madd6[47:0]
-bench.top.madd7[47:0]
-bench.top.samples_memory_r_data[23:0]
-bench.top.samples_memory_r_data$1[23:0]
-bench.top.samples_memory_r_data$2[23:0]
-bench.top.samples_memory_r_data$3[23:0]
-bench.top.samples2_memory_r_data[23:0]
-bench.top.samples2_memory_r_data$1[23:0]
-bench.top.samples2_memory_r_data$2[23:0]
-bench.top.samples2_memory_r_data$3[23:0]
-bench.top.taps_memory_r_data[23:0]
-bench.top.taps_memory_r_data$1[23:0]
-bench.top.taps_memory_r_data$2[23:0]
-bench.top.taps_memory_r_data$3[23:0]
-bench.top.sumSignalL[47:0]
-bench.top.sumSignalR[47:0]
-@28
-bench.top.signal_stream_out__first
-bench.top.signal_stream_out__last
-bench.top.signal_stream_out__ready
-bench.top.signal_stream_out__valid
-@22
+bench.top.taps1_memory_0_r_data[23:0]
+bench.top.samples1_memory_0_r_data[23:0]
+bench.top.samples2_memory_0_r_data[23:0]
+@24
+bench.top.sample_index[4:0]
+bench.top.memory_read_number_0[1:0]
+bench.top.memory_read_number_1[1:0]
+bench.top.memory_read_number_2[1:0]
+bench.top.memory_read_number_3[1:0]
+@421
+bench.top.samples1_memory_0_r_data[23:0]
+bench.top.samples1_memory_1_r_data[23:0]
+bench.top.samples1_memory_2_r_data[23:0]
+bench.top.samples1_memory_3_r_data[23:0]
+bench.top.samples2_memory_0_r_data[23:0]
+bench.top.samples2_memory_1_r_data[23:0]
+bench.top.samples2_memory_2_r_data[23:0]
+bench.top.samples2_memory_3_r_data[23:0]
+@420
+bench.top.madd_values_0[23:0]
+bench.top.madd_values_1[23:0]
+bench.top.madd_values_2[23:0]
+bench.top.madd_values_3[23:0]
+bench.top.madd_values_4[23:0]
+bench.top.madd_values_5[23:0]
+bench.top.madd_values_6[23:0]
+bench.top.madd_values_7[23:0]
+bench.top.sumSignalL[23:0]
+bench.top.sumSignalR[23:0]
 bench.top.signal_stream_out__payload[23:0]
 [pattern_trace] 1
 [pattern_trace] 0
