@@ -23,7 +23,7 @@ class FIRConvolver(Elaboratable):
         self.signal_out = StreamInterface(name="signal_stream_out", payload_width=bitwidth)
 
         # convert to fixed point representation
-        self.tapcount = 4096 #3072 synthesizes
+        self.tapcount = 4096 #4096 synthesizes
         self.slices = 4 # math.ceil(self.tapcount/(clockfrequency/samplerate)) #4
         self.slice_size = self.tapcount // self.slices
 
@@ -41,7 +41,7 @@ class FIRConvolver(Elaboratable):
         # taps2_fp = [int(x * 2 ** (bitwidth)) for x in taps2]
 
         #sig, sample_rate = sf.read('IR.wav')
-        sample_rate, sig = wavfile.read('IRs/IR_4800.wav')
+        sample_rate, sig = wavfile.read('IRs/IR_4800_minus24db.wav')
         print(sig)
         #taps_fp = [int(x * 2 ** (bitwidth-1)-1) for x in sig[:self.tapcount, 0]]
         #taps2_fp = [int(x * 2 ** (bitwidth-1)-1) for x in sig[:self.tapcount, 1]]
@@ -92,9 +92,9 @@ class FIRConvolver(Elaboratable):
         #memory_write_number = Signal(range(self.slices))
         sample_index = Signal(range(self.slice_size))
 
-        madd_values = Array(Signal(signed(self.bitwidth),name=f"madd_values_{i}") for i in range(self.slices*2))
+        madd_values = Array(Signal(signed(self.bitwidth*2),name=f"madd_values_{i}") for i in range(self.slices*2))
 
-        sumSignalL = Signal(signed(self.bitwidth))
+        sumSignalL = Signal(signed(self.bitwidth*2))
         sumSignalR = Signal.like(sumSignalL)
 
         ix = Signal(range(self.tapcount+2))
@@ -207,11 +207,18 @@ class FIRConvolver(Elaboratable):
 
                     #with m.If(ix > 0):
                     if self.USE_CROSSFEED: #crossfeed
+                        #m.d.sync += [
+                        #    madd_values[i].eq(madd_values[i] + (left_sample * main_tap >> self.bitwidth)  #left
+                        #    + (right_sample * bleed_tap >> self.bitwidth)), #right_bleed
+                        #    madd_values[i+self.slices].eq(madd_values[i+self.slices] + (right_sample * main_tap >> self.bitwidth)  #right
+                        #    + (left_sample * bleed_tap >> self.bitwidth)) #left_bleed
+                        #]
                         m.d.sync += [
-                            madd_values[i].eq(madd_values[i] + (left_sample * main_tap >> self.bitwidth)  #left
-                            + (right_sample * bleed_tap >> self.bitwidth)), #right_bleed
-                            madd_values[i+self.slices].eq(madd_values[i+self.slices] + (right_sample * main_tap >> self.bitwidth)  #right
-                            + (left_sample * bleed_tap >> self.bitwidth)) #left_bleed
+                            madd_values[i].eq(madd_values[i] + (left_sample * main_tap)  # left
+                                              + (right_sample * bleed_tap)),  # right_bleed
+                            madd_values[i + self.slices].eq(
+                                madd_values[i + self.slices] + (right_sample * main_tap)  # right
+                                + (left_sample * bleed_tap))  # left_bleed
                         ]
                     else:
                         #with m.If(ix > 0):
@@ -220,8 +227,8 @@ class FIRConvolver(Elaboratable):
                         m.d.sync += [
                             #madd_values[i].eq(madd_values[i] + (left_sample * main_tap >> (self.bitwidth-1))), # >> (self.bitwidth-1)))
                             #madd_values[i + self.slices].eq(madd_values[i + self.slices] + (right_sample * main_tap >> (self.bitwidth-1))),
-                            madd_values[i].eq(madd_values[i] + (left_sample * main_tap >> (self.bitwidth))),
-                            madd_values[i + self.slices].eq(madd_values[i + self.slices] + (right_sample * main_tap >> (self.bitwidth))),
+                            madd_values[i].eq(madd_values[i] + (left_sample * main_tap)),
+                            madd_values[i + self.slices].eq(madd_values[i + self.slices] + (right_sample * main_tap)),
                         ]
                 with m.If(ix == self.slice_size-1):
                     #sumL = 0
@@ -254,7 +261,7 @@ class FIRConvolver(Elaboratable):
                 m.next = "OUTPUT"
             with m.State("OUTPUT"):
                 m.d.sync += [
-                    self.signal_out.payload.eq(sumSignalL),
+                    self.signal_out.payload.eq(sumSignalL >> self.bitwidth),
                     self.signal_out.valid.eq(1),
                     self.signal_out.first.eq(1),
                     self.signal_out.last.eq(0),
@@ -265,7 +272,7 @@ class FIRConvolver(Elaboratable):
             with m.State("OUT_RIGHT"):
                 m.d.comb += self.fsm_state_out.eq(5)
                 m.d.sync += [
-                    self.signal_out.payload.eq(sumSignalR),
+                    self.signal_out.payload.eq(sumSignalR >> self.bitwidth),
                     self.signal_out.valid.eq(1),
                     self.signal_out.first.eq(0),
                     self.signal_out.last.eq(1),
