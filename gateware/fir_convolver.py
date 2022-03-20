@@ -23,7 +23,7 @@ class FIRConvolver(Elaboratable):
         self.signal_out = StreamInterface(name="signal_stream_out", payload_width=bitwidth)
 
         # convert to fixed point representation
-        self.tapcount = 16 #3072 synthesizes
+        self.tapcount = 1024 #3072 synthesizes
         self.slices = 4 # math.ceil(self.tapcount/(clockfrequency/samplerate)) #4
         self.slice_size = self.tapcount // self.slices
 
@@ -41,7 +41,7 @@ class FIRConvolver(Elaboratable):
         # taps2_fp = [int(x * 2 ** (bitwidth)) for x in taps2]
 
         #sig, sample_rate = sf.read('IR.wav')
-        sample_rate, sig = wavfile.read('IRs/IR_4096_minus6db.wav')
+        sample_rate, sig = wavfile.read('IRs/IR_4800.wav')
         print(sig)
         #taps_fp = [int(x * 2 ** (bitwidth-1)-1) for x in sig[:self.tapcount, 0]]
         #taps2_fp = [int(x * 2 ** (bitwidth-1)-1) for x in sig[:self.tapcount, 1]]
@@ -61,73 +61,44 @@ class FIRConvolver(Elaboratable):
         self.samples2_memories = Array(Memory(width=self.bitwidth, depth=self.slice_size, name=f"samples2_memory_{i}") for i in range(self.slices))
 
 
-        #for i in range(self.slices):
-            #self.taps1_memories[i].init = taps_fp[i * self.slice_size:(i + 1) * self.slice_size]
-            #self.taps2_memories[i].init = taps2_fp[i * self.slice_size:(i + 1) * self.slice_size]
+        for i in range(self.slices):
+            self.taps1_memories[i].init = taps_fp[i * self.slice_size:(i + 1) * self.slice_size]
+            self.taps2_memories[i].init = taps2_fp[i * self.slice_size:(i + 1) * self.slice_size]
 
-        self.taps1_memories[0].init = [1]#[1 * 2 ** (self.bitwidth-1) ]
-        self.taps2_memories[0].init = [1]#[1 * 2 ** (self.bitwidth-1) ]
-
+        #self.taps1_memories[0].init = [1 * 2 ** (self.bitwidth-1)-1, int(0.5 * 2 ** (self.bitwidth-1)-1), int(0.25 * 2 ** (self.bitwidth-1)-1)]
+        #self.taps2_memories[0].init = [1 * 2 ** (self.bitwidth-1)-1, int(0.5 * 2 ** (self.bitwidth-1)-1), int(0.25 * 2 ** (self.bitwidth-1)-1)]
         self.fsm_state_out = Signal(5)
 
-    def insert_sample(self, m: Module, value: int, offset_var, memories: [], memory_number: int, sample_index: int):
-        m.d.sync += offset_var.eq(offset_var+1)
-        with m.If(offset_var == self.tapcount):
-            m.d.sync += offset_var.eq(1)
 
-        m.d.comb += [
-            memory_number.eq(offset_var // self.slice_size),
-            sample_index.eq(offset_var % self.slice_size),
-            memories[memory_number].data.eq(self.signal_in.payload),
-            memories[memory_number].addr.eq(sample_index),
-            memories[memory_number].en.eq(1)
-        ]
 
     # we use the array indices flipped, ascending from zero
     # so x[0] is x_n, x[1] is x_n-
     # 1, x[2] is x_n-2 ...
     # in other words: higher indices are past values, 0 is most recent
-    def get_sample_at(self, m: Module, index: int, offset_var: int, memories: [], memory_number: int, sample_index: int):
-        with m.If(((offset_var - 1) - index) >=  0):
-            m.d.comb += [
-                memory_number.eq(((offset_var - 1) - index) // self.slice_size),
-                sample_index.eq(((offset_var - 1) - index) % self.slice_size),
-                memories[memory_number].addr.eq(sample_index),
-            ]
-        with m.Else():
-            m.d.comb += [
-                memory_number.eq(((offset_var - 1) - index + self.tapcount) // self.slice_size),
-                sample_index.eq(((offset_var - 1) - index + self.tapcount) % self.slice_size),
-                memories[memory_number].addr.eq(sample_index),
-            ]
 
     def elaborate(self, platform) -> Module:
         m = Module()
 
-        taps1_read_ports = Array(self.taps1_memories[i].read_port() for i in range(self.slices))
-        taps2_read_ports = Array(self.taps2_memories[i].read_port() for i in range(self.slices))
+        taps1_read_ports = Array(self.taps1_memories[i].read_port(transparent=False) for i in range(self.slices))
+        taps2_read_ports = Array(self.taps2_memories[i].read_port(transparent=False) for i in range(self.slices))
         samples1_write_ports = Array(self.samples1_memories[i].write_port() for i in range(self.slices))
         samples2_write_ports = Array(self.samples2_memories[i].write_port() for i in range(self.slices))
-        samples1_read_ports = Array(self.samples1_memories[i].read_port() for i in range(self.slices))
-        samples2_read_ports = Array(self.samples2_memories[i].read_port() for i in range(self.slices))
+        samples1_read_ports = Array(self.samples1_memories[i].read_port(transparent=False) for i in range(self.slices))
+        samples2_read_ports = Array(self.samples2_memories[i].read_port(transparent=False) for i in range(self.slices))
 
         m.submodules += [taps1_read_ports, taps2_read_ports, samples1_write_ports, samples2_write_ports, samples1_read_ports, samples2_read_ports]
 
-        memory1_number = Array(Signal(range(self.slices), name=f"memory1_number_{i}") for i in range(self.slices))
-        memory2_number = Array(Signal(range(self.slices), name=f"memory2_number_{i}") for i in range(self.slices))
-        sample1_indexes = Array(Signal(range(self.slice_size), name=f"sample1_index_{i}") for i in range(self.slices))
-        sample2_indexes = Array(Signal(range(self.slice_size), name=f"sample2_index_{i}") for i in range(self.slices))
+        memory_read_numbers = Array(Signal(range(self.slices), name=f"memory_read_number_{i}") for i in range(self.slices))
+        #memory_write_number = Signal(range(self.slices))
+        sample_index = Signal(range(self.slice_size))
 
-        sample_values = Array(Signal(signed(self.bitwidth),name=f"sample_values_{i}") for i in range(self.slices*2))
-        taps_values = Array(Signal(signed(self.bitwidth),name=f"taps_values_{i}") for i in range(self.slices*2))
         madd_values = Array(Signal(signed(self.bitwidth),name=f"madd_values_{i}") for i in range(self.slices*2))
 
         sumSignalL = Signal(signed(self.bitwidth))
         sumSignalR = Signal.like(sumSignalL)
 
-        ix = Signal(range(self.tapcount + 1))
+        ix = Signal(range(self.tapcount+2))
         offset = Signal(Shape.cast(range(self.tapcount)).width)
-        offset2 = Signal.like(offset)
 
         m.d.sync += [
             #samples_write_port.en.eq(0),
@@ -135,101 +106,155 @@ class FIRConvolver(Elaboratable):
             #self.signal_out.valid.eq(0),
         ]
         for i in range(self.slices):
-            m.d.comb += [
+            m.d.sync += [
                 samples1_write_ports[i].en.eq(0),
                 samples2_write_ports[i].en.eq(0),
             ]
 
-        m.d.comb += self.signal_out.valid.eq(0)
+        m.d.sync += self.signal_out.valid.eq(0)
         m.d.comb += self.signal_in.ready.eq(0)
 
+        with m.If((offset - ix) >= 0):
+            m.d.comb += [
+                sample_index.eq((offset - ix) % self.slice_size),
+                #memory_write_number.eq((offset - ix) // self.slice_size),
+            ]
+        with m.Else():
+            m.d.comb += [
+                sample_index.eq((offset - ix + self.tapcount) % self.slice_size),
+                #memory_write_number.eq((offset - ix + self.tapcount) // self.slice_size),
+            ]
+
+        for i in range(self.slices):
+            with m.If((offset - ix - i * self.slice_size) >= 0):
+                m.d.comb += [
+                    memory_read_numbers[i].eq((offset - ix - i * self.slice_size) // self.slice_size),
+                ]
+            with m.Else():
+                m.d.comb += [
+                    memory_read_numbers[i].eq((offset - ix + self.tapcount - i * self.slice_size) // self.slice_size),
+                ]
+
+            m.d.sync += [
+                taps1_read_ports[i].addr.eq(ix),
+                taps2_read_ports[i].addr.eq(ix),
+                samples1_read_ports[memory_read_numbers[i]].addr.eq(sample_index),
+                samples2_read_ports[memory_read_numbers[i]].addr.eq(sample_index),
+                taps1_read_ports[i].en.eq(0),
+                taps2_read_ports[i].en.eq(0),
+                samples1_read_ports[i].en.eq(0),
+                samples2_read_ports[i].en.eq(0),
+            ]
 
         set1 = Signal()
         set2 = Signal()
         with m.FSM(reset="IDLE"):
             with m.State("IDLE"):
                 m.d.comb += self.fsm_state_out.eq(1)
-                with m.If(self.signal_in.valid & self.signal_in.last & ~set2): # right channel
-                    m.d.comb += self.signal_in.ready.eq(1)
-                    self.insert_sample(m, self.signal_in, offset_var=offset2, memories=samples2_write_ports,
-                                       memory_number=memory2_number[0], sample_index=sample2_indexes[0])
-                    m.d.sync += set2.eq(1)
+                with m.If(self.signal_in.valid & self.signal_in.first & ~set1):  # left channel
+                    m.d.sync += [
+                        samples1_write_ports[memory_read_numbers[0]].data.eq(self.signal_in.payload.as_signed()),
+                        samples1_write_ports[memory_read_numbers[0]].addr.eq(offset),
+                        samples1_write_ports[memory_read_numbers[0]].en.eq(1)
+                    ]
 
-                with m.Elif(self.signal_in.valid & self.signal_in.first & ~set1): #left channel
-                    m.d.comb += self.signal_in.ready.eq(1)
-                    self.insert_sample(m, self.signal_in, offset_var=offset, memories=samples1_write_ports,
-                                       memory_number=memory1_number[0], sample_index=sample1_indexes[0])
                     m.d.sync += set1.eq(1)
+                with m.Elif(self.signal_in.valid & self.signal_in.last & ~set2): # right channel
+                    m.d.sync += [
+                        samples2_write_ports[memory_read_numbers[0]].data.eq(self.signal_in.payload.as_signed()),
+                        samples2_write_ports[memory_read_numbers[0]].addr.eq(offset),
+                        samples2_write_ports[memory_read_numbers[0]].en.eq(1)
+                    ]
+                    m.d.sync += set2.eq(1)
 
                 with m.If(set1 & set2):
                     m.d.sync += ix.eq(0)
                     for i in range(self.slices * 2):
                         m.d.sync += madd_values[i].eq(0)
-                    m.next = "STORE"
-                #with m.Else():
-                #    m.d.comb += self.signal_in.ready.eq(1)
+                    m.next = "MAC"
+                with m.Else():
+                    m.d.comb += self.signal_in.ready.eq(1)
 
-            with m.State("STORE"):
-                m.d.comb += self.fsm_state_out.eq(2)
-
-                m.next = "MAC"
+            #with m.State("STORE"):
+            #    m.d.comb += self.fsm_state_out.eq(2)
+            #    m.next = "MAC"
             with m.State("MAC"):
                 m.d.comb += self.fsm_state_out.eq(3)
                 #for i in range(self.slices):
                 #    m.d.comb += samples_read_ports[i].addr.eq(self.slice_size)
                 #    m.d.comb += samples2_read_ports[i].addr.eq(self.slice_size)
-
                 for i in range(self.slices):
-                    self.get_sample_at(m, ix + self.slice_size * i, offset_var=offset, memories=samples1_read_ports,
-                                       memory_number=memory1_number[i], sample_index=sample1_indexes[i])
-                    self.get_sample_at(m, ix + self.slice_size * i, offset_var=offset2, memories=samples2_read_ports,
-                                       memory_number=memory2_number[i], sample_index=sample2_indexes[i])
-
                     m.d.comb += [
-                        taps1_read_ports[i].addr.eq(ix),
-                        taps2_read_ports[i].addr.eq(ix),
-                        sample_values[i].eq(samples1_read_ports[memory1_number[i]].data),
-                        sample_values[i + self.slices].eq(samples2_read_ports[memory2_number[i]].data),
-                        taps_values[i].eq(taps1_read_ports[i].data),
-                        taps_values[i + self.slices].eq(taps2_read_ports[i].data),
+                        #sample_values[i].eq(samples1_read_ports[memory1_number[i]].data),
+                        #sample_values[i + self.slices].eq(samples2_read_ports[memory2_number[i]].data),
                     ]
+
 
                 #for i in range(self.slices*2):
                 #    m.d.sync += madd_values[i].eq(madd_values[i] + (a_values[i] * b_values[i]))
                 # this is probably it - if it fits in the available LABS:
                 for i in range(self.slices):
-                    if self.USE_CROSSFEED: #crossfeed
-                        m.d.sync += madd_values[i].eq(
-                            madd_values[i] + (sample_values[i] * taps_values[i] >> self.bitwidth)  #left
-                            + (sample_values[i+self.slices] * taps_values[i+self.slices] >> self.bitwidth) #right_bleed
-                        )
-                        m.d.sync += madd_values[i+self.slices].eq(
-                            madd_values[i+self.slices] + (sample_values[i+self.slices] * taps_values[i] >> self.bitwidth)  #right
-                            + (sample_values[i] * taps_values[i+self.slices] >> self.bitwidth) #left_bleed
-                        )
-                    else:
-                        for i in range(self.slices*2):
-                            m.d.sync += madd_values[i].eq(madd_values[i] + ((sample_values[i] * taps_values[i]) )) # >> (self.bitwidth-1)))
+                    left_sample = samples1_read_ports[memory_read_numbers[i]].data.as_signed()
+                    right_sample = samples2_read_ports[memory_read_numbers[i]].data.as_signed()
+                    main_tap = taps1_read_ports[i].data.as_signed()
+                    bleed_tap = taps2_read_ports[i].data.as_signed()
 
-                with m.If(ix == self.slice_size - 1):
-                    sumL = 0
-                    sumR = 0
-                    for i in range(self.slices):
-                        sumL += madd_values[i]
-                        sumR += madd_values[i + self.slices]
-
-                    m.d.sync += [
-                        sumSignalL.eq(sumL),
-                        sumSignalR.eq(sumR),
-                    ]
-                    m.next = "OUTPUT"
+                    with m.If(ix > 1):
+                        if self.USE_CROSSFEED: #crossfeed
+                            m.d.sync += [
+                                madd_values[i].eq(madd_values[i] + (left_sample * main_tap >> self.bitwidth)  #left
+                                + (right_sample * bleed_tap >> self.bitwidth)), #right_bleed
+                                madd_values[i+self.slices].eq(madd_values[i+self.slices] + (right_sample * main_tap >> self.bitwidth)  #right
+                                + (left_sample * bleed_tap >> self.bitwidth)) #left_bleed
+                            ]
+                        else:
+                            #with m.If(ix > 0):
+                            #    with m.If(ix < self.slice_size):
+                            for i in range(self.slices):
+                                m.d.sync += [
+                                    #madd_values[i].eq(madd_values[i] + (left_sample * main_tap >> (self.bitwidth-1))), # >> (self.bitwidth-1)))
+                                    #madd_values[i + self.slices].eq(madd_values[i + self.slices] + (right_sample * main_tap >> (self.bitwidth-1))),
+                                    madd_values[i].eq(madd_values[i] + (left_sample * main_tap >> self.bitwidth)),
+                                    madd_values[i + self.slices].eq(madd_values[i + self.slices] + (right_sample * main_tap >> self.bitwidth)),
+                                ]
+                with m.If(ix == self.slice_size+1):
+                    #sumL = 0
+                    #sumR = 0
+                    #for i in range(self.slices):
+                    #    sumL += madd_values[i]
+                    #    sumR += madd_values[i + self.slices]
+#
+                    #m.d.sync += [
+                    #    sumSignalL.eq(sumL),
+                    #    sumSignalR.eq(sumR),
+                    #]
+                    m.next = "SUM"
                 with m.Else():
+                    for i in range(self.slices):
+                        m.d.sync += [
+                            taps1_read_ports[i].en.eq(1),
+                            taps2_read_ports[i].en.eq(1),
+                            samples1_read_ports[i].en.eq(1),
+                            samples2_read_ports[i].en.eq(1),
+                        ]
                     m.d.sync += ix.eq(ix + 1)
 
-            with m.State("OUTPUT"):
+            with m.State("SUM"):
                 m.d.comb += self.fsm_state_out.eq(4)
 
-                m.d.comb += [
+                sumL = 0
+                sumR = 0
+                for i in range(self.slices):
+                    sumL += madd_values[i]
+                    sumR += madd_values[i + self.slices]
+
+                m.d.sync += [
+                    sumSignalL.eq(sumL),
+                    sumSignalR.eq(sumR),
+                ]
+                m.next = "OUTPUT"
+            with m.State("OUTPUT"):
+                m.d.sync += [
                     self.signal_out.payload.eq(sumSignalL),
                     self.signal_out.valid.eq(1),
                     self.signal_out.first.eq(1),
@@ -240,7 +265,7 @@ class FIRConvolver(Elaboratable):
 
             with m.State("OUT_RIGHT"):
                 m.d.comb += self.fsm_state_out.eq(5)
-                m.d.comb += [
+                m.d.sync += [
                     self.signal_out.payload.eq(sumSignalR),
                     self.signal_out.valid.eq(1),
                     self.signal_out.first.eq(0),
@@ -252,6 +277,7 @@ class FIRConvolver(Elaboratable):
                 ]
 
                 with m.If(self.signal_out.ready):
+                    m.d.sync += offset.eq(offset + 1)
                     m.next = "IDLE"
 
         return m
@@ -292,7 +318,7 @@ class FixedPointFIRFilterTest(GatewareTestCase):
         yield dut.signal_in.valid.eq(1)
         yield dut.signal_in.first.eq(0)
         yield dut.signal_in.last.eq(1)
-        yield dut.signal_in.payload.eq(max-100)
+        yield dut.signal_in.payload.eq(min)
         yield Tick()
         #yield from self.wait_ready(dut)
         #yield dut.signal_in.payload.eq(2222)
@@ -303,7 +329,7 @@ class FixedPointFIRFilterTest(GatewareTestCase):
         #for _ in range(60): yield
         #yield dut.signal_in.payload.eq(0)
         #return
-        for i in range(240):
+        for i in range(60):
             yield from self.wait_ready(dut)
             yield dut.signal_in.valid.eq(1)
             yield dut.signal_in.first.eq(1)
@@ -314,6 +340,6 @@ class FixedPointFIRFilterTest(GatewareTestCase):
             yield dut.signal_in.valid.eq(1)
             yield dut.signal_in.first.eq(0)
             yield dut.signal_in.last.eq(1)
-            yield dut.signal_in.payload.eq(i+200)
+            yield dut.signal_in.payload.eq(-i-200)
             yield Tick()
             print("end of loop")
