@@ -23,7 +23,7 @@ class FIRConvolver(Elaboratable):
         self.signal_out = StreamInterface(name="signal_stream_out", payload_width=bitwidth)
 
         # convert to fixed point representation
-        self.tapcount = 4096 #4096 synthesizes
+        self.tapcount = 1024 #4096 synthesizes
         self.slices = 4 # math.ceil(self.tapcount/(clockfrequency/samplerate)) #4
         self.slice_size = self.tapcount // self.slices
 
@@ -55,10 +55,10 @@ class FIRConvolver(Elaboratable):
 
         assert sample_rate == samplerate, f"Unsupported samplerate {sample_rate} for IR file expected {samplerate}"
 
-        self.taps1_memories = Array(Memory(width=self.bitwidth, depth=self.slice_size, name=f"taps1_memory_{i}") for i in range(self.slices))
-        self.taps2_memories = Array(Memory(width=self.bitwidth, depth=self.slice_size, name=f"taps2_memory_{i}") for i in range(self.slices))
-        self.samples1_memories = Array(Memory(width=self.bitwidth, depth=self.slice_size, name=f"samples1_memory_{i}") for i in range(self.slices))
-        self.samples2_memories = Array(Memory(width=self.bitwidth, depth=self.slice_size, name=f"samples2_memory_{i}") for i in range(self.slices))
+        self.taps1_memories = Array(Memory(width=self.bitwidth, depth=self.tapcount, name=f"taps1_memory_{i}") for i in range(self.slices))
+        self.taps2_memories = Array(Memory(width=self.bitwidth, depth=self.tapcount, name=f"taps2_memory_{i}") for i in range(self.slices))
+        self.samples1_memories = Array(Memory(width=self.bitwidth, depth=self.tapcount, name=f"samples1_memory_{i}") for i in range(self.slices))
+        self.samples2_memories = Array(Memory(width=self.bitwidth, depth=self.tapcount, name=f"samples2_memory_{i}") for i in range(self.slices))
 
 
         for i in range(self.slices):
@@ -123,7 +123,7 @@ class FIRConvolver(Elaboratable):
         m.d.comb += [
             #sample_index.eq((offset - ix + self.tapcount) % self.slice_size),
             sample_index.eq(offset - ix + self.slice_size),
-            #memory_write_number.eq((offset - ix + self.tapcount) // self.slice_size),
+            #memory_write_number.eq(offset // self.slice_size),
         ]
 
         for i in range(self.slices):
@@ -132,18 +132,19 @@ class FIRConvolver(Elaboratable):
             #        memory_read_numbers[i].eq((offset - ix - i * self.slice_size) // self.slice_size),
             #    ]
             #with m.Else():
-            #m.d.comb += [
-            #    memory_read_numbers[i].eq((offset - ix + self.tapcount - i * self.slice_size) // self.slice_size),
-            #]
+            m.d.comb += [
+                #memory_read_numbers[i].eq((offset - ix + self.tapcount - i * self.slice_size) // self.slice_size),
+                memory_read_numbers[i].eq(i),
+            ]
 
-            with m.If(ix == 0):
-                m.d.comb += [
-                    memory_read_numbers[i].eq(i),
-                ]
-            with m.Else():
-                m.d.comb += [
-                    memory_read_numbers[i].eq(i-1 + self.slices),
-                ]
+            #with m.If(ix == 0):
+            #    m.d.comb += [
+            #        memory_read_numbers[i].eq(memory_write_number+i),
+            #    ]
+            #with m.Else():
+            #    m.d.comb += [
+            #        memory_read_numbers[i].eq(memory_write_number+i-1 + self.slices),
+            #    ]
 
             m.d.comb += [
                 taps1_read_ports[i].addr.eq(ix),
@@ -160,21 +161,27 @@ class FIRConvolver(Elaboratable):
                 with m.If(self.signal_in.valid & self.signal_in.first & ~set1):  # left channel
                     m.d.sync += [
                         samples1_write_ports[memory_read_numbers[0]].data.eq(self.signal_in.payload.as_signed()),
-                        samples1_write_ports[memory_read_numbers[0]].addr.eq(offset),
+                        samples1_write_ports[memory_read_numbers[0]].addr.eq(sample_index),
                         samples1_write_ports[memory_read_numbers[0]].en.eq(1)
                     ]
+
+                    #m.d.sync += [
+                    #    samples2_write_ports[memory_write_number].data.eq(self.signal_in.payload.as_signed()),
+                    #    samples2_write_ports[memory_write_number].addr.eq(offset % self.slice_size),
+                    #    samples2_write_ports[memory_write_number].en.eq(1)
+                    #]
 
                     m.d.sync += set1.eq(1)
                 with m.Elif(self.signal_in.valid & self.signal_in.last & ~set2): # right channel
                     m.d.sync += [
                         samples2_write_ports[memory_read_numbers[0]].data.eq(self.signal_in.payload.as_signed()),
-                        samples2_write_ports[memory_read_numbers[0]].addr.eq(offset),
+                        samples2_write_ports[memory_read_numbers[0]].addr.eq(sample_index),
                         samples2_write_ports[memory_read_numbers[0]].en.eq(1)
                     ]
                     m.d.sync += set2.eq(1)
 
                 with m.If(set1 & set2):
-                    m.d.sync += ix.eq(0)
+                    #m.d.sync += ix.eq(0)
                     for i in range(self.slices * 2):
                         m.d.sync += madd_values[i].eq(0)
                     m.next = "MAC"
@@ -215,10 +222,9 @@ class FIRConvolver(Elaboratable):
                         #]
                         m.d.sync += [
                             madd_values[i].eq(madd_values[i] + (left_sample * main_tap)  # left
-                                              + (right_sample * bleed_tap)),  # right_bleed
-                            madd_values[i + self.slices].eq(
-                                madd_values[i + self.slices] + (right_sample * main_tap)  # right
-                                + (left_sample * bleed_tap))  # left_bleed
+                                            + (right_sample * bleed_tap)),  # right_bleed
+                            madd_values[i + self.slices].eq(madd_values[i + self.slices] + (right_sample * main_tap)  # right
+                                            + (left_sample * bleed_tap))  # left_bleed
                         ]
                     else:
                         #with m.If(ix > 0):
@@ -260,6 +266,7 @@ class FIRConvolver(Elaboratable):
                 ]
                 m.next = "OUTPUT"
             with m.State("OUTPUT"):
+                m.d.sync += ix.eq(0)
                 m.d.sync += [
                     self.signal_out.payload.eq(sumSignalL >> self.bitwidth),
                     self.signal_out.valid.eq(1),
