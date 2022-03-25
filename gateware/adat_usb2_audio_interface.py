@@ -40,6 +40,8 @@ from debouncer               import Debouncer
 
 from usb_descriptors import USBDescriptors
 
+from scipy.io import wavfile
+
 class USB2AudioInterface(Elaboratable):
     """ USB Audio Class v2 interface """
     # one isochronous packet typically has 6 or 7 samples of 8 channels of 32 bit samples
@@ -408,7 +410,12 @@ class USB2AudioInterface(Elaboratable):
         ]
 
         enable_fir = Signal(reset=1)
-        m.submodules.fir = fir = DomainRenamer("usb")(FIRConvolver(48000,60e6,24))
+
+        sample_rate, sig = wavfile.read('IRs/IR_4800_minus24db.wav')
+        taps = sig[:4096,:]
+        assert sample_rate == 48000, f"Unsupported samplerate {sample_rate} for IR file expected 48000"
+
+        m.submodules.fir = fir = DomainRenamer("usb")(FIRConvolver(taps=taps, samplerate=48000, clockfrequency=60e6, bitwidth=24))
 
         m.submodules.debouncer = debouncer = Debouncer()
         m.submodules.debouncer2 = debouncer2 = Debouncer()
