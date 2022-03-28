@@ -34,8 +34,8 @@ class FIRConvolver(Elaboratable):
 
         assert self.tapcount % self.slices == 0, f"Tapcount {self.tapcount} cannot be evenly distributed on {self.slices} slizes."
 
-        taps_fp = taps[:, 0]
-        taps2_fp = taps[:, 1]
+        taps_fp = taps[:self.tapcount, 0]
+        taps2_fp = taps[:self.tapcount, 1]
 
         self.taps1_memory = Memory(width=self.size_of_slizes, depth=self.number_of_slices, name=f"taps1_memory")
         self.taps2_memory = Memory(width=self.size_of_slizes, depth=self.number_of_slices, name=f"taps2_memory")
@@ -214,7 +214,7 @@ class FIRConvolver(Elaboratable):
                 m.d.comb += self.fsm_state_out.eq(4)
                 m.d.sync += ix.eq(0)
                 m.d.sync += [
-                    self.signal_out.payload.eq(sumSignalL >> (self.bitwidth-1)),
+                    self.signal_out.payload.eq(sumSignalL >> self.bitwidth),
                     self.signal_out.valid.eq(1),
                     self.signal_out.first.eq(1),
                     self.signal_out.last.eq(0),
@@ -225,7 +225,7 @@ class FIRConvolver(Elaboratable):
             with m.State("OUTPUT RIGHT"):
                 m.d.comb += self.fsm_state_out.eq(5)
                 m.d.sync += [
-                    self.signal_out.payload.eq(sumSignalR >> (self.bitwidth-1)),
+                    self.signal_out.payload.eq(sumSignalR >> self.bitwidth),
                     self.signal_out.valid.eq(1),
                     self.signal_out.first.eq(0),
                     self.signal_out.last.eq(1),
@@ -253,7 +253,6 @@ class FixedPointFIRFilterTest(GatewareTestCase):
         taps[i, 0] = int(tapdata[i])
         taps[i, 1] = int(tapdata[i])
     taps = taps.astype(np.int32)
-    print(taps)
     FRAGMENT_ARGUMENTS = dict(taps=taps, samplerate=48000)
 
     def wait(self, n_cycles: int):
