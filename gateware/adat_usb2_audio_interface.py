@@ -40,7 +40,8 @@ from debouncer               import Debouncer
 
 from usb_descriptors import USBDescriptors
 
-from scipy.io import wavfile
+import wave
+import numpy as np
 
 class USB2AudioInterface(Elaboratable):
     """ USB Audio Class v2 interface """
@@ -66,6 +67,7 @@ class USB2AudioInterface(Elaboratable):
         usb2_number_of_channels      = self.USB2_NO_CHANNELS
         usb2_number_of_channels_bits = Shape.cast(range(usb2_number_of_channels)).width
         audio_bits                   = 24
+        samplerate                   = 48000
         adat_number_of_channels      = usb1_number_of_channels - usb2_number_of_channels
 
         m.submodules.car = platform.clock_domain_generator()
@@ -409,13 +411,27 @@ class USB2AudioInterface(Elaboratable):
             dac2_extractor.selected_channel_in.eq(Mux(usb1_no_channels == 2, 0, 2)),
         ]
 
-        enable_fir = Signal(reset=1)
+        enable_fir = Signal()
 
-        sample_rate, sig = wavfile.read('IRs/IR_4800_minus24db.wav')
-        taps = sig[:4096,:]
-        assert sample_rate == 48000, f"Unsupported samplerate {sample_rate} for IR file expected 48000"
+        #sample_rate, sig = wavfile.read('IRs/IR_4800_minus24db.wav')
+        #with wave.open('IRs/IR_4800.wav', 'rb') as wav:
+        with wave.open('IRs/ISONE_DT990_combined_4800_minus6db.wav', 'rb') as wav:
+            ir_data = wav.readframes(wav.getnframes())
+            ir_sample_rate = wav.getframerate()
 
-        m.submodules.fir = fir = DomainRenamer("usb")(FIRConvolver(taps=taps, samplerate=48000, clockfrequency=60e6, bitwidth=24))
+        ir_sig = np.zeros((len(ir_data)//6, 2), dtype='int32')
+        for i in range(0, len(ir_sig), 6):
+            ir_sig[i // 6, 0] = int.from_bytes(ir_data[i:i + 3], byteorder='little', signed=True)
+            ir_sig[i // 6, 1] = int.from_bytes(ir_data[i + 3:i + 6], byteorder='little', signed=True)
+
+        taps = ir_sig[:4096,:] #tapcount 4096 - more is failing to synthesize right now. 4800 would be the goal for 100ms.
+
+        # some validation of the IR file
+        assert ir_sample_rate == samplerate, f"Unsupported samplerate {ir_sample_rate} for IR file. Required samplerate is {samplerate}"
+        for tap in range(len(taps)):
+            assert -1 * 2 ** (audio_bits-1) <= taps[tap, 0] <= 1 * 2 ** (audio_bits-1)-1, f"Tap #{tap} is out of range for bitwidth {audio_bits}: {taps[tap, 0]}"
+
+        m.submodules.fir = fir = DomainRenamer("usb")(FIRConvolver(taps=taps, samplerate=samplerate, clockfrequency=60e6, bitwidth=audio_bits))
 
         m.submodules.debouncer = debouncer = Debouncer()
         m.submodules.debouncer2 = debouncer2 = Debouncer()
