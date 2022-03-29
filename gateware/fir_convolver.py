@@ -12,6 +12,7 @@ import math
 
 from amlib.test import GatewareTestCase, sync_test_case
 from enum import Enum
+import binascii
 
 class ConvolutionMode(Enum):
     CROSSFEED = 1
@@ -57,8 +58,8 @@ class FIRConvolver(Elaboratable):
             val1 = 0
             val2 = 0
             for j in range(self.slices):
-                val1 += taps_fp[i+j] << j * self.bitwidth
-                val1 += taps2_fp[i+j] << j * self.bitwidth
+                val1 += int(taps_fp[i+j]) << (self.slices-j-1) * self.bitwidth
+                val2 += int(taps2_fp[i+j]) << (self.slices-j-1) * self.bitwidth
             taps_fp_mod.append(val1)
             taps2_fp_mod.append(val2)
 
@@ -156,7 +157,7 @@ class FIRConvolver(Elaboratable):
                 with m.If(set1 & set2):
                     for i in range(self.slices * 2):
                         m.d.sync += [
-                            ix.eq(1),
+                            ix.eq(0),
                             madd_values[i].eq(0),
                             previous_sample1.eq(0),
                             previous_sample2.eq(0),
@@ -278,7 +279,7 @@ class FixedPointFIRFilterTest(GatewareTestCase):
     for i in range(len(tapdata1)):
         taps[i, 0] = int(tapdata1[i] * 2 ** (bitwidth-1)-1)
         taps[i, 1] = int(tapdata2[i] * 2 ** (bitwidth-1)-1)
-    print(taps)
+
     #taps = taps.astype(np.int32)
     FRAGMENT_ARGUMENTS = dict(taps=taps, samplerate=48000, clockfrequency=clockfrequency, bitwidth=bitwidth, convolutionMode=ConvolutionMode.MONO)
 
@@ -286,12 +287,21 @@ class FixedPointFIRFilterTest(GatewareTestCase):
         for _ in range(n_cycles):
             yield Tick()
 
-    def wait_ready(self, dut):
+    def wait_ready(self, dut, out_signal):
         waitcount = 0
-        while (yield dut.signal_in.ready == 0):
+        while ((yield dut.signal_out.valid == 0) & (yield dut.signal_in.ready == 0)):
             waitcount += 1
             yield from self.wait(1)
+        if (yield dut.signal_out.valid == 1):
+            payload = yield dut.signal_out.payload
+            out_signal.append(int.from_bytes(payload.to_bytes(3, 'little', signed=False), 'little',
+                                             signed=True))  # parse 24bit signed
+            yield Tick()
+            payload = yield dut.signal_out.payload
+            out_signal.append(int.from_bytes(payload.to_bytes(3, 'little', signed=False), 'little',
+                                             signed=True))  # parse 24bit signed
         #print("Waitcount {}".format(waitcount))
+
 
     def calculate_expected_result(self, taps, testdata):
         output = np.zeros((len(testdata),2), dtype=np.int32)
@@ -303,15 +313,20 @@ class FixedPointFIRFilterTest(GatewareTestCase):
                     break
                 sumL += int(testdata[sample - tap, 0]) * int(taps[tap, 0])
                 sumR += int(testdata[sample - tap, 1]) * int(taps[tap, 0])
-            output[sample, 0] = sumL >> self.bitwidth
-            output[sample, 1] = sumR >> self.bitwidth
+            #if sample >= len(testdata) - 1:
+            #    print(f"samples: {testdata[sample-1:]}")
+            #    print(f"taps: {taps[:5]}")
+            #    print(int(testdata[sample - tap, 0]) * int(taps[tap, 0]))
+            output[sample, 0] = sumL >> self.bitwidth-1
+            output[sample, 1] = sumR >> self.bitwidth-1
 
         return output
 
     @sync_test_case
     def test_fir(self):
         dut = self.dut
-        max = int(2**15 - 1)
+        #print(self.taps)
+        max = int(2**(self.bitwidth-1) - 1)
         min = -max
         testdata = np.zeros((61,2))
         testdata[0,0] = max
@@ -323,40 +338,101 @@ class FixedPointFIRFilterTest(GatewareTestCase):
         yield dut.signal_out.ready.eq(1)
 
         out_signal = [] #np.zero((1,2))
-
+        print(len(testdata))
         for i in range(len(testdata)):
-            yield from self.wait_ready(dut)
+            #yield from self.wait_ready(dut, out_signal)
             yield Tick()
             yield dut.signal_in.first.eq(1)
             yield dut.signal_in.last.eq(0)
-            yield dut.signal_in.payload.eq(int(testdata[i,0]))
+            yield dut.signal_in.payload.eq(int(testdata[i, 0]))
             yield dut.signal_in.valid.eq(1)
-            yield from self.wait_ready(dut)
-            payload = yield dut.signal_out.payload
-            out_signal.append(int.from_bytes(payload.to_bytes(3,'little', signed=False), 'little', signed=True)) #parse 24bit signed
             yield Tick()
             yield dut.signal_in.valid.eq(1)
             yield dut.signal_in.first.eq(0)
             yield dut.signal_in.last.eq(1)
-            yield dut.signal_in.payload.eq(int(testdata[i,1]))
-            #yield out_signal.append(dut.signal_out.payload)
-            payload = yield dut.signal_out.payload
-            out_signal.append(int.from_bytes(payload.to_bytes(3,'little', signed=False), 'little', signed=True)) #parse 24bit signed
+            yield dut.signal_in.payload.eq(int(testdata[i, 1]))
             yield Tick()
+            #yield out_signal.append(dut.signal_out.payload)
+            yield from self.wait_ready(dut, out_signal)
+            #yield from self.wait_ready(dut, out_signal)
+
+        yield from self.wait(10)
+        #get the last two samples
+        yield from self.wait_ready(dut,out_signal)
 
 
+        print(len(out_signal))
+
+        print(out_signal)
 
         while out_signal[0] == 0:
             out_signal.remove(0)
-        print(out_signal)
+
         expected_result = self.calculate_expected_result(self.taps, testdata)
+        print(len(expected_result))
         print(expected_result)
         for i in range(len(expected_result)):
-            assert expected_result[i, 0] == out_signal[i*2], f"I was: {i}"
-            assert expected_result[i, 1] == out_signal[i * 2+1], f"I was: {i}"
+            assert out_signal[i*2]-2 <= expected_result[i, 0] <= out_signal[i*2]+2, f"counter was: {i}"
+            assert out_signal[i * 2+1]-2 <= expected_result[i, 1] <= out_signal[i * 2+1]+2, f"counter was: {i}"
 
 
 
-
-
-
+#class FixedPointFIRFilterTest(GatewareTestCase):
+#    FRAGMENT_UNDER_TEST = FIRConvolver
+#
+#    tapcount = 32
+#    bitwidth = 24
+#    tapdata = [int(1 * 2 ** (bitwidth-1)-1), int(0.5 * 2 ** (bitwidth-1)-1), int(0.25 * 2 ** (bitwidth-1)-1), int(0.1 * 2 ** (bitwidth-1)-1)]
+#
+#    taps = np.zeros((tapcount, 2))
+#    for i in range(len(tapdata)):
+#        taps[i, 0] = int(tapdata[i])
+#        taps[i, 1] = int(tapdata[i])
+#    taps = taps.astype(np.int32)
+#    print(taps)
+#    FRAGMENT_ARGUMENTS = dict(taps=taps, samplerate=48000)
+#
+#    def wait(self, n_cycles: int):
+#        for _ in range(n_cycles):
+#            yield
+#
+#    def wait_ready(self, dut):
+#        waitcount = 0
+#        while (yield dut.signal_in.ready == 0):
+#            waitcount += 1
+#            yield from self.wait(1)
+#        print("Waitcount {}".format(waitcount))
+#
+#    @sync_test_case
+#    def test_fir(self):
+#        dut = self.dut
+#        max = int(2**15 - 1)
+#        min = -max
+#        yield dut.signal_out.ready.eq(1)
+#        yield from self.wait_ready(dut)
+#        yield Tick()
+#        yield dut.signal_in.first.eq(1)
+#        yield dut.signal_in.last.eq(0)
+#        yield dut.signal_in.payload.eq(max)
+#        yield dut.signal_in.valid.eq(1)
+#        yield from self.wait_ready(dut)
+#        yield dut.signal_in.valid.eq(1)
+#        yield dut.signal_in.first.eq(0)
+#        yield dut.signal_in.last.eq(1)
+#        yield dut.signal_in.payload.eq(min)
+#        yield Tick()
+#        for i in range(60):
+#            yield from self.wait_ready(dut)
+#            yield dut.signal_in.valid.eq(1)
+#            yield dut.signal_in.first.eq(1)
+#            yield dut.signal_in.last.eq(0)
+#            yield dut.signal_in.payload.eq(i+100)
+#            yield Tick()
+#            yield from self.wait_ready(dut)
+#            yield dut.signal_in.valid.eq(1)
+#            yield dut.signal_in.first.eq(0)
+#            yield dut.signal_in.last.eq(1)
+#            yield dut.signal_in.payload.eq(-i-200)
+#            yield Tick()
+#            print("end of loop")
+#
