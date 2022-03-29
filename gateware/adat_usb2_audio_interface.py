@@ -35,7 +35,7 @@ from bundle_demultiplexer    import BundleDemultiplexer
 from stereopair_extractor    import StereoPairExtractor
 from requesthandlers         import UAC2RequestHandlers
 from debug                   import setup_ila, add_debug_led_array
-from fir_convolver           import FIRConvolver
+from fir_convolver           import FIRConvolver, ConvolutionMode
 from debouncer               import Debouncer
 
 from usb_descriptors import USBDescriptors
@@ -431,7 +431,7 @@ class USB2AudioInterface(Elaboratable):
         for tap in range(len(taps)):
             assert -1 * 2 ** (audio_bits-1) <= taps[tap, 0] <= 1 * 2 ** (audio_bits-1)-1, f"Tap #{tap} is out of range for bitwidth {audio_bits}: {taps[tap, 0]}"
 
-        m.submodules.fir = fir = DomainRenamer("usb")(FIRConvolver(taps=taps, samplerate=samplerate, clockfrequency=60e6, bitwidth=audio_bits))
+        m.submodules.fir = fir = DomainRenamer("usb")(FIRConvolver(taps=taps, samplerate=samplerate, clockfrequency=60e6, bitwidth=audio_bits, convolutionMode=ConvolutionMode.CROSSFEED))
 
         m.submodules.debouncer = debouncer = Debouncer()
         m.submodules.debouncer2 = debouncer2 = Debouncer()
