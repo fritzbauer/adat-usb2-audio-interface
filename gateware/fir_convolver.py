@@ -10,25 +10,34 @@ from amlib.stream import StreamInterface
 import numpy as np
 import math
 
-from amlib.test       import GatewareTestCase, sync_test_case
+from amlib.test import GatewareTestCase, sync_test_case
+from enum import Enum
+
+class ConvolutionMode(Enum):
+    CROSSFEED = 1
+    STEREO = 2
+    MONO = 3
 
 class FIRConvolver(Elaboratable):
     def __init__(self,
                  taps: [],
                  samplerate:     int=48000,
                  clockfrequency:  int=60e6,
-                 bitwidth:       int=24) -> None:
+                 bitwidth:       int=24,
+                 convolutionMode: ConvolutionMode=ConvolutionMode.MONO) -> None:
 
         self.signal_in  = StreamInterface(name="signal_stream_in", payload_width=bitwidth)
         self.signal_out = StreamInterface(name="signal_stream_out", payload_width=bitwidth)
 
-        self.USE_CROSSFEED = True
         self.tapcount = len(taps) #4096 synthesizes
-        self.slices = math.ceil(self.tapcount/(clockfrequency/samplerate)) #4
-
         self.bitwidth = bitwidth
-        self.size_of_slizes = self.bitwidth * self.slices
-        self.number_of_slices = self.tapcount // self.slices
+        self.convolutionMode = convolutionMode
+
+        # in order to process more taps than we have clock cycles per sample we will run parallel calculations.
+        # The amount of parallel calculations per channel is defined by the "slices" variable
+        self.slices = math.ceil(self.tapcount / (clockfrequency / samplerate))  # 4
+        self.size_of_slizes = self.bitwidth * self.slices #how many bits per slice
+        self.samples_per_slice = self.tapcount // self.slices #how many samples per slice
 
         print(f"Creating {self.slices} slices for {self.tapcount} taps.")
 
@@ -37,10 +46,10 @@ class FIRConvolver(Elaboratable):
         taps_fp = taps[:self.tapcount, 0]
         taps2_fp = taps[:self.tapcount, 1]
 
-        self.taps1_memory = Memory(width=self.size_of_slizes, depth=self.number_of_slices, name=f"taps1_memory")
-        self.taps2_memory = Memory(width=self.size_of_slizes, depth=self.number_of_slices, name=f"taps2_memory")
-        self.samples1_memory = Memory(width=self.size_of_slizes, depth=self.number_of_slices, name=f"samples1_memory")
-        self.samples2_memory = Memory(width=self.size_of_slizes, depth=self.number_of_slices, name=f"samples2_memory")
+        self.taps1_memory = Memory(width=self.size_of_slizes, depth=self.samples_per_slice)
+        self.taps2_memory = Memory(width=self.size_of_slizes, depth=self.samples_per_slice)
+        self.samples1_memory = Memory(width=self.size_of_slizes, depth=self.samples_per_slice)
+        self.samples2_memory = Memory(width=self.size_of_slizes, depth=self.samples_per_slice)
 
         taps_fp_mod = []
         taps2_fp_mod = []
@@ -87,7 +96,7 @@ class FIRConvolver(Elaboratable):
         sumSignalL = Signal(signed(self.bitwidth*2))
         sumSignalR = Signal.like(sumSignalL)
 
-        ix = Signal(range(self.number_of_slices+1))
+        ix = Signal(range(self.samples_per_slice + 1))
 
         m.d.comb += [
             self.signal_in.ready.eq(0),
@@ -114,7 +123,9 @@ class FIRConvolver(Elaboratable):
         with m.FSM(reset="IDLE"):
             with m.State("IDLE"):
                 m.d.comb += self.fsm_state_out.eq(1)
-                with m.If(self.signal_in.valid & self.signal_in.first & ~set1):  # left channel
+
+                # store new sample for left channel
+                with m.If(self.signal_in.valid & self.signal_in.first & ~set1):
                     sample1_value = Cat(
                         samples1_read_port.data[:-self.bitwidth],
                         self.signal_in.payload.as_signed()
@@ -127,7 +138,9 @@ class FIRConvolver(Elaboratable):
                     ]
 
                     m.d.sync += set1.eq(1)
-                with m.Elif(self.signal_in.valid & self.signal_in.last & ~set2): # right channel
+
+                # store new sample for right channel
+                with m.Elif(self.signal_in.valid & self.signal_in.last & ~set2):
                     sample2_value = Cat(
                         samples2_read_port.data[:-self.bitwidth],
                         self.signal_in.payload.as_signed()
@@ -139,6 +152,7 @@ class FIRConvolver(Elaboratable):
                     ]
                     m.d.sync += set2.eq(1)
 
+                # prepare MAC calculations
                 with m.If(set1 & set2):
                     for i in range(self.slices * 2):
                         m.d.sync += [
@@ -160,26 +174,34 @@ class FIRConvolver(Elaboratable):
             with m.State("MAC"):
                 m.d.comb += self.fsm_state_out.eq(2)
 
-                with m.If(ix <= self.number_of_slices - 1):
+                # do the actual MAC calculation
+                with m.If(ix <= self.samples_per_slice - 1):
                     for i in range(self.slices):
                         left_sample = samples1_read_port.data[i*self.bitwidth:(i+1)*self.bitwidth].as_signed()
                         right_sample = samples2_read_port.data[i*self.bitwidth:(i+1)*self.bitwidth].as_signed()
                         main_tap = taps1_read_port.data[i*self.bitwidth:(i+1)*self.bitwidth].as_signed()
                         bleed_tap = taps2_read_port.data[i*self.bitwidth:(i+1)*self.bitwidth].as_signed()
 
-                        if self.USE_CROSSFEED:
+                        if self.convolutionMode == ConvolutionMode.CROSSFEED:
                             m.d.sync += [
                                 madd_values[i].eq(madd_values[i] + (left_sample * main_tap)  # left
                                                 + (right_sample * bleed_tap)),  # right_bleed
                                 madd_values[i + self.slices].eq(madd_values[i + self.slices] + (right_sample * main_tap) # right
                                                 + (left_sample * bleed_tap))  # left_bleed
                             ]
-                        else:
+                            break
+                        elif self.convolutionMode == ConvolutionMode.STEREO:
+                            m.d.sync += [
+                                madd_values[i].eq(madd_values[i] + (left_sample * main_tap)),
+                                madd_values[i + self.slices].eq(madd_values[i + self.slices] + (right_sample * bleed_tap)),
+                            ]
+                        elif self.convolutionMode == ConvolutionMode.MONO:
                             m.d.sync += [
                                 madd_values[i].eq(madd_values[i] + (left_sample * main_tap)),
                                 madd_values[i + self.slices].eq(madd_values[i + self.slices] + (right_sample * main_tap)),
                             ]
 
+                # shift the samples buffer by one sample to prepare for the next arriving sample in the IDLE state
                 with m.If(ix > 1):
                     m.d.sync += [
                         samples1_write_port.data.eq(Cat((previous_sample1 >> self.bitwidth)[:((self.slices-1)*self.bitwidth)], carryover1_2)),
@@ -191,7 +213,7 @@ class FIRConvolver(Elaboratable):
                         samples2_write_port.en.eq(1),
                     ]
 
-                with m.If(ix == self.number_of_slices + 1):
+                with m.If(ix == self.samples_per_slice + 1):
                     m.next = "SUM"
                 with m.Else():
                     m.d.sync += ix.eq(ix+1)
@@ -246,55 +268,95 @@ class FixedPointFIRFilterTest(GatewareTestCase):
 
     tapcount = 32
     bitwidth = 24
-    tapdata = [int(1 * 2 ** (bitwidth-1)-1), int(0.5 * 2 ** (bitwidth-1)-1), int(0.25 * 2 ** (bitwidth-1)-1), int(0.1 * 2 ** (bitwidth-1)-1)]
+    samplerate = 48000
+    clockfrequency = samplerate * tapcount / 4 # we want to test for 4 slices
 
-    taps = np.zeros((tapcount, 2))
-    for i in range(len(tapdata)):
-        taps[i, 0] = int(tapdata[i])
-        taps[i, 1] = int(tapdata[i])
-    taps = taps.astype(np.int32)
-    FRAGMENT_ARGUMENTS = dict(taps=taps, samplerate=48000)
+    #hardcoded 4-tap IR data which helps checking data during simulation
+    tapdata1 = [1, 0.5, 0.25, 0.1]
+    tapdata2 = [0.05, 0.025, 0.01, 0]
+    taps = np.zeros((tapcount, 2), dtype=np.int32)
+    for i in range(len(tapdata1)):
+        taps[i, 0] = int(tapdata1[i] * 2 ** (bitwidth-1)-1)
+        taps[i, 1] = int(tapdata2[i] * 2 ** (bitwidth-1)-1)
+    print(taps)
+    #taps = taps.astype(np.int32)
+    FRAGMENT_ARGUMENTS = dict(taps=taps, samplerate=48000, clockfrequency=clockfrequency, bitwidth=bitwidth, convolutionMode=ConvolutionMode.MONO)
 
     def wait(self, n_cycles: int):
         for _ in range(n_cycles):
-            yield
+            yield Tick()
 
     def wait_ready(self, dut):
         waitcount = 0
         while (yield dut.signal_in.ready == 0):
             waitcount += 1
             yield from self.wait(1)
-        print("Waitcount {}".format(waitcount))
+        #print("Waitcount {}".format(waitcount))
+
+    def calculate_expected_result(self, taps, testdata):
+        output = np.zeros((len(testdata),2), dtype=np.int32)
+        for sample in range(len(testdata)):
+            sumL = 0
+            sumR = 0
+            for tap in range(len(taps)):
+                if tap > sample:
+                    break
+                sumL += int(testdata[sample - tap, 0]) * int(taps[tap, 0])
+                sumR += int(testdata[sample - tap, 1]) * int(taps[tap, 0])
+            output[sample, 0] = sumL >> self.bitwidth
+            output[sample, 1] = sumR >> self.bitwidth
+
+        return output
 
     @sync_test_case
     def test_fir(self):
         dut = self.dut
         max = int(2**15 - 1)
         min = -max
+        testdata = np.zeros((61,2))
+        testdata[0,0] = max
+        testdata[0,1] = min
+        for i in range(1,60):
+            testdata[i,0] = int(i+100) #left channel
+            testdata[i,1] = int(-i-200) #right channel
+
         yield dut.signal_out.ready.eq(1)
-        yield from self.wait_ready(dut)
-        yield Tick()
-        yield dut.signal_in.first.eq(1)
-        yield dut.signal_in.last.eq(0)
-        yield dut.signal_in.payload.eq(max)
-        yield dut.signal_in.valid.eq(1)
-        yield from self.wait_ready(dut)
-        yield dut.signal_in.valid.eq(1)
-        yield dut.signal_in.first.eq(0)
-        yield dut.signal_in.last.eq(1)
-        yield dut.signal_in.payload.eq(min)
-        yield Tick()
-        for i in range(60):
+
+        out_signal = [] #np.zero((1,2))
+
+        for i in range(len(testdata)):
             yield from self.wait_ready(dut)
-            yield dut.signal_in.valid.eq(1)
+            yield Tick()
             yield dut.signal_in.first.eq(1)
             yield dut.signal_in.last.eq(0)
-            yield dut.signal_in.payload.eq(i+100)
-            yield Tick()
+            yield dut.signal_in.payload.eq(int(testdata[i,0]))
+            yield dut.signal_in.valid.eq(1)
             yield from self.wait_ready(dut)
+            payload = yield dut.signal_out.payload
+            out_signal.append(int.from_bytes(payload.to_bytes(3,'little', signed=False), 'little', signed=True)) #parse 24bit signed
+            yield Tick()
             yield dut.signal_in.valid.eq(1)
             yield dut.signal_in.first.eq(0)
             yield dut.signal_in.last.eq(1)
-            yield dut.signal_in.payload.eq(-i-200)
+            yield dut.signal_in.payload.eq(int(testdata[i,1]))
+            #yield out_signal.append(dut.signal_out.payload)
+            payload = yield dut.signal_out.payload
+            out_signal.append(int.from_bytes(payload.to_bytes(3,'little', signed=False), 'little', signed=True)) #parse 24bit signed
             yield Tick()
-            print("end of loop")
+
+
+
+        while out_signal[0] == 0:
+            out_signal.remove(0)
+        print(out_signal)
+        expected_result = self.calculate_expected_result(self.taps, testdata)
+        print(expected_result)
+        for i in range(len(expected_result)):
+            assert expected_result[i, 0] == out_signal[i*2], f"I was: {i}"
+            assert expected_result[i, 1] == out_signal[i * 2+1], f"I was: {i}"
+
+
+
+
+
+
