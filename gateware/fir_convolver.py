@@ -3,7 +3,7 @@
 # Copyright (c) 2021 Hans Baier <hansfbaier@gmail.com>
 # SPDX-License-Identifier: CERN-OHL-W-2.0
 
-from amaranth import Elaboratable, Module, Signal, Array, Memory, signed, Shape, Cat
+from amaranth import Elaboratable, Module, Signal, Array, Memory, signed, Shape, Cat, Mux
 from amaranth.sim import Tick
 from amlib.stream import StreamInterface
 
@@ -96,6 +96,7 @@ class FIRConvolver(Elaboratable):
         madd_values = Array(Signal(signed(self.bitwidth * 2), name=f"madd_values_{i}") for i in range(self.slices * 2))
         sumSignalL = Signal(signed(self.bitwidth*2))
         sumSignalR = Signal.like(sumSignalL)
+        output_channels = Signal(2)
 
         ix = Signal(range(self.samples_per_slice + 1))
 
@@ -231,32 +232,38 @@ class FIRConvolver(Elaboratable):
                 m.d.sync += [
                     sumSignalL.eq(sumL),
                     sumSignalR.eq(sumR),
+                    output_channels.eq(0),
                 ]
                 m.next = "OUTPUT LEFT"
             with m.State("OUTPUT LEFT"):
                 m.d.comb += self.fsm_state_out.eq(4)
                 m.d.sync += ix.eq(0)
-                m.d.sync += [
-                    self.signal_out.payload.eq(sumSignalL >> self.bitwidth),
-                    self.signal_out.valid.eq(1),
-                    self.signal_out.first.eq(1),
-                    self.signal_out.last.eq(0),
-                ]
                 with m.If(self.signal_out.ready):
-                    m.next = "OUTPUT RIGHT"
+                    m.d.sync += output_channels.eq(output_channels+1)
+
+                m.d.sync += [
+                    self.signal_out.payload.eq(Mux(output_channels == 0, sumSignalL >> (self.bitwidth-1), sumSignalL >> (self.bitwidth-1))),
+                    self.signal_out.valid.eq(1),
+                    self.signal_out.first.eq(~output_channels),
+                    self.signal_out.last.eq(output_channels),
+                ]
+                with m.If(output_channels == 1):
+                    m.d.sync += [
+                        set1.eq(0),
+                        set2.eq(0),
+                    ]
+
+                    m.next = "IDLE"
 
             with m.State("OUTPUT RIGHT"):
                 m.d.comb += self.fsm_state_out.eq(5)
                 m.d.sync += [
-                    self.signal_out.payload.eq(sumSignalR >> self.bitwidth),
+                    self.signal_out.payload.eq(sumSignalR >> (self.bitwidth-1)),
                     self.signal_out.valid.eq(1),
                     self.signal_out.first.eq(0),
                     self.signal_out.last.eq(1),
                 ]
-                m.d.sync += [
-                    set1.eq(0),
-                    set2.eq(0),
-                ]
+
 
                 with m.If(self.signal_out.ready):
                     m.next = "IDLE"
@@ -266,7 +273,7 @@ class FIRConvolver(Elaboratable):
 
 class FixedPointFIRFilterTest(GatewareTestCase):
     FRAGMENT_UNDER_TEST = FIRConvolver
-
+    testSamplecount = 120
     tapcount = 32
     bitwidth = 24
     samplerate = 48000
@@ -281,7 +288,8 @@ class FixedPointFIRFilterTest(GatewareTestCase):
         taps[i, 1] = int(tapdata2[i] * 2 ** (bitwidth-1)-1)
 
     #taps = taps.astype(np.int32)
-    FRAGMENT_ARGUMENTS = dict(taps=taps, samplerate=48000, clockfrequency=clockfrequency, bitwidth=bitwidth, convolutionMode=ConvolutionMode.MONO)
+    convolutionMode = ConvolutionMode.MONO
+    FRAGMENT_ARGUMENTS = dict(taps=taps, samplerate=48000, clockfrequency=clockfrequency, bitwidth=bitwidth, convolutionMode=convolutionMode)
 
     def wait(self, n_cycles: int):
         for _ in range(n_cycles):
@@ -303,7 +311,7 @@ class FixedPointFIRFilterTest(GatewareTestCase):
         #print("Waitcount {}".format(waitcount))
 
 
-    def calculate_expected_result(self, taps, testdata):
+    def calculate_expected_result(self, taps, testdata, convolutionMode):
         output = np.zeros((len(testdata),2), dtype=np.int32)
         for sample in range(len(testdata)):
             sumL = 0
@@ -311,8 +319,15 @@ class FixedPointFIRFilterTest(GatewareTestCase):
             for tap in range(len(taps)):
                 if tap > sample:
                     break
-                sumL += int(testdata[sample - tap, 0]) * int(taps[tap, 0])
-                sumR += int(testdata[sample - tap, 1]) * int(taps[tap, 0])
+                if convolutionMode == ConvolutionMode.CROSSFEED:
+                    sumL += int(testdata[sample - tap, 0]) * int(taps[tap, 0]) + int(testdata[sample - tap, 1]) * int(taps[tap, 1])
+                    sumR += int(testdata[sample - tap, 1]) * int(taps[tap, 0]) + int(testdata[sample - tap, 0]) * int(taps[tap, 1])
+                elif convolutionMode == ConvolutionMode.STEREO:
+                    sumL += int(testdata[sample - tap, 0]) * int(taps[tap, 0])
+                    sumR += int(testdata[sample - tap, 1]) * int(taps[tap, 1])
+                elif convolutionMode == ConvolutionMode.MONO:
+                    sumL += int(testdata[sample - tap, 0]) * int(taps[tap, 0])
+                    sumR += int(testdata[sample - tap, 1]) * int(taps[tap, 0])
             #if sample >= len(testdata) - 1:
             #    print(f"samples: {testdata[sample-1:]}")
             #    print(f"taps: {taps[:5]}")
@@ -328,10 +343,10 @@ class FixedPointFIRFilterTest(GatewareTestCase):
         #print(self.taps)
         max = int(2**(self.bitwidth-1) - 1)
         min = -max
-        testdata = np.zeros((61,2))
+        testdata = np.zeros((self.testSamplecount,2))
         testdata[0,0] = max
         testdata[0,1] = min
-        for i in range(1,60):
+        for i in range(1,self.testSamplecount-1):
             testdata[i,0] = int(i+100) #left channel
             testdata[i,1] = int(-i-200) #right channel
 
@@ -368,71 +383,9 @@ class FixedPointFIRFilterTest(GatewareTestCase):
         while out_signal[0] == 0:
             out_signal.remove(0)
 
-        expected_result = self.calculate_expected_result(self.taps, testdata)
+        expected_result = self.calculate_expected_result(self.taps, testdata, self.convolutionMode)
         print(len(expected_result))
         print(expected_result)
-        for i in range(len(expected_result)):
+        for i in range(len(expected_result)-2):
             assert out_signal[i*2]-2 <= expected_result[i, 0] <= out_signal[i*2]+2, f"counter was: {i}"
             assert out_signal[i * 2+1]-2 <= expected_result[i, 1] <= out_signal[i * 2+1]+2, f"counter was: {i}"
-
-
-
-#class FixedPointFIRFilterTest(GatewareTestCase):
-#    FRAGMENT_UNDER_TEST = FIRConvolver
-#
-#    tapcount = 32
-#    bitwidth = 24
-#    tapdata = [int(1 * 2 ** (bitwidth-1)-1), int(0.5 * 2 ** (bitwidth-1)-1), int(0.25 * 2 ** (bitwidth-1)-1), int(0.1 * 2 ** (bitwidth-1)-1)]
-#
-#    taps = np.zeros((tapcount, 2))
-#    for i in range(len(tapdata)):
-#        taps[i, 0] = int(tapdata[i])
-#        taps[i, 1] = int(tapdata[i])
-#    taps = taps.astype(np.int32)
-#    print(taps)
-#    FRAGMENT_ARGUMENTS = dict(taps=taps, samplerate=48000)
-#
-#    def wait(self, n_cycles: int):
-#        for _ in range(n_cycles):
-#            yield
-#
-#    def wait_ready(self, dut):
-#        waitcount = 0
-#        while (yield dut.signal_in.ready == 0):
-#            waitcount += 1
-#            yield from self.wait(1)
-#        print("Waitcount {}".format(waitcount))
-#
-#    @sync_test_case
-#    def test_fir(self):
-#        dut = self.dut
-#        max = int(2**15 - 1)
-#        min = -max
-#        yield dut.signal_out.ready.eq(1)
-#        yield from self.wait_ready(dut)
-#        yield Tick()
-#        yield dut.signal_in.first.eq(1)
-#        yield dut.signal_in.last.eq(0)
-#        yield dut.signal_in.payload.eq(max)
-#        yield dut.signal_in.valid.eq(1)
-#        yield from self.wait_ready(dut)
-#        yield dut.signal_in.valid.eq(1)
-#        yield dut.signal_in.first.eq(0)
-#        yield dut.signal_in.last.eq(1)
-#        yield dut.signal_in.payload.eq(min)
-#        yield Tick()
-#        for i in range(60):
-#            yield from self.wait_ready(dut)
-#            yield dut.signal_in.valid.eq(1)
-#            yield dut.signal_in.first.eq(1)
-#            yield dut.signal_in.last.eq(0)
-#            yield dut.signal_in.payload.eq(i+100)
-#            yield Tick()
-#            yield from self.wait_ready(dut)
-#            yield dut.signal_in.valid.eq(1)
-#            yield dut.signal_in.first.eq(0)
-#            yield dut.signal_in.last.eq(1)
-#            yield dut.signal_in.payload.eq(-i-200)
-#            yield Tick()
-#            print("end of loop")
-#
