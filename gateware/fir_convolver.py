@@ -25,14 +25,17 @@ class FIRConvolver(Elaboratable):
                  samplerate:     int=48000,
                  clockfrequency:  int=60e6,
                  bitwidth:       int=24,
-                 convolutionMode: ConvolutionMode=ConvolutionMode.MONO) -> None:
+                 convolutionMode: ConvolutionMode=ConvolutionMode.MONO,
+                 i2s_fifo_depth: int=16) -> None:
 
         self.signal_in  = StreamInterface(name="signal_stream_in", payload_width=bitwidth)
         self.signal_out = StreamInterface(name="signal_stream_out", payload_width=bitwidth)
+        self.i2s_fifo_level_in = Signal(range(i2s_fifo_depth + 1))
 
         self.tapcount = len(taps) #4096 synthesizes
         self.bitwidth = bitwidth
         self.convolutionMode = convolutionMode
+        self.i2s_fifo_depth = i2s_fifo_depth
 
         # in order to process more taps than we have clock cycles per sample we will run parallel calculations.
         # The amount of parallel calculations per channel is defined by the "slices" variable
@@ -68,7 +71,7 @@ class FIRConvolver(Elaboratable):
 
         #for ILA
         self.fsm_state_out = Signal(5)
-        self.i2sfull_in = Signal()
+
 
     def elaborate(self, platform) -> Module:
         m = Module()
@@ -156,7 +159,7 @@ class FIRConvolver(Elaboratable):
                     m.d.sync += set2.eq(1)
 
                 # prepare MAC calculations
-                with m.If(set1 & set2 & ~self.i2sfull_in):
+                with m.If(set1 & set2 & (self.i2s_fifo_level_in < self.i2s_fifo_depth)):
                     for i in range(self.slices * 2):
                         m.d.sync += [
                             ix.eq(0),
@@ -172,7 +175,7 @@ class FIRConvolver(Elaboratable):
                         ]
 
                     m.next = "MAC"
-                with m.Elif(~self.i2sfull_in):
+                with m.Elif(self.i2s_fifo_level_in < self.i2s_fifo_depth):
                     m.d.comb += self.signal_in.ready.eq(1)
             with m.State("MAC"):
                 m.d.comb += self.fsm_state_out.eq(2)
