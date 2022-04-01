@@ -387,8 +387,9 @@ class USB2AudioInterface(Elaboratable):
         #
         # I2S DACs
         #
-        m.submodules.dac1_transmitter = dac1 = DomainRenamer("usb")(I2STransmitter(sample_width=audio_bits, fifo_depth=64))
-        m.submodules.dac2_transmitter = dac2 = DomainRenamer("usb")(I2STransmitter(sample_width=audio_bits, fifo_depth=64))
+        dac_fifo_depth = 32
+        m.submodules.dac1_transmitter = dac1 = DomainRenamer("usb")(I2STransmitter(sample_width=audio_bits, fifo_depth=dac_fifo_depth))
+        m.submodules.dac2_transmitter = dac2 = DomainRenamer("usb")(I2STransmitter(sample_width=audio_bits, fifo_depth=dac_fifo_depth))
         m.submodules.dac1_extractor   = dac1_extractor = DomainRenamer("usb")(StereoPairExtractor(usb1_number_of_channels, usb1_to_output_fifo_depth))
         m.submodules.dac2_extractor   = dac2_extractor = DomainRenamer("usb")(StereoPairExtractor(usb1_number_of_channels, usb1_to_output_fifo_depth))
         dac1_pads = platform.request("i2s", 1)
@@ -431,7 +432,9 @@ class USB2AudioInterface(Elaboratable):
         for tap in range(len(taps)):
             assert -1 * 2 ** (audio_bits-1) <= taps[tap, 0] <= 1 * 2 ** (audio_bits-1)-1, f"Tap #{tap} is out of range for bitwidth {audio_bits}: {taps[tap, 0]}"
 
-        m.submodules.fir = fir = DomainRenamer("usb")(FIRConvolver(taps=taps, samplerate=samplerate, clockfrequency=60e6, bitwidth=audio_bits, convolutionMode=ConvolutionMode.CROSSFEED))
+        m.submodules.fir = fir = DomainRenamer("usb")(FIRConvolver(taps=taps, samplerate=samplerate, clockfrequency=60e6,
+                                                                   bitwidth=audio_bits, convolutionMode=ConvolutionMode.CROSSFEED,
+                                                                    i2s_fifo_depth=dac_fifo_depth))
 
         m.submodules.debouncer = debouncer = Debouncer()
         m.submodules.debouncer2 = debouncer2 = Debouncer()
@@ -676,7 +679,7 @@ class USB2AudioInterface(Elaboratable):
             with m.If(enable_fir):
                 m.d.comb += [
                     fir.signal_in.stream_eq(dac_extractor.channel_stream_out),
-                    fir.i2sfull_in.eq(dac.fifo_level_out > 50),
+                    fir.i2s_fifo_level_in.eq(dac.fifo_level_out),
                     dac.stream_in.stream_eq(fir.signal_out)
                 ]
             with m.Else():
