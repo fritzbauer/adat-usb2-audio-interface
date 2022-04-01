@@ -68,6 +68,7 @@ class FIRConvolver(Elaboratable):
 
         #for ILA
         self.fsm_state_out = Signal(5)
+        self.i2sfull_in = Signal()
 
     def elaborate(self, platform) -> Module:
         m = Module()
@@ -155,7 +156,7 @@ class FIRConvolver(Elaboratable):
                     m.d.sync += set2.eq(1)
 
                 # prepare MAC calculations
-                with m.If(set1 & set2):
+                with m.If(set1 & set2 & ~self.i2sfull_in):
                     for i in range(self.slices * 2):
                         m.d.sync += [
                             ix.eq(0),
@@ -171,7 +172,7 @@ class FIRConvolver(Elaboratable):
                         ]
 
                     m.next = "MAC"
-                with m.Else():
+                with m.Elif(~self.i2sfull_in):
                     m.d.comb += self.signal_in.ready.eq(1)
             with m.State("MAC"):
                 m.d.comb += self.fsm_state_out.eq(2)
