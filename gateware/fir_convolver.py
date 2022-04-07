@@ -94,11 +94,6 @@ class FIRConvolver(Elaboratable):
         carryover2 = Signal.like(carryover1)
         carryover2_2 = Signal.like(carryover1)
 
-        left_sample_sig = Signal.like(carryover1)
-        right_sample_sig = Signal.like(carryover1)
-        main_tap_sig = Signal.like(carryover1)
-        bleed_tap_sig = Signal.like(carryover1)
-
         madd_values = Array(Signal(signed(self.bitwidth * 2), name=f"madd_values_{i}") for i in range(self.slices * 2))
         sumSignalL = Signal(signed(self.bitwidth*2))
         sumSignalR = Signal.like(sumSignalL)
@@ -190,13 +185,6 @@ class FIRConvolver(Elaboratable):
                             right_sample = samples2_read_port.data[i*self.bitwidth:(i+1)*self.bitwidth].as_signed()
                             main_tap = taps1_read_port.data[i*self.bitwidth:(i+1)*self.bitwidth].as_signed()
                             bleed_tap = taps2_read_port.data[i*self.bitwidth:(i+1)*self.bitwidth].as_signed()
-
-                            m.d.sync += [
-                                left_sample_sig.eq(left_sample),
-                                right_sample_sig.eq(right_sample),
-                                main_tap_sig.eq(main_tap),
-                                bleed_tap_sig.eq(bleed_tap),
-                            ]
 
                             if self.convolutionMode == ConvolutionMode.CROSSFEED:
                                 m.d.sync += [
