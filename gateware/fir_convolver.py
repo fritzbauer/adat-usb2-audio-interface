@@ -25,17 +25,14 @@ class FIRConvolver(Elaboratable):
                  samplerate:     int=48000,
                  clockfrequency:  int=60e6,
                  bitwidth:       int=24,
-                 convolutionMode: ConvolutionMode=ConvolutionMode.MONO,
-                 i2s_fifo_depth: int=16) -> None:
+                 convolutionMode: ConvolutionMode=ConvolutionMode.MONO) -> None:
 
         self.signal_in  = StreamInterface(name="signal_stream_in", payload_width=bitwidth)
         self.signal_out = StreamInterface(name="signal_stream_out", payload_width=bitwidth)
-        self.i2s_fifo_level_in = Signal(range(i2s_fifo_depth + 1))
 
         self.tapcount = len(taps) #4096 synthesizes
         self.bitwidth = bitwidth
         self.convolutionMode = convolutionMode
-        self.i2s_fifo_depth = i2s_fifo_depth
 
         # in order to process more taps than we have clock cycles per sample we will run parallel calculations.
         # The amount of parallel calculations per channel is defined by the "slices" variable
@@ -96,6 +93,11 @@ class FIRConvolver(Elaboratable):
         carryover1_2 = Signal.like(carryover1)
         carryover2 = Signal.like(carryover1)
         carryover2_2 = Signal.like(carryover1)
+
+        left_sample_sig = Signal.like(carryover1)
+        right_sample_sig = Signal.like(carryover1)
+        main_tap_sig = Signal.like(carryover1)
+        bleed_tap_sig = Signal.like(carryover1)
 
         madd_values = Array(Signal(signed(self.bitwidth * 2), name=f"madd_values_{i}") for i in range(self.slices * 2))
         sumSignalL = Signal(signed(self.bitwidth*2))
@@ -159,7 +161,7 @@ class FIRConvolver(Elaboratable):
                     m.d.sync += set2.eq(1)
 
                 # prepare MAC calculations
-                with m.If(set1 & set2 & (self.i2s_fifo_level_in < self.i2s_fifo_depth)):
+                with m.If(set1 & set2):
                     for i in range(self.slices * 2):
                         m.d.sync += [
                             ix.eq(0),
@@ -175,37 +177,45 @@ class FIRConvolver(Elaboratable):
                         ]
 
                     m.next = "MAC"
-                with m.Elif(self.i2s_fifo_level_in < self.i2s_fifo_depth):
+                with m.Else():
                     m.d.comb += self.signal_in.ready.eq(1)
             with m.State("MAC"):
                 m.d.comb += self.fsm_state_out.eq(2)
 
                 # do the actual MAC calculation
                 with m.If(ix <= self.samples_per_slice - 1):
-                    for i in range(self.slices):
-                        left_sample = samples1_read_port.data[i*self.bitwidth:(i+1)*self.bitwidth].as_signed()
-                        right_sample = samples2_read_port.data[i*self.bitwidth:(i+1)*self.bitwidth].as_signed()
-                        main_tap = taps1_read_port.data[i*self.bitwidth:(i+1)*self.bitwidth].as_signed()
-                        bleed_tap = taps2_read_port.data[i*self.bitwidth:(i+1)*self.bitwidth].as_signed()
+                    with m.If(ix > 0):
+                        for i in range(self.slices):
+                            left_sample = samples1_read_port.data[i*self.bitwidth:(i+1)*self.bitwidth].as_signed()
+                            right_sample = samples2_read_port.data[i*self.bitwidth:(i+1)*self.bitwidth].as_signed()
+                            main_tap = taps1_read_port.data[i*self.bitwidth:(i+1)*self.bitwidth].as_signed()
+                            bleed_tap = taps2_read_port.data[i*self.bitwidth:(i+1)*self.bitwidth].as_signed()
 
-                        if self.convolutionMode == ConvolutionMode.CROSSFEED:
                             m.d.sync += [
-                                madd_values[i].eq(madd_values[i] + (left_sample * main_tap)  # left
-                                                + (right_sample * bleed_tap)),  # right_bleed
-                                madd_values[i + self.slices].eq(madd_values[i + self.slices] + (right_sample * main_tap) # right
-                                                + (left_sample * bleed_tap))  # left_bleed
+                                left_sample_sig.eq(left_sample),
+                                right_sample_sig.eq(right_sample),
+                                main_tap_sig.eq(main_tap),
+                                bleed_tap_sig.eq(bleed_tap),
                             ]
-                            break
-                        elif self.convolutionMode == ConvolutionMode.STEREO:
-                            m.d.sync += [
-                                madd_values[i].eq(madd_values[i] + (left_sample * main_tap)),
-                                madd_values[i + self.slices].eq(madd_values[i + self.slices] + (right_sample * bleed_tap)),
-                            ]
-                        elif self.convolutionMode == ConvolutionMode.MONO:
-                            m.d.sync += [
-                                madd_values[i].eq(madd_values[i] + (left_sample * main_tap)),
-                                madd_values[i + self.slices].eq(madd_values[i + self.slices] + (right_sample * main_tap)),
-                            ]
+
+                            if self.convolutionMode == ConvolutionMode.CROSSFEED:
+                                m.d.sync += [
+                                    madd_values[i].eq(madd_values[i] + (left_sample * main_tap)  # left
+                                                    + (right_sample * bleed_tap)),  # right_bleed
+                                    madd_values[i + self.slices].eq(madd_values[i + self.slices] + (right_sample * main_tap) # right
+                                                    + (left_sample * bleed_tap))  # left_bleed
+                                ]
+                                break
+                            elif self.convolutionMode == ConvolutionMode.STEREO:
+                                m.d.sync += [
+                                    madd_values[i].eq(madd_values[i] + (left_sample * main_tap)),
+                                    madd_values[i + self.slices].eq(madd_values[i + self.slices] + (right_sample * bleed_tap)),
+                                ]
+                            elif self.convolutionMode == ConvolutionMode.MONO:
+                                m.d.sync += [
+                                    madd_values[i].eq(madd_values[i] + (left_sample * main_tap)),
+                                    madd_values[i + self.slices].eq(madd_values[i + self.slices] + (right_sample * main_tap)),
+                                ]
 
                 # shift the samples buffer by one sample to prepare for the next arriving sample in the IDLE state
                 with m.If(ix > 1):
@@ -238,39 +248,25 @@ class FIRConvolver(Elaboratable):
                     sumSignalR.eq(sumR),
                     output_channels.eq(0),
                 ]
-                m.next = "OUTPUT LEFT"
-            with m.State("OUTPUT LEFT"):
+                m.next = "OUTPUT"
+            with m.State("OUTPUT"):
                 m.d.comb += self.fsm_state_out.eq(4)
-                m.d.sync += ix.eq(0)
-                with m.If(self.signal_out.ready):
-                    m.d.sync += output_channels.eq(output_channels+1)
-
                 m.d.sync += [
-                    self.signal_out.payload.eq(Mux(output_channels == 0, sumSignalL >> (self.bitwidth-1), sumSignalL >> (self.bitwidth-1))),
-                    self.signal_out.valid.eq(1),
-                    self.signal_out.first.eq(~output_channels),
-                    self.signal_out.last.eq(output_channels),
+                    set1.eq(0),
+                    set2.eq(0),
+                    ix.eq(0),
                 ]
-                with m.If(output_channels == 1):
+
+                with m.If(output_channels == 2):
+                    m.next = "IDLE"
+                with m.Elif(self.signal_out.ready):
                     m.d.sync += [
-                        set1.eq(0),
-                        set2.eq(0),
+                        output_channels.eq(output_channels + 1),
+                        self.signal_out.payload.eq(Mux(output_channels == 0, sumSignalL >> self.bitwidth, sumSignalR >> self.bitwidth)),
+                        self.signal_out.valid.eq(1),
+                        self.signal_out.first.eq(~output_channels),
+                        self.signal_out.last.eq(output_channels),
                     ]
-
-                    m.next = "IDLE"
-
-            with m.State("OUTPUT RIGHT"):
-                m.d.comb += self.fsm_state_out.eq(5)
-                m.d.sync += [
-                    self.signal_out.payload.eq(sumSignalR >> (self.bitwidth-1)),
-                    self.signal_out.valid.eq(1),
-                    self.signal_out.first.eq(0),
-                    self.signal_out.last.eq(1),
-                ]
-
-
-                with m.If(self.signal_out.ready):
-                    m.next = "IDLE"
 
         return m
 
@@ -312,7 +308,6 @@ class FixedPointFIRFilterTest(GatewareTestCase):
             payload = yield dut.signal_out.payload
             out_signal.append(int.from_bytes(payload.to_bytes(3, 'little', signed=False), 'little',
                                              signed=True))  # parse 24bit signed
-        #print("Waitcount {}".format(waitcount))
 
 
     def calculate_expected_result(self, taps, testdata, convolutionMode):
@@ -336,8 +331,10 @@ class FixedPointFIRFilterTest(GatewareTestCase):
             #    print(f"samples: {testdata[sample-1:]}")
             #    print(f"taps: {taps[:5]}")
             #    print(int(testdata[sample - tap, 0]) * int(taps[tap, 0]))
-            output[sample, 0] = sumL >> self.bitwidth-1
-            output[sample, 1] = sumR >> self.bitwidth-1
+            #print(f"sumL: {sumL}")
+            #print(f"sumR: {sumR}")
+            output[sample, 0] = sumL >> self.bitwidth
+            output[sample, 1] = sumR >> self.bitwidth
 
         return output
 

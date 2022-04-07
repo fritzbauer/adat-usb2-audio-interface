@@ -387,9 +387,8 @@ class USB2AudioInterface(Elaboratable):
         #
         # I2S DACs
         #
-        dac_fifo_depth = 32
-        m.submodules.dac1_transmitter = dac1 = DomainRenamer("usb")(I2STransmitter(sample_width=audio_bits, fifo_depth=dac_fifo_depth))
-        m.submodules.dac2_transmitter = dac2 = DomainRenamer("usb")(I2STransmitter(sample_width=audio_bits, fifo_depth=dac_fifo_depth))
+        m.submodules.dac1_transmitter = dac1 = DomainRenamer("usb")(I2STransmitter(sample_width=audio_bits, fifo_depth=32))
+        m.submodules.dac2_transmitter = dac2 = DomainRenamer("usb")(I2STransmitter(sample_width=audio_bits))
         m.submodules.dac1_extractor   = dac1_extractor = DomainRenamer("usb")(StereoPairExtractor(usb1_number_of_channels, usb1_to_output_fifo_depth))
         m.submodules.dac2_extractor   = dac2_extractor = DomainRenamer("usb")(StereoPairExtractor(usb1_number_of_channels, usb1_to_output_fifo_depth))
         dac1_pads = platform.request("i2s", 1)
@@ -416,7 +415,7 @@ class USB2AudioInterface(Elaboratable):
 
         #sample_rate, sig = wavfile.read('IRs/IR_4800_minus24db.wav')
         #with wave.open('IRs/IR_4800.wav', 'rb') as wav:
-        with wave.open('IRs/ISONE_DT990_combined_4800_minus6db.wav', 'rb') as wav:
+        with wave.open('IRs/ISONE_DT990_combined_4800_plus12db.wav', 'rb') as wav:
             ir_data = wav.readframes(wav.getnframes())
             ir_sample_rate = wav.getframerate()
 
@@ -433,24 +432,21 @@ class USB2AudioInterface(Elaboratable):
             assert -1 * 2 ** (audio_bits-1) <= taps[tap, 0] <= 1 * 2 ** (audio_bits-1)-1, f"Tap #{tap} is out of range for bitwidth {audio_bits}: {taps[tap, 0]}"
 
         m.submodules.fir = fir = DomainRenamer("usb")(FIRConvolver(taps=taps, samplerate=samplerate, clockfrequency=60e6,
-                                                                   bitwidth=audio_bits, convolutionMode=ConvolutionMode.CROSSFEED,
-                                                                    i2s_fifo_depth=dac_fifo_depth))
+                                                                   bitwidth=audio_bits, convolutionMode=ConvolutionMode.CROSSFEED))
 
-        m.submodules.debouncer = debouncer = Debouncer()
-        m.submodules.debouncer2 = debouncer2 = Debouncer()
+        m.submodules.button_debouncer = button_debouncer = Debouncer()
+        m.submodules.request_debouncer = request_debouncer = Debouncer()
         m.d.comb += [
-            debouncer.btn.eq(platform.request("core_button")[0]),
-            debouncer2.btn.eq(usb1_class_request_handler.enable_convolution)
+            button_debouncer.btn.eq(platform.request("core_button")[0]),
+            request_debouncer.btn.eq(usb1_class_request_handler.enable_convolution)
         ]
-
-        with m.If(debouncer.btn_up | debouncer2.btn_up):
-            m.d.sync += enable_fir.eq(~enable_fir)
 
         self.wire_up_dac(m, usb1_to_channel_stream, dac1_extractor, dac1, lrclk, dac1_pads, fir, enable_fir)
         self.wire_up_dac(m, usb1_to_channel_stream, dac2_extractor, dac2, lrclk, dac2_pads)
 
-        with m.If(debouncer.btn_up | debouncer2.btn_up):
-            m.d.comb += dac1.enable_in.eq(0)
+        with m.If(button_debouncer.btn_up | request_debouncer.btn_up): # toggle fir convolution on/off
+            m.d.sync += enable_fir.eq(~enable_fir)
+            m.d.comb += dac1.enable_in.eq(0) # reset the DAC if we toggle the source
 
         #
         # USB => output FIFO level debug signals
@@ -679,7 +675,6 @@ class USB2AudioInterface(Elaboratable):
             with m.If(enable_fir):
                 m.d.comb += [
                     fir.signal_in.stream_eq(dac_extractor.channel_stream_out),
-                    fir.i2s_fifo_level_in.eq(dac.fifo_level_out),
                     dac.stream_in.stream_eq(fir.signal_out)
                 ]
             with m.Else():
