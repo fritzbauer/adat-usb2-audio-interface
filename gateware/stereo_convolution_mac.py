@@ -6,12 +6,12 @@
 from amaranth import Elaboratable, Module, Signal, Array, Memory, signed, Cat, Mux
 from amaranth.sim import Tick
 from amlib.stream import StreamInterface
+from amlib.test import GatewareTestCase, sync_test_case
 
 import numpy as np
 import math
-
-from amlib.test import GatewareTestCase, sync_test_case
 from enum import Enum
+import wave
 
 class ConvolutionMode(Enum):
     CROSSFEED = 1
@@ -25,8 +25,6 @@ class StereoConvolutionMAC(Elaboratable):
         ----------
         taps : int[]
 
-        depth : int
-            Word count. This memory contains ``depth`` storage elements.
         samplerate : int
 
         clockfrequency : int
@@ -34,14 +32,18 @@ class StereoConvolutionMAC(Elaboratable):
         bitwidth : int
 
         convolutionMode : ConvolutionMode
+            Either of:
+            CROSSFEED (1)
+
+            STEREO (2)
+
+            MONO (3)
 
 
         Attributes
         ----------
-        signal_in : int
-        signal_out : int
-        init : list of int
-        attrs : dict
+        signal_in : StreamInterface
+        signal_out : StreamInterface
     """
     def __init__(self,
                  taps: [],
@@ -119,6 +121,16 @@ class StereoConvolutionMAC(Elaboratable):
         sumSignalL = Signal(signed(self._bitwidth * 2))
         sumSignalR = Signal.like(sumSignalL)
 
+        left_sample = [0] * self._slices
+        right_sample = [0] * self._slices
+        main_tap = [0] * self._slices
+        bleed_tap = [0] * self._slices
+
+        #debugging
+        left_sample_sig = Array(Signal.like(carryover1, name=f"left_sample_sig_{i}") for i in range(self._slices))
+        right_sample_sig = Array(Signal.like(carryover1, name=f"right_sample_sig_{i}") for i in range(self._slices))
+        main_tap_sig = Array(Signal.like(carryover1, name=f"main_tap_sig_{i}") for i in range(self._slices))
+        bleed_tap_sig = Array(Signal.like(carryover1, name=f"bleed_tap_sig_{i}") for i in range(self._slices))
 
         m.d.comb += [
             self.signal_in.ready.eq(0),
@@ -192,31 +204,38 @@ class StereoConvolutionMAC(Elaboratable):
                     m.d.comb += self.signal_in.ready.eq(1)
             with m.State("MAC"):
                 # do the actual MAC calculation
-                with m.If(ix <= self._samples_per_slice - 1):
+                with m.If(ix <= self._samples_per_slice):
                     with m.If(ix > 0):
                         for i in range(self._slices):
-                            left_sample = samples1_read_port.data[i*self._bitwidth:(i + 1) * self._bitwidth].as_signed()
-                            right_sample = samples2_read_port.data[i*self._bitwidth:(i + 1) * self._bitwidth].as_signed()
-                            main_tap = taps1_read_port.data[i*self._bitwidth:(i + 1) * self._bitwidth].as_signed()
-                            bleed_tap = taps2_read_port.data[i*self._bitwidth:(i + 1) * self._bitwidth].as_signed()
+                            left_sample[i] = samples1_read_port.data[i*self._bitwidth:(i + 1) * self._bitwidth].as_signed()
+                            right_sample[i] = samples2_read_port.data[i*self._bitwidth:(i + 1) * self._bitwidth].as_signed()
+                            main_tap[i] = taps1_read_port.data[i*self._bitwidth:(i + 1) * self._bitwidth].as_signed()
+                            bleed_tap[i] = taps2_read_port.data[i*self._bitwidth:(i + 1) * self._bitwidth].as_signed()
+
+                            #debugging
+                            m.d.sync += [
+                                left_sample_sig[i].eq(left_sample[i]),
+                                right_sample_sig[i].eq(right_sample[i]),
+                                main_tap_sig[i].eq(main_tap[i]),
+                                bleed_tap_sig[i].eq(bleed_tap[i]),
+                            ]
 
                             if self._convolutionMode == ConvolutionMode.CROSSFEED:
                                 m.d.sync += [
-                                    madd_values[i].eq(madd_values[i] + (left_sample * main_tap)
-                                                    + (right_sample * bleed_tap)),
-                                    madd_values[i + self._slices].eq(madd_values[i + self._slices] + (right_sample * main_tap)
-                                                                     + (left_sample * bleed_tap))
+                                    madd_values[i].eq(madd_values[i] + (left_sample[i] * main_tap[i])
+                                                    + (right_sample[i] * bleed_tap[i])),
+                                    madd_values[i + self._slices].eq(madd_values[i + self._slices] + (right_sample[i] * main_tap[i])
+                                                                     + (left_sample[i] * bleed_tap[i]))
                                 ]
-                                break
                             elif self._convolutionMode == ConvolutionMode.STEREO:
                                 m.d.sync += [
-                                    madd_values[i].eq(madd_values[i] + (left_sample * main_tap)),
-                                    madd_values[i + self._slices].eq(madd_values[i + self._slices] + (right_sample * bleed_tap)),
+                                    madd_values[i].eq(madd_values[i] + (left_sample[i] * main_tap[i])),
+                                    madd_values[i + self._slices].eq(madd_values[i + self._slices] + (right_sample[i] * bleed_tap[i])),
                                 ]
                             elif self._convolutionMode == ConvolutionMode.MONO:
                                 m.d.sync += [
-                                    madd_values[i].eq(madd_values[i] + (left_sample * main_tap)),
-                                    madd_values[i + self._slices].eq(madd_values[i + self._slices] + (right_sample * main_tap)),
+                                    madd_values[i].eq(madd_values[i] + (left_sample[i] * main_tap[i])),
+                                    madd_values[i + self._slices].eq(madd_values[i + self._slices] + (right_sample[i] * main_tap[i])),
                                 ]
 
                 # shift the samples buffer by one sample to prepare for the next arriving sample in the IDLE state
@@ -278,13 +297,37 @@ class StereoConvolutionMACTest(GatewareTestCase):
     samplerate = 48000
     clockfrequency = samplerate * tapcount / 4 # we want to test for 4 slices
 
-    #hardcoded 4-tap IR data which helps checking data during simulation
-    tapdata1 = [1, 0.5, 0.25, 0.1]
-    tapdata2 = [0.05, 0.025, 0.01, 0]
+    #some test IR-data
+    #tapdata1 = [5033163, 4194303, 2097151,  838859] # [0.6, 0.5, 0.25, 0.1] * 2 ** (bitwidth-1)-1
+    #tapdata2 = [419429, 209714,  83885, 167771] #[0.05, 0.025, 0.01, 0.02] * 2 ** (bitwidth-1)-1
+    tapdata1 = [
+        8388607, 8388607, -8388608, 7805659, -777420, -2651895, 1181562, -3751702,
+        2024355, -1085865, 1194588, -341596, -138844, -133784, -204981, 33373,
+        -636104, -988353, -1313180, -851631, -160023, 370339, 391865, 22927,
+        -288476, -281780, 6684, 241364, 174375, -151480, -496185, -655125
+    ]
+    tapdata2 = [
+        7881750, 7461102, -1293164, 2060193, 2268606, 1214028, 225034, -1235788,
+        486778, 501926, 466836, -94304, 191358, 533261, 402351, 185156,
+        111725, 264777, 243255, 136264, 111589, 216495, 296642, 274774,
+        243960, 263830, 298115, 283377, 232100, 182950, 140385, 87647
+    ]
+
     taps = np.zeros((tapcount, 2), dtype=np.int32)
     for i in range(len(tapdata1)):
-        taps[i, 0] = int(tapdata1[i] * 2 ** (bitwidth-1)-1)
-        taps[i, 1] = int(tapdata2[i] * 2 ** (bitwidth-1)-1)
+        taps[i, 0] = int(tapdata1[i])
+        taps[i, 1] = int(tapdata2[i])
+
+    #with wave.open('IRs/ISONE_DT990_combined_4800_plus12db.wav', 'rb') as wav:
+    #    ir_data = wav.readframes(wav.getnframes())
+    #    ir_sample_rate = wav.getframerate()
+    #
+    #ir_sig = np.zeros((len(ir_data) // 6, 2), dtype='int32')
+    #for i in range(0, len(ir_sig), 6):
+    #    ir_sig[i // 6, 0] = int.from_bytes(ir_data[i:i + 3], byteorder='little', signed=True)
+    #    ir_sig[i // 6, 1] = int.from_bytes(ir_data[i + 3:i + 6], byteorder='little', signed=True)
+    #
+    #taps = ir_sig[:tapcount, :]
 
     convolutionMode = ConvolutionMode.CROSSFEED
     FRAGMENT_ARGUMENTS = dict(taps=taps, samplerate=48000, clockfrequency=clockfrequency, bitwidth=bitwidth, convolutionMode=convolutionMode)
@@ -293,22 +336,26 @@ class StereoConvolutionMACTest(GatewareTestCase):
         for _ in range(n_cycles):
             yield Tick()
 
-    def wait_ready(self, dut, out_signal):
-        waitcount = 0
-        while ((yield dut.signal_out.valid == 0) & (yield dut.signal_in.ready == 0)):
-            waitcount += 1
+    def wait_ready(self, dut):
+        yield dut.signal_in.valid.eq(0)
+        while (yield dut.signal_in.ready == 0):
             yield from self.wait(1)
-        if (yield dut.signal_out.valid == 1):
-            payload = yield dut.signal_out.payload
-            out_signal.append(int.from_bytes(payload.to_bytes(3, 'little', signed=False), 'little', signed=True))  # parse 24bit signed
-            yield Tick()
-            payload = yield dut.signal_out.payload
-            out_signal.append(int.from_bytes(payload.to_bytes(3, 'little', signed=False), 'little', signed=True))  # parse 24bit signed
+
+    def get_output(self, dut, out_signal):
+        while (yield dut.signal_out.valid == 0):
+            yield from self.wait(1)
+
+        payload = yield dut.signal_out.payload
+        out_signal.append(int.from_bytes(payload.to_bytes(3, 'little', signed=False), 'little', signed=True))  # parse 24bit signed
+        yield Tick()
+        payload = yield dut.signal_out.payload
+        out_signal.append(int.from_bytes(payload.to_bytes(3, 'little', signed=False), 'little', signed=True))  # parse 24bit signed
 
 
     def calculate_expected_result(self, taps, testdata, convolutionMode):
         output = np.zeros((len(testdata),2), dtype=np.int32)
         for sample in range(len(testdata)):
+
             sumL = 0
             sumR = 0
             for tap in range(len(taps)):
@@ -341,6 +388,47 @@ class StereoConvolutionMACTest(GatewareTestCase):
             testdata[i,0] = int(i+100) #left channel
             testdata[i,1] = int(-i-200) #right channel
 
+        with wave.open('/home/rouven/tmp/CS.wav', 'rb') as wav:
+            sig_data = wav.readframes(wav.getnframes())
+            sig_sample_rate = wav.getframerate()
+
+        testdata = np.zeros((len(sig_data)//6, 2), dtype='int32')
+        for i in range(0, len(sig_data), 6):
+            testdata[i // 6, 0] = int.from_bytes(sig_data[i:i + 3], byteorder='little', signed=True)
+            testdata[i // 6, 1] = int.from_bytes(sig_data[i + 3:i + 6], byteorder='little', signed=True)
+
+        testdata = testdata[1000000:(1000000+self.testSamplecount),:]
+
+        testdata_raw = [[812420, 187705], [800807, 152271], [788403, 109422], [789994, 65769], [773819, 12803],
+                    [747336, -40589], [744825, -84371], [729641, -141286], [706089, -190230], [687227, -238741],
+                    [674577, -293106], [679382, -354421], [673939, -404084], [670470, -448995], [698245, -493213],
+                    [727041, -527915], [749620, -566963], [777583, -578647], [793651, -596892], [807524, -608824],
+                    [819352, -600195], [813153, -594125], [811380, -574884], [804773, -549522], [803946, -519619],
+                    [798627, -484158], [795990, -457567], [784727, -441965], [781253, -423321], [772247, -406696],
+                    [737346, -396969], [727344, -397146], [709987, -398310], [691059, -397030], [657034, -408094],
+                    [626680, -421474], [602569, -440591], [568337, -465274], [542343, -489621], [503093, -522351],
+                    [449579, -560565], [379701, -601463], [310374, -645896], [224866, -689011], [131545, -735663],
+                    [16957, -783650], [-111726, -827044], [-241836, -883122], [-370953, -935652], [-485623, -981734],
+                    [-583078, -1036719], [-654543, -1084068], [-710559, -1134423], [-733894, -1178457],
+                    [-741472, -1222978], [-730563, -1261715], [-713004, -1283693], [-695040, -1300765],
+                    [-669049, -1313577], [-656220, -1333732], [-651277, -1349524], [-657046, -1361661],
+                    [-666656, -1369770], [-663344, -1368362], [-667356, -1376221], [-675844, -1380697],
+                    [-675575, -1378351], [-670833, -1370430], [-663705, -1343927], [-654934, -1325950],
+                    [-630174, -1292244], [-601587, -1244248], [-586781, -1199700], [-577894, -1134632],
+                    [-576851, -1061743], [-593347, -977451], [-603222, -883179], [-606804, -777615], [-602340, -671055],
+                    [-602439, -575690], [-581846, -480232], [-563534, -413668], [-547941, -360161], [-519823, -314832],
+                    [-491941, -277750], [-458161, -247667], [-421273, -221640], [-391277, -193937], [-373996, -167258],
+                    [-369452, -141699], [-398689, -124104], [-429195, -104058], [-483597, -90449], [-534715, -76876],
+                    [-580318, -75685], [-629828, -68031], [-662375, -69266], [-688125, -77877],
+                    [-696417, -84852], [-706783, -99115], [-709124, -115825], [-694132, -152064], [-670392, -183572],
+                    [-650166, -220606], [-600539, -254463], [-557703, -287120], [-512840, -317225], [-459318, -333891],
+                    [-435701, -348684], [-404251, -355299], [-390665, -352357], [-376465, -343641], [-378383, -344794],
+                    [-369697, -338782], [-362845, -332500], [-351513, -319435], [-321284, -298249], [-301254, -274747],
+                    [-256613, -242747], [-208538, -203862]]
+        for i in range(len(testdata_raw)):
+            testdata[i, 0] = testdata_raw[i][0]
+            testdata[i, 1] = testdata_raw[i][1]
+
         yield dut.signal_out.ready.eq(1)
 
         out_signal = []
@@ -357,23 +445,16 @@ class StereoConvolutionMACTest(GatewareTestCase):
             yield dut.signal_in.last.eq(1)
             yield dut.signal_in.payload.eq(int(testdata[i, 1]))
             yield Tick()
-            yield from self.wait_ready(dut, out_signal)
-
-        yield from self.wait(10)
-
-        yield from self.wait_ready(dut,out_signal) # get the last two samples
+            yield from self.wait_ready(dut)
+            yield from self.get_output(dut, out_signal)
 
         expected_result = self.calculate_expected_result(self.taps, testdata, self.convolutionMode)
-
         print(f"Length of expected data: {len(expected_result)}")
         print(f"Expected data: {expected_result}")
 
         print(f"Length of received data: {len(out_signal)/2}")
         print(f"Received data: {out_signal}")
 
-        while out_signal[0] == 0:
-            out_signal.remove(0)
-
-        for i in range(len(expected_result)-2):
-            assert out_signal[i*2]-2 <= expected_result[i, 0] <= out_signal[i*2]+2, f"counter was: {i}"
-            assert out_signal[i * 2+1]-2 <= expected_result[i, 1] <= out_signal[i * 2+1]+2, f"counter was: {i}"
+        for i in range(len(expected_result)):
+            assert out_signal[i*2] - 2 <= expected_result[i, 0] <= out_signal[i*2] + 2, f"counter was: {i}"
+            assert out_signal[i * 2+1] - 2 <= expected_result[i, 1] <= out_signal[i * 2+1] + 2, f"counter was: {i}"

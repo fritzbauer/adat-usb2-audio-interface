@@ -1,0 +1,117 @@
+[*]
+[*] GTKWave Analyzer v3.3.106 (w)1999-2020 BSI
+[*] Fri Apr  8 14:42:45 2022
+[*]
+[dumpfile] "/home/rouven/Computer/Coden/Audio/adat-usb2-audio-interface/gateware/test_StereoConvolutionMACTest_test_fir.vcd"
+[dumpfile_mtime] "Fri Apr  8 14:42:12 2022"
+[dumpfile_size] 2118493
+[savefile] "/home/rouven/Computer/Coden/Audio/adat-usb2-audio-interface/gateware/stereo_convolution_mac-bench.gtkw"
+[timestart] 4227600
+[size] 1850 1011
+[pos] -1 -1
+*-16.000000 182800 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] bench.
+[sst_width] 304
+[signals_width] 502
+[sst_expanded] 1
+[sst_vpaned_height] 285
+@28
+bench.top.clk
+bench.top.fsm_state
+@24
+bench.top.ix[3:0]
+@22
+bench.top.previous_sample1[95:0]
+bench.top.carryover1[23:0]
+bench.top.carryover1_2[23:0]
+bench.top.left_sample_sig_0[23:0]
+bench.top.left_sample_sig_1[23:0]
+bench.top.left_sample_sig_2[23:0]
+bench.top.left_sample_sig_3[23:0]
+bench.top.right_sample_sig_0[23:0]
+bench.top.right_sample_sig_1[23:0]
+bench.top.right_sample_sig_2[23:0]
+bench.top.right_sample_sig_3[23:0]
+bench.top.main_tap_sig_0[23:0]
+bench.top.main_tap_sig_1[23:0]
+bench.top.main_tap_sig_2[23:0]
+bench.top.main_tap_sig_3[23:0]
+bench.top.bleed_tap_sig_0[23:0]
+bench.top.bleed_tap_sig_1[23:0]
+bench.top.bleed_tap_sig_2[23:0]
+bench.top.bleed_tap_sig_3[23:0]
+bench.top.madd_values_0[47:0]
+bench.top.madd_values_1[47:0]
+@c00022
+bench.top.madd_values_2[47:0]
+@28
+(0)bench.top.madd_values_2[47:0]
+(1)bench.top.madd_values_2[47:0]
+(2)bench.top.madd_values_2[47:0]
+(3)bench.top.madd_values_2[47:0]
+(4)bench.top.madd_values_2[47:0]
+(5)bench.top.madd_values_2[47:0]
+(6)bench.top.madd_values_2[47:0]
+(7)bench.top.madd_values_2[47:0]
+(8)bench.top.madd_values_2[47:0]
+(9)bench.top.madd_values_2[47:0]
+(10)bench.top.madd_values_2[47:0]
+(11)bench.top.madd_values_2[47:0]
+(12)bench.top.madd_values_2[47:0]
+(13)bench.top.madd_values_2[47:0]
+(14)bench.top.madd_values_2[47:0]
+(15)bench.top.madd_values_2[47:0]
+(16)bench.top.madd_values_2[47:0]
+(17)bench.top.madd_values_2[47:0]
+(18)bench.top.madd_values_2[47:0]
+(19)bench.top.madd_values_2[47:0]
+(20)bench.top.madd_values_2[47:0]
+(21)bench.top.madd_values_2[47:0]
+(22)bench.top.madd_values_2[47:0]
+(23)bench.top.madd_values_2[47:0]
+(24)bench.top.madd_values_2[47:0]
+(25)bench.top.madd_values_2[47:0]
+(26)bench.top.madd_values_2[47:0]
+(27)bench.top.madd_values_2[47:0]
+(28)bench.top.madd_values_2[47:0]
+(29)bench.top.madd_values_2[47:0]
+(30)bench.top.madd_values_2[47:0]
+(31)bench.top.madd_values_2[47:0]
+(32)bench.top.madd_values_2[47:0]
+(33)bench.top.madd_values_2[47:0]
+(34)bench.top.madd_values_2[47:0]
+(35)bench.top.madd_values_2[47:0]
+(36)bench.top.madd_values_2[47:0]
+(37)bench.top.madd_values_2[47:0]
+(38)bench.top.madd_values_2[47:0]
+(39)bench.top.madd_values_2[47:0]
+(40)bench.top.madd_values_2[47:0]
+(41)bench.top.madd_values_2[47:0]
+(42)bench.top.madd_values_2[47:0]
+(43)bench.top.madd_values_2[47:0]
+(44)bench.top.madd_values_2[47:0]
+(45)bench.top.madd_values_2[47:0]
+(46)bench.top.madd_values_2[47:0]
+(47)bench.top.madd_values_2[47:0]
+@1401200
+-group_end
+@22
+bench.top.madd_values_3[47:0]
+bench.top.madd_values_4[47:0]
+bench.top.madd_values_5[47:0]
+bench.top.madd_values_6[47:0]
+bench.top.madd_values_7[47:0]
+@420
+bench.top.signal_stream_in__payload[23:0]
+@23
+bench.top.signal_stream_in__payload[23:0]
+@28
+bench.top.signal_stream_in__ready
+bench.top.signal_stream_in__valid
+@420
+bench.top.signal_stream_out__payload[23:0]
+@28
+bench.top.signal_stream_out__ready
+bench.top.signal_stream_out__valid
+[pattern_trace] 1
+[pattern_trace] 0
