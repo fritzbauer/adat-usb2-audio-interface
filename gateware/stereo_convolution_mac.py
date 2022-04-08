@@ -11,7 +11,6 @@ from amlib.test import GatewareTestCase, sync_test_case
 import numpy as np
 import math
 from enum import Enum
-import wave
 
 class ConvolutionMode(Enum):
     CROSSFEED = 1
@@ -23,21 +22,33 @@ class StereoConvolutionMAC(Elaboratable):
 
         Parameters
         ----------
-        taps : int[]
+        taps : int[][]
+            A two dimensional numpy array containing the stereo impulse response data: np.zeros((tapcount, 2), dtype=np.int32)
 
         samplerate : int
+            The samplerate of the signal.
 
         clockfrequency : int
+            The frequency of the sync domain. This is needed to evaluate how many parallel multiplications need to
+            be done in order to process the data in realtime.
 
         bitwidth : int
+            The bitwidth of the signal.
 
         convolutionMode : ConvolutionMode
             Either of:
             CROSSFEED (1)
-
+                Applies the IR data as crossfeed
+                Channel 1 = Channel 1 * IR-Channel1 + Channel2 * IR-Channel2
+                Channel 2 = Channel 2 * IR-Channel1 + Channel1 * IR-Channel2
             STEREO (2)
-
+                Applies each channel of the IR data to each signal channel:
+                Channel 1 = Channel 1 * IR-Channel1
+                Channel 2 = Channel2 * IR-Channel2
             MONO (3)
+                Applies only the first IR channel two both signal channels:
+                Channel 1 = Channel 1 * IR-Channel1
+                Channel 2 = Channel 2 * IR-Channel1
 
 
         Attributes
@@ -121,16 +132,11 @@ class StereoConvolutionMAC(Elaboratable):
         sumSignalL = Signal(signed(self._bitwidth * 2))
         sumSignalR = Signal.like(sumSignalL)
 
-        left_sample = [0] * self._slices
-        right_sample = [0] * self._slices
-        main_tap = [0] * self._slices
-        bleed_tap = [0] * self._slices
-
         #debugging
-        left_sample_sig = Array(Signal.like(carryover1, name=f"left_sample_sig_{i}") for i in range(self._slices))
-        right_sample_sig = Array(Signal.like(carryover1, name=f"right_sample_sig_{i}") for i in range(self._slices))
-        main_tap_sig = Array(Signal.like(carryover1, name=f"main_tap_sig_{i}") for i in range(self._slices))
-        bleed_tap_sig = Array(Signal.like(carryover1, name=f"bleed_tap_sig_{i}") for i in range(self._slices))
+        #left_sample_sig = Array(Signal.like(carryover1, name=f"left_sample_sig_{i}") for i in range(self._slices))
+        #right_sample_sig = Array(Signal.like(carryover1, name=f"right_sample_sig_{i}") for i in range(self._slices))
+        #main_tap_sig = Array(Signal.like(carryover1, name=f"main_tap_sig_{i}") for i in range(self._slices))
+        #bleed_tap_sig = Array(Signal.like(carryover1, name=f"bleed_tap_sig_{i}") for i in range(self._slices))
 
         m.d.comb += [
             self.signal_in.ready.eq(0),
@@ -207,35 +213,35 @@ class StereoConvolutionMAC(Elaboratable):
                 with m.If(ix <= self._samples_per_slice):
                     with m.If(ix > 0):
                         for i in range(self._slices):
-                            left_sample[i] = samples1_read_port.data[i*self._bitwidth:(i + 1) * self._bitwidth].as_signed()
-                            right_sample[i] = samples2_read_port.data[i*self._bitwidth:(i + 1) * self._bitwidth].as_signed()
-                            main_tap[i] = taps1_read_port.data[i*self._bitwidth:(i + 1) * self._bitwidth].as_signed()
-                            bleed_tap[i] = taps2_read_port.data[i*self._bitwidth:(i + 1) * self._bitwidth].as_signed()
+                            left_sample = samples1_read_port.data[i*self._bitwidth:(i + 1) * self._bitwidth].as_signed()
+                            right_sample = samples2_read_port.data[i*self._bitwidth:(i + 1) * self._bitwidth].as_signed()
+                            main_tap = taps1_read_port.data[i*self._bitwidth:(i + 1) * self._bitwidth].as_signed()
+                            bleed_tap = taps2_read_port.data[i*self._bitwidth:(i + 1) * self._bitwidth].as_signed()
 
                             #debugging
-                            m.d.sync += [
-                                left_sample_sig[i].eq(left_sample[i]),
-                                right_sample_sig[i].eq(right_sample[i]),
-                                main_tap_sig[i].eq(main_tap[i]),
-                                bleed_tap_sig[i].eq(bleed_tap[i]),
-                            ]
+                            #m.d.sync += [
+                            #    left_sample_sig[i].eq(left_sample),
+                            #    right_sample_sig[i].eq(right_sample),
+                            #    main_tap_sig[i].eq(main_tap),
+                            #    bleed_tap_sig[i].eq(bleed_tap),
+                            #]
 
                             if self._convolutionMode == ConvolutionMode.CROSSFEED:
                                 m.d.sync += [
-                                    madd_values[i].eq(madd_values[i] + (left_sample[i] * main_tap[i])
-                                                    + (right_sample[i] * bleed_tap[i])),
-                                    madd_values[i + self._slices].eq(madd_values[i + self._slices] + (right_sample[i] * main_tap[i])
-                                                                     + (left_sample[i] * bleed_tap[i]))
+                                    madd_values[i].eq(madd_values[i] + (left_sample * main_tap)
+                                                    + (right_sample * bleed_tap)),
+                                    madd_values[i + self._slices].eq(madd_values[i + self._slices] + (right_sample * main_tap)
+                                                                     + (left_sample * bleed_tap))
                                 ]
                             elif self._convolutionMode == ConvolutionMode.STEREO:
                                 m.d.sync += [
-                                    madd_values[i].eq(madd_values[i] + (left_sample[i] * main_tap[i])),
-                                    madd_values[i + self._slices].eq(madd_values[i + self._slices] + (right_sample[i] * bleed_tap[i])),
+                                    madd_values[i].eq(madd_values[i] + (left_sample * main_tap)),
+                                    madd_values[i + self._slices].eq(madd_values[i + self._slices] + (right_sample * bleed_tap)),
                                 ]
                             elif self._convolutionMode == ConvolutionMode.MONO:
                                 m.d.sync += [
-                                    madd_values[i].eq(madd_values[i] + (left_sample[i] * main_tap[i])),
-                                    madd_values[i + self._slices].eq(madd_values[i + self._slices] + (right_sample[i] * main_tap[i])),
+                                    madd_values[i].eq(madd_values[i] + (left_sample * main_tap)),
+                                    madd_values[i + self._slices].eq(madd_values[i + self._slices] + (right_sample * main_tap)),
                                 ]
 
                 # shift the samples buffer by one sample to prepare for the next arriving sample in the IDLE state
@@ -318,17 +324,6 @@ class StereoConvolutionMACTest(GatewareTestCase):
         taps[i, 0] = int(tapdata1[i])
         taps[i, 1] = int(tapdata2[i])
 
-    #with wave.open('IRs/ISONE_DT990_combined_4800_plus12db.wav', 'rb') as wav:
-    #    ir_data = wav.readframes(wav.getnframes())
-    #    ir_sample_rate = wav.getframerate()
-    #
-    #ir_sig = np.zeros((len(ir_data) // 6, 2), dtype='int32')
-    #for i in range(0, len(ir_sig), 6):
-    #    ir_sig[i // 6, 0] = int.from_bytes(ir_data[i:i + 3], byteorder='little', signed=True)
-    #    ir_sig[i // 6, 1] = int.from_bytes(ir_data[i + 3:i + 6], byteorder='little', signed=True)
-    #
-    #taps = ir_sig[:tapcount, :]
-
     convolutionMode = ConvolutionMode.CROSSFEED
     FRAGMENT_ARGUMENTS = dict(taps=taps, samplerate=48000, clockfrequency=clockfrequency, bitwidth=bitwidth, convolutionMode=convolutionMode)
 
@@ -355,7 +350,6 @@ class StereoConvolutionMACTest(GatewareTestCase):
     def calculate_expected_result(self, taps, testdata, convolutionMode):
         output = np.zeros((len(testdata),2), dtype=np.int32)
         for sample in range(len(testdata)):
-
             sumL = 0
             sumR = 0
             for tap in range(len(taps)):
@@ -381,23 +375,6 @@ class StereoConvolutionMACTest(GatewareTestCase):
         dut = self.dut
         max = int(2**(self.bitwidth-1) - 1)
         min = -max
-        testdata = np.zeros((self.testSamplecount,2))
-        testdata[0,0] = max
-        testdata[0,1] = min
-        for i in range(1,self.testSamplecount-1):
-            testdata[i,0] = int(i+100) #left channel
-            testdata[i,1] = int(-i-200) #right channel
-
-        with wave.open('/home/rouven/tmp/CS.wav', 'rb') as wav:
-            sig_data = wav.readframes(wav.getnframes())
-            sig_sample_rate = wav.getframerate()
-
-        testdata = np.zeros((len(sig_data)//6, 2), dtype='int32')
-        for i in range(0, len(sig_data), 6):
-            testdata[i // 6, 0] = int.from_bytes(sig_data[i:i + 3], byteorder='little', signed=True)
-            testdata[i // 6, 1] = int.from_bytes(sig_data[i + 3:i + 6], byteorder='little', signed=True)
-
-        testdata = testdata[1000000:(1000000+self.testSamplecount),:]
 
         testdata_raw = [[812420, 187705], [800807, 152271], [788403, 109422], [789994, 65769], [773819, 12803],
                     [747336, -40589], [744825, -84371], [729641, -141286], [706089, -190230], [687227, -238741],
@@ -425,6 +402,8 @@ class StereoConvolutionMACTest(GatewareTestCase):
                     [-435701, -348684], [-404251, -355299], [-390665, -352357], [-376465, -343641], [-378383, -344794],
                     [-369697, -338782], [-362845, -332500], [-351513, -319435], [-321284, -298249], [-301254, -274747],
                     [-256613, -242747], [-208538, -203862]]
+
+        testdata = np.zeros((self.testSamplecount, 2))
         for i in range(len(testdata_raw)):
             testdata[i, 0] = testdata_raw[i][0]
             testdata[i, 1] = testdata_raw[i][1]
