@@ -61,7 +61,8 @@ class StereoConvolutionMAC(Elaboratable):
                  samplerate:     int=48000,
                  clockfrequency:  int=60e6,
                  bitwidth:       int=24,
-                 convolutionMode: ConvolutionMode=ConvolutionMode.MONO) -> None:
+                 convolutionMode: ConvolutionMode=ConvolutionMode.MONO,
+                 debug=False) -> None:
 
         self.signal_in  = StreamInterface(name="signal_stream_in", payload_width=bitwidth)
         self.signal_out = StreamInterface(name="signal_stream_out", payload_width=bitwidth)
@@ -69,9 +70,12 @@ class StereoConvolutionMAC(Elaboratable):
         self._tapcount = len(taps) #4096 synthesizes
         self._bitwidth = bitwidth
         self._convolutionMode = convolutionMode
+        self._debug = debug
 
         # in order to process more taps than we have clock cycles per sample we will run parallel calculations.
         # The number of parallel calculations per channel is defined by the "slices" variable
+        # E.g. 60MHz sync domain and 48kHz samplerate leads to 1250 cycles available for calculations per audio sample. 
+        # In order to process an IR with 4096 taps you need 4 parallel computations (slices) in order to do real-time dsp.        
         self._slices = math.ceil(self._tapcount / (clockfrequency / samplerate))  # 4
         self._size_of_slizes = self._bitwidth * self._slices #how many bits per slice
         self._samples_per_slice = self._tapcount // self._slices #how many samples per slice
@@ -132,11 +136,11 @@ class StereoConvolutionMAC(Elaboratable):
         sumSignalL = Signal(signed(self._bitwidth * 2))
         sumSignalR = Signal.like(sumSignalL)
 
-        #debugging
-        #left_sample_sig = Array(Signal.like(carryover1, name=f"left_sample_sig_{i}") for i in range(self._slices))
-        #right_sample_sig = Array(Signal.like(carryover1, name=f"right_sample_sig_{i}") for i in range(self._slices))
-        #main_tap_sig = Array(Signal.like(carryover1, name=f"main_tap_sig_{i}") for i in range(self._slices))
-        #bleed_tap_sig = Array(Signal.like(carryover1, name=f"bleed_tap_sig_{i}") for i in range(self._slices))
+        if self._debug:
+            left_sample_sig = Array(Signal.like(carryover1, name=f"left_sample_sig_{i}") for i in range(self._slices))
+            right_sample_sig = Array(Signal.like(carryover1, name=f"right_sample_sig_{i}") for i in range(self._slices))
+            main_tap_sig = Array(Signal.like(carryover1, name=f"main_tap_sig_{i}") for i in range(self._slices))
+            bleed_tap_sig = Array(Signal.like(carryover1, name=f"bleed_tap_sig_{i}") for i in range(self._slices))
 
         m.d.comb += [
             self.signal_in.ready.eq(0),
@@ -218,13 +222,13 @@ class StereoConvolutionMAC(Elaboratable):
                             main_tap = taps1_read_port.data[i*self._bitwidth:(i + 1) * self._bitwidth].as_signed()
                             bleed_tap = taps2_read_port.data[i*self._bitwidth:(i + 1) * self._bitwidth].as_signed()
 
-                            #debugging
-                            #m.d.sync += [
-                            #    left_sample_sig[i].eq(left_sample),
-                            #    right_sample_sig[i].eq(right_sample),
-                            #    main_tap_sig[i].eq(main_tap),
-                            #    bleed_tap_sig[i].eq(bleed_tap),
-                            #]
+                            if self._debug:
+                                m.d.sync += [
+                                    left_sample_sig[i].eq(left_sample),
+                                    right_sample_sig[i].eq(right_sample),
+                                    main_tap_sig[i].eq(main_tap),
+                                    bleed_tap_sig[i].eq(bleed_tap),
+                                ]
 
                             if self._convolutionMode == ConvolutionMode.CROSSFEED:
                                 m.d.sync += [
@@ -301,11 +305,11 @@ class StereoConvolutionMACTest(GatewareTestCase):
     tapcount = 32
     bitwidth = 24
     samplerate = 48000
+    # For testing it is unrealistic to process 4000 taps. We specify a slow clockfrequency of 384kHz (48000*32/4) in order to
+    # test the calculation for 4 slices. Testing for a single slice would not uncover any parallel-processing issues in the code.
     clockfrequency = samplerate * tapcount / 4 # we want to test for 4 slices
 
     #some test IR-data
-    #tapdata1 = [5033163, 4194303, 2097151,  838859] # [0.6, 0.5, 0.25, 0.1] * 2 ** (bitwidth-1)-1
-    #tapdata2 = [419429, 209714,  83885, 167771] #[0.05, 0.025, 0.01, 0.02] * 2 ** (bitwidth-1)-1
     tapdata1 = [
         8388607, 8388607, -8388608, 7805659, -777420, -2651895, 1181562, -3751702,
         2024355, -1085865, 1194588, -341596, -138844, -133784, -204981, 33373,
@@ -325,7 +329,8 @@ class StereoConvolutionMACTest(GatewareTestCase):
         taps[i, 1] = int(tapdata2[i])
 
     convolutionMode = ConvolutionMode.CROSSFEED
-    FRAGMENT_ARGUMENTS = dict(taps=taps, samplerate=48000, clockfrequency=clockfrequency, bitwidth=bitwidth, convolutionMode=convolutionMode)
+    FRAGMENT_ARGUMENTS = dict(taps=taps, samplerate=48000, clockfrequency=clockfrequency, bitwidth=bitwidth,
+                              convolutionMode=convolutionMode, debug=True)
 
     def wait(self, n_cycles: int):
         for _ in range(n_cycles):
@@ -373,9 +378,6 @@ class StereoConvolutionMACTest(GatewareTestCase):
     @sync_test_case
     def test_fir(self):
         dut = self.dut
-        max = int(2**(self.bitwidth-1) - 1)
-        min = -max
-
         testdata_raw = [[812420, 187705], [800807, 152271], [788403, 109422], [789994, 65769], [773819, 12803],
                     [747336, -40589], [744825, -84371], [729641, -141286], [706089, -190230], [687227, -238741],
                     [674577, -293106], [679382, -354421], [673939, -404084], [670470, -448995], [698245, -493213],
@@ -435,5 +437,5 @@ class StereoConvolutionMACTest(GatewareTestCase):
         print(f"Received data: {out_signal}")
 
         for i in range(len(expected_result)):
-            assert out_signal[i*2] - 2 <= expected_result[i, 0] <= out_signal[i*2] + 2, f"counter was: {i}"
-            assert out_signal[i * 2+1] - 2 <= expected_result[i, 1] <= out_signal[i * 2+1] + 2, f"counter was: {i}"
+            assert out_signal[i*2] - 1 <= expected_result[i, 0] <= out_signal[i*2] + 1, f"counter was: {i}"
+            assert out_signal[i * 2+1] - 1 <= expected_result[i, 1] <= out_signal[i * 2+1] + 1 , f"counter was: {i}"

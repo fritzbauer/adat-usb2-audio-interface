@@ -35,7 +35,7 @@ from bundle_demultiplexer    import BundleDemultiplexer
 from stereopair_extractor    import StereoPairExtractor
 from requesthandlers         import UAC2RequestHandlers
 from debug                   import setup_ila, add_debug_led_array
-from fir_convolver           import FIRConvolver
+from stereo_convolution_mac           import FIRConvolver
 
 from usb_descriptors import USBDescriptors
 
