@@ -120,6 +120,7 @@ def setup_ila(v, ila_max_packet_size):
     usb2_to_usb1_midi_fifo       = v['usb2_to_usb1_midi_fifo']
 
     dac1_extractor               = v['dac1_extractor']
+    dac1                         = v['dac1']
     fir                          = v['fir']
     enable_fir                   = v['enable_fir']
 
@@ -505,6 +506,9 @@ def setup_ila(v, ila_max_packet_size):
         dac1_extractor.channel_stream_out.ready,
         dac1_extractor.channel_stream_out.first,
         dac1_extractor.channel_stream_out.last,
+        dac1.underflow_out,
+        dac1.fifo_level_out,
+        enable_fir,
     ]
 
     fir_signal_in_valid = Signal()
@@ -517,7 +521,6 @@ def setup_ila(v, ila_max_packet_size):
     fir_signal_out_last = Signal()
     fir_signal_out_payload = Signal(24)
     fir_signal_out_ready = Signal()
-    fir_fsm_state_out = Signal(5)
 
     m.d.comb += [
         fir_signal_in_valid.eq(fir.signal_in.valid),
@@ -530,7 +533,6 @@ def setup_ila(v, ila_max_packet_size):
         fir_signal_out_last.eq(fir.signal_out.last),
         fir_signal_out_payload.eq(fir.signal_out.payload),
         fir_signal_out_ready.eq(fir.signal_out.ready),
-        fir_fsm_state_out.eq(fir.fsm_state_out),
     ]
 
     fir_debug = [
@@ -550,7 +552,6 @@ def setup_ila(v, ila_max_packet_size):
         fir_signal_out_payload,
         fir_signal_out_ready,
         dac1_extractor.level,
-        fir_fsm_state_out,
         enable_fir
     ]
 
@@ -558,7 +559,7 @@ def setup_ila(v, ila_max_packet_size):
     #
     # signals to trace
     #
-    signals = fir_debug
+    signals = dac_extractor_debug
 
     signals_bits = sum([s.width for s in signals])
     m.submodules.ila = ila = \
