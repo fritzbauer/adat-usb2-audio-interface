@@ -13,7 +13,7 @@ class FFTConvolver:
         self.bitwidth = 24
 
         if self.testing:
-            self.tapcount = 16
+            self.tapcount = 4096
         else:
             self.tapcount = 4096
 
@@ -30,8 +30,8 @@ class FFTConvolver:
 
         if self.testing:
             samples = samples[30 * self.sample_rate:30 * self.sample_rate + self.tapcount]
-        else:
-            samples = samples[30 * self.sample_rate:40 * self.sample_rate]
+        #else:
+        #    samples = samples[30 * self.sample_rate:40 * self.sample_rate]
 
         print(f"{datetime.now().strftime('%H:%M:%S')}: Calculating")
         out_data = self.calculate_channel_fft(samples, taps)
@@ -44,28 +44,48 @@ class FFTConvolver:
         output_samples = samples.copy()
 
         print(f"{datetime.now().strftime('%H:%M:%S')}: Starting")
-        samplecount = len(samples)
-        tapcount = len(taps)
+        samplecount = len(samples[:,0])
+        tapcount = len(taps[:,0])
 
-        fftsize = 2<<(tapcount-1).bit_length()
-        stepsize = fftsize-tapcount +1 #or 32
+
+        stepsize = 128 #fftsize-tapcount +1 #or 32
+        fftsize = 2 << (stepsize - 1).bit_length()
+        slices = tapcount // stepsize
+        print(f"Slices: {slices}")
         offsets = range(0,samplecount,stepsize)
+        previous_samples1 = np.zeros((slices, fftsize), dtype=np.complex128)
+        previous_samples2 = np.zeros((slices, fftsize), dtype=np.complex128)
 
-        tapsfft1 = np.fft.fft(taps[:, 0], n=fftsize)
-        tapsfft2 = np.fft.fft(taps[:, 1], n=fftsize)
+        tapsfft1 = np.zeros((slices, fftsize), dtype=np.complex128)
+        tapsfft2 = np.zeros((slices, fftsize), dtype=np.complex128)
+        for j in range(slices):
+            tapsfft1[j] = np.fft.fft(taps[j*stepsize:(j+1)*stepsize, 0], n=fftsize)
+            tapsfft2[j] = np.fft.fft(taps[j*stepsize:(j+1)*stepsize, 1], n=fftsize)
 
+        print(tapsfft1)
         buffer1 = np.zeros(samplecount + fftsize, dtype=np.complex128)
         buffer2 = np.zeros(samplecount + fftsize, dtype=np.complex128)
 
         for n in offsets:
-            signalfft1 = np.fft.fft(samples[n:n + stepsize, 0], n=fftsize)
-            signalfft2 = np.fft.fft(samples[n:n + stepsize, 1], n=fftsize)
-            #print(f"signalfft len: {np.shape(signalfft1)}")
+            np.roll(previous_samples1, fftsize)
+            np.roll(previous_samples2, fftsize)
+            previous_samples1[0] = np.fft.fft(samples[n:n + stepsize, 0], n=fftsize)
+            previous_samples2[0] = np.fft.fft(samples[n:n + stepsize, 1], n=fftsize)
+            # print(f"signalfft len: {np.shape(signalfft1)}")
 
-            convolved1 = signalfft1 * tapsfft1
-            convolved2 = signalfft2 * tapsfft2
-            modifiedsignal1 = np.fft.ifft(convolved1)
-            modifiedsignal2 = np.fft.ifft(convolved2)
+            slice1 = np.zeros((fftsize), dtype=np.complex128)
+            slice2 = np.zeros((fftsize), dtype=np.complex128)
+
+            for j in range(slices):
+
+                convolved1 = previous_samples1[j] * tapsfft1[j] + previous_samples2[j] * tapsfft2[j]
+                convolved2 = previous_samples2[j] * tapsfft1[j] + previous_samples1[j] * tapsfft2[j]
+                slice1 += convolved1
+                slice2 += convolved2
+            #print(f"Slice1: {slice1}")
+
+            modifiedsignal1 = np.fft.ifft(slice1, n=fftsize)
+            modifiedsignal2 = np.fft.ifft(slice2, n=fftsize)
 
             #print(f"Modifiedshape: {np.shape(modifiedsignal1)}: {modifiedsignal1}")
             buffer1[n:n + fftsize] += modifiedsignal1
@@ -82,7 +102,7 @@ class FFTConvolver:
             print(f"Samplecount: {samplecount}; fftsize: {fftsize}; stepsize: {stepsize}")
             print(f"tapsfft len: {np.shape(tapsfft1)}")
             print(f"np.abs: {np.abs(buffer1[:samplecount])}")
-            print(f"output_samples: {output_samples[:,0]}")
+            print(f"output_samples: {output_samples[3900:4200,0]}")
             print(f"{datetime.now().strftime('%H:%M:%S')}: Finished")
 
         return output_samples
