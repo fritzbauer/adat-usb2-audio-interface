@@ -1,6 +1,7 @@
 import wave
 #import matplotlib.pyplot as plt
 import numpy as np
+import math
 
 from datetime import datetime
 import binascii
@@ -23,10 +24,11 @@ class FFTConvolver:
 
     def run(self):
         print(f"{datetime.now().strftime('%H:%M:%S')}: Loading Taps")
-        taps = self.load_wav_file(self.ir_filename)[:self.tapcount]
-
+        taps, _ = self.load_wav_file(self.ir_filename, self.bitwidth)
+        taps = taps[:self.tapcount]
+        
         print(f"{datetime.now().strftime('%H:%M:%S')}: Loading samples")
-        samples = self.load_wav_file(self.samples_filename)
+        samples, _ = self.load_wav_file(self.samples_filename, self.bitwidth)
 
         if self.testing:
             samples = samples[30 * self.sample_rate:30 * self.sample_rate + self.tapcount]
@@ -36,14 +38,12 @@ class FFTConvolver:
         print(f"{datetime.now().strftime('%H:%M:%S')}: Calculating")
         out_data = self.calculate_channel_fft(samples, taps)
 
-        print(f"{datetime.now().strftime('%H:%M:%S')}: Saving output.")
-        self.save_wav_file(self.output_filename, out_data)
+        print(f"{datetime.now().strftime('%H:%M:%S')}: Saving output")
+        self.save_wav_file(self.output_filename, out_data, self.bitwidth)
 
 
     def calculate_channel_fft(self, samples, taps):
         output_samples = samples.copy()
-
-        print(f"{datetime.now().strftime('%H:%M:%S')}: Starting")
         samplecount = len(samples[:,0])
         tapcount = len(taps[:,0])
 
@@ -51,7 +51,6 @@ class FFTConvolver:
         stepsize = 128 #fftsize-tapcount +1 #or 32
         fftsize = 2 << (stepsize - 1).bit_length()
         slices = tapcount // stepsize
-        print(f"Slices: {slices}")
         offsets = range(0,samplecount,stepsize)
         previous_samples1 = np.zeros((slices, fftsize), dtype=np.complex128)
         previous_samples2 = np.zeros((slices, fftsize), dtype=np.complex128)
@@ -62,7 +61,6 @@ class FFTConvolver:
             tapsfft1[j] = np.fft.fft(taps[j*stepsize:(j+1)*stepsize, 0], n=fftsize)
             tapsfft2[j] = np.fft.fft(taps[j*stepsize:(j+1)*stepsize, 1], n=fftsize)
 
-        print(tapsfft1)
         buffer1 = np.zeros(samplecount + fftsize, dtype=np.complex128)
         buffer2 = np.zeros(samplecount + fftsize, dtype=np.complex128)
 
@@ -107,26 +105,34 @@ class FFTConvolver:
 
         return output_samples
 
-    def load_wav_file(self, filename):
+    def load_wav_file(self, filename, bitwidth):
         with wave.open(filename, 'rb') as wav:
             raw_data = wav.readframes(wav.getnframes())
+            sample_rate = wav.getframerate()
+            channels = wav.getnchannels()
+            samplewidth = wav.getsampwidth()  # 3 bytes = 24bit
+        
+        # bring the signal to the desired bitwidth
+        normalize_factor = bitwidth - samplewidth * 8
 
-        data = np.zeros((len(raw_data) // 6, 2), dtype='int64')
+        bytes_per_Frame = channels * samplewidth
+        data = np.zeros((len(raw_data) // bytes_per_Frame, channels), dtype='int64')
 
-        for i in range(0, len(raw_data), 6):
-            data[i // 6, 0] = int.from_bytes(raw_data[i:i + 3], byteorder='little', signed=True)
-            data[i // 6, 1] = int.from_bytes(raw_data[i + 3:i + 6], byteorder='little', signed=True)
+        for i in range(0, len(raw_data), bytes_per_Frame):
+            for channel in range(channels):
+                sample = int.from_bytes(raw_data[i + channel * samplewidth:i + (channel+1) * samplewidth], byteorder='little', signed=True)
+                data[i // bytes_per_Frame, channel] = sample * 2 ** normalize_factor #normalize to bitwidth
 
-        assert self.validate_pcm_data(data)
+        assert self.validate_pcm_data(data, bitwidth)
 
-        return data
+        return data, sample_rate
 
-    def save_wav_file(self, filename, data):
-        assert self.validate_pcm_data(data)
+    def save_wav_file(self, filename, data, bitwidth):
+        assert self.validate_pcm_data(data, bitwidth)
         out_wav = bytearray()
         for i in range(len(data)):
-            out_wav.extend(int(data[i, 0]).to_bytes(3, 'little', signed=True))
-            out_wav.extend(int(data[i, 1]).to_bytes(3, 'little', signed=True))
+            out_wav.extend(int(data[i, 0]).to_bytes(math.ceil(bitwidth/8), 'little', signed=True))
+            out_wav.extend(int(data[i, 1]).to_bytes(math.ceil(bitwidth/8), 'little', signed=True))
 
         print(data[:, 0])
 
@@ -147,14 +153,14 @@ class FFTConvolver:
             wav.setnframes(len(data))
             wav.writeframesraw(out_wav)
 
-    def validate_pcm_data(self, data):
+    def validate_pcm_data(self, data, bitwidth):
         valid = True
         for sample in range(len(data)):
-            if not -1 * 2 ** (self.bitwidth - 1) <= data[sample, 0] <= 1 * 2 ** (self.bitwidth - 1) - 1:
+            if not -1 * 2 ** (bitwidth - 1) <= data[sample, 0] <= 1 * 2 ** (bitwidth - 1) - 1:
                 print(f"Out of range: {data[sample, 0]}")
                 valid = False
 
-            if not -1 * 2 ** (self.bitwidth - 1) <= data[sample, 1] <= 1 * 2 ** (self.bitwidth - 1) - 1:
+            if not -1 * 2 ** (bitwidth - 1) <= data[sample, 1] <= 1 * 2 ** (bitwidth - 1) - 1:
                 print(f"Out of range: {data[sample, 1]}")
                 valid = False
         return valid
