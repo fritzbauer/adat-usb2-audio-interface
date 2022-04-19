@@ -419,7 +419,7 @@ class USB2AudioInterface(Elaboratable):
             enable_convolver = Signal()
 
             # load the IR data
-            ir_sig = PCMImport.load_wav_file('IRs/DT990_crossfeed_4800taps.wav', audio_bits)
+            ir_sig, ir_sample_rate = PCMImport.load_wav_file('IRs/DT990_crossfeed_4800taps.wav', audio_bits)
 
             # tapcount 4096 - more is failing to synthesize right now. 4800 would be the goal for 100ms.
             taps = ir_sig[:4096,:]
