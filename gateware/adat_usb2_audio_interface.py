@@ -37,6 +37,7 @@ from bundle_demultiplexer    import BundleDemultiplexer
 from stereopair_extractor    import StereoPairExtractor
 from requesthandlers         import UAC2RequestHandlers
 from debug                   import setup_ila, add_debug_led_array
+from pcm_import              import PCMImport
 
 from usb_descriptors import USBDescriptors
 
@@ -418,14 +419,7 @@ class USB2AudioInterface(Elaboratable):
             enable_convolver = Signal()
 
             # load the IR data
-            with wave.open('IRs/DT990_crossfeed_4800taps.wav', 'rb') as wav:
-                ir_data = wav.readframes(wav.getnframes())
-                ir_sample_rate = wav.getframerate()
-
-            ir_sig = np.zeros((len(ir_data) // 6, 2), dtype='int32')
-            for i in range(0, len(ir_sig), 6):
-                ir_sig[i // 6, 0] = int.from_bytes(ir_data[i:i + 3], byteorder='little', signed=True)
-                ir_sig[i // 6, 1] = int.from_bytes(ir_data[i + 3:i + 6], byteorder='little', signed=True)
+            ir_sig = PCMImport.load_wav_file('IRs/DT990_crossfeed_4800taps.wav', audio_bits)
 
             # tapcount 4096 - more is failing to synthesize right now. 4800 would be the goal for 100ms.
             taps = ir_sig[:4096,:]
@@ -435,9 +429,7 @@ class USB2AudioInterface(Elaboratable):
 
             # validate the IR file
             assert ir_sample_rate == samplerate, f"Unsupported samplerate {ir_sample_rate} for IR file. Required samplerate is {samplerate}"
-            for tap in range(len(taps)):
-                assert -1 * 2 ** (audio_bits - 1) <= taps[tap, 0] <= 1 * 2 ** (audio_bits - 1) - 1,\
-                        f"Tap #{tap} is out of range for bitwidth {audio_bits}: {taps[tap, 0]}"
+            
         else:
             convolver = None
             enable_convolver = None
