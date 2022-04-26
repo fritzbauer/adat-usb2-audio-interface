@@ -5,6 +5,7 @@ import math
 
 from datetime import datetime
 import binascii
+from cmath import exp, pi
 
 class FFTConvolver:
 
@@ -64,8 +65,8 @@ class FFTConvolver:
             z2 = np.zeros((fftsize))
             z1[:stepsize] = taps[j * stepsize:(j + 1) * stepsize, 0]
             z2[:stepsize] = taps[j * stepsize:(j + 1) * stepsize, 1]
-            tapsfft1[j] = FFTConvolver.FFT(z1)
-            tapsfft2[j] = FFTConvolver.FFT(z2)
+            tapsfft1[j] = FFTConvolver.DFT(z1)
+            tapsfft2[j] = FFTConvolver.DFT(z2)
 
         buffer1 = np.zeros(samplecount + fftsize, dtype=np.complex128)
         buffer2 = np.zeros(samplecount + fftsize, dtype=np.complex128)
@@ -79,8 +80,8 @@ class FFTConvolver:
             z2 = np.zeros((fftsize))
             z1[:stepsize] = samples[n:n + stepsize, 0]
             z2[:stepsize] = samples[n:n + stepsize, 0]
-            previous_samples1[0] = FFTConvolver.FFT(z1)
-            previous_samples2[0] = FFTConvolver.FFT(z2)
+            previous_samples1[0] = FFTConvolver.DFT(z1)
+            previous_samples2[0] = FFTConvolver.DFT(z2)
             # print(f"signalfft len: {np.shape(signalfft1)}")
 
             slice1 = np.zeros((fftsize), dtype=np.complex128)
@@ -94,13 +95,8 @@ class FFTConvolver:
                 slice2 += convolved2
             #print(f"Slice1: {slice1}")
 
-            z1 = np.zeros((fftsize))
-            z2 = np.zeros((fftsize))
-            z1 = slice1
-            z2 = slice2
-
-            modifiedsignal1 = FFTConvolver.FFT(z1, inverse=True)
-            modifiedsignal2 = FFTConvolver.FFT(z2, inverse=True)
+            modifiedsignal1 = FFTConvolver.IDFT(slice1)
+            modifiedsignal2 = FFTConvolver.IDFT(slice2)
 
             #print(f"Modifiedshape: {np.shape(modifiedsignal1)}: {modifiedsignal1}")
             buffer1[n:n + fftsize] += modifiedsignal1
@@ -109,8 +105,8 @@ class FFTConvolver:
         for i in range(samplecount):
             #if i < 40:
             #    print(f"Output: res: {int(res[i])}; abs: {np.abs(res[i])}; real: {np.real(res[i])}; img: {np.imag(res[i])}")
-            output_samples[i, 0] = int(np.real(buffer1[i])) #>> self.bitwidth
-            output_samples[i, 1] = int(np.real(buffer2[i])) #>> self.bitwidth
+            output_samples[i, 0] = int(np.real(buffer1[i])) >> self.bitwidth#(self.bitwidth+12)
+            output_samples[i, 1] = int(np.real(buffer2[i])) >> self.bitwidth#(self.bitwidth+12)
 
         if self.testing:
             print(f"taplen: {len(taps)}")
@@ -138,7 +134,7 @@ class FFTConvolver:
         for i in range(0, len(raw_data), bytes_per_Frame):
             for channel in range(channels):
                 sample = int.from_bytes(raw_data[i + channel * samplewidth:i + (channel+1) * samplewidth], byteorder='little', signed=True)
-                data[i // bytes_per_Frame, channel] = (sample * 2 ** normalize_factor) >> (bitwidth//2)#normalize to bitwidth
+                data[i // bytes_per_Frame, channel] = (sample * 2 ** normalize_factor) #>> (bitwidth//2)#normalize to bitwidth
 
         assert self.validate_pcm_data(data, bitwidth)
 
@@ -195,10 +191,41 @@ class FFTConvolver:
             real, imag = 0, 0
             for n in range(N):
                 theta = -k * (2 * math.pi) * (float(n) / N)
+                #print(f"{n}: {theta}; k: {k}")
                 real += int(x[n]) * math.cos(theta)
                 imag += int(x[n]) * math.sin(theta)
-            out.append(complex(real / N, imag / N))
+            out.append(complex(real, imag))
         return out
+
+    def DFT2(x):
+        N, out = len(x), []
+        if N <= 1:
+            return x
+        even = FFTConvolver.FFT2(x[0::2])
+        odd = FFTConvolver.FFT2(x[1::2])
+
+        theta =  [-k * (2 * math.pi) * (float(n) / N) for k in range(N // 2)]
+
+        for k in range(N):
+            real, imag = 0, 0
+            for n in range(N):
+                theta = -k * (2 * math.pi) * (float(n) / N)
+                #print(f"{n}: {theta}; k: {k}")
+                real += int(x[n]) * math.cos(theta)
+                imag += int(x[n]) * math.sin(theta)
+            out.append(complex(real, imag))
+            [even[k] + T[k] for k in range(N // 2)] + \
+            [even[k] - T[k] for k in range(N // 2)]
+        return out
+
+    def FFT2(x):
+        N = len(x)
+        if N <= 1: return x
+        even = FFTConvolver.FFT2(x[0::2])
+        odd = FFTConvolver.FFT2(x[1::2])
+        T = [exp(-2j * pi * k / N) * odd[k] for k in range(N // 2)]
+        return [even[k] + T[k] for k in range(N // 2)] + \
+               [even[k] - T[k] for k in range(N // 2)]
 
     # >> Inverse discrete Fourier transform
     # yr [in]: real parts of the sinusoids
@@ -210,10 +237,34 @@ class FFTConvolver:
             real, imag = 0, 0
             for k in range(N):
                 theta = k * (2 * math.pi) * (float(n) / N)
+
                 real += (input[k].real * math.cos(theta)) - (input[k].imag * math.sin(theta))
                 # imag += (yr[k] * math.sin(theta)) + (yi[k] * math.cos(theta))
-            x.append(real)
+            x.append(round(real/N))
+            #x.append(real/float(N))
         return x
+
+    def FFT2(x):
+        N = len(x)
+        if N <= 1: return x
+        even = FFTConvolver.FFT2(x[0::2])
+        odd = FFTConvolver.FFT2(x[1::2])
+        T = [exp(-2j * pi * k / N) * odd[k] for k in range(N // 2)]
+        return [even[k] + T[k] for k in range(N // 2)] + \
+               [even[k] - T[k] for k in range(N // 2)]
+
+    def IFFT2(x):
+        N, x = len(X), FFTConvolver.FFT2(X, sign=1)  # e^{j2\pi/N}
+        for i in range(N):
+            x[i] = x[i] / float(N)
+        return x
+        #N = len(x)
+        #if N <= 1: return x
+        #even = FFTConvolver.FFT2(x[0::2])
+        #odd = FFTConvolver.FFT2(x[1::2])
+        #T = [exp(2j * pi * k / N) * odd[k] for k in range(N // 2)]
+        #return [even[k] + T[k] for k in range(N // 2)] + \
+        #       [even[k] - T[k] for k in range(N // 2)]
 
     #https://jakevdp.github.io/blog/2013/08/28/understanding-the-fft/
     def FFT(x, inverse=False):
@@ -221,13 +272,15 @@ class FFTConvolver:
         #x = np.asarray(x, dtype=float)
         N = len(x) #x.shape[0]
 
-        if N % 2 > 0:
-            raise ValueError("size of x must be a power of 2")
-        elif N <= 32:  # this cutoff should be optimized
+
+        if N <= 1:  # this cutoff should be optimized
+            return x
             if inverse:
                 return FFTConvolver.IDFT(x)
             else:
                 return FFTConvolver.DFT(x)
+        elif N % 2 > 0:
+            raise ValueError("size of x must be a power of 2")
         else:
             X_even = FFTConvolver.FFT(x[::2], inverse)
             X_odd = FFTConvolver.FFT(x[1::2], inverse)
@@ -238,5 +291,14 @@ class FFTConvolver:
             return np.concatenate([X_even + factor[:N // 2] * X_odd,
                                    X_even + factor[N // 2:] * X_odd])
 
+    def IFFT3(X):
+        N, x = len(X), FFTConvolver.FFT(X, inverse=True)  # e^{j2\pi/N}
+        for i in range(N):
+            x[i] = int((x[i] / float(N)).real)
+        return x
+
 if __name__ == "__main__":
     FFTConvolver().run()
+    #fft = FFTConvolver.DFT([1, 1, 1, 1, 0, 0, 0, 0])
+    #print(fft)
+    #print(FFTConvolver.IDFT(fft))
