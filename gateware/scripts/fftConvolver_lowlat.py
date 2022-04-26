@@ -32,8 +32,8 @@ class FFTConvolver:
 
         if self.testing:
             samples = samples[30 * self.sample_rate:30 * self.sample_rate + self.tapcount]
-        #else:
-        #    samples = samples[30 * self.sample_rate:40 * self.sample_rate]
+        else:
+            samples = samples[30 * self.sample_rate:40 * self.sample_rate]
 
         print(f"{datetime.now().strftime('%H:%M:%S')}: Calculating")
         out_data = self.calculate_channel_fft(samples, taps)
@@ -58,17 +58,29 @@ class FFTConvolver:
         tapsfft1 = np.zeros((slices, fftsize), dtype=np.complex128)
         tapsfft2 = np.zeros((slices, fftsize), dtype=np.complex128)
         for j in range(slices):
-            tapsfft1[j] = np.fft.fft(taps[j*stepsize:(j+1)*stepsize, 0], n=fftsize)
-            tapsfft2[j] = np.fft.fft(taps[j*stepsize:(j+1)*stepsize, 1], n=fftsize)
+            #tapsfft1[j] = np.fft.fft(taps[j*stepsize:(j+1)*stepsize, 0], n=fftsize)
+            #tapsfft2[j] = np.fft.fft(taps[j*stepsize:(j+1)*stepsize, 1], n=fftsize)
+            z1 = np.zeros((fftsize))
+            z2 = np.zeros((fftsize))
+            z1[:stepsize] = taps[j * stepsize:(j + 1) * stepsize, 0]
+            z2[:stepsize] = taps[j * stepsize:(j + 1) * stepsize, 1]
+            tapsfft1[j] = FFTConvolver.FFT(z1)
+            tapsfft2[j] = FFTConvolver.FFT(z2)
 
         buffer1 = np.zeros(samplecount + fftsize, dtype=np.complex128)
         buffer2 = np.zeros(samplecount + fftsize, dtype=np.complex128)
 
         for n in offsets:
+            if (n // stepsize) % 200 == 0:
+                print(f"{n}/{samplecount}")
             np.roll(previous_samples1, fftsize)
             np.roll(previous_samples2, fftsize)
-            previous_samples1[0] = np.fft.fft(samples[n:n + stepsize, 0], n=fftsize)
-            previous_samples2[0] = np.fft.fft(samples[n:n + stepsize, 1], n=fftsize)
+            z1 = np.zeros((fftsize))
+            z2 = np.zeros((fftsize))
+            z1[:stepsize] = samples[n:n + stepsize, 0]
+            z2[:stepsize] = samples[n:n + stepsize, 0]
+            previous_samples1[0] = FFTConvolver.FFT(z1)
+            previous_samples2[0] = FFTConvolver.FFT(z2)
             # print(f"signalfft len: {np.shape(signalfft1)}")
 
             slice1 = np.zeros((fftsize), dtype=np.complex128)
@@ -82,8 +94,13 @@ class FFTConvolver:
                 slice2 += convolved2
             #print(f"Slice1: {slice1}")
 
-            modifiedsignal1 = np.fft.ifft(slice1, n=fftsize)
-            modifiedsignal2 = np.fft.ifft(slice2, n=fftsize)
+            z1 = np.zeros((fftsize))
+            z2 = np.zeros((fftsize))
+            z1 = slice1
+            z2 = slice2
+
+            modifiedsignal1 = FFTConvolver.FFT(z1, inverse=True)
+            modifiedsignal2 = FFTConvolver.FFT(z2, inverse=True)
 
             #print(f"Modifiedshape: {np.shape(modifiedsignal1)}: {modifiedsignal1}")
             buffer1[n:n + fftsize] += modifiedsignal1
@@ -92,8 +109,8 @@ class FFTConvolver:
         for i in range(samplecount):
             #if i < 40:
             #    print(f"Output: res: {int(res[i])}; abs: {np.abs(res[i])}; real: {np.real(res[i])}; img: {np.imag(res[i])}")
-            output_samples[i, 0] = int(np.real(buffer1[i])) >> self.bitwidth
-            output_samples[i, 1] = int(np.real(buffer2[i])) >> self.bitwidth
+            output_samples[i, 0] = int(np.real(buffer1[i])) #>> self.bitwidth
+            output_samples[i, 1] = int(np.real(buffer2[i])) #>> self.bitwidth
 
         if self.testing:
             print(f"taplen: {len(taps)}")
@@ -121,7 +138,7 @@ class FFTConvolver:
         for i in range(0, len(raw_data), bytes_per_Frame):
             for channel in range(channels):
                 sample = int.from_bytes(raw_data[i + channel * samplewidth:i + (channel+1) * samplewidth], byteorder='little', signed=True)
-                data[i // bytes_per_Frame, channel] = sample * 2 ** normalize_factor #normalize to bitwidth
+                data[i // bytes_per_Frame, channel] = (sample * 2 ** normalize_factor) >> (bitwidth//2)#normalize to bitwidth
 
         assert self.validate_pcm_data(data, bitwidth)
 
@@ -164,6 +181,62 @@ class FFTConvolver:
                 print(f"Out of range: {data[sample, 1]}")
                 valid = False
         return valid
+
+    #https://dsp.stackexchange.com/questions/70649/fft-for-long-waveform
+    #https://gist.github.com/dannvix/12c26919b6e182afb1f724b051e1ad7a
+    #https://rosettacode.org/wiki/Fast_Fourier_transform
+    # >> Discrete Fourier transform for sampled signals
+    # x [in]: sampled signals, a list of magnitudes (real numbers)
+    # yr [out]: real parts of the sinusoids
+    # yi [out]: imaginary parts of the sinusoids
+    def DFT(x):
+        N, out = len(x), []
+        for k in range(N):
+            real, imag = 0, 0
+            for n in range(N):
+                theta = -k * (2 * math.pi) * (float(n) / N)
+                real += int(x[n]) * math.cos(theta)
+                imag += int(x[n]) * math.sin(theta)
+            out.append(complex(real / N, imag / N))
+        return out
+
+    # >> Inverse discrete Fourier transform
+    # yr [in]: real parts of the sinusoids
+    # yi [in]: imaginary parts of the sinusoids
+    # x [out]: sampled signals (real parts only), a list of magnitude
+    def IDFT(input):
+        N, x = len(input), []
+        for n in range(N):
+            real, imag = 0, 0
+            for k in range(N):
+                theta = k * (2 * math.pi) * (float(n) / N)
+                real += (input[k].real * math.cos(theta)) - (input[k].imag * math.sin(theta))
+                # imag += (yr[k] * math.sin(theta)) + (yi[k] * math.cos(theta))
+            x.append(real)
+        return x
+
+    #https://jakevdp.github.io/blog/2013/08/28/understanding-the-fft/
+    def FFT(x, inverse=False):
+        """A recursive implementation of the 1D Cooley-Tukey FFT"""
+        #x = np.asarray(x, dtype=float)
+        N = len(x) #x.shape[0]
+
+        if N % 2 > 0:
+            raise ValueError("size of x must be a power of 2")
+        elif N <= 32:  # this cutoff should be optimized
+            if inverse:
+                return FFTConvolver.IDFT(x)
+            else:
+                return FFTConvolver.DFT(x)
+        else:
+            X_even = FFTConvolver.FFT(x[::2], inverse)
+            X_odd = FFTConvolver.FFT(x[1::2], inverse)
+            if inverse:
+                factor = np.exp(2j * np.pi * np.arange(N) / N)
+            else:
+                factor = np.exp(-2j * np.pi * np.arange(N) / N)
+            return np.concatenate([X_even + factor[:N // 2] * X_odd,
+                                   X_even + factor[N // 2:] * X_odd])
 
 if __name__ == "__main__":
     FFTConvolver().run()
