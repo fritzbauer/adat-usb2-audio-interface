@@ -1,0 +1,53 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Thu Apr 28 14:48:37 2022
+[*]
+[dumpfile] "/home/rouven/fpga/adat-usb2-audio-interface/gateware/test_StereoConvolutionFFTTest_test_fir.vcd"
+[dumpfile_mtime] "Thu Apr 28 14:42:59 2022"
+[dumpfile_size] 435608
+[savefile] "/home/rouven/fpga/adat-usb2-audio-interface/gateware/stereo_convolution_fft-bench.gtkw"
+[timestart] 0
+[size] 1852 1016
+[pos] -1 -1
+*-20.000000 623000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] bench.
+[sst_width] 233
+[signals_width] 442
+[sst_expanded] 1
+[sst_vpaned_height] 289
+@28
+bench.top.valid_in
+@24
+bench.top.gotSamples[4:0]
+@28
+bench.top.valid_out
+@24
+bench.top.fft_out_counter[2:0]
+bench.top.mac_counter[2:0]
+@28
+bench.top.fsm_state
+bench.top.signal_stream_in__first
+bench.top.signal_stream_in__last
+@22
+bench.top.signal_stream_in__payload[23:0]
+@28
+bench.top.signal_stream_in__ready
+bench.top.signal_stream_in__valid
+@22
+bench.top.signal_stream_out__payload[23:0]
+@28
+bench.top.signal_stream_out__valid
+@22
+bench.top.madd1[26:0]
+@28
+bench.top._buffer_memory_r_addr[2:0]
+@22
+bench.top._buffer_memory_r_data[53:0]
+@28
+bench.top._buffer_memory_w_addr[2:0]
+@22
+bench.top._buffer_memory_w_data[53:0]
+@28
+bench.top._buffer_memory_w_en
+[pattern_trace] 1
+[pattern_trace] 0
