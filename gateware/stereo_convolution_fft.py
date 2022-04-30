@@ -68,13 +68,13 @@ class StereoConvolutionFFT(Elaboratable):
         self.signal_in  = StreamInterface(name="signal_stream_in", payload_width=bitwidth)
         self.signal_out = StreamInterface(name="signal_stream_out", payload_width=bitwidth)
 
-        self._tapcount = 1024 #len(taps) #4096 synthesizes
+        self._tapcount = 64 #len(taps) #4096 synthesizes
         self._bitwidth = bitwidth
         self._convolutionMode = convolutionMode
         self._debug = debug
         self._testing = testing
 
-        self._stepsize = 128  # fftsize-tapcount +1 #or 32
+        self._stepsize = 16  # fftsize-tapcount +1 #or 32
         self._fftsize = 2 << (self._stepsize - 1).bit_length()
         print(f"FFTSize: {self._fftsize}")
         self._slices = self._tapcount // self._stepsize
@@ -91,7 +91,7 @@ class StereoConvolutionFFT(Elaboratable):
         #   * Store the right input samples
         #   * Store the left output samples
         #   * Store the left-right interleaved output samples
-        self._buffer_memory = Memory(width=self._fft_output_bitwidth*2, depth=self._stepsize*2)
+        self._buffer_memory = Memory(width=self._fft_output_bitwidth*2, depth=self._fftsize*2)
 
         tapsfft1 = np.zeros((self._slices * self._fftsize), dtype=np.int64)
         tapsfft2 = np.zeros((self._slices * self._fftsize), dtype=np.int64)
@@ -109,8 +109,9 @@ class StereoConvolutionFFT(Elaboratable):
             #tapsfft1[j*self._fftsize: (j+1)*self._fftsize] = int(np.abs(np.fft.rfft(taps[j * self._stepsize:(j + 1) * self._stepsize, 0], n=self._fftsize)))
             #tapsfft2[j*self._fftsize: (j+1)*self._fftsize] = np.fft.rfft(taps[j * self._stepsize:(j + 1) * self._stepsize, 1], n=self._fftsize)
 
-        #self._taps1_memory.init = tapsfft1
-        #self._taps2_memory.init = tapsfft2
+        # TODO: This does not synthesize for larger FFT sizes, but works for smaller?!
+        self._taps1_memory.init = tapsfft1
+        self._taps2_memory.init = tapsfft2
 
     def elaborate(self, platform) -> Module:
         m = Module()
@@ -137,10 +138,15 @@ class StereoConvolutionFFT(Elaboratable):
         slices_counter = Signal(range(self._slices))
         mac_counter = Signal(range(self._fftsize))
 
-        madd1 = Signal(self._bitwidth + Shape.cast(range(self._fftsize)).width)
+        madd1 = Signal(self._fft_output_bitwidth * 2)
+        carryover = Signal.like(madd1)
 
-        #gotSamples = Signal(range(self._fft_output_bitwidth))
-        #m.d.comb += gotSamples.eq(fft.gotSamples)
+        gotSamples = Signal(range(self._fftsize*3))
+        fftCount = Signal.like(gotSamples)
+        m.d.comb += [
+            gotSamples.eq(fft.gotSamples),
+            fftCount.eq(fft.fftCount),
+        ]
 
         m.d.comb += [
             self.signal_in.ready.eq(0),
@@ -340,7 +346,7 @@ class StereoConvolutionFFT(Elaboratable):
                 ]
                 m.d.sync += [
                     self.signal_out.valid.eq(1),
-                    self.signal_out.payload.eq(buffer_read_port.data >> self._fft_output_bitwidth),
+                    self.signal_out.payload.eq(buffer_read_port.data >> Shape.cast(range(self._fftsize)).width),
                     self.signal_out.first.eq(in_out_counter % 2 == 0),
                     self.signal_out.last.eq(in_out_counter % 2 == 1),
                     in_out_counter.eq(in_out_counter + 1),

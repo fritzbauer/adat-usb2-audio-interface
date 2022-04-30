@@ -1,30 +1,22 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Thu Apr 28 14:48:37 2022
+[*] Sat Apr 30 13:06:15 2022
 [*]
 [dumpfile] "/home/rouven/fpga/adat-usb2-audio-interface/gateware/test_StereoConvolutionFFTTest_test_fir.vcd"
-[dumpfile_mtime] "Thu Apr 28 14:42:59 2022"
-[dumpfile_size] 435608
+[dumpfile_mtime] "Sat Apr 30 13:06:09 2022"
+[dumpfile_size] 1081529
 [savefile] "/home/rouven/fpga/adat-usb2-audio-interface/gateware/stereo_convolution_fft-bench.gtkw"
-[timestart] 0
-[size] 1852 1016
+[timestart] 6973000
+[size] 1846 1016
 [pos] -1 -1
-*-20.000000 623000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-19.000000 8025000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] bench.
 [sst_width] 233
 [signals_width] 442
 [sst_expanded] 1
 [sst_vpaned_height] 289
 @28
-bench.top.valid_in
-@24
-bench.top.gotSamples[4:0]
-@28
-bench.top.valid_out
-@24
-bench.top.fft_out_counter[2:0]
-bench.top.mac_counter[2:0]
-@28
+bench.top.clk
 bench.top.fsm_state
 bench.top.signal_stream_in__first
 bench.top.signal_stream_in__last
@@ -33,21 +25,51 @@ bench.top.signal_stream_in__payload[23:0]
 @28
 bench.top.signal_stream_in__ready
 bench.top.signal_stream_in__valid
+bench.top.valid_in
+bench.top.valid_out
 @22
+bench.top.sample_in[47:0]
+@24
+bench.top.sample_out[57:0]
+bench.top.gotSamples[6:0]
+bench.top.fftCount[6:0]
+bench.top._samples1_memory_w_addr[6:0]
+@22
+bench.top._samples1_memory_w_data[57:0]
+@28
+bench.top._samples1_memory_w_en
+@24
+bench.top.in_out_counter[4:0]
+bench.top.slices_counter[1:0]
+bench.top.mac_counter[4:0]
+bench.top._samples1_memory_r_addr[6:0]
+@22
+bench.top._samples1_memory_r_data[57:0]
+@24
+bench.top._taps1_memory_r_addr[6:0]
+@22
+bench.top._taps1_memory_r_data[57:0]
+@24
+bench.top._taps2_memory_r_addr[6:0]
+@22
+bench.top._taps2_memory_r_data[57:0]
+bench.top.madd1[57:0]
+@24
+bench.top._buffer_memory_w_addr[5:0]
+@22
+bench.top._buffer_memory_w_data[57:0]
+@28
+bench.top._buffer_memory_w_en
+@24
+bench.top._buffer_memory_r_addr[5:0]
+@22
+bench.top._buffer_memory_r_data[57:0]
+@28
+bench.top.signal_stream_out__first
+bench.top.signal_stream_out__last
+@25
 bench.top.signal_stream_out__payload[23:0]
 @28
 bench.top.signal_stream_out__valid
-@22
-bench.top.madd1[26:0]
-@28
-bench.top._buffer_memory_r_addr[2:0]
-@22
-bench.top._buffer_memory_r_data[53:0]
-@28
-bench.top._buffer_memory_w_addr[2:0]
-@22
-bench.top._buffer_memory_w_data[53:0]
-@28
-bench.top._buffer_memory_w_en
 [pattern_trace] 1
 [pattern_trace] 0

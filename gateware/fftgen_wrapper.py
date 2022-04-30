@@ -100,15 +100,18 @@ class FFTGenWrapper(Elaboratable):
 
 class FFTGenWrapperTest(Elaboratable):
     def __init__(self, tapcount, in_bitwidth, out_bitwidth):
+        self._tapcount = tapcount
+        self._out_bitwidth = out_bitwidth
+
         self.valid_in = Signal()
-        self.sample_in = Signal(in_bitwidth)
-        self.sample_out = Signal(out_bitwidth)
+        self.sample_in = Signal(in_bitwidth*2)
+        self.sample_out = Signal(out_bitwidth*2)
         self.valid_out = Signal()
-        self.gotSamples = Signal(range(out_bitwidth))
-        self.fftCount = Signal(3)
+        self.gotSamples = Signal(range(self._tapcount*3))
+        self.fftCount = Signal(range(self._tapcount))
         self.outputSamples = Signal.like(self.gotSamples)
 
-        self._tapcount = tapcount
+
 
     def elaborate(self, platform) -> Module:
         m = Module()
@@ -121,18 +124,26 @@ class FFTGenWrapperTest(Elaboratable):
         with m.If(self.valid_in):
             m.d.sync += self.gotSamples.eq(self.gotSamples + 1)
 
-        with m.If(self.gotSamples % self._tapcount == 0):
-            m.d.sync += self.fftCount.eq(self.fftCount + 1)
+            #with m.If(self.gotSamples % self._tapcount == 0):
+            #    m.d.sync += self.fftCount.eq(self.fftCount + 1)
+            sig1 = Signal(10)
+            sig2 = Signal(10)
+            m.d.sync += [
+                sig1.eq(self.fftCount // (self._tapcount-1))
+            ]
+            m.d.sync += self.fftCount.eq(self.gotSamples // (self._tapcount-2) - self.outputSamples//(self._tapcount-2))
+
+            #with m.If(self.outputSamples % self._tapcount-1 == 0):
+             #   m.d.sync += self.fftCount.eq(self.fftCount - 1)
 
 
         with m.If(self.fftCount > 0):
             m.d.sync += [
                 self.outputSamples.eq(self.outputSamples + 1),
-                self.sample_out.eq(1),
+                self.sample_out.eq(((10000 + self.gotSamples*1000 + self.outputSamples) << self._out_bitwidth) + 30000 + self.gotSamples*1000 + self.outputSamples),
                 self.valid_out.eq(1),
             ]
 
-            with m.If(self.outputSamples % self._tapcount == 0):
-                m.d.sync += self.fftCount.eq(self.fftCount - 1)
+
 
         return m
