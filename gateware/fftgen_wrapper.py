@@ -67,7 +67,10 @@ class FFTGenWrapper(Elaboratable):
         self.sample_in = Signal(in_bitwidth)
         self.sample_out = Signal(out_bitwidth)
         self.valid_out = Signal()
+        self.reset_in = Signal()
 
+        self.gotSamples = Signal(32)
+        self.outputSamples = Signal(32)
 
     def elaborate(self, platform) -> Module:
         m = Module()
@@ -89,12 +92,17 @@ class FFTGenWrapper(Elaboratable):
 
         m.submodules.fft = Instance(instance_name,
             i_i_clk = ClockSignal("sync"),
-            i_i_reset = ResetSignal("sync"),
+            i_i_reset = self.reset_in, #ResetSignal("sync"),
             i_i_ce = self.valid_in,
             i_i_sample = self.sample_in,
             o_o_result = self.sample_out,
             o_o_sync = self.valid_out
         )
+        with m.If(self.valid_in):
+            m.d.sync += self.gotSamples.eq(self.gotSamples + 1)
+
+        with m.If(self.valid_out):
+            m.d.sync += self.outputSamples.eq(self.outputSamples + 1)
 
         return m
 

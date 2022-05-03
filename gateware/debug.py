@@ -544,12 +544,21 @@ def setup_ila(v, ila_max_packet_size):
         fir_signal_out_valid,
         fir_signal_out_first,
         fir_signal_out_last,
-        fir_signal_out_payload,
+        #fir_signal_out_payload,
         fir_signal_out_ready,
         dac1_extractor.level,
         enable_fir,
         fir.fsm_state,
         fir.fft_out_counter,
+        fir.in_out_counter,
+        fir.fft.gotSamples,
+        fir.fft.outputSamples,
+        fir.fft.valid_in,
+        fir.fft.valid_out,
+        fir.fft.sample_in,
+        fir.fft.sample_out,
+        fir.fft.reset_in,
+
     ]
 
 
@@ -582,8 +591,8 @@ def setup_ila(v, ila_max_packet_size):
         # ila.enable.eq(input_or_output_active | garbage | usb_frame_borders),
         #ila.trigger.eq(fir_signal_in_valid),
         #ila.trigger.eq(fir_signal_in_valid & fir_signal_in_last),
-        ila.trigger.eq(dac1_extractor.channel_stream_out.payload != 0 & fir_signal_in_valid),
-        #ila.trigger.eq(fir.signal_in.ready),
+        #ila.trigger.eq(dac1_extractor.channel_stream_out.payload != 0 & fir_signal_in_valid),
+        ila.trigger.eq(fir.in_out_counter > 29),
         ila.enable .eq(input_or_output_active),
     ]
 
