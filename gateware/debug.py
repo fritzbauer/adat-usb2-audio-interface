@@ -536,11 +536,6 @@ def setup_ila(v, ila_max_packet_size):
     ]
 
     fir_debug = [
-        dac1_extractor.channel_stream_out.payload,
-        dac1_extractor.channel_stream_out.valid,
-        dac1_extractor.channel_stream_out.ready,
-        dac1_extractor.channel_stream_out.first,
-        dac1_extractor.channel_stream_out.last,
         fir_signal_in_ready,
         fir_signal_in_valid,
         fir_signal_in_first,
@@ -552,14 +547,16 @@ def setup_ila(v, ila_max_packet_size):
         fir_signal_out_payload,
         fir_signal_out_ready,
         dac1_extractor.level,
-        enable_fir
+        enable_fir,
+        fir.fsm_state,
+        fir.fft_out_counter,
     ]
 
 
     #
     # signals to trace
     #
-    signals = dac_extractor_debug
+    signals = fir_debug
 
     signals_bits = sum([s.width for s in signals])
     m.submodules.ila = ila = \
