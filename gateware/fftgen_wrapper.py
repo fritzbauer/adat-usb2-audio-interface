@@ -29,7 +29,7 @@ class FFTGenWrapper(Elaboratable):
         args.extend(["-n", str(in_bitwidth)])
         args.extend(["-m", str(out_bitwidth)])
         args.extend(["-x", str(0)])
-        args.extend(["-k", str(500)])
+        #args.extend(["-k", str(500)])
         args.extend(["-p", str(dspcount)])
         args.extend(["-d", self.folder_path])
 
