@@ -68,13 +68,13 @@ class StereoConvolutionFFT(Elaboratable):
         self.signal_in  = StreamInterface(name="signal_stream_in", payload_width=bitwidth)
         self.signal_out = StreamInterface(name="signal_stream_out", payload_width=bitwidth)
 
-        self._tapcount = 64 #len(taps) #4096 synthesizes
+        self._tapcount = 256 #len(taps) #4096 synthesizes
         self._bitwidth = bitwidth
         self._convolutionMode = convolutionMode
         self._debug = debug
         self._testing = testing
 
-        self._stepsize = 16  # fftsize-tapcount +1 #or 32
+        self._stepsize = 64  # fftsize-tapcount +1 #or 32
         self._fftsize = 2 << (self._stepsize - 1).bit_length()
         self._slices = self._tapcount // self._stepsize
         self._fft_output_bitwidth = self._bitwidth + Shape.cast(range(self._fftsize)).width
@@ -92,8 +92,11 @@ class StereoConvolutionFFT(Elaboratable):
         #   * Store the left-right interleaved output samples
         self._buffer_memory = Memory(width=self._fft_output_bitwidth*2, depth=self._fftsize*2)
 
-        tapsfft1 = np.zeros((self._slices * self._fftsize), dtype=np.int64)
-        tapsfft2 = np.zeros((self._slices * self._fftsize), dtype=np.int64)
+        #tapsfft1 = np.zeros((self._slices * self._fftsize), dtype=np.int64)
+        #tapsfft2 = np.zeros((self._slices * self._fftsize), dtype=np.int64)
+
+        tapsfft1 = [0] * (self._slices * self._fftsize)
+        tapsfft2 = [0] * (self._slices * self._fftsize)
         for j in range(self._slices):
             #print(f"stepsize: {self._stepsize}")
             #print(f"fftsize: {self._fftsize}")
@@ -123,6 +126,33 @@ class StereoConvolutionFFT(Elaboratable):
 
     def elaborate(self, platform) -> Module:
         m = Module()
+
+        if False: #just connect the FFT to the inputs and outputs for some ILA analyze of the FFT
+            m.submodules.fft = fft = self.fft
+
+            valid = Signal()
+            with m.If(self.signal_in.valid):
+                m.d.sync += valid.eq(1)
+
+            m.d.comb += [
+                self.signal_in.ready.eq(1),
+                fft.sample_in.eq(self.signal_in.payload),
+                fft.valid_in.eq(valid),
+                self.signal_out.valid.eq(fft.valid_out),
+                self.signal_out.payload.eq(fft.sample_out),
+            ]
+
+            in_out_counter = Signal(range(self._fftsize + 1))
+            fft_out_counter = Signal.like(in_out_counter)
+            mac_counter = Signal.like(in_out_counter)
+            slices_counter = Signal(range(self._slices))
+
+            m.d.comb += [
+                self.fft_out_counter.eq(fft_out_counter),
+                self.in_out_counter.eq(in_out_counter),
+            ]
+
+            return m
 
         taps1_read_port = self._taps1_memory.read_port()
         taps2_read_port = self._taps2_memory.read_port()

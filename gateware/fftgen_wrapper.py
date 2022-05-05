@@ -21,15 +21,14 @@ class FFTGenWrapper(Elaboratable):
         except OSError as e:
             print("Error: %s - %s." % (e.filename, e.strerror))
 
-        fftgen_path = '/home/rouven/Computer/Coden/Audio/dblclockfft/sw/fftgen'
-        #fftgen_path = './fftgen'
+        fftgen_path = 'fftgen'
         args = []
         args.append(fftgen_path)
         args.extend(["-f", str(tapcount)])
         args.extend(["-n", str(in_bitwidth)])
         args.extend(["-m", str(out_bitwidth)])
-        args.extend(["-x", str(0)])
-        #args.extend(["-k", str(500)])
+        args.extend(["-x", str(0)]) #2 extra bits for twiddle factors - seems to be the best compromise
+        args.extend(["-k", str(4)]) #process a sample every three clocks - seems to be the best compromise
         args.extend(["-p", str(dspcount)])
         args.extend(["-d", self.folder_path])
 
@@ -69,8 +68,9 @@ class FFTGenWrapper(Elaboratable):
         self.valid_out = Signal()
         self.reset_in = Signal()
 
-        self.gotSamples = Signal(32)
-        self.outputSamples = Signal(32)
+        self.gotSamples = Signal(16)
+        self.outputSamples = Signal(16)
+        self.clock_sync = Signal(24)
 
     def elaborate(self, platform) -> Module:
         m = Module()
@@ -92,13 +92,20 @@ class FFTGenWrapper(Elaboratable):
 
         m.submodules.fft = Instance(instance_name,
             i_i_clk = ClockSignal("sync"),
+            #i_i_clk = self.clock,
             i_i_reset = self.reset_in, #ResetSignal("sync"),
             i_i_ce = self.valid_in,
             i_i_sample = self.sample_in,
             o_o_result = self.sample_out,
             o_o_sync = self.valid_out
         )
+
+        m.d.sync += self.clock_sync.eq(self.clock_sync + 1)
+
         with m.If(self.valid_in):
+            with m.If(self.gotSamples == 0):
+                m.d.sync += self.clock_sync.eq(0)
+
             m.d.sync += self.gotSamples.eq(self.gotSamples + 1)
 
         with m.If(self.valid_out):
