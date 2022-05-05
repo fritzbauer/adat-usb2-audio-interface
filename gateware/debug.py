@@ -544,7 +544,7 @@ def setup_ila(v, ila_max_packet_size):
         fir_signal_out_valid,
         fir_signal_out_first,
         fir_signal_out_last,
-        #fir_signal_out_payload,
+        fir_signal_out_payload,
         fir_signal_out_ready,
         dac1_extractor.level,
         enable_fir,
@@ -553,12 +553,27 @@ def setup_ila(v, ila_max_packet_size):
         fir.in_out_counter,
         fir.fft.gotSamples,
         fir.fft.outputSamples,
+        #fir.fft.clock_usb,
+        fir.fft.clock_sync,
         fir.fft.valid_in,
         fir.fft.valid_out,
         fir.fft.sample_in,
         fir.fft.sample_out,
         fir.fft.reset_in,
 
+    ]
+
+    fft_debug = [
+        dac1_extractor.level,
+        fir.fft.gotSamples,
+        fir.fft.outputSamples,
+        #fir.fft.clock_usb,
+        fir.fft.clock_sync,
+        fir.fft.valid_in,
+        fir.fft.valid_out,
+        fir.fft.sample_in,
+        fir.fft.sample_out,
+        fir.fft.reset_in,
     ]
 
 
@@ -576,7 +591,7 @@ def setup_ila(v, ila_max_packet_size):
             #sample_rate=48e3 * 256 * 9, # fast domain
             signals=signals,
             sample_depth       = int(50 * 8 * 1024 / signals_bits),
-            samples_pretrigger = 2, #int(78 * 8 * 1024 / signals_bits),
+            samples_pretrigger = 500, #int(78 * 8 * 1024 / signals_bits),
             with_enable=True)
 
     stream_ep = USBMultibyteStreamInEndpoint(
@@ -592,8 +607,9 @@ def setup_ila(v, ila_max_packet_size):
         #ila.trigger.eq(fir_signal_in_valid),
         #ila.trigger.eq(fir_signal_in_valid & fir_signal_in_last),
         #ila.trigger.eq(dac1_extractor.channel_stream_out.payload != 0 & fir_signal_in_valid),
-        ila.trigger.eq(fir.in_out_counter > 29),
-        ila.enable .eq(input_or_output_active),
+        ila.trigger.eq(fir.fft.outputSamples > 0),
+        #ila.enable .eq(input_or_output_active),
+        ila.enable.eq(1),
     ]
 
     ILACoreParameters(ila).pickle()
