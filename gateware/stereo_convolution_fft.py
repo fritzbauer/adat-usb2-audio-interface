@@ -68,13 +68,13 @@ class StereoConvolutionFFT(Elaboratable):
         self.signal_in  = StreamInterface(name="signal_stream_in", payload_width=bitwidth)
         self.signal_out = StreamInterface(name="signal_stream_out", payload_width=bitwidth)
 
-        self._tapcount = 256 #len(taps) #4096 synthesizes
+        self._tapcount = 32 #len(taps) #4096 synthesizes
         self._bitwidth = bitwidth
         self._convolutionMode = convolutionMode
         self._debug = debug
         self._testing = testing
 
-        self._stepsize = 64  # fftsize-tapcount +1 #or 32
+        self._stepsize = 8  # fftsize-tapcount +1 #or 32
         self._fftsize = 2 << (self._stepsize - 1).bit_length()
         self._slices = self._tapcount // self._stepsize
         self._fft_output_bitwidth = self._bitwidth + Shape.cast(range(self._fftsize)).width
@@ -116,8 +116,8 @@ class StereoConvolutionFFT(Elaboratable):
         self._taps2_memory.init = tapsfft2
 
         self.fsm_state = Signal(4)
-        self.fft_out_counter = Signal(range(self._fftsize))
-        self.in_out_counter = Signal(range(self._fftsize))
+        self.dbg_fft_out_counter = Signal(range(self._fftsize))
+        self.dbg_in_out_counter = Signal(range(self._fftsize))
 
         if not self._testing:
             self.fft = FFTGenWrapper(self._fftsize, self._bitwidth, self._fft_output_bitwidth, 25, inverse=False)
@@ -148,8 +148,8 @@ class StereoConvolutionFFT(Elaboratable):
             slices_counter = Signal(range(self._slices))
 
             m.d.comb += [
-                self.fft_out_counter.eq(fft_out_counter),
-                self.in_out_counter.eq(in_out_counter),
+                self.dbg_fft_out_counter.eq(fft_out_counter),
+                self.dbg_in_out_counter.eq(in_out_counter),
             ]
 
             return m
@@ -168,15 +168,17 @@ class StereoConvolutionFFT(Elaboratable):
 
         m.submodules.fft = fft = self.fft
 
+        read_fft = Signal(2)
         in_out_counter = Signal(range(self._fftsize+1))
         fft_out_counter = Signal.like(in_out_counter)
         mac_counter = Signal.like(in_out_counter)
         slices_counter = Signal(range(self._slices))
 
-        m.d.comb += [
-            self.fft_out_counter.eq(fft_out_counter),
-            self.in_out_counter.eq(in_out_counter),
-        ]
+        if self._debug:
+            m.d.comb += [
+                self.dbg_fft_out_counter.eq(fft_out_counter),
+                self.dbg_in_out_counter.eq(in_out_counter)
+            ]
 
         madd1 = Signal(self._fft_output_bitwidth * 2 *2)
         carryover = Signal.like(madd1)
@@ -192,7 +194,7 @@ class StereoConvolutionFFT(Elaboratable):
         m.d.comb += [
             self.signal_in.ready.eq(0),
             fft.valid_in.eq(0),
-            buffer_read_port.addr.eq(fft_out_counter),
+            #buffer_read_port.addr.eq(fft_out_counter),
         ]
 
         m.d.comb += [
@@ -217,6 +219,9 @@ class StereoConvolutionFFT(Elaboratable):
         ]
 
         with m.FSM(reset="READ_SAMPLES"):
+
+            # READ_SAMPLES state passes on the samples of the first channel to the fft
+            # and stores the channels of the second channel in the buffer_memory
             with m.State("READ_SAMPLES"):
                 m.d.comb += self.fsm_state.eq(1)
                 with m.If(in_out_counter == 0):
@@ -224,7 +229,7 @@ class StereoConvolutionFFT(Elaboratable):
                         fft.reset_in.eq(1)
                     ]
 
-                with m.If(in_out_counter < self._stepsize-1): #offby1? stepsize-1?
+                with m.If(in_out_counter < self._stepsize): #offby1? stepsize-1?
                     m.d.comb += self.signal_in.ready.eq(1)
                     with m.If(self.signal_in.valid):  # & self.signal_in.ready):
                         with m.If(self.signal_in.first):
@@ -236,51 +241,91 @@ class StereoConvolutionFFT(Elaboratable):
                         with m.Elif(self.signal_in.last):
                             m.d.comb += [
                                 buffer_write_port.en.eq(1),
-                                buffer_write_port.addr.eq(in_out_counter),
+                                buffer_write_port.addr.eq(in_out_counter*2+1),
                                 buffer_write_port.data.eq(self.signal_in.payload << self._bitwidth),
                             ]
 
                             m.d.sync += [
                                 in_out_counter.eq(in_out_counter + 1)
                             ]
-                with m.Elif(in_out_counter < self._fftsize):#offby1? stepsize-1?
+                with m.Else():
+                    m.d.sync += [
+                        fft_out_counter.eq(0),
+                        read_fft.eq(0),
+                    ]
+                    m.next = "LEFT_FFT_PADDING"
+            # This state writes the zero padding to the left channels fft and starts reading the FFT output
+            with m.State("LEFT_FFT_PADDING"):
+                m.d.comb += self.fsm_state.eq(2)
+                with m.If(in_out_counter < self._fftsize-1):#offby1? stepsize-1?
                     m.d.comb += [
                         fft.valid_in.eq(1),
                         fft.sample_in.eq(0), #zero padding
                     ]
                     m.d.sync += [
-                        in_out_counter.eq(in_out_counter + 1)
+                        in_out_counter.eq(in_out_counter + 1),
                     ]
+
+                    with m.If(fft.valid_out | read_fft):
+                        m.d.comb += [
+                            samples1_write_port.en.eq(1),
+                            samples1_write_port.addr.eq(fft_out_counter),
+                            samples1_write_port.data.eq(fft.sample_out),
+                        ]
+
+                        m.d.sync += [
+                            fft_out_counter.eq(fft_out_counter + 1),
+                            read_fft.eq(1),
+                        ]
                 with m.Else():
                     m.d.sync += [
-                        fft_out_counter.eq(0),
+                        in_out_counter.eq(0),
                     ]
                     m.next = "READ_LEFT_WRITE_RIGHT_FFT"
 
             with m.State("READ_LEFT_WRITE_RIGHT_FFT"):
-                m.d.comb += self.fsm_state.eq(2)
-                with m.If(fft.valid_out):
-                    m.d.comb += [
-                        samples1_write_port.en.eq(1),
-                        samples1_write_port.addr.eq(fft_out_counter),
-                        samples1_write_port.data.eq(fft.sample_out),
-                    ]
+                m.d.comb += self.fsm_state.eq(3)
+
+                # write left fft data to memory
                 m.d.comb += [
-                    #Insert right channel to FFT
-                    fft.valid_in.eq(1),
-                    fft.sample_in.eq(Mux(fft_out_counter < self._stepsize, buffer_read_port.data, 0)),#offby1?
-                ]
-                m.d.sync += [
-                    fft_out_counter.eq(fft_out_counter + 1)
+                    samples1_write_port.en.eq(1),
+                    samples1_write_port.addr.eq(fft_out_counter),
+                    samples1_write_port.data.eq(fft.sample_out),
                 ]
 
-                with m.If(fft_out_counter == self._fftsize): #offby1? stepsize-1?
-                    m.d.sync += mac_counter.eq(0)
-                    m.next = "CALC_LEFT_READ_RIGHT_FFT"
-            with m.State("CALC_LEFT_READ_RIGHT_FFT"):
-                m.d.comb += self.fsm_state.eq(3)
+                # send right samples to fft
+                m.d.comb += [
+                    # Mux only needed for easier debugging in GTKWave - confirm it does not read beyond border
+                    buffer_read_port.addr.eq(Mux(in_out_counter < self._stepsize, in_out_counter * 2 + 1, 0)),
+                    fft.sample_in.eq(Mux(in_out_counter < self._stepsize, buffer_read_port.data, 0))
+                ]
+
+                #with m.If(in_out_counter > 0): # takes 1 cycle to load the data from memory
+                m.d.comb += [
+                    fft.valid_in.eq(1),
+                ]
+
+                # increment counters
+                m.d.sync += [
+                    fft_out_counter.eq(fft_out_counter + 1),
+                    in_out_counter.eq(in_out_counter + 1),
+                ]
+
+                with m.If(fft_out_counter == self._fftsize-1): #offby1? stepsize-1?
+                    m.d.sync += fft_out_counter.eq(0)
+                    m.next = "RIGHT_FFT_PAD_AND_READ"
+            with m.State("RIGHT_FFT_PAD_AND_READ"):
+                m.d.comb += self.fsm_state.eq(4)
                 # fft_out_counter should be 0 again when entering this stage !!!confirm this
-                with m.If(fft.valid_out):
+                m.d.comb += [
+                    fft.valid_in.eq(1), #we want to continue sending to the FFT 0 values until we got all data for the right channel
+                    fft.sample_in.eq(0),
+                ]
+                with m.If(fft.valid_out | (read_fft == 2)): #right channel
+                    m.d.sync += [
+                        read_fft.eq(2)
+                    ]
+
                     m.d.comb += [
                         samples2_write_port.en.eq(1),
                         samples2_write_port.addr.eq(fft_out_counter),
@@ -290,6 +335,43 @@ class StereoConvolutionFFT(Elaboratable):
                         fft_out_counter.eq(fft_out_counter + 1)
                     ]
 
+                    #with m.If(fft.valid_out):
+                    #    m.d.sync += [
+                    #        fft_out_counter.eq(0)
+                    #    ]
+                with m.Else(): #left channel
+                    # write left fft data to memory
+                    m.d.comb += [
+                        samples1_write_port.en.eq(1),
+                        samples1_write_port.addr.eq(fft_out_counter),
+                        samples1_write_port.data.eq(fft.sample_out),
+                    ]
+                    m.d.sync += [
+                        fft_out_counter.eq(fft_out_counter + 1)
+                    ]
+
+                with m.If(in_out_counter < self._fftsize):
+                    # send right padding to fft
+                    m.d.comb += [
+                        # Mux only needed for easier debugging in GTKWave - confirm it does not read beyond border
+                        buffer_read_port.addr.eq(Mux(in_out_counter < self._stepsize, in_out_counter * 2 + 1, 0)),
+                        fft.sample_in.eq(Mux(in_out_counter < self._stepsize, buffer_read_port.data, 0)),
+
+                    ]
+                    # increment counters
+                    m.d.sync += [
+                        in_out_counter.eq(in_out_counter + 1),
+                    ]
+
+                with m.If(fft_out_counter == self._fftsize-1):
+                    m.d.sync += mac_counter.eq(0)
+                    m.next = "MAC"
+
+                    #with m.If(in_out_counter > 0):  # takes 1 cycle to load the data from memory
+                    #    m.d.comb += [
+                    #        fft.valid_in.eq(1),
+                    #    ]
+            with m.State("MAC"):
                 #MAC_LEFT_CHANNEL
 
                 #crossfeed
@@ -539,13 +621,18 @@ class StereoConvolutionFFTTest(GatewareTestCase):
 
         out_signal = []
 
+        #yield from self.wait_ready(dut)
+        #yield dut.signal_in.first.eq(1)
+        #yield dut.signal_in.last.eq(0)
+
         for i in range(len(testdata)):
-            yield Tick()
+            yield from self.wait_ready(dut)
             yield dut.signal_in.first.eq(1)
             yield dut.signal_in.last.eq(0)
             yield dut.signal_in.payload.eq(int(testdata[i, 0]))
             yield dut.signal_in.valid.eq(1)
             yield Tick()
+            yield from self.wait_ready(dut)
             yield dut.signal_in.valid.eq(1)
             yield dut.signal_in.first.eq(0)
             yield dut.signal_in.last.eq(1)

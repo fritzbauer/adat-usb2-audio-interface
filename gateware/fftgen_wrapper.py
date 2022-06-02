@@ -118,6 +118,7 @@ class FFTGenWrapperTest(Elaboratable):
         self._tapcount = tapcount
         self._out_bitwidth = out_bitwidth
 
+        self.reset_in = Signal()
         self.valid_in = Signal()
         self.sample_in = Signal(in_bitwidth*2)
         self.sample_out = Signal(out_bitwidth*2)
@@ -131,7 +132,7 @@ class FFTGenWrapperTest(Elaboratable):
     def elaborate(self, platform) -> Module:
         m = Module()
 
-        m.d.sync += [
+        m.d.comb += [
             self.sample_out.eq(0),
             self.valid_out.eq(0),
         ]
@@ -146,18 +147,23 @@ class FFTGenWrapperTest(Elaboratable):
             m.d.sync += [
                 sig1.eq(self.fftCount // (self._tapcount-1))
             ]
-            m.d.sync += self.fftCount.eq(self.gotSamples // (self._tapcount-2) - self.outputSamples//(self._tapcount-2))
-
+            #m.d.sync += self.fftCount.eq((self.gotSamples + self._tapcount//3) // (self._tapcount-2) - self.outputSamples//(self._tapcount-2))
+            m.d.sync += self.fftCount.eq(Mux(self.gotSamples >= self._tapcount//3*2, 1, 0))
+            m.d.comb += [
+                self.valid_out.eq(self.fftCount & ((self.gotSamples + self._tapcount//3) % self._tapcount == 0))
+            ]
             #with m.If(self.outputSamples % self._tapcount-1 == 0):
              #   m.d.sync += self.fftCount.eq(self.fftCount - 1)
 
 
-        with m.If(self.fftCount > 0):
-            m.d.sync += [
-                self.outputSamples.eq(self.outputSamples + 1),
-                self.sample_out.eq(((10000 + self.gotSamples*1000 + self.outputSamples) << self._out_bitwidth) + 30000 + self.gotSamples*1000 + self.outputSamples),
-                self.valid_out.eq(1),
-            ]
+            with m.If(self.fftCount > 0):
+                m.d.sync += [
+                    self.outputSamples.eq(self.outputSamples + 1),
+                ]
+                m.d.comb += [
+                    self.sample_out.eq(((10000 + self.gotSamples*1000 + self.outputSamples) << self._out_bitwidth) + 30000 + self.gotSamples*1000 + self.outputSamples),
+
+                ]
 
 
 
