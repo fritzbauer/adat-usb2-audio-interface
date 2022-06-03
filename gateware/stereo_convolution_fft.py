@@ -461,7 +461,7 @@ class StereoConvolutionFFT(Elaboratable):
 
                 with m.If(mac_counter == self._fftsize - 1): #offby1?
                     m.d.sync += [
-
+                        in_out_counter.eq(0)
                     ]
                     m.next ="SEND_RIGHT_READ_LEFT_IFFT"
             with m.State("SEND_RIGHT_READ_LEFT_IFFT"):
@@ -469,8 +469,51 @@ class StereoConvolutionFFT(Elaboratable):
                 # TODO: Store the MAC samples after _stepsize these will be needed for the next MAC in the next block
                 #with m.If(fft.valid_out):
 
+                # send right channel to IFFT
+                with m.If(in_out_counter > 0):
+                    m.d.comb += [
+                        fft.valid_in.eq(1),
+                        buffer2_read_port.addr.eq(Mux(in_out_counter < self._fftsize, in_out_counter, 0)),
+                        fft.sample_in.eq(Mux(in_out_counter < self._fftsize, buffer2_read_port.data, 0)),
+                    ]
 
+                m.d.sync += [
+                    in_out_counter.eq(in_out_counter + 1),
+                ]
 
+                #read IFFT output
+                with m.If((fft.valid_out | (read_fft == 2) ) & fft.valid_in):
+                    m.d.comb += [
+                        buffer2_write_port.en.eq(1),
+                        buffer2_write_port.addr.eq(fft_out_counter),  # interleaved left channel
+                        # TODO: do we need to calculate abs()?
+                        buffer2_write_port.data.eq(fft.sample_out[self._fft_output_bitwidth: self._fft_output_bitwidth * 2] >> (
+                                        self._fft_output_bitwidth - self._bitwidth))
+                        # >> Shape.cast(range(self._fftsize)).width),
+                    ]
+                    m.d.sync += [
+                        fft_out_counter.eq(fft_out_counter + 1),
+                    ]
+
+                    with m.If(fft.valid_out):
+                        m.d.sync += [
+                            read_fft.eq(2),
+                            fft_out_counter.eq(1),
+                        ]
+
+                #read right FFT
+                with m.Elif((read_fft == 1) & fft.valid_in):
+                    m.d.comb += [
+                        buffer1_write_port.en.eq(1),
+                        buffer1_write_port.addr.eq(fft_out_counter),  # interleaved left channel
+                        # TODO: do we need to calculate abs()?
+                        buffer1_write_port.data.eq(fft.sample_out[self._fft_output_bitwidth: self._fft_output_bitwidth * 2] >> (self._fft_output_bitwidth - self._bitwidth))
+                        # >> Shape.cast(range(self._fftsize)).width),
+                    ]
+                    m.d.sync += [
+                        fft_out_counter.eq(fft_out_counter + 1),
+                        read_fft.eq(1),
+                    ]
 
                 with m.If(slices_counter == self._slices - 1): # offby1?
                     m.d.comb += [
@@ -484,7 +527,7 @@ class StereoConvolutionFFT(Elaboratable):
                         madd1.eq(0),
                     ]
 
-                with m.If(mac_counter == self._fftsize):  # offby1?
+                with m.If((fft_out_counter == self._fftsize - 1) & (read_fft == 2)):  # offby1?
                     m.d.sync += [
                         fft_out_counter.eq(0),
                         slices_counter.eq(0),
@@ -492,22 +535,6 @@ class StereoConvolutionFFT(Elaboratable):
                         in_out_counter.eq(0),
                         mac_counter.eq(0),
                     ]
-                    m.next = "READ_RIGHT_IFFT"
-            with m.State("READ_RIGHT_IFFT"):
-                m.d.comb += self.fsm_state.eq(5)
-                with m.If(fft.valid_out):
-                    m.d.comb += [
-                        buffer2_write_port.en.eq(1),
-                        buffer2_write_port.addr.eq(fft_out_counter), #interleaved right channel
-                        # TODO: do we need to calculate abs()?
-                        #buffer_write_port.data.eq(fft.sample_out.bit_select(self._bitwidth, self._bitwidth*2) >> Shape.cast(range(self._fftsize)).width),
-                        buffer2_write_port.data.eq(fft.sample_out[self._bitwidth: self._bitwidth*2])# >> Shape.cast(range(self._fftsize)).width),
-                    ]
-                    m.d.sync += [
-                        fft_out_counter.eq(fft_out_counter + 1)
-                    ]
-
-                with m.If(fft_out_counter == self._fftsize):
                     m.next = "OUTPUT_DATA"
 
             with m.State("OUTPUT_DATA"):

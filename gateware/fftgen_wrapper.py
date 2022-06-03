@@ -28,7 +28,7 @@ class FFTGenWrapper(Elaboratable):
         args.extend(["-n", str(in_bitwidth)])
         args.extend(["-m", str(out_bitwidth)])
         args.extend(["-x", str(0)]) #2 extra bits for twiddle factors - seems to be the best compromise
-        args.extend(["-k", str(4)]) #process a sample every three clocks - seems to be the best compromise
+        args.extend(["-k", str(1)]) #process a sample every three clocks - seems to be the best compromise
         args.extend(["-p", str(dspcount)])
         args.extend(["-d", self.folder_path])
 
@@ -137,6 +137,7 @@ class FFTGenWrapperTest(Elaboratable):
             self.valid_out.eq(0),
         ]
 
+
         with m.If(self.valid_in):
             m.d.sync += self.gotSamples.eq(self.gotSamples + 1)
 
@@ -166,5 +167,15 @@ class FFTGenWrapperTest(Elaboratable):
                 ]
 
 
+        with m.If(self.reset_in):
+            m.d.sync += [
+                self.fftCount.eq(0),
+                self.gotSamples.eq(1),
+                self.outputSamples.eq(0),
+            ]
+            m.d.comb += [
+                self.valid_out.eq(0),
+                self.sample_out.eq(0),
+            ]
 
         return m
