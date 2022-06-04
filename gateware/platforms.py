@@ -6,6 +6,7 @@ from amaranth_boards.qmtech_ep4ce   import QMTechEP4CEPlatform
 from amaranth_boards.qmtech_5cefa2  import QMTech5CEFA2Platform
 from amaranth_boards.qmtech_10cl006 import QMTech10CL006Platform
 from amaranth_boards.qmtech_xc7a35t import QMTechXC7A35TPlatform
+from amaranth_boards.qmtech_ep4cgx150 import QMTechEP4CGX150Platform
 
 from luna.gateware.platform.core import LUNAPlatform
 
@@ -71,6 +72,27 @@ class ADATFaceCycloneIV(QMTechEP4CEPlatform, LUNAPlatform):
         self.connectors[0].number = 3
         self.connectors[1].number = 2
         super().__init__(no_kluts=55, standalone=False)
+
+
+class ADATFaceCycloneIV_EP4CGX150(QMTechEP4CGX150Platform, LUNAPlatform):
+    fast_multiplier        = 9
+    clock_domain_generator = IntelFPGAClockDomainGenerator
+    fast_domain_clock_freq = int(48e3 * 256 * fast_multiplier)
+
+    @property
+    def file_templates(self):
+        templates = super().file_templates
+        templates["{{name}}.qsf"] += IntelFPGAParameters.QSF_ADDITIONS
+        templates["{{name}}.sdc"] += IntelFPGAParameters.SDC_ADDITIONS
+        return templates
+
+    def __init__(self):
+        self.resources += ADATFaceRev0Baseboard.resources(Attrs(io_standard="3.3-V LVCMOS"))
+        # swap connector numbers, because on ADATface the connector
+        # names are swapped compared to the QMTech daughterboard
+        self.connectors[0].number = 3
+        self.connectors[1].number = 2
+        super().__init__(standalone=False)
 
 # This is here just for experimental reasons.
 # right now the design probably would not fit into this device anymore

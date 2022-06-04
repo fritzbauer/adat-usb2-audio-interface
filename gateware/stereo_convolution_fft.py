@@ -68,13 +68,15 @@ class StereoConvolutionFFT(Elaboratable):
         self.signal_in  = StreamInterface(name="signal_stream_in", payload_width=bitwidth)
         self.signal_out = StreamInterface(name="signal_stream_out", payload_width=bitwidth)
 
-        self._tapcount = 32 #len(taps) #4096 synthesizes
+        #self._tapcount = 32
+        self._tapcount = len(taps) #4096 synthesizes
         self._bitwidth = bitwidth
         self._convolutionMode = convolutionMode
         self._debug = debug
         self._testing = testing
 
-        self._stepsize = 8  # fftsize-tapcount +1 #or 32
+        #self._stepsize = 8
+        self._stepsize = 128  # fftsize-tapcount +1 #or 32
         self._fftsize = 2 << (self._stepsize - 1).bit_length()
         self._slices = self._tapcount // self._stepsize
         self._fft_output_bitwidth = self._bitwidth + Shape.cast(range(self._fftsize)).width
@@ -119,6 +121,7 @@ class StereoConvolutionFFT(Elaboratable):
         self.fsm_state = Signal(4)
         self.dbg_fft_out_counter = Signal(range(self._fftsize))
         self.dbg_in_out_counter = Signal(range(self._fftsize))
+        self.dbg_madd1 = Signal(self._fft_output_bitwidth * 2 * 2)
 
         if not self._testing:
             self.fft = FFTGenWrapper(self._fftsize, self._bitwidth, self._fft_output_bitwidth, 25, inverse=False)
@@ -177,15 +180,19 @@ class StereoConvolutionFFT(Elaboratable):
         mac_counter = Signal.like(in_out_counter)
         slices_counter = Signal(range(self._slices))
 
+        madd1 = Signal(self._fft_output_bitwidth * 2 * 2)
+        madd2 = Signal.like(madd1)
+        carryover1 = Signal(self._fft_output_bitwidth * 2)
+        carryover1_2 = Signal.like(carryover1)
+        carryover2 = Signal.like(carryover1)
+        carryover2_2 = Signal.like(carryover1)
+
         if self._debug:
             m.d.comb += [
                 self.dbg_fft_out_counter.eq(fft_out_counter),
-                self.dbg_in_out_counter.eq(in_out_counter)
+                self.dbg_in_out_counter.eq(in_out_counter),
+                self.dbg_madd1.eq(madd1),
             ]
-
-        madd1 = Signal(self._fft_output_bitwidth * 2 * 2)
-        madd2 = Signal.like(madd1)
-        carryover = Signal.like(madd1)
 
         if self._testing:
             gotSamples = Signal(range(self._fftsize*3))
@@ -201,16 +208,7 @@ class StereoConvolutionFFT(Elaboratable):
             #buffer_read_port.addr.eq(fft_out_counter),
         ]
 
-        m.d.comb += [
-            #samples1_read_port.en.eq(1),
-            samples1_read_port.addr.eq(slices_counter * self._fftsize + mac_counter),
-            #samples2_read_port.en.eq(1),
-            samples2_read_port.addr.eq(slices_counter * self._fftsize + mac_counter),
-            #taps1_read_port.en.eq(1),
-            taps1_read_port.addr.eq(slices_counter * self._fftsize + mac_counter),
-            #taps2_read_port.en.eq(1),
-            taps2_read_port.addr.eq(slices_counter * self._fftsize + mac_counter),
-        ]
+
 
         m.d.comb += [
             # self.signal_out.valid.eq(0),
@@ -229,14 +227,15 @@ class StereoConvolutionFFT(Elaboratable):
             # and stores the channels of the second channel in the buffer_memory
             with m.State("READ_SAMPLES"):
                 m.d.comb += self.fsm_state.eq(1)
-                with m.If(in_out_counter == 0):
-                    m.d.comb += [
-                        fft.reset_in.eq(1)
-                    ]
 
                 with m.If(in_out_counter < self._stepsize): #offby1? stepsize-1?
                     m.d.comb += self.signal_in.ready.eq(1)
                     with m.If(self.signal_in.valid):  # & self.signal_in.ready):
+                        with m.If(in_out_counter == 0):
+                            m.d.comb += [
+                                fft.reset_in.eq(1)
+                            ]
+
                         with m.If(self.signal_in.first):
                             m.d.comb += [
                                 fft.valid_in.eq(1),
@@ -271,7 +270,7 @@ class StereoConvolutionFFT(Elaboratable):
                         in_out_counter.eq(in_out_counter + 1),
                     ]
 
-                    with m.If(fft.valid_out | (read_fft == 1)):
+                    with m.If((fft.valid_out | (read_fft == 1)) & fft.valid_in):
                         m.d.comb += [
                             samples1_write_port.en.eq(1),
                             samples1_write_port.addr.eq(fft_out_counter),
@@ -292,11 +291,17 @@ class StereoConvolutionFFT(Elaboratable):
                 m.d.comb += self.fsm_state.eq(3)
 
                 # write left fft data to memory
-                m.d.comb += [
-                    samples1_write_port.en.eq(1),
-                    samples1_write_port.addr.eq(fft_out_counter),
-                    samples1_write_port.data.eq(fft.sample_out),
-                ]
+                with m.If((fft.valid_out | (read_fft == 1)) & fft.valid_in):
+                    m.d.comb += [
+                        samples1_write_port.en.eq(1),
+                        samples1_write_port.addr.eq(fft_out_counter),
+                        samples1_write_port.data.eq(fft.sample_out),
+                    ]
+
+                    m.d.sync += [
+                        fft_out_counter.eq(fft_out_counter + 1),
+                        read_fft.eq(1),
+                    ]
 
                 # send right samples to fft
                 m.d.comb += [
@@ -312,7 +317,7 @@ class StereoConvolutionFFT(Elaboratable):
 
                 # increment counters
                 m.d.sync += [
-                    fft_out_counter.eq(fft_out_counter + 1),
+                    #fft_out_counter.eq(fft_out_counter + 1),
                     in_out_counter.eq(in_out_counter + 1),
                 ]
 
@@ -375,6 +380,8 @@ class StereoConvolutionFFT(Elaboratable):
                         fft_out_counter.eq(0),
                         madd1.eq(0),
                         madd2.eq(0),
+                        carryover1.eq(0),
+                        carryover2.eq(0),
                         read_fft.eq(0),
                     ]
                     m.next = "MAC"
@@ -384,6 +391,7 @@ class StereoConvolutionFFT(Elaboratable):
                     #        fft.valid_in.eq(1),
                     #    ]
             with m.State("MAC"):
+                m.d.comb += self.fsm_state.eq(5)
                 #MAC_LEFT_CHANNEL
 
                 #crossfeed
@@ -405,11 +413,34 @@ class StereoConvolutionFFT(Elaboratable):
                 channel2_real = samples2_real * taps1_real - samples2_imag * taps1_imag + samples1_real * taps2_real - samples1_imag * taps2_imag
                 channel2_imag = samples2_real * taps1_imag + samples2_imag * taps1_real + samples1_real * taps2_imag + samples1_imag * taps2_real
 
+                m.d.comb += [
+                    samples1_read_port.addr.eq(slices_counter * self._fftsize + mac_counter),
+                    samples2_read_port.addr.eq(slices_counter * self._fftsize + mac_counter),
+                    taps1_read_port.addr.eq(slices_counter * self._fftsize + mac_counter),
+                    taps2_read_port.addr.eq(slices_counter * self._fftsize + mac_counter),
+
+                    #samples1_write_port.addr.eq(Mux(slices_counter > 1, (slices_counter - 1), 0) * self._fftsize + mac_counter),
+                    #samples2_write_port.addr.eq(Mux(slices_counter > 1, (slices_counter - 1), 0) * self._fftsize + mac_counter),
+                    samples1_write_port.addr.eq((slices_counter - 1) * self._fftsize + mac_counter),
+                    samples2_write_port.addr.eq((slices_counter - 1) * self._fftsize + mac_counter),
+                    samples1_write_port.data.eq(carryover1_2),
+                    samples2_write_port.data.eq(carryover2_2),
+                    samples1_write_port.en.eq(Mux(slices_counter > 1, 1, 0)),
+                    samples2_write_port.en.eq(Mux(slices_counter > 1, 1, 0)),
+                ]
+
                 m.d.sync += [
                     madd1.eq(madd1 + Cat([channel1_imag, channel1_real])),
                     madd2.eq(madd2 + Cat([channel2_imag, channel2_real])),
                     slices_counter.eq(slices_counter + 1),
                 ]
+                with m.If(slices_counter > 1):
+                    m.d.sync += [
+                        carryover1.eq(samples1_read_port.data),
+                        carryover1_2.eq(carryover1),
+                        carryover2.eq(samples2_read_port.data),
+                        carryover2_2.eq(carryover2),
+                    ]
 
                 with m.If(slices_counter == self._slices-1): #offby1?
 
@@ -442,6 +473,8 @@ class StereoConvolutionFFT(Elaboratable):
                     m.d.sync += [
                         mac_counter.eq(mac_counter + 1),
                         slices_counter.eq(0),
+                        carryover1.eq(0),
+                        carryover2.eq(0),
                         madd1.eq(0),
                     ]
 
@@ -465,7 +498,7 @@ class StereoConvolutionFFT(Elaboratable):
                     ]
                     m.next ="SEND_RIGHT_READ_LEFT_IFFT"
             with m.State("SEND_RIGHT_READ_LEFT_IFFT"):
-                m.d.comb += self.fsm_state.eq(4)
+                m.d.comb += self.fsm_state.eq(6)
                 # TODO: Store the MAC samples after _stepsize these will be needed for the next MAC in the next block
                 #with m.If(fft.valid_out):
 
@@ -515,30 +548,30 @@ class StereoConvolutionFFT(Elaboratable):
                         read_fft.eq(1),
                     ]
 
-                with m.If(slices_counter == self._slices - 1): # offby1?
-                    m.d.comb += [
-                        fft.valid_in.eq(1),
-                        # conjugate for ifft
-                        fft.sample_in.eq(Cat([-1*madd1[0:self._bitwidth], madd1[self._bitwidth: self._bitwidth*2]])),
-                    ]
-                    m.d.sync += [
-                        mac_counter.eq(mac_counter + 1),
-                        slices_counter.eq(0),
-                        madd1.eq(0),
-                    ]
+                #with m.If(slices_counter == self._slices - 1): # offby1?
+                #    m.d.comb += [
+                #        fft.valid_in.eq(1),
+                #        # conjugate for ifft
+                #        fft.sample_in.eq(Cat([-1*madd1[0:self._bitwidth], madd1[self._bitwidth: self._bitwidth*2]])),
+                #    ]
+                #    m.d.sync += [
+                #        mac_counter.eq(mac_counter + 1),
+                #        slices_counter.eq(0),
+                #        madd1.eq(0),
+                #    ]
 
                 with m.If((fft_out_counter == self._fftsize - 1) & (read_fft == 2)):  # offby1?
                     m.d.sync += [
-                        fft_out_counter.eq(0),
-                        slices_counter.eq(0),
-                        madd1.eq(0),
+                        #fft_out_counter.eq(0),
+                        #slices_counter.eq(0),
+                        #madd1.eq(0),
                         in_out_counter.eq(0),
-                        mac_counter.eq(0),
+                        #mac_counter.eq(0),
                     ]
                     m.next = "OUTPUT_DATA"
 
             with m.State("OUTPUT_DATA"):
-                m.d.comb += self.fsm_state.eq(6)
+                m.d.comb += self.fsm_state.eq(7)
                 with m.If(self.signal_out.ready):
                     m.d.comb += [
                         buffer1_read_port.addr.eq(in_out_counter//2),
@@ -557,9 +590,43 @@ class StereoConvolutionFFT(Elaboratable):
                     ]
 
                 with m.If(in_out_counter == self._stepsize*2-1):
+                    m.d.sync += [
+                        in_out_counter.eq(0),
+                    ]
                     m.next = "READ_SAMPLES"
         return m
 
+
+class FFTMock:
+    def __init__(self, tapcount, out_bitwidth):
+        self._tapcount = tapcount
+        self.gotSamples = 0
+        self.outputSamples = 0
+        self._out_bitwidth = out_bitwidth
+
+    def FFT(self, x, reset):
+        if reset:
+            self.gotSamples = 0
+            self.outputSamples = 0
+
+        output = np.zeros((len(self._tapcount), 2), dtype=np.int32)
+        for i in len(output):
+            self.gotSamples += 1
+            if i > self._tapcount//3*2:
+                self.outputSamples += 1
+
+            output[i, 0] = ((10000 + self.gotSamples * 1000 + self.outputSamples) << self._out_bitwidth) \
+                            + 30000 + self.gotSamples * 1000 + self.outputSamples
+
+        for i in len(output):
+            self.gotSamples += 1
+            if i > self._tapcount//3*2:
+                self.outputSamples += 1
+
+            output[i, 1] = ((10000 + self.gotSamples * 1000 + self.outputSamples) << self._out_bitwidth) \
+                            + 30000 + self.gotSamples * 1000 + self.outputSamples
+
+        return output
 
 class StereoConvolutionFFTTest(GatewareTestCase):
     FRAGMENT_UNDER_TEST = StereoConvolutionFFT
@@ -615,25 +682,97 @@ class StereoConvolutionFFTTest(GatewareTestCase):
 
 
     def calculate_expected_result(self, taps, testdata, convolutionMode):
-        output = np.zeros((len(testdata),2), dtype=np.int32)
-        for sample in range(len(testdata)):
-            sumL = 0
-            sumR = 0
-            for tap in range(len(taps)):
-                if tap > sample:
-                    break
-                if convolutionMode == ConvolutionMode.CROSSFEED:
-                    sumL += int(testdata[sample - tap, 0]) * int(taps[tap, 0]) + int(testdata[sample - tap, 1]) * int(taps[tap, 1])
-                    sumR += int(testdata[sample - tap, 1]) * int(taps[tap, 0]) + int(testdata[sample - tap, 0]) * int(taps[tap, 1])
-                elif convolutionMode == ConvolutionMode.STEREO:
-                    sumL += int(testdata[sample - tap, 0]) * int(taps[tap, 0])
-                    sumR += int(testdata[sample - tap, 1]) * int(taps[tap, 1])
-                elif convolutionMode == ConvolutionMode.MONO:
-                    sumL += int(testdata[sample - tap, 0]) * int(taps[tap, 0])
-                    sumR += int(testdata[sample - tap, 1]) * int(taps[tap, 0])
+        output = np.zeros((len(testdata), 2), dtype=np.int32)
 
-            output[sample, 0] = sumL >> self.bitwidth
-            output[sample, 1] = sumR >> self.bitwidth
+        return output
+        fftMock = FFTMock(16,24+4)
+        fft = fftMock.FFT(None, False)
+        #ifft = fftMock.FFT(None, True)
+
+
+
+
+
+        output_samples = testdata.copy()
+        samplecount = len(testdata[:, 0])
+        tapcount = len(taps[:, 0])
+
+        stepsize = 128  # fftsize-tapcount +1 #or 32
+        fftsize = 2 << (stepsize - 1).bit_length()
+        slices = tapcount // stepsize
+        offsets = range(0, samplecount, stepsize)
+        previous_samples1 = np.zeros((slices, fftsize), dtype=np.complex128)
+        previous_samples2 = np.zeros((slices, fftsize), dtype=np.complex128)
+
+        tapsfft1 = np.zeros((slices, fftsize), dtype=np.complex128)
+        tapsfft2 = np.zeros((slices, fftsize), dtype=np.complex128)
+        for j in range(slices):
+            # tapsfft1[j] = np.fft.fft(taps[j*stepsize:(j+1)*stepsize, 0], n=fftsize)
+            # tapsfft2[j] = np.fft.fft(taps[j*stepsize:(j+1)*stepsize, 1], n=fftsize)
+            z1 = np.zeros((fftsize))
+            z2 = np.zeros((fftsize))
+            z1[:stepsize] = taps[j * stepsize:(j + 1) * stepsize, 0]
+            z2[:stepsize] = taps[j * stepsize:(j + 1) * stepsize, 1]
+            tapsfft1[j] = FFTConvolver.FFT(z1)
+            tapsfft2[j] = FFTConvolver.FFT(z2)
+
+        buffer1 = np.zeros(samplecount + fftsize, dtype=np.complex128)
+        buffer2 = np.zeros(samplecount + fftsize, dtype=np.complex128)
+
+        for n in offsets:
+            if (n // stepsize) % 200 == 0:
+                print(f"{n}/{samplecount}")
+
+            np.roll(previous_samples1, fftsize)
+            np.roll(previous_samples2, fftsize)
+            z1 = np.zeros((fftsize))
+            z2 = np.zeros((fftsize))
+            z1[:stepsize] = samples[n:n + stepsize, 0]
+            z2[:stepsize] = samples[n:n + stepsize, 0]
+            previous_samples1[0] = FFTConvolver.FFT(z1)
+            previous_samples2[0] = FFTConvolver.FFT(z2)
+
+            slice1 = np.zeros((fftsize), dtype=np.complex128)
+            slice2 = np.zeros((fftsize), dtype=np.complex128)
+
+            for j in range(slices):
+                convolved1 = previous_samples1[j] * tapsfft1[j] + previous_samples2[j] * tapsfft2[j]
+                convolved2 = previous_samples2[j] * tapsfft1[j] + previous_samples1[j] * tapsfft2[j]
+                slice1 += convolved1
+                slice2 += convolved2
+            # print(f"Slice1: {slice1}")
+
+            modifiedsignal1 = FFTConvolver.IFFT(slice1)
+            modifiedsignal2 = FFTConvolver.IFFT(slice2)
+
+            # print(f"Modifiedshape: {np.shape(modifiedsignal1)}: {modifiedsignal1}")
+            buffer1[n:n + fftsize] += modifiedsignal1
+            buffer2[n:n + fftsize] += modifiedsignal2
+
+        for i in range(samplecount):
+            # if i < 40:
+            #    print(f"Output: res: {int(res[i])}; abs: {np.abs(res[i])}; real: {np.real(res[i])}; img: {np.imag(res[i])}")
+            output_samples[i, 0] = int(np.real(buffer1[i])) >> self.bitwidth  # (self.bitwidth+12)
+            output_samples[i, 1] = int(np.real(buffer2[i])) >> self.bitwidth  # (self.bitwidth+12)
+
+        #for sample in range(len(testdata)):
+        #    sumL = 0
+        #    sumR = 0
+        #    for tap in range(len(taps)):
+        #        if tap > sample:
+        #            break
+        #        if convolutionMode == ConvolutionMode.CROSSFEED:
+        #            sumL += int(testdata[sample - tap, 0]) * int(taps[tap, 0]) + int(testdata[sample - tap, 1]) * int(taps[tap, 1])
+        #            sumR += int(testdata[sample - tap, 1]) * int(taps[tap, 0]) + int(testdata[sample - tap, 0]) * int(taps[tap, 1])
+        #        elif convolutionMode == ConvolutionMode.STEREO:
+        #            sumL += int(testdata[sample - tap, 0]) * int(taps[tap, 0])
+        #            sumR += int(testdata[sample - tap, 1]) * int(taps[tap, 1])
+        #        elif convolutionMode == ConvolutionMode.MONO:
+        #            sumL += int(testdata[sample - tap, 0]) * int(taps[tap, 0])
+        #            sumR += int(testdata[sample - tap, 1]) * int(taps[tap, 0])
+#
+        #    output[sample, 0] = sumL >> self.bitwidth
+        #    output[sample, 1] = sumR >> self.bitwidth
 
         return output
 
