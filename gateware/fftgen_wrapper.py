@@ -3,6 +3,7 @@ from  amaranth.lib.cdc import ResetSynchronizer
 import os
 import subprocess
 import shutil
+from amaranth.lib.fifo import SyncFIFO
 
 class FFTGenWrapper(Elaboratable):
     wrapper_id = 0
@@ -63,8 +64,8 @@ class FFTGenWrapper(Elaboratable):
             print("Patching ifft files completed.")
 
         self.valid_in = Signal()
-        self.sample_in = Signal(in_bitwidth)
-        self.sample_out = Signal(out_bitwidth)
+        self.sample_in = Signal(in_bitwidth*2)
+        self.sample_out = Signal(out_bitwidth*2)
         self.valid_out = Signal()
         self.reset_in = Signal()
 
@@ -132,6 +133,8 @@ class FFTGenWrapperTest(Elaboratable):
     def elaborate(self, platform) -> Module:
         m = Module()
 
+        m.submodules.fifo = fifo = SyncFIFO(width=24, depth=self._tapcount*3)
+
         m.d.comb += [
             self.sample_out.eq(0),
             self.valid_out.eq(0),
@@ -139,6 +142,11 @@ class FFTGenWrapperTest(Elaboratable):
 
 
         with m.If(self.valid_in):
+            m.d.comb += [
+                fifo.w_data.eq(self.sample_in),
+                fifo.w_en.eq(1)
+            ]
+
             m.d.sync += self.gotSamples.eq(self.gotSamples + 1)
 
             #with m.If(self.gotSamples % self._tapcount == 0):
@@ -162,8 +170,9 @@ class FFTGenWrapperTest(Elaboratable):
                     self.outputSamples.eq(self.outputSamples + 1),
                 ]
                 m.d.comb += [
+                    fifo.r_en.eq(1),
                     self.sample_out.eq(((10000 + self.gotSamples*1000 + self.outputSamples) << self._out_bitwidth) + 30000 + self.gotSamples*1000 + self.outputSamples),
-
+                    #self.sample_out.eq(fifo.r_data),
                 ]
 
 
