@@ -549,8 +549,8 @@ def setup_ila(v, ila_max_packet_size):
         dac1_extractor.level,
         enable_fir,
         fir.fsm_state,
-        fir.fft_out_counter,
-        fir.in_out_counter,
+        fir.dbg_fft_out_counter,
+        fir.dbg_in_out_counter,
         fir.fft.gotSamples,
         fir.fft.outputSamples,
         #fir.fft.clock_usb,
@@ -564,6 +564,8 @@ def setup_ila(v, ila_max_packet_size):
     ]
 
     fft_debug = [
+        fir.dbg_madd1,
+        fir.fsm_state,
         dac1_extractor.level,
         fir.fft.gotSamples,
         fir.fft.outputSamples,
