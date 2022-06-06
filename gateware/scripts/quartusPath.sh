@@ -1,0 +1,2 @@
+. ./venv/bin/activate
+export PATH=/home/rouven/Applications/IntelFPGA_lite/quartus/bin/:/home/rouven/Computer/Coden/Audio/fpga/IntelFPGA_lite/quartus/bin/:/home/rouven/Computer/Coden/Audio/adat-usb2-audio-interface/gateware/venv/bin:/home/rouven/.wasmtime/bin:/home/rouven/.wasienv/bin:/home/rouven/.wasmer/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/bin:/usr/lib64/opencascade-7.5.3/bin:/usr/lib/llvm/13/bin:/opt/gcc-arm-none-eabi/bin:/home/rouven/.wasmer/globals/wapm_packages/.bin
