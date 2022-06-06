@@ -84,9 +84,11 @@ class ADATFaceRev0Baseboard:
                 Subsignal("rx", Pins("J_2:9", dir="i")),
                 attrs),
 
-            # Debug
-            SPIResource(0, clk="J_2:12", copi="J_2:8", cipo=None, cs_n="J_2:10", attrs=attrs),
+            # SPIResource(0, clk="J_2:12", copi="J_2:8", cipo=None, cs_n="J_2:10", attrs=attrs),
+            #SPIResource(0, clk="J_2:16", copi="J_2:12", cipo=None, cs_n="J_2:14", attrs=attrs),
+            UARTResource(0, rx="J_2:8", tx="J_2:10", attrs=attrs),
 
+            # Debug
             Resource("debug", 0, Pins("J_2:44", dir="o")),
             Resource("debug", 1, Pins("J_2:46", dir="o")),
             Resource("debug", 2, Pins("J_2:48", dir="o")),

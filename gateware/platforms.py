@@ -51,7 +51,7 @@ class ADATFaceCycloneV(QMTech5CEFA2Platform, LUNAPlatform):
         # names are swapped compared to the QMTech daughterboard
         self.connectors[0].number = 3
         self.connectors[1].number = 2
-        super().__init__(standalone=False)
+        super().__init__(standalone=True)
 
 class ADATFaceCycloneIV(QMTechEP4CEPlatform, LUNAPlatform):
     fast_multiplier        = 9

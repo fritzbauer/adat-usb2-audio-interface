@@ -37,6 +37,7 @@ from bundle_demultiplexer    import BundleDemultiplexer
 from stereopair_extractor    import StereoPairExtractor
 from requesthandlers         import UAC2RequestHandlers
 from debug                   import setup_ila, add_debug_led_array
+from litex_soc               import LiteXSoC
 
 from usb_descriptors import USBDescriptors
 
@@ -57,7 +58,7 @@ class USB2AudioInterface(Elaboratable):
     USE_ILA             = False
     ILA_MAX_PACKET_SIZE = 512
 
-    USE_DEBUG_LED_ARRAY = True
+    USE_DEBUG_LED_ARRAY = False
 
     USE_CONVOLUTION = False
 
@@ -441,6 +442,7 @@ class USB2AudioInterface(Elaboratable):
         else:
             convolver = None
             enable_convolver = None
+            m.submodules.litex_soc = litex_soc = LiteXSoC()
 
         self.wire_up_dac(m, usb1_to_channel_stream, dac1_extractor, dac1, lrclk, dac1_pads, convolver, enable_convolver)
         self.wire_up_dac(m, usb1_to_channel_stream, dac2_extractor, dac2, lrclk, dac2_pads)
@@ -715,8 +717,8 @@ class USB2AudioInterface(Elaboratable):
         ]
 
 if __name__ == "__main__":
-    os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceCycloneIV"
-    #os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceCycloneV"
+    #os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceCycloneIV"
+    os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceCycloneV"
     #os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceCyclone10"
     #os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceArtix7"
     top_level_cli(USB2AudioInterface)
