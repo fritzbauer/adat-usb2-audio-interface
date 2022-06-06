@@ -36,6 +36,7 @@ from stereopair_extractor    import StereoPairExtractor
 from requesthandlers         import UAC2RequestHandlers
 from debug                   import setup_ila, add_debug_led_array
 from stereo_convolution_fft           import StereoConvolutionFFT, ConvolutionMode
+#from stereo_convolution_mac           import StereoConvolutionMAC, ConvolutionMode
 from debouncer               import Debouncer
 
 from usb_descriptors import USBDescriptors
@@ -54,7 +55,7 @@ class USB2AudioInterface(Elaboratable):
     USB1_MAX_PACKET_SIZE = int(224 * 4 + USB2_MAX_PACKET_SIZE)
     INPUT_CDC_FIFO_DEPTH = 256 * 4
 
-    USE_ILA             = True
+    USE_ILA             = False
     ILA_MAX_PACKET_SIZE = 512
 
     USE_DEBUG_LED_ARRAY = True
@@ -419,12 +420,13 @@ class USB2AudioInterface(Elaboratable):
             ir_data = wav.readframes(wav.getnframes())
             ir_sample_rate = wav.getframerate()
 
-        ir_sig = np.zeros((len(ir_data)//6, 2), dtype='int32')
+        #ir_sig = np.zeros((len(ir_data)//6, 2), dtype='int32')
+        ir_sig = np.zeros((4096, 2), dtype='int32')
         for i in range(0, len(ir_sig), 6):
             ir_sig[i // 6, 0] = int.from_bytes(ir_data[i:i + 3], byteorder='little', signed=True)
             ir_sig[i // 6, 1] = int.from_bytes(ir_data[i + 3:i + 6], byteorder='little', signed=True)
 
-        taps = ir_sig[:4096,:] #tapcount 4096 - more is failing to synthesize right now. 4800 would be the goal for 100ms.
+        taps = ir_sig #ir_sig[:4096,:] #tapcount 4096 - more is failing to synthesize right now. 4800 would be the goal for 100ms.
 
         # some validation of the IR file
         assert ir_sample_rate == samplerate, f"Unsupported samplerate {ir_sample_rate} for IR file. Required samplerate is {samplerate}"
@@ -701,7 +703,8 @@ class USB2AudioInterface(Elaboratable):
 
 if __name__ == "__main__":
     #os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceCycloneIV"
-    os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceCycloneV"
+    os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceCycloneIV_EP4CGX150"
+    #os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceCycloneV"
     #os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceCyclone10"
     #os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceArtix7"
     top_level_cli(USB2AudioInterface)
