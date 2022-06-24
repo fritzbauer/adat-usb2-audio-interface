@@ -30,7 +30,10 @@ module qmtech_5cefa2 (
 	output wire sdram_ras_n,
 	output wire sdram_cas_n,
 	output wire sdram_we_n,
-	inout  wire [15:0] sdram_dq,
+	//inout  wire [15:0] sdram_dq,
+	input  wire [15:0] sdram_dq_i,
+	output  wire [15:0] sdram_dq_oe,
+	output  wire [15:0] sdram_dq_o,
 	output wire [1:0] sdram_dm,
 	output reg  user_led0
 );
@@ -1383,6 +1386,41 @@ wire builder_impl15;
 // Combinatorial Logic
 //------------------------------------------------------------------------------
 
+assign sdram_dq_oe[0] = builder_impl_inferedsdrtristate0_oe;
+assign sdram_dq_oe[1] = builder_impl_inferedsdrtristate1_oe;
+assign sdram_dq_oe[2] = builder_impl_inferedsdrtristate2_oe;
+assign sdram_dq_oe[3] = builder_impl_inferedsdrtristate3_oe;
+assign sdram_dq_oe[4] = builder_impl_inferedsdrtristate4_oe;
+assign sdram_dq_oe[5] = builder_impl_inferedsdrtristate5_oe;
+assign sdram_dq_oe[6] = builder_impl_inferedsdrtristate6_oe;
+assign sdram_dq_oe[7] = builder_impl_inferedsdrtristate7_oe;
+assign sdram_dq_oe[8] = builder_impl_inferedsdrtristate8_oe;
+assign sdram_dq_oe[9] = builder_impl_inferedsdrtristate9_oe;
+assign sdram_dq_oe[10] = builder_impl_inferedsdrtristate10_oe;
+assign sdram_dq_oe[11] = builder_impl_inferedsdrtristate11_oe;
+assign sdram_dq_oe[12] = builder_impl_inferedsdrtristate12_oe;
+assign sdram_dq_oe[13] = builder_impl_inferedsdrtristate13_oe;
+assign sdram_dq_oe[14] = builder_impl_inferedsdrtristate14_oe;
+assign sdram_dq_oe[15] = builder_impl_inferedsdrtristate15_oe;
+
+
+assign builder_impl_inferedsdrtristate0__o = sdram_dq_o[0];
+assign builder_impl_inferedsdrtristate1__o = sdram_dq_o[1];
+assign builder_impl_inferedsdrtristate2__o = sdram_dq_o[2];
+assign builder_impl_inferedsdrtristate3__o = sdram_dq_o[3];
+assign builder_impl_inferedsdrtristate4__o = sdram_dq_o[4];
+assign builder_impl_inferedsdrtristate5__o = sdram_dq_o[5];
+assign builder_impl_inferedsdrtristate6__o = sdram_dq_o[6];
+assign builder_impl_inferedsdrtristate7__o = sdram_dq_o[7];
+assign builder_impl_inferedsdrtristate8__o = sdram_dq_o[8];
+assign builder_impl_inferedsdrtristate9__o = sdram_dq_o[9];
+assign builder_impl_inferedsdrtristate10__o = sdram_dq_o[10];
+assign builder_impl_inferedsdrtristate11__o = sdram_dq_o[11];
+assign builder_impl_inferedsdrtristate12__o = sdram_dq_o[12];
+assign builder_impl_inferedsdrtristate13__o = sdram_dq_o[13];
+assign builder_impl_inferedsdrtristate14__o = sdram_dq_o[14];
+assign builder_impl_inferedsdrtristate15__o = sdram_dq_o[15];
+
 assign main_basesoc_reset = (main_basesoc_soc_rst | main_basesoc_cpu_rst);
 always @(*) begin
 	main_crg_rst <= 1'd0;
@@ -1398,10 +1436,10 @@ always @(*) begin
 end
 assign main_crg_reset = main_crg_rst;
 assign main_crg_clkin = clk105;
-assign sys_clk = clk105;
-assign sys_ps_clk = clk105_ram;
-assign main_crg_clkout0 = builder_subfragments_clks[0];
-assign main_crg_clkout1 = builder_subfragments_clks[1];
+assign sys_clk = main_crg_clkout0;
+assign sys_ps_clk = main_crg_clkout1;
+assign main_crg_clkout0 = clk105;
+assign main_crg_clkout1 = clk105_ram;
 assign main_basesoc_bus_errors_status = main_basesoc_bus_errors;
 assign main_basesoc_basesoc_adr = main_basesoc_basesoc_ram_bus_adr[14:0];
 assign main_basesoc_basesoc_ram_bus_dat_r = main_basesoc_basesoc_dat_r;
@@ -5944,53 +5982,104 @@ ALTDDIO_OUT #(
 	.dataout(sdram_cke)
 );
 
-assign sdram_dq[0] = builder_impl_inferedsdrtristate0_oe ? builder_impl_inferedsdrtristate0__o : 1'bz;
-assign builder_impl_inferedsdrtristate0__i = sdram_dq[0];
 
-assign sdram_dq[1] = builder_impl_inferedsdrtristate1_oe ? builder_impl_inferedsdrtristate1__o : 1'bz;
-assign builder_impl_inferedsdrtristate1__i = sdram_dq[1];
+//assign sdram_dq_oe[0] = builder_impl_inferedsdrtristate0_oe ? 1'b1 : 1'b0;
+assign builder_impl_inferedsdrtristate0__i = sdram_dq_i[0];
 
-assign sdram_dq[2] = builder_impl_inferedsdrtristate2_oe ? builder_impl_inferedsdrtristate2__o : 1'bz;
-assign builder_impl_inferedsdrtristate2__i = sdram_dq[2];
+//assign sdram_dq_oe[1] = builder_impl_inferedsdrtristate1_oe ? 1'b1 : 1'b0;
+assign builder_impl_inferedsdrtristate1__i = sdram_dq_i[1];
 
-assign sdram_dq[3] = builder_impl_inferedsdrtristate3_oe ? builder_impl_inferedsdrtristate3__o : 1'bz;
-assign builder_impl_inferedsdrtristate3__i = sdram_dq[3];
+//assign sdram_dq_oe[2] = builder_impl_inferedsdrtristate2_oe ? 1'b1 : 1'b0;
+assign builder_impl_inferedsdrtristate2__i = sdram_dq_i[2];
 
-assign sdram_dq[4] = builder_impl_inferedsdrtristate4_oe ? builder_impl_inferedsdrtristate4__o : 1'bz;
-assign builder_impl_inferedsdrtristate4__i = sdram_dq[4];
+//assign sdram_dq_oe[3] = builder_impl_inferedsdrtristate3_oe ? 1'b1 : 1'b0;
+assign builder_impl_inferedsdrtristate3__i = sdram_dq_i[3];
 
-assign sdram_dq[5] = builder_impl_inferedsdrtristate5_oe ? builder_impl_inferedsdrtristate5__o : 1'bz;
-assign builder_impl_inferedsdrtristate5__i = sdram_dq[5];
+//assign sdram_dq_oe[4] = builder_impl_inferedsdrtristate4_oe ? 1'b1 : 1'b0;
+assign builder_impl_inferedsdrtristate4__i = sdram_dq_i[4];
 
-assign sdram_dq[6] = builder_impl_inferedsdrtristate6_oe ? builder_impl_inferedsdrtristate6__o : 1'bz;
-assign builder_impl_inferedsdrtristate6__i = sdram_dq[6];
+//assign sdram_dq_oe[5] = builder_impl_inferedsdrtristate5_oe ? 1'b1 : 1'b0;
+assign builder_impl_inferedsdrtristate5__i = sdram_dq_i[5];
 
-assign sdram_dq[7] = builder_impl_inferedsdrtristate7_oe ? builder_impl_inferedsdrtristate7__o : 1'bz;
-assign builder_impl_inferedsdrtristate7__i = sdram_dq[7];
+//assign sdram_dq_oe[6] = builder_impl_inferedsdrtristate6_oe ? 1'b1 : 1'b0;
+assign builder_impl_inferedsdrtristate6__i = sdram_dq_i[6];
 
-assign sdram_dq[8] = builder_impl_inferedsdrtristate8_oe ? builder_impl_inferedsdrtristate8__o : 1'bz;
-assign builder_impl_inferedsdrtristate8__i = sdram_dq[8];
+//assign sdram_dq_oe[7] = builder_impl_inferedsdrtristate7_oe ? 1'b1 : 1'b0;
+assign builder_impl_inferedsdrtristate7__i = sdram_dq_i[7];
 
-assign sdram_dq[9] = builder_impl_inferedsdrtristate9_oe ? builder_impl_inferedsdrtristate9__o : 1'bz;
-assign builder_impl_inferedsdrtristate9__i = sdram_dq[9];
+//assign sdram_dq_oe[8] = builder_impl_inferedsdrtristate8_oe ? 1'b1 : 1'b0;
+assign builder_impl_inferedsdrtristate8__i = sdram_dq_i[8];
 
-assign sdram_dq[10] = builder_impl_inferedsdrtristate10_oe ? builder_impl_inferedsdrtristate10__o : 1'bz;
-assign builder_impl_inferedsdrtristate10__i = sdram_dq[10];
+//assign sdram_dq_oe[9] = builder_impl_inferedsdrtristate9_oe ? 1'b1 : 1'b0;
+assign builder_impl_inferedsdrtristate9__i = sdram_dq_i[9];
 
-assign sdram_dq[11] = builder_impl_inferedsdrtristate11_oe ? builder_impl_inferedsdrtristate11__o : 1'bz;
-assign builder_impl_inferedsdrtristate11__i = sdram_dq[11];
+//assign sdram_dq_oe[10] = builder_impl_inferedsdrtristate10_oe ? 1'b1 : 1'b0;
+assign builder_impl_inferedsdrtristate10__i = sdram_dq_i[10];
 
-assign sdram_dq[12] = builder_impl_inferedsdrtristate12_oe ? builder_impl_inferedsdrtristate12__o : 1'bz;
-assign builder_impl_inferedsdrtristate12__i = sdram_dq[12];
+//assign sdram_dq_oe[11] = builder_impl_inferedsdrtristate11_oe ? 1'b1 : 1'b0;
+assign builder_impl_inferedsdrtristate11__i = sdram_dq_i[11];
 
-assign sdram_dq[13] = builder_impl_inferedsdrtristate13_oe ? builder_impl_inferedsdrtristate13__o : 1'bz;
-assign builder_impl_inferedsdrtristate13__i = sdram_dq[13];
+//assign sdram_dq_oe[12] = builder_impl_inferedsdrtristate12_oe ? 1'b1 : 1'b0;
+assign builder_impl_inferedsdrtristate12__i = sdram_dq_i[12];
 
-assign sdram_dq[14] = builder_impl_inferedsdrtristate14_oe ? builder_impl_inferedsdrtristate14__o : 1'bz;
-assign builder_impl_inferedsdrtristate14__i = sdram_dq[14];
+//assign sdram_dq_oe[13] = builder_impl_inferedsdrtristate13_oe ? 1'b1 : 1'b0;
+assign builder_impl_inferedsdrtristate13__i = sdram_dq_i[13];
 
-assign sdram_dq[15] = builder_impl_inferedsdrtristate15_oe ? builder_impl_inferedsdrtristate15__o : 1'bz;
-assign builder_impl_inferedsdrtristate15__i = sdram_dq[15];
+//assign sdram_dq_oe[14] = builder_impl_inferedsdrtristate14_oe ? 1'b1 : 1'b0;
+assign builder_impl_inferedsdrtristate14__i = sdram_dq_i[14];
+
+//assign sdram_dq_oe[15] = builder_impl_inferedsdrtristate15_oe ? 1'b1 : 1'b0;
+assign builder_impl_inferedsdrtristate15__i = sdram_dq_i[15];
+
+
+
+//assign sdram_dq[0] = builder_impl_inferedsdrtristate0_oe ? builder_impl_inferedsdrtristate0__o : 1'bz;
+//assign builder_impl_inferedsdrtristate0__i = sdram_dq[0];
+//
+//assign sdram_dq[1] = builder_impl_inferedsdrtristate1_oe ? builder_impl_inferedsdrtristate1__o : 1'bz;
+//assign builder_impl_inferedsdrtristate1__i = sdram_dq[1];
+//
+//assign sdram_dq[2] = builder_impl_inferedsdrtristate2_oe ? builder_impl_inferedsdrtristate2__o : 1'bz;
+//assign builder_impl_inferedsdrtristate2__i = sdram_dq[2];
+//
+//assign sdram_dq[3] = builder_impl_inferedsdrtristate3_oe ? builder_impl_inferedsdrtristate3__o : 1'bz;
+//assign builder_impl_inferedsdrtristate3__i = sdram_dq[3];
+//
+//assign sdram_dq[4] = builder_impl_inferedsdrtristate4_oe ? builder_impl_inferedsdrtristate4__o : 1'bz;
+//assign builder_impl_inferedsdrtristate4__i = sdram_dq[4];
+//
+//assign sdram_dq[5] = builder_impl_inferedsdrtristate5_oe ? builder_impl_inferedsdrtristate5__o : 1'bz;
+//assign builder_impl_inferedsdrtristate5__i = sdram_dq[5];
+//
+//assign sdram_dq[6] = builder_impl_inferedsdrtristate6_oe ? builder_impl_inferedsdrtristate6__o : 1'bz;
+//assign builder_impl_inferedsdrtristate6__i = sdram_dq[6];
+//
+//assign sdram_dq[7] = builder_impl_inferedsdrtristate7_oe ? builder_impl_inferedsdrtristate7__o : 1'bz;
+//assign builder_impl_inferedsdrtristate7__i = sdram_dq[7];
+//
+//assign sdram_dq[8] = builder_impl_inferedsdrtristate8_oe ? builder_impl_inferedsdrtristate8__o : 1'bz;
+//assign builder_impl_inferedsdrtristate8__i = sdram_dq[8];
+//
+//assign sdram_dq[9] = builder_impl_inferedsdrtristate9_oe ? builder_impl_inferedsdrtristate9__o : 1'bz;
+//assign builder_impl_inferedsdrtristate9__i = sdram_dq[9];
+//
+//assign sdram_dq[10] = builder_impl_inferedsdrtristate10_oe ? builder_impl_inferedsdrtristate10__o : 1'bz;
+//assign builder_impl_inferedsdrtristate10__i = sdram_dq[10];
+//
+//assign sdram_dq[11] = builder_impl_inferedsdrtristate11_oe ? builder_impl_inferedsdrtristate11__o : 1'bz;
+//assign builder_impl_inferedsdrtristate11__i = sdram_dq[11];
+//
+//assign sdram_dq[12] = builder_impl_inferedsdrtristate12_oe ? builder_impl_inferedsdrtristate12__o : 1'bz;
+//assign builder_impl_inferedsdrtristate12__i = sdram_dq[12];
+//
+//assign sdram_dq[13] = builder_impl_inferedsdrtristate13_oe ? builder_impl_inferedsdrtristate13__o : 1'bz;
+//assign builder_impl_inferedsdrtristate13__i = sdram_dq[13];
+//
+//assign sdram_dq[14] = builder_impl_inferedsdrtristate14_oe ? builder_impl_inferedsdrtristate14__o : 1'bz;
+//assign builder_impl_inferedsdrtristate14__i = sdram_dq[14];
+//
+//assign sdram_dq[15] = builder_impl_inferedsdrtristate15_oe ? builder_impl_inferedsdrtristate15__o : 1'bz;
+//assign builder_impl_inferedsdrtristate15__i = sdram_dq[15];
 
 ALTDDIO_OUT #(
 	.WIDTH(1'd1)

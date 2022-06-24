@@ -1,4 +1,5 @@
 from amaranth import Elaboratable, Module, Signal, Array, Memory, signed, Cat, Mux, Instance, ClockSignal, ResetSignal
+from amaranth.compat.fhdl.specials import Tristate
 import os
 import subprocess
 import shutil
@@ -7,7 +8,7 @@ from amaranth_boards.resources import SDRAMResource, UARTResource
 class LiteXSoC(Elaboratable):
     def __init__(self):
         self.led = Signal()
-        return
+
 
     def elaborate(self, platform) -> Module:
         m = Module()
@@ -41,9 +42,14 @@ class LiteXSoC(Elaboratable):
         #    output reg  user_led0
         #);
 
+        #dq = Signal(16)
+        #m.d.comb += dq.eq(sdram_resource.dq.i)
+        #m.d.comb += sdram_resource.dq.o.eq(dq.o)
+
+        #dq = Tristate(sdram_resource.dq.o, sdram_resource.dq.oe, sdram_resource.dq.i)
         m.submodules.litex_soc = Instance("qmtech_5cefa2",
             i_clk105 = ClockSignal("soc"),
-            i_clk105_ram=ClockSignal("sdram"),
+            i_clk105_ram= ClockSignal("sdram"),
             o_sdram_clock = sdram_resource.clk,
             o_serial_tx=uart_resource.tx,
             i_serial_rx=uart_resource.rx,
@@ -54,9 +60,14 @@ class LiteXSoC(Elaboratable):
             o_sdram_ras_n=sdram_resource.ras,
             o_sdram_cas_n=sdram_resource.cas,
             o_sdram_we_n=sdram_resource.we,
-            io_sdram_dq=sdram_resource.dq,
+            i_sdram_dq_i=sdram_resource.dq.i,
+            o_sdram_dq_oe=sdram_resource.dq.oe,
+            o_sdram_dq_o=sdram_resource.dq.o,
+            #i_sdram_i=sdram_resource.dq.i,
+            #i_sdram_oe=sdram_resource.dq.oe,
+            #o_sdram_o=sdram_resource.dq.o,
             o_sdram_dm=sdram_resource.dqm,
-            o_user_led0 = self.led
+            o_user_led0=self.led
         )
 
 

@@ -513,10 +513,9 @@ class USB2AudioInterface(Elaboratable):
         ]
         m.d.comb += [getattr(leds, f"sync{i + 1}").eq(adat_receivers[i].synced_out) for i in range(4)]
 
-        if self.USE_CONVOLUTION:
-            convolver_led = platform.request("core_led", 0)
-            m.d.comb += convolver_led.o.eq(enable_convolver)
-
+        #if self.USE_CONVOLUTION:
+        convolver_led = platform.request("core_led", 0)
+        m.d.comb += convolver_led.o.eq(litex_soc.led)
         return m
 
 
