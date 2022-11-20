@@ -22,6 +22,8 @@ class IntelFPGAParameters:
             set_instance_assignment -name INCREASE_DELAY_TO_OUTPUT_PIN OFF -to *ulpi*
             set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
         """
+        #if $urandom is not found: 
+        # set_global_assignment -name VERILOG_MACRO "SYNTHESIS=1"
 
     SDC_ADDITIONS = r"""
             derive_pll_clocks

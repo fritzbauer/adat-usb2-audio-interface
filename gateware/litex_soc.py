@@ -4,7 +4,7 @@ import os
 import subprocess
 import shutil
 from amaranth_boards.resources import SDRAMResource, UARTResource
-
+from utils import request_bare
 class LiteXSoC(Elaboratable):
     def __init__(self):
         self.led = Signal()
@@ -14,6 +14,7 @@ class LiteXSoC(Elaboratable):
         m = Module()
 
         platform.add_file("VexRiscv.v", open("VexRiscv.v"))
+        #platform.add_file("VexRiscvLitexSmpCluster_Cc2_Iw64Is8192Iy2_Dw64Ds8192Dy2_ITs4DTs4_Ldw16_Cdma_Ood.v", open("VexRiscvLitexSmpCluster_Cc2_Iw64Is8192Iy2_Dw64Ds8192Dy2_ITs4DTs4_Ldw16_Cdma_Ood.v"))
         platform.add_file("qmtech_5cefa2.v", open("qmtech_5cefa2.v"))
         platform.add_file("qmtech_5cefa2_mem.init", open("qmtech_5cefa2_mem.init"))
         platform.add_file("qmtech_5cefa2_rom.init", open("qmtech_5cefa2_rom.init"))
@@ -22,7 +23,7 @@ class LiteXSoC(Elaboratable):
         #/ home / rouven / Computer / Coden / Audio / fpga / pythondata - cpu - vexriscv / pythondata_cpu_vexriscv / verilog / VexRiscv.v
         #sdram_resource = (SDRAMResource)(platform.request("sdram"))
         #uart_resource = (UARTResource())(platform.request("uart"))
-        sdram_resource = platform.request("sdram")
+        sdram_resource = request_bare(platform, "sdram", 0)
         uart_resource = platform.request("uart")
 
         #module qmtech_5cefa2 (
@@ -48,8 +49,8 @@ class LiteXSoC(Elaboratable):
 
         #dq = Tristate(sdram_resource.dq.o, sdram_resource.dq.oe, sdram_resource.dq.i)
         m.submodules.litex_soc = Instance("qmtech_5cefa2",
-            i_clk105 = ClockSignal("soc"),
-            i_clk105_ram= ClockSignal("sdram"),
+            i_clk50 = ClockSignal("clk50"),
+            #i_clk105_ram= ClockSignal("sdram"),
             o_sdram_clock = sdram_resource.clk,
             o_serial_tx=uart_resource.tx,
             i_serial_rx=uart_resource.rx,
@@ -60,9 +61,9 @@ class LiteXSoC(Elaboratable):
             o_sdram_ras_n=sdram_resource.ras,
             o_sdram_cas_n=sdram_resource.cas,
             o_sdram_we_n=sdram_resource.we,
-            i_sdram_dq_i=sdram_resource.dq.i,
-            o_sdram_dq_oe=sdram_resource.dq.oe,
-            o_sdram_dq_o=sdram_resource.dq.o,
+            io_sdram_dq=sdram_resource.dq,
+            #o_sdram_dq_oe=sdram_resource.dq.oe,
+            #o_sdram_dq_o=sdram_resource.dq.o,
             #i_sdram_i=sdram_resource.dq.i,
             #i_sdram_oe=sdram_resource.dq.oe,
             #o_sdram_o=sdram_resource.dq.o,
