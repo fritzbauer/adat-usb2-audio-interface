@@ -27,12 +27,8 @@ class LiteXSoC(Elaboratable):
         #sdram_resource = (SDRAMResource)(platform.request("sdram"))
         #uart_resource = (UARTResource())(platform.request("uart"))
         sdram_resource = request_bare(platform, "sdram", 0)
-        uart_resource = platform.request("uart", 1)
-        print(uart_resource)
-        
-        uartbone_resource = platform.request("uart", 0)
-        print(uartbone_resource)
-        #exit(1)
+        uart_resource = platform.request("uart", 0)
+        uartbone_resource = platform.request("uart", 1)
         
         #module qmtech_5cefa2 (
         #    input  wire clk50,
@@ -49,10 +45,12 @@ class LiteXSoC(Elaboratable):
         #    inout  wire [15:0] sdram_dq,
         #    output wire [1:0] sdram_dm,
         #    output reg  user_led0,
-        #    input  wire i2s_rx,
-        #    output wire i2s_tx,
-        #    input  wire i2s_clk,
-        #    input  wire i2s_sync,
+        #    input  wire i2s_rx_rx,
+        #    input  wire i2s_rx_clk,
+        #    input  wire i2s_rx_sync,
+        #    output wire i2s_tx_tx,
+        #    input  wire i2s_tx_clk,
+        #    input  wire i2s_tx_sync,
         #    output reg  serial_debug_tx,
         #    input  wire serial_debug_rx
         #);
@@ -77,10 +75,12 @@ class LiteXSoC(Elaboratable):
             io_sdram_dq=sdram_resource.dq,
             o_sdram_dm=sdram_resource.dqm,
             o_user_led0=self._led,
-            i_i2s_rx=self._i2s_rx,
-            o_i2s_tx=self._i2s_tx,
-            i_i2s_clk=ClockSignal("dac"),
-            i_i2s_sync=self._lrclk,
+            i_i2s_rx_rx=self._i2s_rx,
+            i_i2s_rx_clk=~ClockSignal("dac"),
+            i_i2s_rx_sync=self._lrclk,
+            o_i2s_tx_tx=self._i2s_tx,
+            i_i2s_tx_clk=~ClockSignal("dac"),
+            i_i2s_tx_sync=self._lrclk,
             o_serial_debug_tx=uartbone_resource.tx,
             i_serial_debug_rx=uartbone_resource.rx
         )
