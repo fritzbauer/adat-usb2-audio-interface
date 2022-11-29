@@ -41,6 +41,8 @@ from litex_soc               import LiteXSoC
 
 from usb_descriptors import USBDescriptors
 
+from amlib.stream import StreamInterface
+
 import wave
 import numpy as np
 
@@ -523,6 +525,7 @@ class USB2AudioInterface(Elaboratable):
         convolver_led = platform.request("led", 0)
         m.d.comb += [
             convolver_led.o.eq(litex_soc._led ^ enable_convolver),
+            #convolver_led.o.eq(enable_convolver),
         ]
 
         return m
@@ -696,6 +699,20 @@ class USB2AudioInterface(Elaboratable):
             dac_extractor.channel_stream_in.channel_nr.eq(usb_to_channel_stream.channel_stream_out.channel_nr),
         ]
 
+        testdata_stream = StreamInterface(name="testdata_stream_out", payload_width=24)        
+        m.d.comb += [
+            testdata_stream.valid.eq(dac_extractor.channel_stream_out.valid),
+            testdata_stream.first.eq(dac_extractor.channel_stream_out.first),
+            testdata_stream.last.eq(dac_extractor.channel_stream_out.last),
+            testdata_stream.payload.eq(0b100101101010111100001100), #0x96AF0C
+                                         #10010110101011110000110 # #86 57 4b 4b5786
+                                         #001100001111010101101001 #30f596
+                                      #0b001100001111010101101001 #30F569
+                                         #1001011010101111000011
+            #dac_extractor.channel_stream_out.ready.eq(testdata_stream.ready),
+            #testdata_stream.ready.eq(dac_extractor.channel_stream_out),
+        ]
+
         if convolver:
             with m.If(enable_convolver):
                 m.d.comb += [
@@ -705,12 +722,15 @@ class USB2AudioInterface(Elaboratable):
             with m.Else():
                 m.d.comb += dac.stream_in.stream_eq(dac_extractor.channel_stream_out)
         else:
+            #m.d.comb += dac.stream_in.stream_eq(testdata_stream)
             m.d.comb += dac.stream_in.stream_eq(dac_extractor.channel_stream_out)
 
-        if litex_soc:
+        
+        if litex_soc:            
             with m.If(enable_convolver):
+                
                 m.d.comb += [
-                    litex_soc._i2s_rx.eq(dac.serial_data_out),
+                    litex_soc._i2s_rx.eq(dac.serial_data_out),                    
                     litex_soc._lrclk.eq(~lrclk),
                     dac_pads.data.eq(litex_soc._i2s_tx),
                     #litex_soc._i2s_rx.eq(dac.serial_data_out),
