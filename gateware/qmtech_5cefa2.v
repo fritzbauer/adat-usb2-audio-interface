@@ -8,8 +8,8 @@
 //
 // Filename   : qmtech_5cefa2.v
 // Device     : 5CEFA2F23C8
-// LiteX sha1 : c957ed6e
-// Date       : 2022-11-25 13:02:02
+// LiteX sha1 : 0ce6b555
+// Date       : 2022-11-29 13:42:03
 //------------------------------------------------------------------------------
 
 `timescale 1ns / 1ps
@@ -46,285 +46,285 @@ module qmtech_5cefa2 (
 // Signals
 //------------------------------------------------------------------------------
 
-reg           main_crg_rst = 1'd0;
+reg           main_rst = 1'd0;
 wire          sys_clk;
 wire          sys_rst;
 wire          sys_ps_clk;
 wire          sys_ps_rst;
-wire          main_crg_reset;
-wire          main_crg_locked;
-wire          main_crg_clkin;
-wire          main_crg_clkout0;
-wire          main_crg_clkout1;
-reg           main_basesoc_basesoc_soc_rst = 1'd0;
-wire          main_basesoc_basesoc_cpu_rst;
-reg     [1:0] main_basesoc_basesoc_reset_storage = 2'd0;
-reg           main_basesoc_basesoc_reset_re = 1'd0;
-reg    [31:0] main_basesoc_basesoc_scratch_storage = 32'd305419896;
-reg           main_basesoc_basesoc_scratch_re = 1'd0;
-wire   [31:0] main_basesoc_basesoc_bus_errors_status;
-wire          main_basesoc_basesoc_bus_errors_we;
-reg           main_basesoc_basesoc_bus_errors_re = 1'd0;
-wire          main_basesoc_basesoc_bus_error;
-reg    [31:0] main_basesoc_basesoc_bus_errors = 32'd0;
-wire          main_basesoc_basesoc_reset;
-reg    [31:0] main_basesoc_basesoc_interrupt = 32'd0;
-wire   [29:0] main_basesoc_basesoc_ibus_ibus_adr;
-wire   [31:0] main_basesoc_basesoc_ibus_ibus_dat_w;
-wire   [31:0] main_basesoc_basesoc_ibus_ibus_dat_r;
-wire    [3:0] main_basesoc_basesoc_ibus_ibus_sel;
-wire          main_basesoc_basesoc_ibus_ibus_cyc;
-wire          main_basesoc_basesoc_ibus_ibus_stb;
-wire          main_basesoc_basesoc_ibus_ibus_ack;
-wire          main_basesoc_basesoc_ibus_ibus_we;
-wire    [2:0] main_basesoc_basesoc_ibus_ibus_cti;
-wire    [1:0] main_basesoc_basesoc_ibus_ibus_bte;
-wire          main_basesoc_basesoc_ibus_ibus_err;
-wire   [29:0] main_basesoc_basesoc_dbus_dbus_adr;
-wire   [31:0] main_basesoc_basesoc_dbus_dbus_dat_w;
-wire   [31:0] main_basesoc_basesoc_dbus_dbus_dat_r;
-wire    [3:0] main_basesoc_basesoc_dbus_dbus_sel;
-wire          main_basesoc_basesoc_dbus_dbus_cyc;
-wire          main_basesoc_basesoc_dbus_dbus_stb;
-wire          main_basesoc_basesoc_dbus_dbus_ack;
-wire          main_basesoc_basesoc_dbus_dbus_we;
-wire    [2:0] main_basesoc_basesoc_dbus_dbus_cti;
-wire    [1:0] main_basesoc_basesoc_dbus_dbus_bte;
-wire          main_basesoc_basesoc_dbus_dbus_err;
-reg           main_basesoc_basesoc_vexriscv_debug_reset = 1'd0;
-reg           main_basesoc_basesoc_vexriscv_ibus_err = 1'd0;
-reg           main_basesoc_basesoc_vexriscv_dbus_err = 1'd0;
-reg           main_basesoc_basesoc_vexriscv_i_cmd_valid = 1'd0;
-reg           main_basesoc_basesoc_vexriscv_i_cmd_payload_wr = 1'd0;
-reg     [7:0] main_basesoc_basesoc_vexriscv_i_cmd_payload_address = 8'd0;
-reg    [31:0] main_basesoc_basesoc_vexriscv_i_cmd_payload_data = 32'd0;
-wire          main_basesoc_basesoc_vexriscv_o_cmd_ready;
-wire   [31:0] main_basesoc_basesoc_vexriscv_o_rsp_data;
-wire          main_basesoc_basesoc_vexriscv_o_resetOut;
-reg           main_basesoc_basesoc_vexriscv_reset_debug_logic = 1'd0;
-reg           main_basesoc_basesoc_vexriscv_transfer_complete = 1'd0;
-reg           main_basesoc_basesoc_vexriscv_transfer_in_progress = 1'd0;
-reg           main_basesoc_basesoc_vexriscv_transfer_wait_for_ack = 1'd0;
-wire   [29:0] main_basesoc_basesoc_vexriscv_debug_bus_adr;
-wire   [31:0] main_basesoc_basesoc_vexriscv_debug_bus_dat_w;
-reg    [31:0] main_basesoc_basesoc_vexriscv_debug_bus_dat_r = 32'd0;
-wire    [3:0] main_basesoc_basesoc_vexriscv_debug_bus_sel;
-wire          main_basesoc_basesoc_vexriscv_debug_bus_cyc;
-wire          main_basesoc_basesoc_vexriscv_debug_bus_stb;
-reg           main_basesoc_basesoc_vexriscv_debug_bus_ack = 1'd0;
-wire          main_basesoc_basesoc_vexriscv_debug_bus_we;
-wire    [2:0] main_basesoc_basesoc_vexriscv_debug_bus_cti;
-wire    [1:0] main_basesoc_basesoc_vexriscv_debug_bus_bte;
-reg           main_basesoc_basesoc_vexriscv_debug_bus_err = 1'd0;
-reg    [31:0] main_basesoc_basesoc_vexriscv = 32'd0;
-wire   [29:0] main_basesoc_basesoc_basesoc_ram_bus_adr;
-wire   [31:0] main_basesoc_basesoc_basesoc_ram_bus_dat_w;
-wire   [31:0] main_basesoc_basesoc_basesoc_ram_bus_dat_r;
-wire    [3:0] main_basesoc_basesoc_basesoc_ram_bus_sel;
-wire          main_basesoc_basesoc_basesoc_ram_bus_cyc;
-wire          main_basesoc_basesoc_basesoc_ram_bus_stb;
-reg           main_basesoc_basesoc_basesoc_ram_bus_ack = 1'd0;
-wire          main_basesoc_basesoc_basesoc_ram_bus_we;
-wire    [2:0] main_basesoc_basesoc_basesoc_ram_bus_cti;
-wire    [1:0] main_basesoc_basesoc_basesoc_ram_bus_bte;
-reg           main_basesoc_basesoc_basesoc_ram_bus_err = 1'd0;
-reg           main_basesoc_basesoc_basesoc_adr_burst = 1'd0;
-wire   [14:0] main_basesoc_basesoc_basesoc_adr;
-wire   [31:0] main_basesoc_basesoc_basesoc_dat_r;
-wire   [29:0] main_basesoc_basesoc_ram_bus_ram_bus_adr;
-wire   [31:0] main_basesoc_basesoc_ram_bus_ram_bus_dat_w;
-wire   [31:0] main_basesoc_basesoc_ram_bus_ram_bus_dat_r;
-wire    [3:0] main_basesoc_basesoc_ram_bus_ram_bus_sel;
-wire          main_basesoc_basesoc_ram_bus_ram_bus_cyc;
-wire          main_basesoc_basesoc_ram_bus_ram_bus_stb;
-reg           main_basesoc_basesoc_ram_bus_ram_bus_ack = 1'd0;
-wire          main_basesoc_basesoc_ram_bus_ram_bus_we;
-wire    [2:0] main_basesoc_basesoc_ram_bus_ram_bus_cti;
-wire    [1:0] main_basesoc_basesoc_ram_bus_ram_bus_bte;
-reg           main_basesoc_basesoc_ram_bus_ram_bus_err = 1'd0;
-reg           main_basesoc_basesoc_ram_adr_burst = 1'd0;
-wire   [10:0] main_basesoc_basesoc_ram_adr;
-wire   [31:0] main_basesoc_basesoc_ram_dat_r;
-reg     [3:0] main_basesoc_basesoc_ram_we = 4'd0;
-wire   [31:0] main_basesoc_basesoc_ram_dat_w;
-wire          main_basesoc_basesoc_tx_sink_valid;
-reg           main_basesoc_basesoc_tx_sink_ready = 1'd0;
-wire          main_basesoc_basesoc_tx_sink_first;
-wire          main_basesoc_basesoc_tx_sink_last;
-wire    [7:0] main_basesoc_basesoc_tx_sink_payload_data;
-reg     [7:0] main_basesoc_basesoc_tx_data = 8'd0;
-reg     [3:0] main_basesoc_basesoc_tx_count = 4'd0;
-reg           main_basesoc_basesoc_tx_enable = 1'd0;
-reg           main_basesoc_basesoc_tx_tick = 1'd0;
-reg    [31:0] main_basesoc_basesoc_tx_phase = 32'd0;
-reg           main_basesoc_basesoc_rx_source_valid = 1'd0;
-wire          main_basesoc_basesoc_rx_source_ready;
-reg           main_basesoc_basesoc_rx_source_first = 1'd0;
-reg           main_basesoc_basesoc_rx_source_last = 1'd0;
-reg     [7:0] main_basesoc_basesoc_rx_source_payload_data = 8'd0;
-reg     [7:0] main_basesoc_basesoc_rx_data = 8'd0;
-reg     [3:0] main_basesoc_basesoc_rx_count = 4'd0;
-reg           main_basesoc_basesoc_rx_enable = 1'd0;
-reg           main_basesoc_basesoc_rx_tick = 1'd0;
-reg    [31:0] main_basesoc_basesoc_rx_phase = 32'd0;
-wire          main_basesoc_basesoc_rx_rx;
-reg           main_basesoc_basesoc_rx_rx_d = 1'd0;
-reg           main_basesoc_basesoc_uart_rxtx_re = 1'd0;
-wire    [7:0] main_basesoc_basesoc_uart_rxtx_r;
-reg           main_basesoc_basesoc_uart_rxtx_we = 1'd0;
-wire    [7:0] main_basesoc_basesoc_uart_rxtx_w;
-wire          main_basesoc_basesoc_uart_txfull_status;
-wire          main_basesoc_basesoc_uart_txfull_we;
-reg           main_basesoc_basesoc_uart_txfull_re = 1'd0;
-wire          main_basesoc_basesoc_uart_rxempty_status;
-wire          main_basesoc_basesoc_uart_rxempty_we;
-reg           main_basesoc_basesoc_uart_rxempty_re = 1'd0;
-wire          main_basesoc_basesoc_uart_irq;
-wire          main_basesoc_basesoc_uart_tx_status;
-reg           main_basesoc_basesoc_uart_tx_pending = 1'd0;
-wire          main_basesoc_basesoc_uart_tx_trigger;
-reg           main_basesoc_basesoc_uart_tx_clear = 1'd0;
-reg           main_basesoc_basesoc_uart_tx_trigger_d = 1'd0;
-wire          main_basesoc_basesoc_uart_rx_status;
-reg           main_basesoc_basesoc_uart_rx_pending = 1'd0;
-wire          main_basesoc_basesoc_uart_rx_trigger;
-reg           main_basesoc_basesoc_uart_rx_clear = 1'd0;
-reg           main_basesoc_basesoc_uart_rx_trigger_d = 1'd0;
-wire          main_basesoc_basesoc_uart_tx0;
-wire          main_basesoc_basesoc_uart_rx0;
-reg     [1:0] main_basesoc_basesoc_uart_status_status = 2'd0;
-wire          main_basesoc_basesoc_uart_status_we;
-reg           main_basesoc_basesoc_uart_status_re = 1'd0;
-wire          main_basesoc_basesoc_uart_tx1;
-wire          main_basesoc_basesoc_uart_rx1;
-reg     [1:0] main_basesoc_basesoc_uart_pending_status = 2'd0;
-wire          main_basesoc_basesoc_uart_pending_we;
-reg           main_basesoc_basesoc_uart_pending_re = 1'd0;
-reg     [1:0] main_basesoc_basesoc_uart_pending_r = 2'd0;
-wire          main_basesoc_basesoc_uart_tx2;
-wire          main_basesoc_basesoc_uart_rx2;
-reg     [1:0] main_basesoc_basesoc_uart_enable_storage = 2'd0;
-reg           main_basesoc_basesoc_uart_enable_re = 1'd0;
-wire          main_basesoc_basesoc_uart_txempty_status;
-wire          main_basesoc_basesoc_uart_txempty_we;
-reg           main_basesoc_basesoc_uart_txempty_re = 1'd0;
-wire          main_basesoc_basesoc_uart_rxfull_status;
-wire          main_basesoc_basesoc_uart_rxfull_we;
-reg           main_basesoc_basesoc_uart_rxfull_re = 1'd0;
-wire          main_basesoc_basesoc_uart_uart_sink_valid;
-wire          main_basesoc_basesoc_uart_uart_sink_ready;
-wire          main_basesoc_basesoc_uart_uart_sink_first;
-wire          main_basesoc_basesoc_uart_uart_sink_last;
-wire    [7:0] main_basesoc_basesoc_uart_uart_sink_payload_data;
-wire          main_basesoc_basesoc_uart_uart_source_valid;
-wire          main_basesoc_basesoc_uart_uart_source_ready;
-wire          main_basesoc_basesoc_uart_uart_source_first;
-wire          main_basesoc_basesoc_uart_uart_source_last;
-wire    [7:0] main_basesoc_basesoc_uart_uart_source_payload_data;
-wire          main_basesoc_basesoc_uart_tx_fifo_sink_valid;
-wire          main_basesoc_basesoc_uart_tx_fifo_sink_ready;
-reg           main_basesoc_basesoc_uart_tx_fifo_sink_first = 1'd0;
-reg           main_basesoc_basesoc_uart_tx_fifo_sink_last = 1'd0;
-wire    [7:0] main_basesoc_basesoc_uart_tx_fifo_sink_payload_data;
-wire          main_basesoc_basesoc_uart_tx_fifo_source_valid;
-wire          main_basesoc_basesoc_uart_tx_fifo_source_ready;
-wire          main_basesoc_basesoc_uart_tx_fifo_source_first;
-wire          main_basesoc_basesoc_uart_tx_fifo_source_last;
-wire    [7:0] main_basesoc_basesoc_uart_tx_fifo_source_payload_data;
-wire          main_basesoc_basesoc_uart_tx_fifo_re;
-reg           main_basesoc_basesoc_uart_tx_fifo_readable = 1'd0;
-wire          main_basesoc_basesoc_uart_tx_fifo_syncfifo_we;
-wire          main_basesoc_basesoc_uart_tx_fifo_syncfifo_writable;
-wire          main_basesoc_basesoc_uart_tx_fifo_syncfifo_re;
-wire          main_basesoc_basesoc_uart_tx_fifo_syncfifo_readable;
-wire    [9:0] main_basesoc_basesoc_uart_tx_fifo_syncfifo_din;
-wire    [9:0] main_basesoc_basesoc_uart_tx_fifo_syncfifo_dout;
-reg     [4:0] main_basesoc_basesoc_uart_tx_fifo_level0 = 5'd0;
-reg           main_basesoc_basesoc_uart_tx_fifo_replace = 1'd0;
-reg     [3:0] main_basesoc_basesoc_uart_tx_fifo_produce = 4'd0;
-reg     [3:0] main_basesoc_basesoc_uart_tx_fifo_consume = 4'd0;
-reg     [3:0] main_basesoc_basesoc_uart_tx_fifo_wrport_adr = 4'd0;
-wire    [9:0] main_basesoc_basesoc_uart_tx_fifo_wrport_dat_r;
-wire          main_basesoc_basesoc_uart_tx_fifo_wrport_we;
-wire    [9:0] main_basesoc_basesoc_uart_tx_fifo_wrport_dat_w;
-wire          main_basesoc_basesoc_uart_tx_fifo_do_read;
-wire    [3:0] main_basesoc_basesoc_uart_tx_fifo_rdport_adr;
-wire    [9:0] main_basesoc_basesoc_uart_tx_fifo_rdport_dat_r;
-wire          main_basesoc_basesoc_uart_tx_fifo_rdport_re;
-wire    [4:0] main_basesoc_basesoc_uart_tx_fifo_level1;
-wire    [7:0] main_basesoc_basesoc_uart_tx_fifo_fifo_in_payload_data;
-wire          main_basesoc_basesoc_uart_tx_fifo_fifo_in_first;
-wire          main_basesoc_basesoc_uart_tx_fifo_fifo_in_last;
-wire    [7:0] main_basesoc_basesoc_uart_tx_fifo_fifo_out_payload_data;
-wire          main_basesoc_basesoc_uart_tx_fifo_fifo_out_first;
-wire          main_basesoc_basesoc_uart_tx_fifo_fifo_out_last;
-wire          main_basesoc_basesoc_uart_rx_fifo_sink_valid;
-wire          main_basesoc_basesoc_uart_rx_fifo_sink_ready;
-wire          main_basesoc_basesoc_uart_rx_fifo_sink_first;
-wire          main_basesoc_basesoc_uart_rx_fifo_sink_last;
-wire    [7:0] main_basesoc_basesoc_uart_rx_fifo_sink_payload_data;
-wire          main_basesoc_basesoc_uart_rx_fifo_source_valid;
-wire          main_basesoc_basesoc_uart_rx_fifo_source_ready;
-wire          main_basesoc_basesoc_uart_rx_fifo_source_first;
-wire          main_basesoc_basesoc_uart_rx_fifo_source_last;
-wire    [7:0] main_basesoc_basesoc_uart_rx_fifo_source_payload_data;
-wire          main_basesoc_basesoc_uart_rx_fifo_re;
-reg           main_basesoc_basesoc_uart_rx_fifo_readable = 1'd0;
-wire          main_basesoc_basesoc_uart_rx_fifo_syncfifo_we;
-wire          main_basesoc_basesoc_uart_rx_fifo_syncfifo_writable;
-wire          main_basesoc_basesoc_uart_rx_fifo_syncfifo_re;
-wire          main_basesoc_basesoc_uart_rx_fifo_syncfifo_readable;
-wire    [9:0] main_basesoc_basesoc_uart_rx_fifo_syncfifo_din;
-wire    [9:0] main_basesoc_basesoc_uart_rx_fifo_syncfifo_dout;
-reg     [4:0] main_basesoc_basesoc_uart_rx_fifo_level0 = 5'd0;
-reg           main_basesoc_basesoc_uart_rx_fifo_replace = 1'd0;
-reg     [3:0] main_basesoc_basesoc_uart_rx_fifo_produce = 4'd0;
-reg     [3:0] main_basesoc_basesoc_uart_rx_fifo_consume = 4'd0;
-reg     [3:0] main_basesoc_basesoc_uart_rx_fifo_wrport_adr = 4'd0;
-wire    [9:0] main_basesoc_basesoc_uart_rx_fifo_wrport_dat_r;
-wire          main_basesoc_basesoc_uart_rx_fifo_wrport_we;
-wire    [9:0] main_basesoc_basesoc_uart_rx_fifo_wrport_dat_w;
-wire          main_basesoc_basesoc_uart_rx_fifo_do_read;
-wire    [3:0] main_basesoc_basesoc_uart_rx_fifo_rdport_adr;
-wire    [9:0] main_basesoc_basesoc_uart_rx_fifo_rdport_dat_r;
-wire          main_basesoc_basesoc_uart_rx_fifo_rdport_re;
-wire    [4:0] main_basesoc_basesoc_uart_rx_fifo_level1;
-wire    [7:0] main_basesoc_basesoc_uart_rx_fifo_fifo_in_payload_data;
-wire          main_basesoc_basesoc_uart_rx_fifo_fifo_in_first;
-wire          main_basesoc_basesoc_uart_rx_fifo_fifo_in_last;
-wire    [7:0] main_basesoc_basesoc_uart_rx_fifo_fifo_out_payload_data;
-wire          main_basesoc_basesoc_uart_rx_fifo_fifo_out_first;
-wire          main_basesoc_basesoc_uart_rx_fifo_fifo_out_last;
-reg    [31:0] main_basesoc_basesoc_timer_load_storage = 32'd0;
-reg           main_basesoc_basesoc_timer_load_re = 1'd0;
-reg    [31:0] main_basesoc_basesoc_timer_reload_storage = 32'd0;
-reg           main_basesoc_basesoc_timer_reload_re = 1'd0;
-reg           main_basesoc_basesoc_timer_en_storage = 1'd0;
-reg           main_basesoc_basesoc_timer_en_re = 1'd0;
-reg           main_basesoc_basesoc_timer_update_value_storage = 1'd0;
-reg           main_basesoc_basesoc_timer_update_value_re = 1'd0;
-reg    [31:0] main_basesoc_basesoc_timer_value_status = 32'd0;
-wire          main_basesoc_basesoc_timer_value_we;
-reg           main_basesoc_basesoc_timer_value_re = 1'd0;
-wire          main_basesoc_basesoc_timer_irq;
-wire          main_basesoc_basesoc_timer_zero_status;
-reg           main_basesoc_basesoc_timer_zero_pending = 1'd0;
-wire          main_basesoc_basesoc_timer_zero_trigger;
-reg           main_basesoc_basesoc_timer_zero_clear = 1'd0;
-reg           main_basesoc_basesoc_timer_zero_trigger_d = 1'd0;
-wire          main_basesoc_basesoc_timer_zero0;
-wire          main_basesoc_basesoc_timer_status_status;
-wire          main_basesoc_basesoc_timer_status_we;
-reg           main_basesoc_basesoc_timer_status_re = 1'd0;
-wire          main_basesoc_basesoc_timer_zero1;
-wire          main_basesoc_basesoc_timer_pending_status;
-wire          main_basesoc_basesoc_timer_pending_we;
-reg           main_basesoc_basesoc_timer_pending_re = 1'd0;
-reg           main_basesoc_basesoc_timer_pending_r = 1'd0;
-wire          main_basesoc_basesoc_timer_zero2;
-reg           main_basesoc_basesoc_timer_enable_storage = 1'd0;
-reg           main_basesoc_basesoc_timer_enable_re = 1'd0;
-reg    [31:0] main_basesoc_basesoc_timer_value = 32'd0;
+wire          main_reset;
+wire          main_locked;
+wire          main_clkin;
+wire          main_clkout0;
+wire          main_clkout1;
+reg           main_basesoc_soc_rst = 1'd0;
+wire          main_basesoc_cpu_rst;
+reg     [1:0] main_basesoc_reset_storage = 2'd0;
+reg           main_basesoc_reset_re = 1'd0;
+reg    [31:0] main_basesoc_scratch_storage = 32'd305419896;
+reg           main_basesoc_scratch_re = 1'd0;
+wire   [31:0] main_basesoc_bus_errors_status;
+wire          main_basesoc_bus_errors_we;
+reg           main_basesoc_bus_errors_re = 1'd0;
+wire          main_basesoc_bus_error;
+reg    [31:0] main_basesoc_bus_errors = 32'd0;
+wire          main_basesoc_reset;
+reg    [31:0] main_basesoc_interrupt = 32'd0;
+wire   [29:0] main_basesoc_ibus_ibus_adr;
+wire   [31:0] main_basesoc_ibus_ibus_dat_w;
+wire   [31:0] main_basesoc_ibus_ibus_dat_r;
+wire    [3:0] main_basesoc_ibus_ibus_sel;
+wire          main_basesoc_ibus_ibus_cyc;
+wire          main_basesoc_ibus_ibus_stb;
+wire          main_basesoc_ibus_ibus_ack;
+wire          main_basesoc_ibus_ibus_we;
+wire    [2:0] main_basesoc_ibus_ibus_cti;
+wire    [1:0] main_basesoc_ibus_ibus_bte;
+wire          main_basesoc_ibus_ibus_err;
+wire   [29:0] main_basesoc_dbus_dbus_adr;
+wire   [31:0] main_basesoc_dbus_dbus_dat_w;
+wire   [31:0] main_basesoc_dbus_dbus_dat_r;
+wire    [3:0] main_basesoc_dbus_dbus_sel;
+wire          main_basesoc_dbus_dbus_cyc;
+wire          main_basesoc_dbus_dbus_stb;
+wire          main_basesoc_dbus_dbus_ack;
+wire          main_basesoc_dbus_dbus_we;
+wire    [2:0] main_basesoc_dbus_dbus_cti;
+wire    [1:0] main_basesoc_dbus_dbus_bte;
+wire          main_basesoc_dbus_dbus_err;
+reg           main_basesoc_vexriscv_debug_reset = 1'd0;
+reg           main_basesoc_vexriscv_ibus_err = 1'd0;
+reg           main_basesoc_vexriscv_dbus_err = 1'd0;
+reg           main_basesoc_vexriscv_i_cmd_valid = 1'd0;
+reg           main_basesoc_vexriscv_i_cmd_payload_wr = 1'd0;
+reg     [7:0] main_basesoc_vexriscv_i_cmd_payload_address = 8'd0;
+reg    [31:0] main_basesoc_vexriscv_i_cmd_payload_data = 32'd0;
+wire          main_basesoc_vexriscv_o_cmd_ready;
+wire   [31:0] main_basesoc_vexriscv_o_rsp_data;
+wire          main_basesoc_vexriscv_o_resetOut;
+reg           main_basesoc_vexriscv_reset_debug_logic = 1'd0;
+reg           main_basesoc_vexriscv_transfer_complete = 1'd0;
+reg           main_basesoc_vexriscv_transfer_in_progress = 1'd0;
+reg           main_basesoc_vexriscv_transfer_wait_for_ack = 1'd0;
+wire   [29:0] main_basesoc_vexriscv_debug_bus_adr;
+wire   [31:0] main_basesoc_vexriscv_debug_bus_dat_w;
+reg    [31:0] main_basesoc_vexriscv_debug_bus_dat_r = 32'd0;
+wire    [3:0] main_basesoc_vexriscv_debug_bus_sel;
+wire          main_basesoc_vexriscv_debug_bus_cyc;
+wire          main_basesoc_vexriscv_debug_bus_stb;
+reg           main_basesoc_vexriscv_debug_bus_ack = 1'd0;
+wire          main_basesoc_vexriscv_debug_bus_we;
+wire    [2:0] main_basesoc_vexriscv_debug_bus_cti;
+wire    [1:0] main_basesoc_vexriscv_debug_bus_bte;
+reg           main_basesoc_vexriscv_debug_bus_err = 1'd0;
+reg    [31:0] main_basesoc_vexriscv = 32'd0;
+wire   [29:0] main_basesoc_basesoc_ram_bus_adr;
+wire   [31:0] main_basesoc_basesoc_ram_bus_dat_w;
+wire   [31:0] main_basesoc_basesoc_ram_bus_dat_r;
+wire    [3:0] main_basesoc_basesoc_ram_bus_sel;
+wire          main_basesoc_basesoc_ram_bus_cyc;
+wire          main_basesoc_basesoc_ram_bus_stb;
+reg           main_basesoc_basesoc_ram_bus_ack = 1'd0;
+wire          main_basesoc_basesoc_ram_bus_we;
+wire    [2:0] main_basesoc_basesoc_ram_bus_cti;
+wire    [1:0] main_basesoc_basesoc_ram_bus_bte;
+reg           main_basesoc_basesoc_ram_bus_err = 1'd0;
+reg           main_basesoc_basesoc_adr_burst = 1'd0;
+wire   [14:0] main_basesoc_basesoc_adr;
+wire   [31:0] main_basesoc_basesoc_dat_r;
+wire   [29:0] main_basesoc_ram_bus_ram_bus_adr;
+wire   [31:0] main_basesoc_ram_bus_ram_bus_dat_w;
+wire   [31:0] main_basesoc_ram_bus_ram_bus_dat_r;
+wire    [3:0] main_basesoc_ram_bus_ram_bus_sel;
+wire          main_basesoc_ram_bus_ram_bus_cyc;
+wire          main_basesoc_ram_bus_ram_bus_stb;
+reg           main_basesoc_ram_bus_ram_bus_ack = 1'd0;
+wire          main_basesoc_ram_bus_ram_bus_we;
+wire    [2:0] main_basesoc_ram_bus_ram_bus_cti;
+wire    [1:0] main_basesoc_ram_bus_ram_bus_bte;
+reg           main_basesoc_ram_bus_ram_bus_err = 1'd0;
+reg           main_basesoc_ram_adr_burst = 1'd0;
+wire   [10:0] main_basesoc_ram_adr;
+wire   [31:0] main_basesoc_ram_dat_r;
+reg     [3:0] main_basesoc_ram_we = 4'd0;
+wire   [31:0] main_basesoc_ram_dat_w;
+wire          main_basesoc_tx_sink_valid;
+reg           main_basesoc_tx_sink_ready = 1'd0;
+wire          main_basesoc_tx_sink_first;
+wire          main_basesoc_tx_sink_last;
+wire    [7:0] main_basesoc_tx_sink_payload_data;
+reg     [7:0] main_basesoc_tx_data = 8'd0;
+reg     [3:0] main_basesoc_tx_count = 4'd0;
+reg           main_basesoc_tx_enable = 1'd0;
+reg           main_basesoc_tx_tick = 1'd0;
+reg    [31:0] main_basesoc_tx_phase = 32'd0;
+reg           main_basesoc_rx_source_valid = 1'd0;
+wire          main_basesoc_rx_source_ready;
+reg           main_basesoc_rx_source_first = 1'd0;
+reg           main_basesoc_rx_source_last = 1'd0;
+reg     [7:0] main_basesoc_rx_source_payload_data = 8'd0;
+reg     [7:0] main_basesoc_rx_data = 8'd0;
+reg     [3:0] main_basesoc_rx_count = 4'd0;
+reg           main_basesoc_rx_enable = 1'd0;
+reg           main_basesoc_rx_tick = 1'd0;
+reg    [31:0] main_basesoc_rx_phase = 32'd0;
+wire          main_basesoc_rx_rx;
+reg           main_basesoc_rx_rx_d = 1'd0;
+reg           main_basesoc_uart_rxtx_re = 1'd0;
+wire    [7:0] main_basesoc_uart_rxtx_r;
+reg           main_basesoc_uart_rxtx_we = 1'd0;
+wire    [7:0] main_basesoc_uart_rxtx_w;
+wire          main_basesoc_uart_txfull_status;
+wire          main_basesoc_uart_txfull_we;
+reg           main_basesoc_uart_txfull_re = 1'd0;
+wire          main_basesoc_uart_rxempty_status;
+wire          main_basesoc_uart_rxempty_we;
+reg           main_basesoc_uart_rxempty_re = 1'd0;
+wire          main_basesoc_uart_irq;
+wire          main_basesoc_uart_tx_status;
+reg           main_basesoc_uart_tx_pending = 1'd0;
+wire          main_basesoc_uart_tx_trigger;
+reg           main_basesoc_uart_tx_clear = 1'd0;
+reg           main_basesoc_uart_tx_trigger_d = 1'd0;
+wire          main_basesoc_uart_rx_status;
+reg           main_basesoc_uart_rx_pending = 1'd0;
+wire          main_basesoc_uart_rx_trigger;
+reg           main_basesoc_uart_rx_clear = 1'd0;
+reg           main_basesoc_uart_rx_trigger_d = 1'd0;
+wire          main_basesoc_uart_tx0;
+wire          main_basesoc_uart_rx0;
+reg     [1:0] main_basesoc_uart_status_status = 2'd0;
+wire          main_basesoc_uart_status_we;
+reg           main_basesoc_uart_status_re = 1'd0;
+wire          main_basesoc_uart_tx1;
+wire          main_basesoc_uart_rx1;
+reg     [1:0] main_basesoc_uart_pending_status = 2'd0;
+wire          main_basesoc_uart_pending_we;
+reg           main_basesoc_uart_pending_re = 1'd0;
+reg     [1:0] main_basesoc_uart_pending_r = 2'd0;
+wire          main_basesoc_uart_tx2;
+wire          main_basesoc_uart_rx2;
+reg     [1:0] main_basesoc_uart_enable_storage = 2'd0;
+reg           main_basesoc_uart_enable_re = 1'd0;
+wire          main_basesoc_uart_txempty_status;
+wire          main_basesoc_uart_txempty_we;
+reg           main_basesoc_uart_txempty_re = 1'd0;
+wire          main_basesoc_uart_rxfull_status;
+wire          main_basesoc_uart_rxfull_we;
+reg           main_basesoc_uart_rxfull_re = 1'd0;
+wire          main_basesoc_uart_uart_sink_valid;
+wire          main_basesoc_uart_uart_sink_ready;
+wire          main_basesoc_uart_uart_sink_first;
+wire          main_basesoc_uart_uart_sink_last;
+wire    [7:0] main_basesoc_uart_uart_sink_payload_data;
+wire          main_basesoc_uart_uart_source_valid;
+wire          main_basesoc_uart_uart_source_ready;
+wire          main_basesoc_uart_uart_source_first;
+wire          main_basesoc_uart_uart_source_last;
+wire    [7:0] main_basesoc_uart_uart_source_payload_data;
+wire          main_basesoc_uart_tx_fifo_sink_valid;
+wire          main_basesoc_uart_tx_fifo_sink_ready;
+reg           main_basesoc_uart_tx_fifo_sink_first = 1'd0;
+reg           main_basesoc_uart_tx_fifo_sink_last = 1'd0;
+wire    [7:0] main_basesoc_uart_tx_fifo_sink_payload_data;
+wire          main_basesoc_uart_tx_fifo_source_valid;
+wire          main_basesoc_uart_tx_fifo_source_ready;
+wire          main_basesoc_uart_tx_fifo_source_first;
+wire          main_basesoc_uart_tx_fifo_source_last;
+wire    [7:0] main_basesoc_uart_tx_fifo_source_payload_data;
+wire          main_basesoc_uart_tx_fifo_re;
+reg           main_basesoc_uart_tx_fifo_readable = 1'd0;
+wire          main_basesoc_uart_tx_fifo_syncfifo_we;
+wire          main_basesoc_uart_tx_fifo_syncfifo_writable;
+wire          main_basesoc_uart_tx_fifo_syncfifo_re;
+wire          main_basesoc_uart_tx_fifo_syncfifo_readable;
+wire    [9:0] main_basesoc_uart_tx_fifo_syncfifo_din;
+wire    [9:0] main_basesoc_uart_tx_fifo_syncfifo_dout;
+reg     [4:0] main_basesoc_uart_tx_fifo_level0 = 5'd0;
+reg           main_basesoc_uart_tx_fifo_replace = 1'd0;
+reg     [3:0] main_basesoc_uart_tx_fifo_produce = 4'd0;
+reg     [3:0] main_basesoc_uart_tx_fifo_consume = 4'd0;
+reg     [3:0] main_basesoc_uart_tx_fifo_wrport_adr = 4'd0;
+wire    [9:0] main_basesoc_uart_tx_fifo_wrport_dat_r;
+wire          main_basesoc_uart_tx_fifo_wrport_we;
+wire    [9:0] main_basesoc_uart_tx_fifo_wrport_dat_w;
+wire          main_basesoc_uart_tx_fifo_do_read;
+wire    [3:0] main_basesoc_uart_tx_fifo_rdport_adr;
+wire    [9:0] main_basesoc_uart_tx_fifo_rdport_dat_r;
+wire          main_basesoc_uart_tx_fifo_rdport_re;
+wire    [4:0] main_basesoc_uart_tx_fifo_level1;
+wire    [7:0] main_basesoc_uart_tx_fifo_fifo_in_payload_data;
+wire          main_basesoc_uart_tx_fifo_fifo_in_first;
+wire          main_basesoc_uart_tx_fifo_fifo_in_last;
+wire    [7:0] main_basesoc_uart_tx_fifo_fifo_out_payload_data;
+wire          main_basesoc_uart_tx_fifo_fifo_out_first;
+wire          main_basesoc_uart_tx_fifo_fifo_out_last;
+wire          main_basesoc_uart_rx_fifo_sink_valid;
+wire          main_basesoc_uart_rx_fifo_sink_ready;
+wire          main_basesoc_uart_rx_fifo_sink_first;
+wire          main_basesoc_uart_rx_fifo_sink_last;
+wire    [7:0] main_basesoc_uart_rx_fifo_sink_payload_data;
+wire          main_basesoc_uart_rx_fifo_source_valid;
+wire          main_basesoc_uart_rx_fifo_source_ready;
+wire          main_basesoc_uart_rx_fifo_source_first;
+wire          main_basesoc_uart_rx_fifo_source_last;
+wire    [7:0] main_basesoc_uart_rx_fifo_source_payload_data;
+wire          main_basesoc_uart_rx_fifo_re;
+reg           main_basesoc_uart_rx_fifo_readable = 1'd0;
+wire          main_basesoc_uart_rx_fifo_syncfifo_we;
+wire          main_basesoc_uart_rx_fifo_syncfifo_writable;
+wire          main_basesoc_uart_rx_fifo_syncfifo_re;
+wire          main_basesoc_uart_rx_fifo_syncfifo_readable;
+wire    [9:0] main_basesoc_uart_rx_fifo_syncfifo_din;
+wire    [9:0] main_basesoc_uart_rx_fifo_syncfifo_dout;
+reg     [4:0] main_basesoc_uart_rx_fifo_level0 = 5'd0;
+reg           main_basesoc_uart_rx_fifo_replace = 1'd0;
+reg     [3:0] main_basesoc_uart_rx_fifo_produce = 4'd0;
+reg     [3:0] main_basesoc_uart_rx_fifo_consume = 4'd0;
+reg     [3:0] main_basesoc_uart_rx_fifo_wrport_adr = 4'd0;
+wire    [9:0] main_basesoc_uart_rx_fifo_wrport_dat_r;
+wire          main_basesoc_uart_rx_fifo_wrport_we;
+wire    [9:0] main_basesoc_uart_rx_fifo_wrport_dat_w;
+wire          main_basesoc_uart_rx_fifo_do_read;
+wire    [3:0] main_basesoc_uart_rx_fifo_rdport_adr;
+wire    [9:0] main_basesoc_uart_rx_fifo_rdport_dat_r;
+wire          main_basesoc_uart_rx_fifo_rdport_re;
+wire    [4:0] main_basesoc_uart_rx_fifo_level1;
+wire    [7:0] main_basesoc_uart_rx_fifo_fifo_in_payload_data;
+wire          main_basesoc_uart_rx_fifo_fifo_in_first;
+wire          main_basesoc_uart_rx_fifo_fifo_in_last;
+wire    [7:0] main_basesoc_uart_rx_fifo_fifo_out_payload_data;
+wire          main_basesoc_uart_rx_fifo_fifo_out_first;
+wire          main_basesoc_uart_rx_fifo_fifo_out_last;
+reg    [31:0] main_basesoc_timer_load_storage = 32'd0;
+reg           main_basesoc_timer_load_re = 1'd0;
+reg    [31:0] main_basesoc_timer_reload_storage = 32'd0;
+reg           main_basesoc_timer_reload_re = 1'd0;
+reg           main_basesoc_timer_en_storage = 1'd0;
+reg           main_basesoc_timer_en_re = 1'd0;
+reg           main_basesoc_timer_update_value_storage = 1'd0;
+reg           main_basesoc_timer_update_value_re = 1'd0;
+reg    [31:0] main_basesoc_timer_value_status = 32'd0;
+wire          main_basesoc_timer_value_we;
+reg           main_basesoc_timer_value_re = 1'd0;
+wire          main_basesoc_timer_irq;
+wire          main_basesoc_timer_zero_status;
+reg           main_basesoc_timer_zero_pending = 1'd0;
+wire          main_basesoc_timer_zero_trigger;
+reg           main_basesoc_timer_zero_clear = 1'd0;
+reg           main_basesoc_timer_zero_trigger_d = 1'd0;
+wire          main_basesoc_timer_zero0;
+wire          main_basesoc_timer_status_status;
+wire          main_basesoc_timer_status_we;
+reg           main_basesoc_timer_status_re = 1'd0;
+wire          main_basesoc_timer_zero1;
+wire          main_basesoc_timer_pending_status;
+wire          main_basesoc_timer_pending_we;
+reg           main_basesoc_timer_pending_re = 1'd0;
+reg           main_basesoc_timer_pending_r = 1'd0;
+wire          main_basesoc_timer_zero2;
+reg           main_basesoc_timer_enable_storage = 1'd0;
+reg           main_basesoc_timer_enable_re = 1'd0;
+reg    [31:0] main_basesoc_timer_value = 32'd0;
 wire   [12:0] main_dfi_p0_address;
 wire    [1:0] main_dfi_p0_bank;
 wire          main_dfi_p0_cas_n;
@@ -342,747 +342,747 @@ wire          main_dfi_p0_rddata_en;
 wire   [15:0] main_dfi_p0_rddata;
 reg           main_dfi_p0_rddata_valid = 1'd0;
 reg     [3:0] main_rddata_en = 4'd0;
-wire   [12:0] main_basesoc_sdram_slave_p0_address;
-wire    [1:0] main_basesoc_sdram_slave_p0_bank;
-wire          main_basesoc_sdram_slave_p0_cas_n;
-wire          main_basesoc_sdram_slave_p0_cs_n;
-wire          main_basesoc_sdram_slave_p0_ras_n;
-wire          main_basesoc_sdram_slave_p0_we_n;
-wire          main_basesoc_sdram_slave_p0_cke;
-wire          main_basesoc_sdram_slave_p0_odt;
-wire          main_basesoc_sdram_slave_p0_reset_n;
-wire          main_basesoc_sdram_slave_p0_act_n;
-wire   [15:0] main_basesoc_sdram_slave_p0_wrdata;
-wire          main_basesoc_sdram_slave_p0_wrdata_en;
-wire    [1:0] main_basesoc_sdram_slave_p0_wrdata_mask;
-wire          main_basesoc_sdram_slave_p0_rddata_en;
-reg    [15:0] main_basesoc_sdram_slave_p0_rddata = 16'd0;
-reg           main_basesoc_sdram_slave_p0_rddata_valid = 1'd0;
-reg    [12:0] main_basesoc_sdram_master_p0_address = 13'd0;
-reg     [1:0] main_basesoc_sdram_master_p0_bank = 2'd0;
-reg           main_basesoc_sdram_master_p0_cas_n = 1'd1;
-reg           main_basesoc_sdram_master_p0_cs_n = 1'd1;
-reg           main_basesoc_sdram_master_p0_ras_n = 1'd1;
-reg           main_basesoc_sdram_master_p0_we_n = 1'd1;
-reg           main_basesoc_sdram_master_p0_cke = 1'd0;
-reg           main_basesoc_sdram_master_p0_odt = 1'd0;
-reg           main_basesoc_sdram_master_p0_reset_n = 1'd0;
-reg           main_basesoc_sdram_master_p0_act_n = 1'd1;
-reg    [15:0] main_basesoc_sdram_master_p0_wrdata = 16'd0;
-reg           main_basesoc_sdram_master_p0_wrdata_en = 1'd0;
-reg     [1:0] main_basesoc_sdram_master_p0_wrdata_mask = 2'd0;
-reg           main_basesoc_sdram_master_p0_rddata_en = 1'd0;
-wire   [15:0] main_basesoc_sdram_master_p0_rddata;
-wire          main_basesoc_sdram_master_p0_rddata_valid;
-wire   [12:0] main_basesoc_sdram_csr_dfi_p0_address;
-wire    [1:0] main_basesoc_sdram_csr_dfi_p0_bank;
-reg           main_basesoc_sdram_csr_dfi_p0_cas_n = 1'd1;
-reg           main_basesoc_sdram_csr_dfi_p0_cs_n = 1'd1;
-reg           main_basesoc_sdram_csr_dfi_p0_ras_n = 1'd1;
-reg           main_basesoc_sdram_csr_dfi_p0_we_n = 1'd1;
-wire          main_basesoc_sdram_csr_dfi_p0_cke;
-wire          main_basesoc_sdram_csr_dfi_p0_odt;
-wire          main_basesoc_sdram_csr_dfi_p0_reset_n;
-reg           main_basesoc_sdram_csr_dfi_p0_act_n = 1'd1;
-wire   [15:0] main_basesoc_sdram_csr_dfi_p0_wrdata;
-wire          main_basesoc_sdram_csr_dfi_p0_wrdata_en;
-wire    [1:0] main_basesoc_sdram_csr_dfi_p0_wrdata_mask;
-wire          main_basesoc_sdram_csr_dfi_p0_rddata_en;
-reg    [15:0] main_basesoc_sdram_csr_dfi_p0_rddata = 16'd0;
-reg           main_basesoc_sdram_csr_dfi_p0_rddata_valid = 1'd0;
-reg    [12:0] main_basesoc_sdram_ext_dfi_p0_address = 13'd0;
-reg     [1:0] main_basesoc_sdram_ext_dfi_p0_bank = 2'd0;
-reg           main_basesoc_sdram_ext_dfi_p0_cas_n = 1'd1;
-reg           main_basesoc_sdram_ext_dfi_p0_cs_n = 1'd1;
-reg           main_basesoc_sdram_ext_dfi_p0_ras_n = 1'd1;
-reg           main_basesoc_sdram_ext_dfi_p0_we_n = 1'd1;
-reg           main_basesoc_sdram_ext_dfi_p0_cke = 1'd0;
-reg           main_basesoc_sdram_ext_dfi_p0_odt = 1'd0;
-reg           main_basesoc_sdram_ext_dfi_p0_reset_n = 1'd0;
-reg           main_basesoc_sdram_ext_dfi_p0_act_n = 1'd1;
-reg    [15:0] main_basesoc_sdram_ext_dfi_p0_wrdata = 16'd0;
-reg           main_basesoc_sdram_ext_dfi_p0_wrdata_en = 1'd0;
-reg     [1:0] main_basesoc_sdram_ext_dfi_p0_wrdata_mask = 2'd0;
-reg           main_basesoc_sdram_ext_dfi_p0_rddata_en = 1'd0;
-reg    [15:0] main_basesoc_sdram_ext_dfi_p0_rddata = 16'd0;
-reg           main_basesoc_sdram_ext_dfi_p0_rddata_valid = 1'd0;
-reg           main_basesoc_sdram_ext_dfi_sel = 1'd0;
-wire          main_basesoc_sdram_sel;
-wire          main_basesoc_sdram_cke;
-wire          main_basesoc_sdram_odt;
-wire          main_basesoc_sdram_reset_n;
-reg     [3:0] main_basesoc_sdram_storage = 4'd1;
-reg           main_basesoc_sdram_re = 1'd0;
-wire          main_basesoc_sdram_csrfield_cs;
-wire          main_basesoc_sdram_csrfield_we;
-wire          main_basesoc_sdram_csrfield_cas;
-wire          main_basesoc_sdram_csrfield_ras;
-wire          main_basesoc_sdram_csrfield_wren;
-wire          main_basesoc_sdram_csrfield_rden;
-reg     [5:0] main_basesoc_sdram_command_storage = 6'd0;
-reg           main_basesoc_sdram_command_re = 1'd0;
-reg           main_basesoc_sdram_command_issue_re = 1'd0;
-wire          main_basesoc_sdram_command_issue_r;
-reg           main_basesoc_sdram_command_issue_we = 1'd0;
-reg           main_basesoc_sdram_command_issue_w = 1'd0;
-reg    [12:0] main_basesoc_sdram_address_storage = 13'd0;
-reg           main_basesoc_sdram_address_re = 1'd0;
-reg     [1:0] main_basesoc_sdram_baddress_storage = 2'd0;
-reg           main_basesoc_sdram_baddress_re = 1'd0;
-reg    [15:0] main_basesoc_sdram_wrdata_storage = 16'd0;
-reg           main_basesoc_sdram_wrdata_re = 1'd0;
-reg    [15:0] main_basesoc_sdram_rddata_status = 16'd0;
-wire          main_basesoc_sdram_rddata_we;
-reg           main_basesoc_sdram_rddata_re = 1'd0;
-wire          main_basesoc_sdram_interface_bank0_valid;
-wire          main_basesoc_sdram_interface_bank0_ready;
-wire          main_basesoc_sdram_interface_bank0_we;
-wire   [21:0] main_basesoc_sdram_interface_bank0_addr;
-wire          main_basesoc_sdram_interface_bank0_lock;
-wire          main_basesoc_sdram_interface_bank0_wdata_ready;
-wire          main_basesoc_sdram_interface_bank0_rdata_valid;
-wire          main_basesoc_sdram_interface_bank1_valid;
-wire          main_basesoc_sdram_interface_bank1_ready;
-wire          main_basesoc_sdram_interface_bank1_we;
-wire   [21:0] main_basesoc_sdram_interface_bank1_addr;
-wire          main_basesoc_sdram_interface_bank1_lock;
-wire          main_basesoc_sdram_interface_bank1_wdata_ready;
-wire          main_basesoc_sdram_interface_bank1_rdata_valid;
-wire          main_basesoc_sdram_interface_bank2_valid;
-wire          main_basesoc_sdram_interface_bank2_ready;
-wire          main_basesoc_sdram_interface_bank2_we;
-wire   [21:0] main_basesoc_sdram_interface_bank2_addr;
-wire          main_basesoc_sdram_interface_bank2_lock;
-wire          main_basesoc_sdram_interface_bank2_wdata_ready;
-wire          main_basesoc_sdram_interface_bank2_rdata_valid;
-wire          main_basesoc_sdram_interface_bank3_valid;
-wire          main_basesoc_sdram_interface_bank3_ready;
-wire          main_basesoc_sdram_interface_bank3_we;
-wire   [21:0] main_basesoc_sdram_interface_bank3_addr;
-wire          main_basesoc_sdram_interface_bank3_lock;
-wire          main_basesoc_sdram_interface_bank3_wdata_ready;
-wire          main_basesoc_sdram_interface_bank3_rdata_valid;
-reg    [15:0] main_basesoc_sdram_interface_wdata = 16'd0;
-reg     [1:0] main_basesoc_sdram_interface_wdata_we = 2'd0;
-wire   [15:0] main_basesoc_sdram_interface_rdata;
-reg    [12:0] main_basesoc_sdram_dfi_p0_address = 13'd0;
-reg     [1:0] main_basesoc_sdram_dfi_p0_bank = 2'd0;
-reg           main_basesoc_sdram_dfi_p0_cas_n = 1'd1;
-reg           main_basesoc_sdram_dfi_p0_cs_n = 1'd1;
-reg           main_basesoc_sdram_dfi_p0_ras_n = 1'd1;
-reg           main_basesoc_sdram_dfi_p0_we_n = 1'd1;
-wire          main_basesoc_sdram_dfi_p0_cke;
-wire          main_basesoc_sdram_dfi_p0_odt;
-wire          main_basesoc_sdram_dfi_p0_reset_n;
-reg           main_basesoc_sdram_dfi_p0_act_n = 1'd1;
-wire   [15:0] main_basesoc_sdram_dfi_p0_wrdata;
-reg           main_basesoc_sdram_dfi_p0_wrdata_en = 1'd0;
-wire    [1:0] main_basesoc_sdram_dfi_p0_wrdata_mask;
-reg           main_basesoc_sdram_dfi_p0_rddata_en = 1'd0;
-wire   [15:0] main_basesoc_sdram_dfi_p0_rddata;
-wire          main_basesoc_sdram_dfi_p0_rddata_valid;
-reg           main_basesoc_sdram_cmd_valid = 1'd0;
-reg           main_basesoc_sdram_cmd_ready = 1'd0;
-reg           main_basesoc_sdram_cmd_last = 1'd0;
-reg    [12:0] main_basesoc_sdram_cmd_payload_a = 13'd0;
-reg     [1:0] main_basesoc_sdram_cmd_payload_ba = 2'd0;
-reg           main_basesoc_sdram_cmd_payload_cas = 1'd0;
-reg           main_basesoc_sdram_cmd_payload_ras = 1'd0;
-reg           main_basesoc_sdram_cmd_payload_we = 1'd0;
-reg           main_basesoc_sdram_cmd_payload_is_read = 1'd0;
-reg           main_basesoc_sdram_cmd_payload_is_write = 1'd0;
-wire          main_basesoc_sdram_wants_refresh;
-wire          main_basesoc_sdram_timer_wait;
-wire          main_basesoc_sdram_timer_done0;
-wire    [9:0] main_basesoc_sdram_timer_count0;
-wire          main_basesoc_sdram_timer_done1;
-reg     [9:0] main_basesoc_sdram_timer_count1 = 10'd820;
-wire          main_basesoc_sdram_postponer_req_i;
-reg           main_basesoc_sdram_postponer_req_o = 1'd0;
-reg           main_basesoc_sdram_postponer_count = 1'd0;
-reg           main_basesoc_sdram_sequencer_start0 = 1'd0;
-wire          main_basesoc_sdram_sequencer_done0;
-wire          main_basesoc_sdram_sequencer_start1;
-reg           main_basesoc_sdram_sequencer_done1 = 1'd0;
-reg     [3:0] main_basesoc_sdram_sequencer_counter = 4'd0;
-reg           main_basesoc_sdram_sequencer_count = 1'd0;
-wire          main_basesoc_sdram_bankmachine0_req_valid;
-wire          main_basesoc_sdram_bankmachine0_req_ready;
-wire          main_basesoc_sdram_bankmachine0_req_we;
-wire   [21:0] main_basesoc_sdram_bankmachine0_req_addr;
-wire          main_basesoc_sdram_bankmachine0_req_lock;
-reg           main_basesoc_sdram_bankmachine0_req_wdata_ready = 1'd0;
-reg           main_basesoc_sdram_bankmachine0_req_rdata_valid = 1'd0;
-wire          main_basesoc_sdram_bankmachine0_refresh_req;
-reg           main_basesoc_sdram_bankmachine0_refresh_gnt = 1'd0;
-reg           main_basesoc_sdram_bankmachine0_cmd_valid = 1'd0;
-reg           main_basesoc_sdram_bankmachine0_cmd_ready = 1'd0;
-reg    [12:0] main_basesoc_sdram_bankmachine0_cmd_payload_a = 13'd0;
-wire    [1:0] main_basesoc_sdram_bankmachine0_cmd_payload_ba;
-reg           main_basesoc_sdram_bankmachine0_cmd_payload_cas = 1'd0;
-reg           main_basesoc_sdram_bankmachine0_cmd_payload_ras = 1'd0;
-reg           main_basesoc_sdram_bankmachine0_cmd_payload_we = 1'd0;
-reg           main_basesoc_sdram_bankmachine0_cmd_payload_is_cmd = 1'd0;
-reg           main_basesoc_sdram_bankmachine0_cmd_payload_is_read = 1'd0;
-reg           main_basesoc_sdram_bankmachine0_cmd_payload_is_write = 1'd0;
-reg           main_basesoc_sdram_bankmachine0_auto_precharge = 1'd0;
-wire          main_basesoc_sdram_bankmachine0_sink_valid;
-wire          main_basesoc_sdram_bankmachine0_sink_ready;
-reg           main_basesoc_sdram_bankmachine0_sink_first = 1'd0;
-reg           main_basesoc_sdram_bankmachine0_sink_last = 1'd0;
-wire          main_basesoc_sdram_bankmachine0_sink_payload_we;
-wire   [21:0] main_basesoc_sdram_bankmachine0_sink_payload_addr;
-wire          main_basesoc_sdram_bankmachine0_source_valid;
-wire          main_basesoc_sdram_bankmachine0_source_ready;
-wire          main_basesoc_sdram_bankmachine0_source_first;
-wire          main_basesoc_sdram_bankmachine0_source_last;
-wire          main_basesoc_sdram_bankmachine0_source_payload_we;
-wire   [21:0] main_basesoc_sdram_bankmachine0_source_payload_addr;
-wire          main_basesoc_sdram_bankmachine0_syncfifo0_we;
-wire          main_basesoc_sdram_bankmachine0_syncfifo0_writable;
-wire          main_basesoc_sdram_bankmachine0_syncfifo0_re;
-wire          main_basesoc_sdram_bankmachine0_syncfifo0_readable;
-wire   [24:0] main_basesoc_sdram_bankmachine0_syncfifo0_din;
-wire   [24:0] main_basesoc_sdram_bankmachine0_syncfifo0_dout;
-reg     [3:0] main_basesoc_sdram_bankmachine0_level = 4'd0;
-reg           main_basesoc_sdram_bankmachine0_replace = 1'd0;
-reg     [2:0] main_basesoc_sdram_bankmachine0_produce = 3'd0;
-reg     [2:0] main_basesoc_sdram_bankmachine0_consume = 3'd0;
-reg     [2:0] main_basesoc_sdram_bankmachine0_wrport_adr = 3'd0;
-wire   [24:0] main_basesoc_sdram_bankmachine0_wrport_dat_r;
-wire          main_basesoc_sdram_bankmachine0_wrport_we;
-wire   [24:0] main_basesoc_sdram_bankmachine0_wrport_dat_w;
-wire          main_basesoc_sdram_bankmachine0_do_read;
-wire    [2:0] main_basesoc_sdram_bankmachine0_rdport_adr;
-wire   [24:0] main_basesoc_sdram_bankmachine0_rdport_dat_r;
-wire          main_basesoc_sdram_bankmachine0_fifo_in_payload_we;
-wire   [21:0] main_basesoc_sdram_bankmachine0_fifo_in_payload_addr;
-wire          main_basesoc_sdram_bankmachine0_fifo_in_first;
-wire          main_basesoc_sdram_bankmachine0_fifo_in_last;
-wire          main_basesoc_sdram_bankmachine0_fifo_out_payload_we;
-wire   [21:0] main_basesoc_sdram_bankmachine0_fifo_out_payload_addr;
-wire          main_basesoc_sdram_bankmachine0_fifo_out_first;
-wire          main_basesoc_sdram_bankmachine0_fifo_out_last;
-wire          main_basesoc_sdram_bankmachine0_sink_sink_valid;
-wire          main_basesoc_sdram_bankmachine0_sink_sink_ready;
-wire          main_basesoc_sdram_bankmachine0_sink_sink_first;
-wire          main_basesoc_sdram_bankmachine0_sink_sink_last;
-wire          main_basesoc_sdram_bankmachine0_sink_sink_payload_we;
-wire   [21:0] main_basesoc_sdram_bankmachine0_sink_sink_payload_addr;
-wire          main_basesoc_sdram_bankmachine0_source_source_valid;
-wire          main_basesoc_sdram_bankmachine0_source_source_ready;
-wire          main_basesoc_sdram_bankmachine0_source_source_first;
-wire          main_basesoc_sdram_bankmachine0_source_source_last;
-wire          main_basesoc_sdram_bankmachine0_source_source_payload_we;
-wire   [21:0] main_basesoc_sdram_bankmachine0_source_source_payload_addr;
-wire          main_basesoc_sdram_bankmachine0_pipe_valid_sink_valid;
-wire          main_basesoc_sdram_bankmachine0_pipe_valid_sink_ready;
-wire          main_basesoc_sdram_bankmachine0_pipe_valid_sink_first;
-wire          main_basesoc_sdram_bankmachine0_pipe_valid_sink_last;
-wire          main_basesoc_sdram_bankmachine0_pipe_valid_sink_payload_we;
-wire   [21:0] main_basesoc_sdram_bankmachine0_pipe_valid_sink_payload_addr;
-reg           main_basesoc_sdram_bankmachine0_pipe_valid_source_valid = 1'd0;
-wire          main_basesoc_sdram_bankmachine0_pipe_valid_source_ready;
-reg           main_basesoc_sdram_bankmachine0_pipe_valid_source_first = 1'd0;
-reg           main_basesoc_sdram_bankmachine0_pipe_valid_source_last = 1'd0;
-reg           main_basesoc_sdram_bankmachine0_pipe_valid_source_payload_we = 1'd0;
-reg    [21:0] main_basesoc_sdram_bankmachine0_pipe_valid_source_payload_addr = 22'd0;
-reg    [12:0] main_basesoc_sdram_bankmachine0_row = 13'd0;
-reg           main_basesoc_sdram_bankmachine0_row_opened = 1'd0;
-wire          main_basesoc_sdram_bankmachine0_row_hit;
-reg           main_basesoc_sdram_bankmachine0_row_open = 1'd0;
-reg           main_basesoc_sdram_bankmachine0_row_close = 1'd0;
-reg           main_basesoc_sdram_bankmachine0_row_col_n_addr_sel = 1'd0;
-wire          main_basesoc_sdram_bankmachine0_twtpcon_valid;
-reg           main_basesoc_sdram_bankmachine0_twtpcon_ready = 1'd0;
-reg     [2:0] main_basesoc_sdram_bankmachine0_twtpcon_count = 3'd0;
-wire          main_basesoc_sdram_bankmachine0_trccon_valid;
-reg           main_basesoc_sdram_bankmachine0_trccon_ready = 1'd0;
-reg     [2:0] main_basesoc_sdram_bankmachine0_trccon_count = 3'd0;
-wire          main_basesoc_sdram_bankmachine0_trascon_valid;
-reg           main_basesoc_sdram_bankmachine0_trascon_ready = 1'd0;
-reg     [2:0] main_basesoc_sdram_bankmachine0_trascon_count = 3'd0;
-wire          main_basesoc_sdram_bankmachine1_req_valid;
-wire          main_basesoc_sdram_bankmachine1_req_ready;
-wire          main_basesoc_sdram_bankmachine1_req_we;
-wire   [21:0] main_basesoc_sdram_bankmachine1_req_addr;
-wire          main_basesoc_sdram_bankmachine1_req_lock;
-reg           main_basesoc_sdram_bankmachine1_req_wdata_ready = 1'd0;
-reg           main_basesoc_sdram_bankmachine1_req_rdata_valid = 1'd0;
-wire          main_basesoc_sdram_bankmachine1_refresh_req;
-reg           main_basesoc_sdram_bankmachine1_refresh_gnt = 1'd0;
-reg           main_basesoc_sdram_bankmachine1_cmd_valid = 1'd0;
-reg           main_basesoc_sdram_bankmachine1_cmd_ready = 1'd0;
-reg    [12:0] main_basesoc_sdram_bankmachine1_cmd_payload_a = 13'd0;
-wire    [1:0] main_basesoc_sdram_bankmachine1_cmd_payload_ba;
-reg           main_basesoc_sdram_bankmachine1_cmd_payload_cas = 1'd0;
-reg           main_basesoc_sdram_bankmachine1_cmd_payload_ras = 1'd0;
-reg           main_basesoc_sdram_bankmachine1_cmd_payload_we = 1'd0;
-reg           main_basesoc_sdram_bankmachine1_cmd_payload_is_cmd = 1'd0;
-reg           main_basesoc_sdram_bankmachine1_cmd_payload_is_read = 1'd0;
-reg           main_basesoc_sdram_bankmachine1_cmd_payload_is_write = 1'd0;
-reg           main_basesoc_sdram_bankmachine1_auto_precharge = 1'd0;
-wire          main_basesoc_sdram_bankmachine1_sink_valid;
-wire          main_basesoc_sdram_bankmachine1_sink_ready;
-reg           main_basesoc_sdram_bankmachine1_sink_first = 1'd0;
-reg           main_basesoc_sdram_bankmachine1_sink_last = 1'd0;
-wire          main_basesoc_sdram_bankmachine1_sink_payload_we;
-wire   [21:0] main_basesoc_sdram_bankmachine1_sink_payload_addr;
-wire          main_basesoc_sdram_bankmachine1_source_valid;
-wire          main_basesoc_sdram_bankmachine1_source_ready;
-wire          main_basesoc_sdram_bankmachine1_source_first;
-wire          main_basesoc_sdram_bankmachine1_source_last;
-wire          main_basesoc_sdram_bankmachine1_source_payload_we;
-wire   [21:0] main_basesoc_sdram_bankmachine1_source_payload_addr;
-wire          main_basesoc_sdram_bankmachine1_syncfifo1_we;
-wire          main_basesoc_sdram_bankmachine1_syncfifo1_writable;
-wire          main_basesoc_sdram_bankmachine1_syncfifo1_re;
-wire          main_basesoc_sdram_bankmachine1_syncfifo1_readable;
-wire   [24:0] main_basesoc_sdram_bankmachine1_syncfifo1_din;
-wire   [24:0] main_basesoc_sdram_bankmachine1_syncfifo1_dout;
-reg     [3:0] main_basesoc_sdram_bankmachine1_level = 4'd0;
-reg           main_basesoc_sdram_bankmachine1_replace = 1'd0;
-reg     [2:0] main_basesoc_sdram_bankmachine1_produce = 3'd0;
-reg     [2:0] main_basesoc_sdram_bankmachine1_consume = 3'd0;
-reg     [2:0] main_basesoc_sdram_bankmachine1_wrport_adr = 3'd0;
-wire   [24:0] main_basesoc_sdram_bankmachine1_wrport_dat_r;
-wire          main_basesoc_sdram_bankmachine1_wrport_we;
-wire   [24:0] main_basesoc_sdram_bankmachine1_wrport_dat_w;
-wire          main_basesoc_sdram_bankmachine1_do_read;
-wire    [2:0] main_basesoc_sdram_bankmachine1_rdport_adr;
-wire   [24:0] main_basesoc_sdram_bankmachine1_rdport_dat_r;
-wire          main_basesoc_sdram_bankmachine1_fifo_in_payload_we;
-wire   [21:0] main_basesoc_sdram_bankmachine1_fifo_in_payload_addr;
-wire          main_basesoc_sdram_bankmachine1_fifo_in_first;
-wire          main_basesoc_sdram_bankmachine1_fifo_in_last;
-wire          main_basesoc_sdram_bankmachine1_fifo_out_payload_we;
-wire   [21:0] main_basesoc_sdram_bankmachine1_fifo_out_payload_addr;
-wire          main_basesoc_sdram_bankmachine1_fifo_out_first;
-wire          main_basesoc_sdram_bankmachine1_fifo_out_last;
-wire          main_basesoc_sdram_bankmachine1_sink_sink_valid;
-wire          main_basesoc_sdram_bankmachine1_sink_sink_ready;
-wire          main_basesoc_sdram_bankmachine1_sink_sink_first;
-wire          main_basesoc_sdram_bankmachine1_sink_sink_last;
-wire          main_basesoc_sdram_bankmachine1_sink_sink_payload_we;
-wire   [21:0] main_basesoc_sdram_bankmachine1_sink_sink_payload_addr;
-wire          main_basesoc_sdram_bankmachine1_source_source_valid;
-wire          main_basesoc_sdram_bankmachine1_source_source_ready;
-wire          main_basesoc_sdram_bankmachine1_source_source_first;
-wire          main_basesoc_sdram_bankmachine1_source_source_last;
-wire          main_basesoc_sdram_bankmachine1_source_source_payload_we;
-wire   [21:0] main_basesoc_sdram_bankmachine1_source_source_payload_addr;
-wire          main_basesoc_sdram_bankmachine1_pipe_valid_sink_valid;
-wire          main_basesoc_sdram_bankmachine1_pipe_valid_sink_ready;
-wire          main_basesoc_sdram_bankmachine1_pipe_valid_sink_first;
-wire          main_basesoc_sdram_bankmachine1_pipe_valid_sink_last;
-wire          main_basesoc_sdram_bankmachine1_pipe_valid_sink_payload_we;
-wire   [21:0] main_basesoc_sdram_bankmachine1_pipe_valid_sink_payload_addr;
-reg           main_basesoc_sdram_bankmachine1_pipe_valid_source_valid = 1'd0;
-wire          main_basesoc_sdram_bankmachine1_pipe_valid_source_ready;
-reg           main_basesoc_sdram_bankmachine1_pipe_valid_source_first = 1'd0;
-reg           main_basesoc_sdram_bankmachine1_pipe_valid_source_last = 1'd0;
-reg           main_basesoc_sdram_bankmachine1_pipe_valid_source_payload_we = 1'd0;
-reg    [21:0] main_basesoc_sdram_bankmachine1_pipe_valid_source_payload_addr = 22'd0;
-reg    [12:0] main_basesoc_sdram_bankmachine1_row = 13'd0;
-reg           main_basesoc_sdram_bankmachine1_row_opened = 1'd0;
-wire          main_basesoc_sdram_bankmachine1_row_hit;
-reg           main_basesoc_sdram_bankmachine1_row_open = 1'd0;
-reg           main_basesoc_sdram_bankmachine1_row_close = 1'd0;
-reg           main_basesoc_sdram_bankmachine1_row_col_n_addr_sel = 1'd0;
-wire          main_basesoc_sdram_bankmachine1_twtpcon_valid;
-reg           main_basesoc_sdram_bankmachine1_twtpcon_ready = 1'd0;
-reg     [2:0] main_basesoc_sdram_bankmachine1_twtpcon_count = 3'd0;
-wire          main_basesoc_sdram_bankmachine1_trccon_valid;
-reg           main_basesoc_sdram_bankmachine1_trccon_ready = 1'd0;
-reg     [2:0] main_basesoc_sdram_bankmachine1_trccon_count = 3'd0;
-wire          main_basesoc_sdram_bankmachine1_trascon_valid;
-reg           main_basesoc_sdram_bankmachine1_trascon_ready = 1'd0;
-reg     [2:0] main_basesoc_sdram_bankmachine1_trascon_count = 3'd0;
-wire          main_basesoc_sdram_bankmachine2_req_valid;
-wire          main_basesoc_sdram_bankmachine2_req_ready;
-wire          main_basesoc_sdram_bankmachine2_req_we;
-wire   [21:0] main_basesoc_sdram_bankmachine2_req_addr;
-wire          main_basesoc_sdram_bankmachine2_req_lock;
-reg           main_basesoc_sdram_bankmachine2_req_wdata_ready = 1'd0;
-reg           main_basesoc_sdram_bankmachine2_req_rdata_valid = 1'd0;
-wire          main_basesoc_sdram_bankmachine2_refresh_req;
-reg           main_basesoc_sdram_bankmachine2_refresh_gnt = 1'd0;
-reg           main_basesoc_sdram_bankmachine2_cmd_valid = 1'd0;
-reg           main_basesoc_sdram_bankmachine2_cmd_ready = 1'd0;
-reg    [12:0] main_basesoc_sdram_bankmachine2_cmd_payload_a = 13'd0;
-wire    [1:0] main_basesoc_sdram_bankmachine2_cmd_payload_ba;
-reg           main_basesoc_sdram_bankmachine2_cmd_payload_cas = 1'd0;
-reg           main_basesoc_sdram_bankmachine2_cmd_payload_ras = 1'd0;
-reg           main_basesoc_sdram_bankmachine2_cmd_payload_we = 1'd0;
-reg           main_basesoc_sdram_bankmachine2_cmd_payload_is_cmd = 1'd0;
-reg           main_basesoc_sdram_bankmachine2_cmd_payload_is_read = 1'd0;
-reg           main_basesoc_sdram_bankmachine2_cmd_payload_is_write = 1'd0;
-reg           main_basesoc_sdram_bankmachine2_auto_precharge = 1'd0;
-wire          main_basesoc_sdram_bankmachine2_sink_valid;
-wire          main_basesoc_sdram_bankmachine2_sink_ready;
-reg           main_basesoc_sdram_bankmachine2_sink_first = 1'd0;
-reg           main_basesoc_sdram_bankmachine2_sink_last = 1'd0;
-wire          main_basesoc_sdram_bankmachine2_sink_payload_we;
-wire   [21:0] main_basesoc_sdram_bankmachine2_sink_payload_addr;
-wire          main_basesoc_sdram_bankmachine2_source_valid;
-wire          main_basesoc_sdram_bankmachine2_source_ready;
-wire          main_basesoc_sdram_bankmachine2_source_first;
-wire          main_basesoc_sdram_bankmachine2_source_last;
-wire          main_basesoc_sdram_bankmachine2_source_payload_we;
-wire   [21:0] main_basesoc_sdram_bankmachine2_source_payload_addr;
-wire          main_basesoc_sdram_bankmachine2_syncfifo2_we;
-wire          main_basesoc_sdram_bankmachine2_syncfifo2_writable;
-wire          main_basesoc_sdram_bankmachine2_syncfifo2_re;
-wire          main_basesoc_sdram_bankmachine2_syncfifo2_readable;
-wire   [24:0] main_basesoc_sdram_bankmachine2_syncfifo2_din;
-wire   [24:0] main_basesoc_sdram_bankmachine2_syncfifo2_dout;
-reg     [3:0] main_basesoc_sdram_bankmachine2_level = 4'd0;
-reg           main_basesoc_sdram_bankmachine2_replace = 1'd0;
-reg     [2:0] main_basesoc_sdram_bankmachine2_produce = 3'd0;
-reg     [2:0] main_basesoc_sdram_bankmachine2_consume = 3'd0;
-reg     [2:0] main_basesoc_sdram_bankmachine2_wrport_adr = 3'd0;
-wire   [24:0] main_basesoc_sdram_bankmachine2_wrport_dat_r;
-wire          main_basesoc_sdram_bankmachine2_wrport_we;
-wire   [24:0] main_basesoc_sdram_bankmachine2_wrport_dat_w;
-wire          main_basesoc_sdram_bankmachine2_do_read;
-wire    [2:0] main_basesoc_sdram_bankmachine2_rdport_adr;
-wire   [24:0] main_basesoc_sdram_bankmachine2_rdport_dat_r;
-wire          main_basesoc_sdram_bankmachine2_fifo_in_payload_we;
-wire   [21:0] main_basesoc_sdram_bankmachine2_fifo_in_payload_addr;
-wire          main_basesoc_sdram_bankmachine2_fifo_in_first;
-wire          main_basesoc_sdram_bankmachine2_fifo_in_last;
-wire          main_basesoc_sdram_bankmachine2_fifo_out_payload_we;
-wire   [21:0] main_basesoc_sdram_bankmachine2_fifo_out_payload_addr;
-wire          main_basesoc_sdram_bankmachine2_fifo_out_first;
-wire          main_basesoc_sdram_bankmachine2_fifo_out_last;
-wire          main_basesoc_sdram_bankmachine2_sink_sink_valid;
-wire          main_basesoc_sdram_bankmachine2_sink_sink_ready;
-wire          main_basesoc_sdram_bankmachine2_sink_sink_first;
-wire          main_basesoc_sdram_bankmachine2_sink_sink_last;
-wire          main_basesoc_sdram_bankmachine2_sink_sink_payload_we;
-wire   [21:0] main_basesoc_sdram_bankmachine2_sink_sink_payload_addr;
-wire          main_basesoc_sdram_bankmachine2_source_source_valid;
-wire          main_basesoc_sdram_bankmachine2_source_source_ready;
-wire          main_basesoc_sdram_bankmachine2_source_source_first;
-wire          main_basesoc_sdram_bankmachine2_source_source_last;
-wire          main_basesoc_sdram_bankmachine2_source_source_payload_we;
-wire   [21:0] main_basesoc_sdram_bankmachine2_source_source_payload_addr;
-wire          main_basesoc_sdram_bankmachine2_pipe_valid_sink_valid;
-wire          main_basesoc_sdram_bankmachine2_pipe_valid_sink_ready;
-wire          main_basesoc_sdram_bankmachine2_pipe_valid_sink_first;
-wire          main_basesoc_sdram_bankmachine2_pipe_valid_sink_last;
-wire          main_basesoc_sdram_bankmachine2_pipe_valid_sink_payload_we;
-wire   [21:0] main_basesoc_sdram_bankmachine2_pipe_valid_sink_payload_addr;
-reg           main_basesoc_sdram_bankmachine2_pipe_valid_source_valid = 1'd0;
-wire          main_basesoc_sdram_bankmachine2_pipe_valid_source_ready;
-reg           main_basesoc_sdram_bankmachine2_pipe_valid_source_first = 1'd0;
-reg           main_basesoc_sdram_bankmachine2_pipe_valid_source_last = 1'd0;
-reg           main_basesoc_sdram_bankmachine2_pipe_valid_source_payload_we = 1'd0;
-reg    [21:0] main_basesoc_sdram_bankmachine2_pipe_valid_source_payload_addr = 22'd0;
-reg    [12:0] main_basesoc_sdram_bankmachine2_row = 13'd0;
-reg           main_basesoc_sdram_bankmachine2_row_opened = 1'd0;
-wire          main_basesoc_sdram_bankmachine2_row_hit;
-reg           main_basesoc_sdram_bankmachine2_row_open = 1'd0;
-reg           main_basesoc_sdram_bankmachine2_row_close = 1'd0;
-reg           main_basesoc_sdram_bankmachine2_row_col_n_addr_sel = 1'd0;
-wire          main_basesoc_sdram_bankmachine2_twtpcon_valid;
-reg           main_basesoc_sdram_bankmachine2_twtpcon_ready = 1'd0;
-reg     [2:0] main_basesoc_sdram_bankmachine2_twtpcon_count = 3'd0;
-wire          main_basesoc_sdram_bankmachine2_trccon_valid;
-reg           main_basesoc_sdram_bankmachine2_trccon_ready = 1'd0;
-reg     [2:0] main_basesoc_sdram_bankmachine2_trccon_count = 3'd0;
-wire          main_basesoc_sdram_bankmachine2_trascon_valid;
-reg           main_basesoc_sdram_bankmachine2_trascon_ready = 1'd0;
-reg     [2:0] main_basesoc_sdram_bankmachine2_trascon_count = 3'd0;
-wire          main_basesoc_sdram_bankmachine3_req_valid;
-wire          main_basesoc_sdram_bankmachine3_req_ready;
-wire          main_basesoc_sdram_bankmachine3_req_we;
-wire   [21:0] main_basesoc_sdram_bankmachine3_req_addr;
-wire          main_basesoc_sdram_bankmachine3_req_lock;
-reg           main_basesoc_sdram_bankmachine3_req_wdata_ready = 1'd0;
-reg           main_basesoc_sdram_bankmachine3_req_rdata_valid = 1'd0;
-wire          main_basesoc_sdram_bankmachine3_refresh_req;
-reg           main_basesoc_sdram_bankmachine3_refresh_gnt = 1'd0;
-reg           main_basesoc_sdram_bankmachine3_cmd_valid = 1'd0;
-reg           main_basesoc_sdram_bankmachine3_cmd_ready = 1'd0;
-reg    [12:0] main_basesoc_sdram_bankmachine3_cmd_payload_a = 13'd0;
-wire    [1:0] main_basesoc_sdram_bankmachine3_cmd_payload_ba;
-reg           main_basesoc_sdram_bankmachine3_cmd_payload_cas = 1'd0;
-reg           main_basesoc_sdram_bankmachine3_cmd_payload_ras = 1'd0;
-reg           main_basesoc_sdram_bankmachine3_cmd_payload_we = 1'd0;
-reg           main_basesoc_sdram_bankmachine3_cmd_payload_is_cmd = 1'd0;
-reg           main_basesoc_sdram_bankmachine3_cmd_payload_is_read = 1'd0;
-reg           main_basesoc_sdram_bankmachine3_cmd_payload_is_write = 1'd0;
-reg           main_basesoc_sdram_bankmachine3_auto_precharge = 1'd0;
-wire          main_basesoc_sdram_bankmachine3_sink_valid;
-wire          main_basesoc_sdram_bankmachine3_sink_ready;
-reg           main_basesoc_sdram_bankmachine3_sink_first = 1'd0;
-reg           main_basesoc_sdram_bankmachine3_sink_last = 1'd0;
-wire          main_basesoc_sdram_bankmachine3_sink_payload_we;
-wire   [21:0] main_basesoc_sdram_bankmachine3_sink_payload_addr;
-wire          main_basesoc_sdram_bankmachine3_source_valid;
-wire          main_basesoc_sdram_bankmachine3_source_ready;
-wire          main_basesoc_sdram_bankmachine3_source_first;
-wire          main_basesoc_sdram_bankmachine3_source_last;
-wire          main_basesoc_sdram_bankmachine3_source_payload_we;
-wire   [21:0] main_basesoc_sdram_bankmachine3_source_payload_addr;
-wire          main_basesoc_sdram_bankmachine3_syncfifo3_we;
-wire          main_basesoc_sdram_bankmachine3_syncfifo3_writable;
-wire          main_basesoc_sdram_bankmachine3_syncfifo3_re;
-wire          main_basesoc_sdram_bankmachine3_syncfifo3_readable;
-wire   [24:0] main_basesoc_sdram_bankmachine3_syncfifo3_din;
-wire   [24:0] main_basesoc_sdram_bankmachine3_syncfifo3_dout;
-reg     [3:0] main_basesoc_sdram_bankmachine3_level = 4'd0;
-reg           main_basesoc_sdram_bankmachine3_replace = 1'd0;
-reg     [2:0] main_basesoc_sdram_bankmachine3_produce = 3'd0;
-reg     [2:0] main_basesoc_sdram_bankmachine3_consume = 3'd0;
-reg     [2:0] main_basesoc_sdram_bankmachine3_wrport_adr = 3'd0;
-wire   [24:0] main_basesoc_sdram_bankmachine3_wrport_dat_r;
-wire          main_basesoc_sdram_bankmachine3_wrport_we;
-wire   [24:0] main_basesoc_sdram_bankmachine3_wrport_dat_w;
-wire          main_basesoc_sdram_bankmachine3_do_read;
-wire    [2:0] main_basesoc_sdram_bankmachine3_rdport_adr;
-wire   [24:0] main_basesoc_sdram_bankmachine3_rdport_dat_r;
-wire          main_basesoc_sdram_bankmachine3_fifo_in_payload_we;
-wire   [21:0] main_basesoc_sdram_bankmachine3_fifo_in_payload_addr;
-wire          main_basesoc_sdram_bankmachine3_fifo_in_first;
-wire          main_basesoc_sdram_bankmachine3_fifo_in_last;
-wire          main_basesoc_sdram_bankmachine3_fifo_out_payload_we;
-wire   [21:0] main_basesoc_sdram_bankmachine3_fifo_out_payload_addr;
-wire          main_basesoc_sdram_bankmachine3_fifo_out_first;
-wire          main_basesoc_sdram_bankmachine3_fifo_out_last;
-wire          main_basesoc_sdram_bankmachine3_sink_sink_valid;
-wire          main_basesoc_sdram_bankmachine3_sink_sink_ready;
-wire          main_basesoc_sdram_bankmachine3_sink_sink_first;
-wire          main_basesoc_sdram_bankmachine3_sink_sink_last;
-wire          main_basesoc_sdram_bankmachine3_sink_sink_payload_we;
-wire   [21:0] main_basesoc_sdram_bankmachine3_sink_sink_payload_addr;
-wire          main_basesoc_sdram_bankmachine3_source_source_valid;
-wire          main_basesoc_sdram_bankmachine3_source_source_ready;
-wire          main_basesoc_sdram_bankmachine3_source_source_first;
-wire          main_basesoc_sdram_bankmachine3_source_source_last;
-wire          main_basesoc_sdram_bankmachine3_source_source_payload_we;
-wire   [21:0] main_basesoc_sdram_bankmachine3_source_source_payload_addr;
-wire          main_basesoc_sdram_bankmachine3_pipe_valid_sink_valid;
-wire          main_basesoc_sdram_bankmachine3_pipe_valid_sink_ready;
-wire          main_basesoc_sdram_bankmachine3_pipe_valid_sink_first;
-wire          main_basesoc_sdram_bankmachine3_pipe_valid_sink_last;
-wire          main_basesoc_sdram_bankmachine3_pipe_valid_sink_payload_we;
-wire   [21:0] main_basesoc_sdram_bankmachine3_pipe_valid_sink_payload_addr;
-reg           main_basesoc_sdram_bankmachine3_pipe_valid_source_valid = 1'd0;
-wire          main_basesoc_sdram_bankmachine3_pipe_valid_source_ready;
-reg           main_basesoc_sdram_bankmachine3_pipe_valid_source_first = 1'd0;
-reg           main_basesoc_sdram_bankmachine3_pipe_valid_source_last = 1'd0;
-reg           main_basesoc_sdram_bankmachine3_pipe_valid_source_payload_we = 1'd0;
-reg    [21:0] main_basesoc_sdram_bankmachine3_pipe_valid_source_payload_addr = 22'd0;
-reg    [12:0] main_basesoc_sdram_bankmachine3_row = 13'd0;
-reg           main_basesoc_sdram_bankmachine3_row_opened = 1'd0;
-wire          main_basesoc_sdram_bankmachine3_row_hit;
-reg           main_basesoc_sdram_bankmachine3_row_open = 1'd0;
-reg           main_basesoc_sdram_bankmachine3_row_close = 1'd0;
-reg           main_basesoc_sdram_bankmachine3_row_col_n_addr_sel = 1'd0;
-wire          main_basesoc_sdram_bankmachine3_twtpcon_valid;
-reg           main_basesoc_sdram_bankmachine3_twtpcon_ready = 1'd0;
-reg     [2:0] main_basesoc_sdram_bankmachine3_twtpcon_count = 3'd0;
-wire          main_basesoc_sdram_bankmachine3_trccon_valid;
-reg           main_basesoc_sdram_bankmachine3_trccon_ready = 1'd0;
-reg     [2:0] main_basesoc_sdram_bankmachine3_trccon_count = 3'd0;
-wire          main_basesoc_sdram_bankmachine3_trascon_valid;
-reg           main_basesoc_sdram_bankmachine3_trascon_ready = 1'd0;
-reg     [2:0] main_basesoc_sdram_bankmachine3_trascon_count = 3'd0;
-wire          main_basesoc_sdram_ras_allowed;
-wire          main_basesoc_sdram_cas_allowed;
-reg           main_basesoc_sdram_choose_cmd_want_reads = 1'd0;
-reg           main_basesoc_sdram_choose_cmd_want_writes = 1'd0;
-reg           main_basesoc_sdram_choose_cmd_want_cmds = 1'd0;
-reg           main_basesoc_sdram_choose_cmd_want_activates = 1'd0;
-wire          main_basesoc_sdram_choose_cmd_cmd_valid;
-reg           main_basesoc_sdram_choose_cmd_cmd_ready = 1'd0;
-wire   [12:0] main_basesoc_sdram_choose_cmd_cmd_payload_a;
-wire    [1:0] main_basesoc_sdram_choose_cmd_cmd_payload_ba;
-reg           main_basesoc_sdram_choose_cmd_cmd_payload_cas = 1'd0;
-reg           main_basesoc_sdram_choose_cmd_cmd_payload_ras = 1'd0;
-reg           main_basesoc_sdram_choose_cmd_cmd_payload_we = 1'd0;
-wire          main_basesoc_sdram_choose_cmd_cmd_payload_is_cmd;
-wire          main_basesoc_sdram_choose_cmd_cmd_payload_is_read;
-wire          main_basesoc_sdram_choose_cmd_cmd_payload_is_write;
-reg     [3:0] main_basesoc_sdram_choose_cmd_valids = 4'd0;
-wire    [3:0] main_basesoc_sdram_choose_cmd_request;
-reg     [1:0] main_basesoc_sdram_choose_cmd_grant = 2'd0;
-wire          main_basesoc_sdram_choose_cmd_ce;
-reg           main_basesoc_sdram_choose_req_want_reads = 1'd0;
-reg           main_basesoc_sdram_choose_req_want_writes = 1'd0;
-wire          main_basesoc_sdram_choose_req_want_cmds;
-reg           main_basesoc_sdram_choose_req_want_activates = 1'd0;
-wire          main_basesoc_sdram_choose_req_cmd_valid;
-reg           main_basesoc_sdram_choose_req_cmd_ready = 1'd0;
-wire   [12:0] main_basesoc_sdram_choose_req_cmd_payload_a;
-wire    [1:0] main_basesoc_sdram_choose_req_cmd_payload_ba;
-reg           main_basesoc_sdram_choose_req_cmd_payload_cas = 1'd0;
-reg           main_basesoc_sdram_choose_req_cmd_payload_ras = 1'd0;
-reg           main_basesoc_sdram_choose_req_cmd_payload_we = 1'd0;
-wire          main_basesoc_sdram_choose_req_cmd_payload_is_cmd;
-wire          main_basesoc_sdram_choose_req_cmd_payload_is_read;
-wire          main_basesoc_sdram_choose_req_cmd_payload_is_write;
-reg     [3:0] main_basesoc_sdram_choose_req_valids = 4'd0;
-wire    [3:0] main_basesoc_sdram_choose_req_request;
-reg     [1:0] main_basesoc_sdram_choose_req_grant = 2'd0;
-wire          main_basesoc_sdram_choose_req_ce;
-reg    [12:0] main_basesoc_sdram_nop_a = 13'd0;
-reg     [1:0] main_basesoc_sdram_nop_ba = 2'd0;
-reg     [1:0] main_basesoc_sdram_steerer_sel = 2'd0;
-reg           main_basesoc_sdram_steerer0 = 1'd1;
-reg           main_basesoc_sdram_steerer1 = 1'd1;
-wire          main_basesoc_sdram_trrdcon_valid;
-reg           main_basesoc_sdram_trrdcon_ready = 1'd0;
-reg           main_basesoc_sdram_trrdcon_count = 1'd0;
-wire          main_basesoc_sdram_tfawcon_valid;
-reg           main_basesoc_sdram_tfawcon_ready = 1'd1;
-wire          main_basesoc_sdram_tccdcon_valid;
-reg           main_basesoc_sdram_tccdcon_ready = 1'd0;
-reg           main_basesoc_sdram_tccdcon_count = 1'd0;
-wire          main_basesoc_sdram_twtrcon_valid;
-reg           main_basesoc_sdram_twtrcon_ready = 1'd0;
-reg     [2:0] main_basesoc_sdram_twtrcon_count = 3'd0;
-wire          main_basesoc_sdram_read_available;
-wire          main_basesoc_sdram_write_available;
-reg           main_basesoc_sdram_en0 = 1'd0;
-wire          main_basesoc_sdram_max_time0;
-reg     [4:0] main_basesoc_sdram_time0 = 5'd0;
-reg           main_basesoc_sdram_en1 = 1'd0;
-wire          main_basesoc_sdram_max_time1;
-reg     [3:0] main_basesoc_sdram_time1 = 4'd0;
-wire          main_basesoc_sdram_go_to_refresh;
-reg           main_basesoc_port_cmd_valid = 1'd0;
-wire          main_basesoc_port_cmd_ready;
-reg           main_basesoc_port_cmd_payload_we = 1'd0;
-reg    [23:0] main_basesoc_port_cmd_payload_addr = 24'd0;
-wire          main_basesoc_port_wdata_valid;
-wire          main_basesoc_port_wdata_ready;
-wire          main_basesoc_port_wdata_first;
-wire          main_basesoc_port_wdata_last;
-wire   [15:0] main_basesoc_port_wdata_payload_data;
-wire    [1:0] main_basesoc_port_wdata_payload_we;
-wire          main_basesoc_port_rdata_valid;
-wire          main_basesoc_port_rdata_ready;
-reg           main_basesoc_port_rdata_first = 1'd0;
-reg           main_basesoc_port_rdata_last = 1'd0;
-wire   [15:0] main_basesoc_port_rdata_payload_data;
-wire   [29:0] main_basesoc_wb_sdram_adr;
-wire   [31:0] main_basesoc_wb_sdram_dat_w;
-reg    [31:0] main_basesoc_wb_sdram_dat_r = 32'd0;
-wire    [3:0] main_basesoc_wb_sdram_sel;
-wire          main_basesoc_wb_sdram_cyc;
-wire          main_basesoc_wb_sdram_stb;
-reg           main_basesoc_wb_sdram_ack = 1'd0;
-wire          main_basesoc_wb_sdram_we;
-wire    [2:0] main_basesoc_wb_sdram_cti;
-wire    [1:0] main_basesoc_wb_sdram_bte;
-reg           main_basesoc_wb_sdram_err = 1'd0;
-wire   [29:0] main_basesoc_interface_adr;
-wire  [127:0] main_basesoc_interface_dat_w;
-reg   [127:0] main_basesoc_interface_dat_r = 128'd0;
-wire   [15:0] main_basesoc_interface_sel;
-reg           main_basesoc_interface_cyc = 1'd0;
-reg           main_basesoc_interface_stb = 1'd0;
-reg           main_basesoc_interface_ack = 1'd0;
-reg           main_basesoc_interface_we = 1'd0;
-wire    [8:0] main_basesoc_data_port_adr;
-wire  [127:0] main_basesoc_data_port_dat_r;
-reg    [15:0] main_basesoc_data_port_we = 16'd0;
-reg   [127:0] main_basesoc_data_port_dat_w = 128'd0;
-reg           main_basesoc_write_from_slave = 1'd0;
-reg     [1:0] main_basesoc_adr_offset_r = 2'd0;
-wire    [8:0] main_basesoc_tag_port_adr;
-wire   [23:0] main_basesoc_tag_port_dat_r;
-reg           main_basesoc_tag_port_we = 1'd0;
-wire   [23:0] main_basesoc_tag_port_dat_w;
-wire   [22:0] main_basesoc_tag_do_tag;
-wire          main_basesoc_tag_do_dirty;
-wire   [22:0] main_basesoc_tag_di_tag;
-reg           main_basesoc_tag_di_dirty = 1'd0;
-reg           main_basesoc_word_clr = 1'd0;
-reg           main_basesoc_word_inc = 1'd0;
-wire          main_basesoc_wishbone_bridge_flush;
-reg           main_basesoc_wishbone_bridge_cmd_valid = 1'd0;
-reg           main_basesoc_wishbone_bridge_cmd_ready = 1'd0;
-wire          main_basesoc_wishbone_bridge_cmd_last;
-wire          main_basesoc_wishbone_bridge_cmd_payload_we;
-wire   [20:0] main_basesoc_wishbone_bridge_cmd_payload_addr;
-reg           main_basesoc_wishbone_bridge_wdata_valid = 1'd0;
-wire          main_basesoc_wishbone_bridge_wdata_ready;
-reg           main_basesoc_wishbone_bridge_wdata_first = 1'd0;
-reg           main_basesoc_wishbone_bridge_wdata_last = 1'd0;
-wire  [127:0] main_basesoc_wishbone_bridge_wdata_payload_data;
-wire   [15:0] main_basesoc_wishbone_bridge_wdata_payload_we;
-wire          main_basesoc_wishbone_bridge_rdata_valid;
-wire          main_basesoc_wishbone_bridge_rdata_ready;
-wire          main_basesoc_wishbone_bridge_rdata_first;
-wire          main_basesoc_wishbone_bridge_rdata_last;
-wire  [127:0] main_basesoc_wishbone_bridge_rdata_payload_data;
-reg     [2:0] main_basesoc_wishbone_bridge_count = 3'd0;
-wire          main_basesoc_wishbone_bridge_wdata_converter_sink_valid;
-wire          main_basesoc_wishbone_bridge_wdata_converter_sink_ready;
-wire          main_basesoc_wishbone_bridge_wdata_converter_sink_first;
-wire          main_basesoc_wishbone_bridge_wdata_converter_sink_last;
-wire  [127:0] main_basesoc_wishbone_bridge_wdata_converter_sink_payload_data;
-wire   [15:0] main_basesoc_wishbone_bridge_wdata_converter_sink_payload_we;
-wire          main_basesoc_wishbone_bridge_wdata_converter_source_valid;
-wire          main_basesoc_wishbone_bridge_wdata_converter_source_ready;
-wire          main_basesoc_wishbone_bridge_wdata_converter_source_first;
-wire          main_basesoc_wishbone_bridge_wdata_converter_source_last;
-wire   [15:0] main_basesoc_wishbone_bridge_wdata_converter_source_payload_data;
-wire    [1:0] main_basesoc_wishbone_bridge_wdata_converter_source_payload_we;
-wire          main_basesoc_wishbone_bridge_wdata_converter_converter_sink_valid;
-wire          main_basesoc_wishbone_bridge_wdata_converter_converter_sink_ready;
-wire          main_basesoc_wishbone_bridge_wdata_converter_converter_sink_first;
-wire          main_basesoc_wishbone_bridge_wdata_converter_converter_sink_last;
-reg   [143:0] main_basesoc_wishbone_bridge_wdata_converter_converter_sink_payload_data = 144'd0;
-wire          main_basesoc_wishbone_bridge_wdata_converter_converter_source_valid;
-wire          main_basesoc_wishbone_bridge_wdata_converter_converter_source_ready;
-wire          main_basesoc_wishbone_bridge_wdata_converter_converter_source_first;
-wire          main_basesoc_wishbone_bridge_wdata_converter_converter_source_last;
-reg    [17:0] main_basesoc_wishbone_bridge_wdata_converter_converter_source_payload_data = 18'd0;
-wire          main_basesoc_wishbone_bridge_wdata_converter_converter_source_payload_valid_token_count;
-reg     [2:0] main_basesoc_wishbone_bridge_wdata_converter_converter_mux = 3'd0;
-wire          main_basesoc_wishbone_bridge_wdata_converter_converter_first;
-wire          main_basesoc_wishbone_bridge_wdata_converter_converter_last;
-wire          main_basesoc_wishbone_bridge_wdata_converter_source_source_valid;
-wire          main_basesoc_wishbone_bridge_wdata_converter_source_source_ready;
-wire          main_basesoc_wishbone_bridge_wdata_converter_source_source_first;
-wire          main_basesoc_wishbone_bridge_wdata_converter_source_source_last;
-wire   [17:0] main_basesoc_wishbone_bridge_wdata_converter_source_source_payload_data;
-wire          main_basesoc_wishbone_bridge_rdata_converter_sink_valid;
-wire          main_basesoc_wishbone_bridge_rdata_converter_sink_ready;
-wire          main_basesoc_wishbone_bridge_rdata_converter_sink_first;
-wire          main_basesoc_wishbone_bridge_rdata_converter_sink_last;
-wire   [15:0] main_basesoc_wishbone_bridge_rdata_converter_sink_payload_data;
-wire          main_basesoc_wishbone_bridge_rdata_converter_source_valid;
-wire          main_basesoc_wishbone_bridge_rdata_converter_source_ready;
-wire          main_basesoc_wishbone_bridge_rdata_converter_source_first;
-wire          main_basesoc_wishbone_bridge_rdata_converter_source_last;
-reg   [127:0] main_basesoc_wishbone_bridge_rdata_converter_source_payload_data = 128'd0;
-wire          main_basesoc_wishbone_bridge_rdata_converter_converter_sink_valid;
-wire          main_basesoc_wishbone_bridge_rdata_converter_converter_sink_ready;
-wire          main_basesoc_wishbone_bridge_rdata_converter_converter_sink_first;
-wire          main_basesoc_wishbone_bridge_rdata_converter_converter_sink_last;
-wire   [15:0] main_basesoc_wishbone_bridge_rdata_converter_converter_sink_payload_data;
-wire          main_basesoc_wishbone_bridge_rdata_converter_converter_source_valid;
-wire          main_basesoc_wishbone_bridge_rdata_converter_converter_source_ready;
-reg           main_basesoc_wishbone_bridge_rdata_converter_converter_source_first = 1'd0;
-reg           main_basesoc_wishbone_bridge_rdata_converter_converter_source_last = 1'd0;
-reg   [127:0] main_basesoc_wishbone_bridge_rdata_converter_converter_source_payload_data = 128'd0;
-reg     [3:0] main_basesoc_wishbone_bridge_rdata_converter_converter_source_payload_valid_token_count = 4'd0;
-reg     [2:0] main_basesoc_wishbone_bridge_rdata_converter_converter_demux = 3'd0;
-wire          main_basesoc_wishbone_bridge_rdata_converter_converter_load_part;
-reg           main_basesoc_wishbone_bridge_rdata_converter_converter_strobe_all = 1'd0;
-wire          main_basesoc_wishbone_bridge_rdata_converter_source_source_valid;
-wire          main_basesoc_wishbone_bridge_rdata_converter_source_source_ready;
-wire          main_basesoc_wishbone_bridge_rdata_converter_source_source_first;
-wire          main_basesoc_wishbone_bridge_rdata_converter_source_source_last;
-wire  [127:0] main_basesoc_wishbone_bridge_rdata_converter_source_source_payload_data;
-reg           main_basesoc_wishbone_bridge_aborted = 1'd0;
-reg           main_basesoc_wishbone_bridge_is_ongoing = 1'd0;
+wire   [12:0] main_sdram_slave_p0_address;
+wire    [1:0] main_sdram_slave_p0_bank;
+wire          main_sdram_slave_p0_cas_n;
+wire          main_sdram_slave_p0_cs_n;
+wire          main_sdram_slave_p0_ras_n;
+wire          main_sdram_slave_p0_we_n;
+wire          main_sdram_slave_p0_cke;
+wire          main_sdram_slave_p0_odt;
+wire          main_sdram_slave_p0_reset_n;
+wire          main_sdram_slave_p0_act_n;
+wire   [15:0] main_sdram_slave_p0_wrdata;
+wire          main_sdram_slave_p0_wrdata_en;
+wire    [1:0] main_sdram_slave_p0_wrdata_mask;
+wire          main_sdram_slave_p0_rddata_en;
+reg    [15:0] main_sdram_slave_p0_rddata = 16'd0;
+reg           main_sdram_slave_p0_rddata_valid = 1'd0;
+reg    [12:0] main_sdram_master_p0_address = 13'd0;
+reg     [1:0] main_sdram_master_p0_bank = 2'd0;
+reg           main_sdram_master_p0_cas_n = 1'd1;
+reg           main_sdram_master_p0_cs_n = 1'd1;
+reg           main_sdram_master_p0_ras_n = 1'd1;
+reg           main_sdram_master_p0_we_n = 1'd1;
+reg           main_sdram_master_p0_cke = 1'd0;
+reg           main_sdram_master_p0_odt = 1'd0;
+reg           main_sdram_master_p0_reset_n = 1'd0;
+reg           main_sdram_master_p0_act_n = 1'd1;
+reg    [15:0] main_sdram_master_p0_wrdata = 16'd0;
+reg           main_sdram_master_p0_wrdata_en = 1'd0;
+reg     [1:0] main_sdram_master_p0_wrdata_mask = 2'd0;
+reg           main_sdram_master_p0_rddata_en = 1'd0;
+wire   [15:0] main_sdram_master_p0_rddata;
+wire          main_sdram_master_p0_rddata_valid;
+wire   [12:0] main_sdram_csr_dfi_p0_address;
+wire    [1:0] main_sdram_csr_dfi_p0_bank;
+reg           main_sdram_csr_dfi_p0_cas_n = 1'd1;
+reg           main_sdram_csr_dfi_p0_cs_n = 1'd1;
+reg           main_sdram_csr_dfi_p0_ras_n = 1'd1;
+reg           main_sdram_csr_dfi_p0_we_n = 1'd1;
+wire          main_sdram_csr_dfi_p0_cke;
+wire          main_sdram_csr_dfi_p0_odt;
+wire          main_sdram_csr_dfi_p0_reset_n;
+reg           main_sdram_csr_dfi_p0_act_n = 1'd1;
+wire   [15:0] main_sdram_csr_dfi_p0_wrdata;
+wire          main_sdram_csr_dfi_p0_wrdata_en;
+wire    [1:0] main_sdram_csr_dfi_p0_wrdata_mask;
+wire          main_sdram_csr_dfi_p0_rddata_en;
+reg    [15:0] main_sdram_csr_dfi_p0_rddata = 16'd0;
+reg           main_sdram_csr_dfi_p0_rddata_valid = 1'd0;
+reg    [12:0] main_sdram_ext_dfi_p0_address = 13'd0;
+reg     [1:0] main_sdram_ext_dfi_p0_bank = 2'd0;
+reg           main_sdram_ext_dfi_p0_cas_n = 1'd1;
+reg           main_sdram_ext_dfi_p0_cs_n = 1'd1;
+reg           main_sdram_ext_dfi_p0_ras_n = 1'd1;
+reg           main_sdram_ext_dfi_p0_we_n = 1'd1;
+reg           main_sdram_ext_dfi_p0_cke = 1'd0;
+reg           main_sdram_ext_dfi_p0_odt = 1'd0;
+reg           main_sdram_ext_dfi_p0_reset_n = 1'd0;
+reg           main_sdram_ext_dfi_p0_act_n = 1'd1;
+reg    [15:0] main_sdram_ext_dfi_p0_wrdata = 16'd0;
+reg           main_sdram_ext_dfi_p0_wrdata_en = 1'd0;
+reg     [1:0] main_sdram_ext_dfi_p0_wrdata_mask = 2'd0;
+reg           main_sdram_ext_dfi_p0_rddata_en = 1'd0;
+reg    [15:0] main_sdram_ext_dfi_p0_rddata = 16'd0;
+reg           main_sdram_ext_dfi_p0_rddata_valid = 1'd0;
+reg           main_sdram_ext_dfi_sel = 1'd0;
+wire          main_sdram_sel;
+wire          main_sdram_cke1;
+wire          main_sdram_odt;
+wire          main_sdram_reset_n;
+reg     [3:0] main_sdram_storage = 4'd1;
+reg           main_sdram_re = 1'd0;
+wire          main_sdram_csrfield_cs;
+wire          main_sdram_csrfield_we;
+wire          main_sdram_csrfield_cas;
+wire          main_sdram_csrfield_ras;
+wire          main_sdram_csrfield_wren;
+wire          main_sdram_csrfield_rden;
+reg     [5:0] main_sdram_command_storage = 6'd0;
+reg           main_sdram_command_re = 1'd0;
+reg           main_sdram_command_issue_re = 1'd0;
+wire          main_sdram_command_issue_r;
+reg           main_sdram_command_issue_we = 1'd0;
+reg           main_sdram_command_issue_w = 1'd0;
+reg    [12:0] main_sdram_address_storage = 13'd0;
+reg           main_sdram_address_re = 1'd0;
+reg     [1:0] main_sdram_baddress_storage = 2'd0;
+reg           main_sdram_baddress_re = 1'd0;
+reg    [15:0] main_sdram_wrdata_storage = 16'd0;
+reg           main_sdram_wrdata_re = 1'd0;
+reg    [15:0] main_sdram_rddata_status = 16'd0;
+wire          main_sdram_rddata_we;
+reg           main_sdram_rddata_re = 1'd0;
+wire          main_sdram_interface_bank0_valid;
+wire          main_sdram_interface_bank0_ready;
+wire          main_sdram_interface_bank0_we;
+wire   [21:0] main_sdram_interface_bank0_addr;
+wire          main_sdram_interface_bank0_lock;
+wire          main_sdram_interface_bank0_wdata_ready;
+wire          main_sdram_interface_bank0_rdata_valid;
+wire          main_sdram_interface_bank1_valid;
+wire          main_sdram_interface_bank1_ready;
+wire          main_sdram_interface_bank1_we;
+wire   [21:0] main_sdram_interface_bank1_addr;
+wire          main_sdram_interface_bank1_lock;
+wire          main_sdram_interface_bank1_wdata_ready;
+wire          main_sdram_interface_bank1_rdata_valid;
+wire          main_sdram_interface_bank2_valid;
+wire          main_sdram_interface_bank2_ready;
+wire          main_sdram_interface_bank2_we;
+wire   [21:0] main_sdram_interface_bank2_addr;
+wire          main_sdram_interface_bank2_lock;
+wire          main_sdram_interface_bank2_wdata_ready;
+wire          main_sdram_interface_bank2_rdata_valid;
+wire          main_sdram_interface_bank3_valid;
+wire          main_sdram_interface_bank3_ready;
+wire          main_sdram_interface_bank3_we;
+wire   [21:0] main_sdram_interface_bank3_addr;
+wire          main_sdram_interface_bank3_lock;
+wire          main_sdram_interface_bank3_wdata_ready;
+wire          main_sdram_interface_bank3_rdata_valid;
+reg    [15:0] main_sdram_interface_wdata = 16'd0;
+reg     [1:0] main_sdram_interface_wdata_we = 2'd0;
+wire   [15:0] main_sdram_interface_rdata;
+reg    [12:0] main_sdram_dfi_p0_address = 13'd0;
+reg     [1:0] main_sdram_dfi_p0_bank = 2'd0;
+reg           main_sdram_dfi_p0_cas_n = 1'd1;
+reg           main_sdram_dfi_p0_cs_n = 1'd1;
+reg           main_sdram_dfi_p0_ras_n = 1'd1;
+reg           main_sdram_dfi_p0_we_n = 1'd1;
+wire          main_sdram_dfi_p0_cke;
+wire          main_sdram_dfi_p0_odt;
+wire          main_sdram_dfi_p0_reset_n;
+reg           main_sdram_dfi_p0_act_n = 1'd1;
+wire   [15:0] main_sdram_dfi_p0_wrdata;
+reg           main_sdram_dfi_p0_wrdata_en = 1'd0;
+wire    [1:0] main_sdram_dfi_p0_wrdata_mask;
+reg           main_sdram_dfi_p0_rddata_en = 1'd0;
+wire   [15:0] main_sdram_dfi_p0_rddata;
+wire          main_sdram_dfi_p0_rddata_valid;
+reg           main_sdram_cmd_valid = 1'd0;
+reg           main_sdram_cmd_ready = 1'd0;
+reg           main_sdram_cmd_last = 1'd0;
+reg    [12:0] main_sdram_cmd_payload_a = 13'd0;
+reg     [1:0] main_sdram_cmd_payload_ba = 2'd0;
+reg           main_sdram_cmd_payload_cas = 1'd0;
+reg           main_sdram_cmd_payload_ras = 1'd0;
+reg           main_sdram_cmd_payload_we = 1'd0;
+reg           main_sdram_cmd_payload_is_read = 1'd0;
+reg           main_sdram_cmd_payload_is_write = 1'd0;
+wire          main_sdram_wants_refresh;
+wire          main_sdram_timer_wait;
+wire          main_sdram_timer_done0;
+wire    [9:0] main_sdram_timer_count0;
+wire          main_sdram_timer_done1;
+reg     [9:0] main_sdram_timer_count1 = 10'd820;
+wire          main_sdram_postponer_req_i;
+reg           main_sdram_postponer_req_o = 1'd0;
+reg           main_sdram_postponer_count = 1'd0;
+reg           main_sdram_sequencer_start0 = 1'd0;
+wire          main_sdram_sequencer_done0;
+wire          main_sdram_sequencer_start1;
+reg           main_sdram_sequencer_done1 = 1'd0;
+reg     [3:0] main_sdram_sequencer_counter = 4'd0;
+reg           main_sdram_sequencer_count = 1'd0;
+wire          main_sdram_bankmachine0_req_valid;
+wire          main_sdram_bankmachine0_req_ready;
+wire          main_sdram_bankmachine0_req_we;
+wire   [21:0] main_sdram_bankmachine0_req_addr;
+wire          main_sdram_bankmachine0_req_lock;
+reg           main_sdram_bankmachine0_req_wdata_ready = 1'd0;
+reg           main_sdram_bankmachine0_req_rdata_valid = 1'd0;
+wire          main_sdram_bankmachine0_refresh_req;
+reg           main_sdram_bankmachine0_refresh_gnt = 1'd0;
+reg           main_sdram_bankmachine0_cmd_valid = 1'd0;
+reg           main_sdram_bankmachine0_cmd_ready = 1'd0;
+reg    [12:0] main_sdram_bankmachine0_cmd_payload_a = 13'd0;
+wire    [1:0] main_sdram_bankmachine0_cmd_payload_ba;
+reg           main_sdram_bankmachine0_cmd_payload_cas = 1'd0;
+reg           main_sdram_bankmachine0_cmd_payload_ras = 1'd0;
+reg           main_sdram_bankmachine0_cmd_payload_we = 1'd0;
+reg           main_sdram_bankmachine0_cmd_payload_is_cmd = 1'd0;
+reg           main_sdram_bankmachine0_cmd_payload_is_read = 1'd0;
+reg           main_sdram_bankmachine0_cmd_payload_is_write = 1'd0;
+reg           main_sdram_bankmachine0_auto_precharge = 1'd0;
+wire          main_sdram_bankmachine0_sink_valid;
+wire          main_sdram_bankmachine0_sink_ready;
+reg           main_sdram_bankmachine0_sink_first = 1'd0;
+reg           main_sdram_bankmachine0_sink_last = 1'd0;
+wire          main_sdram_bankmachine0_sink_payload_we;
+wire   [21:0] main_sdram_bankmachine0_sink_payload_addr;
+wire          main_sdram_bankmachine0_source_valid;
+wire          main_sdram_bankmachine0_source_ready;
+wire          main_sdram_bankmachine0_source_first;
+wire          main_sdram_bankmachine0_source_last;
+wire          main_sdram_bankmachine0_source_payload_we;
+wire   [21:0] main_sdram_bankmachine0_source_payload_addr;
+wire          main_sdram_bankmachine0_syncfifo0_we;
+wire          main_sdram_bankmachine0_syncfifo0_writable;
+wire          main_sdram_bankmachine0_syncfifo0_re;
+wire          main_sdram_bankmachine0_syncfifo0_readable;
+wire   [24:0] main_sdram_bankmachine0_syncfifo0_din;
+wire   [24:0] main_sdram_bankmachine0_syncfifo0_dout;
+reg     [3:0] main_sdram_bankmachine0_level = 4'd0;
+reg           main_sdram_bankmachine0_replace = 1'd0;
+reg     [2:0] main_sdram_bankmachine0_produce = 3'd0;
+reg     [2:0] main_sdram_bankmachine0_consume = 3'd0;
+reg     [2:0] main_sdram_bankmachine0_wrport_adr = 3'd0;
+wire   [24:0] main_sdram_bankmachine0_wrport_dat_r;
+wire          main_sdram_bankmachine0_wrport_we;
+wire   [24:0] main_sdram_bankmachine0_wrport_dat_w;
+wire          main_sdram_bankmachine0_do_read;
+wire    [2:0] main_sdram_bankmachine0_rdport_adr;
+wire   [24:0] main_sdram_bankmachine0_rdport_dat_r;
+wire          main_sdram_bankmachine0_fifo_in_payload_we;
+wire   [21:0] main_sdram_bankmachine0_fifo_in_payload_addr;
+wire          main_sdram_bankmachine0_fifo_in_first;
+wire          main_sdram_bankmachine0_fifo_in_last;
+wire          main_sdram_bankmachine0_fifo_out_payload_we;
+wire   [21:0] main_sdram_bankmachine0_fifo_out_payload_addr;
+wire          main_sdram_bankmachine0_fifo_out_first;
+wire          main_sdram_bankmachine0_fifo_out_last;
+wire          main_sdram_bankmachine0_sink_sink_valid;
+wire          main_sdram_bankmachine0_sink_sink_ready;
+wire          main_sdram_bankmachine0_sink_sink_first;
+wire          main_sdram_bankmachine0_sink_sink_last;
+wire          main_sdram_bankmachine0_sink_sink_payload_we;
+wire   [21:0] main_sdram_bankmachine0_sink_sink_payload_addr;
+wire          main_sdram_bankmachine0_source_source_valid;
+wire          main_sdram_bankmachine0_source_source_ready;
+wire          main_sdram_bankmachine0_source_source_first;
+wire          main_sdram_bankmachine0_source_source_last;
+wire          main_sdram_bankmachine0_source_source_payload_we;
+wire   [21:0] main_sdram_bankmachine0_source_source_payload_addr;
+wire          main_sdram_bankmachine0_pipe_valid_sink_valid;
+wire          main_sdram_bankmachine0_pipe_valid_sink_ready;
+wire          main_sdram_bankmachine0_pipe_valid_sink_first;
+wire          main_sdram_bankmachine0_pipe_valid_sink_last;
+wire          main_sdram_bankmachine0_pipe_valid_sink_payload_we;
+wire   [21:0] main_sdram_bankmachine0_pipe_valid_sink_payload_addr;
+reg           main_sdram_bankmachine0_pipe_valid_source_valid = 1'd0;
+wire          main_sdram_bankmachine0_pipe_valid_source_ready;
+reg           main_sdram_bankmachine0_pipe_valid_source_first = 1'd0;
+reg           main_sdram_bankmachine0_pipe_valid_source_last = 1'd0;
+reg           main_sdram_bankmachine0_pipe_valid_source_payload_we = 1'd0;
+reg    [21:0] main_sdram_bankmachine0_pipe_valid_source_payload_addr = 22'd0;
+reg    [12:0] main_sdram_bankmachine0_row = 13'd0;
+reg           main_sdram_bankmachine0_row_opened = 1'd0;
+wire          main_sdram_bankmachine0_row_hit;
+reg           main_sdram_bankmachine0_row_open = 1'd0;
+reg           main_sdram_bankmachine0_row_close = 1'd0;
+reg           main_sdram_bankmachine0_row_col_n_addr_sel = 1'd0;
+wire          main_sdram_bankmachine0_twtpcon_valid;
+reg           main_sdram_bankmachine0_twtpcon_ready = 1'd0;
+reg     [2:0] main_sdram_bankmachine0_twtpcon_count = 3'd0;
+wire          main_sdram_bankmachine0_trccon_valid;
+reg           main_sdram_bankmachine0_trccon_ready = 1'd0;
+reg     [2:0] main_sdram_bankmachine0_trccon_count = 3'd0;
+wire          main_sdram_bankmachine0_trascon_valid;
+reg           main_sdram_bankmachine0_trascon_ready = 1'd0;
+reg     [2:0] main_sdram_bankmachine0_trascon_count = 3'd0;
+wire          main_sdram_bankmachine1_req_valid;
+wire          main_sdram_bankmachine1_req_ready;
+wire          main_sdram_bankmachine1_req_we;
+wire   [21:0] main_sdram_bankmachine1_req_addr;
+wire          main_sdram_bankmachine1_req_lock;
+reg           main_sdram_bankmachine1_req_wdata_ready = 1'd0;
+reg           main_sdram_bankmachine1_req_rdata_valid = 1'd0;
+wire          main_sdram_bankmachine1_refresh_req;
+reg           main_sdram_bankmachine1_refresh_gnt = 1'd0;
+reg           main_sdram_bankmachine1_cmd_valid = 1'd0;
+reg           main_sdram_bankmachine1_cmd_ready = 1'd0;
+reg    [12:0] main_sdram_bankmachine1_cmd_payload_a = 13'd0;
+wire    [1:0] main_sdram_bankmachine1_cmd_payload_ba;
+reg           main_sdram_bankmachine1_cmd_payload_cas = 1'd0;
+reg           main_sdram_bankmachine1_cmd_payload_ras = 1'd0;
+reg           main_sdram_bankmachine1_cmd_payload_we = 1'd0;
+reg           main_sdram_bankmachine1_cmd_payload_is_cmd = 1'd0;
+reg           main_sdram_bankmachine1_cmd_payload_is_read = 1'd0;
+reg           main_sdram_bankmachine1_cmd_payload_is_write = 1'd0;
+reg           main_sdram_bankmachine1_auto_precharge = 1'd0;
+wire          main_sdram_bankmachine1_sink_valid;
+wire          main_sdram_bankmachine1_sink_ready;
+reg           main_sdram_bankmachine1_sink_first = 1'd0;
+reg           main_sdram_bankmachine1_sink_last = 1'd0;
+wire          main_sdram_bankmachine1_sink_payload_we;
+wire   [21:0] main_sdram_bankmachine1_sink_payload_addr;
+wire          main_sdram_bankmachine1_source_valid;
+wire          main_sdram_bankmachine1_source_ready;
+wire          main_sdram_bankmachine1_source_first;
+wire          main_sdram_bankmachine1_source_last;
+wire          main_sdram_bankmachine1_source_payload_we;
+wire   [21:0] main_sdram_bankmachine1_source_payload_addr;
+wire          main_sdram_bankmachine1_syncfifo1_we;
+wire          main_sdram_bankmachine1_syncfifo1_writable;
+wire          main_sdram_bankmachine1_syncfifo1_re;
+wire          main_sdram_bankmachine1_syncfifo1_readable;
+wire   [24:0] main_sdram_bankmachine1_syncfifo1_din;
+wire   [24:0] main_sdram_bankmachine1_syncfifo1_dout;
+reg     [3:0] main_sdram_bankmachine1_level = 4'd0;
+reg           main_sdram_bankmachine1_replace = 1'd0;
+reg     [2:0] main_sdram_bankmachine1_produce = 3'd0;
+reg     [2:0] main_sdram_bankmachine1_consume = 3'd0;
+reg     [2:0] main_sdram_bankmachine1_wrport_adr = 3'd0;
+wire   [24:0] main_sdram_bankmachine1_wrport_dat_r;
+wire          main_sdram_bankmachine1_wrport_we;
+wire   [24:0] main_sdram_bankmachine1_wrport_dat_w;
+wire          main_sdram_bankmachine1_do_read;
+wire    [2:0] main_sdram_bankmachine1_rdport_adr;
+wire   [24:0] main_sdram_bankmachine1_rdport_dat_r;
+wire          main_sdram_bankmachine1_fifo_in_payload_we;
+wire   [21:0] main_sdram_bankmachine1_fifo_in_payload_addr;
+wire          main_sdram_bankmachine1_fifo_in_first;
+wire          main_sdram_bankmachine1_fifo_in_last;
+wire          main_sdram_bankmachine1_fifo_out_payload_we;
+wire   [21:0] main_sdram_bankmachine1_fifo_out_payload_addr;
+wire          main_sdram_bankmachine1_fifo_out_first;
+wire          main_sdram_bankmachine1_fifo_out_last;
+wire          main_sdram_bankmachine1_sink_sink_valid;
+wire          main_sdram_bankmachine1_sink_sink_ready;
+wire          main_sdram_bankmachine1_sink_sink_first;
+wire          main_sdram_bankmachine1_sink_sink_last;
+wire          main_sdram_bankmachine1_sink_sink_payload_we;
+wire   [21:0] main_sdram_bankmachine1_sink_sink_payload_addr;
+wire          main_sdram_bankmachine1_source_source_valid;
+wire          main_sdram_bankmachine1_source_source_ready;
+wire          main_sdram_bankmachine1_source_source_first;
+wire          main_sdram_bankmachine1_source_source_last;
+wire          main_sdram_bankmachine1_source_source_payload_we;
+wire   [21:0] main_sdram_bankmachine1_source_source_payload_addr;
+wire          main_sdram_bankmachine1_pipe_valid_sink_valid;
+wire          main_sdram_bankmachine1_pipe_valid_sink_ready;
+wire          main_sdram_bankmachine1_pipe_valid_sink_first;
+wire          main_sdram_bankmachine1_pipe_valid_sink_last;
+wire          main_sdram_bankmachine1_pipe_valid_sink_payload_we;
+wire   [21:0] main_sdram_bankmachine1_pipe_valid_sink_payload_addr;
+reg           main_sdram_bankmachine1_pipe_valid_source_valid = 1'd0;
+wire          main_sdram_bankmachine1_pipe_valid_source_ready;
+reg           main_sdram_bankmachine1_pipe_valid_source_first = 1'd0;
+reg           main_sdram_bankmachine1_pipe_valid_source_last = 1'd0;
+reg           main_sdram_bankmachine1_pipe_valid_source_payload_we = 1'd0;
+reg    [21:0] main_sdram_bankmachine1_pipe_valid_source_payload_addr = 22'd0;
+reg    [12:0] main_sdram_bankmachine1_row = 13'd0;
+reg           main_sdram_bankmachine1_row_opened = 1'd0;
+wire          main_sdram_bankmachine1_row_hit;
+reg           main_sdram_bankmachine1_row_open = 1'd0;
+reg           main_sdram_bankmachine1_row_close = 1'd0;
+reg           main_sdram_bankmachine1_row_col_n_addr_sel = 1'd0;
+wire          main_sdram_bankmachine1_twtpcon_valid;
+reg           main_sdram_bankmachine1_twtpcon_ready = 1'd0;
+reg     [2:0] main_sdram_bankmachine1_twtpcon_count = 3'd0;
+wire          main_sdram_bankmachine1_trccon_valid;
+reg           main_sdram_bankmachine1_trccon_ready = 1'd0;
+reg     [2:0] main_sdram_bankmachine1_trccon_count = 3'd0;
+wire          main_sdram_bankmachine1_trascon_valid;
+reg           main_sdram_bankmachine1_trascon_ready = 1'd0;
+reg     [2:0] main_sdram_bankmachine1_trascon_count = 3'd0;
+wire          main_sdram_bankmachine2_req_valid;
+wire          main_sdram_bankmachine2_req_ready;
+wire          main_sdram_bankmachine2_req_we;
+wire   [21:0] main_sdram_bankmachine2_req_addr;
+wire          main_sdram_bankmachine2_req_lock;
+reg           main_sdram_bankmachine2_req_wdata_ready = 1'd0;
+reg           main_sdram_bankmachine2_req_rdata_valid = 1'd0;
+wire          main_sdram_bankmachine2_refresh_req;
+reg           main_sdram_bankmachine2_refresh_gnt = 1'd0;
+reg           main_sdram_bankmachine2_cmd_valid = 1'd0;
+reg           main_sdram_bankmachine2_cmd_ready = 1'd0;
+reg    [12:0] main_sdram_bankmachine2_cmd_payload_a = 13'd0;
+wire    [1:0] main_sdram_bankmachine2_cmd_payload_ba;
+reg           main_sdram_bankmachine2_cmd_payload_cas = 1'd0;
+reg           main_sdram_bankmachine2_cmd_payload_ras = 1'd0;
+reg           main_sdram_bankmachine2_cmd_payload_we = 1'd0;
+reg           main_sdram_bankmachine2_cmd_payload_is_cmd = 1'd0;
+reg           main_sdram_bankmachine2_cmd_payload_is_read = 1'd0;
+reg           main_sdram_bankmachine2_cmd_payload_is_write = 1'd0;
+reg           main_sdram_bankmachine2_auto_precharge = 1'd0;
+wire          main_sdram_bankmachine2_sink_valid;
+wire          main_sdram_bankmachine2_sink_ready;
+reg           main_sdram_bankmachine2_sink_first = 1'd0;
+reg           main_sdram_bankmachine2_sink_last = 1'd0;
+wire          main_sdram_bankmachine2_sink_payload_we;
+wire   [21:0] main_sdram_bankmachine2_sink_payload_addr;
+wire          main_sdram_bankmachine2_source_valid;
+wire          main_sdram_bankmachine2_source_ready;
+wire          main_sdram_bankmachine2_source_first;
+wire          main_sdram_bankmachine2_source_last;
+wire          main_sdram_bankmachine2_source_payload_we;
+wire   [21:0] main_sdram_bankmachine2_source_payload_addr;
+wire          main_sdram_bankmachine2_syncfifo2_we;
+wire          main_sdram_bankmachine2_syncfifo2_writable;
+wire          main_sdram_bankmachine2_syncfifo2_re;
+wire          main_sdram_bankmachine2_syncfifo2_readable;
+wire   [24:0] main_sdram_bankmachine2_syncfifo2_din;
+wire   [24:0] main_sdram_bankmachine2_syncfifo2_dout;
+reg     [3:0] main_sdram_bankmachine2_level = 4'd0;
+reg           main_sdram_bankmachine2_replace = 1'd0;
+reg     [2:0] main_sdram_bankmachine2_produce = 3'd0;
+reg     [2:0] main_sdram_bankmachine2_consume = 3'd0;
+reg     [2:0] main_sdram_bankmachine2_wrport_adr = 3'd0;
+wire   [24:0] main_sdram_bankmachine2_wrport_dat_r;
+wire          main_sdram_bankmachine2_wrport_we;
+wire   [24:0] main_sdram_bankmachine2_wrport_dat_w;
+wire          main_sdram_bankmachine2_do_read;
+wire    [2:0] main_sdram_bankmachine2_rdport_adr;
+wire   [24:0] main_sdram_bankmachine2_rdport_dat_r;
+wire          main_sdram_bankmachine2_fifo_in_payload_we;
+wire   [21:0] main_sdram_bankmachine2_fifo_in_payload_addr;
+wire          main_sdram_bankmachine2_fifo_in_first;
+wire          main_sdram_bankmachine2_fifo_in_last;
+wire          main_sdram_bankmachine2_fifo_out_payload_we;
+wire   [21:0] main_sdram_bankmachine2_fifo_out_payload_addr;
+wire          main_sdram_bankmachine2_fifo_out_first;
+wire          main_sdram_bankmachine2_fifo_out_last;
+wire          main_sdram_bankmachine2_sink_sink_valid;
+wire          main_sdram_bankmachine2_sink_sink_ready;
+wire          main_sdram_bankmachine2_sink_sink_first;
+wire          main_sdram_bankmachine2_sink_sink_last;
+wire          main_sdram_bankmachine2_sink_sink_payload_we;
+wire   [21:0] main_sdram_bankmachine2_sink_sink_payload_addr;
+wire          main_sdram_bankmachine2_source_source_valid;
+wire          main_sdram_bankmachine2_source_source_ready;
+wire          main_sdram_bankmachine2_source_source_first;
+wire          main_sdram_bankmachine2_source_source_last;
+wire          main_sdram_bankmachine2_source_source_payload_we;
+wire   [21:0] main_sdram_bankmachine2_source_source_payload_addr;
+wire          main_sdram_bankmachine2_pipe_valid_sink_valid;
+wire          main_sdram_bankmachine2_pipe_valid_sink_ready;
+wire          main_sdram_bankmachine2_pipe_valid_sink_first;
+wire          main_sdram_bankmachine2_pipe_valid_sink_last;
+wire          main_sdram_bankmachine2_pipe_valid_sink_payload_we;
+wire   [21:0] main_sdram_bankmachine2_pipe_valid_sink_payload_addr;
+reg           main_sdram_bankmachine2_pipe_valid_source_valid = 1'd0;
+wire          main_sdram_bankmachine2_pipe_valid_source_ready;
+reg           main_sdram_bankmachine2_pipe_valid_source_first = 1'd0;
+reg           main_sdram_bankmachine2_pipe_valid_source_last = 1'd0;
+reg           main_sdram_bankmachine2_pipe_valid_source_payload_we = 1'd0;
+reg    [21:0] main_sdram_bankmachine2_pipe_valid_source_payload_addr = 22'd0;
+reg    [12:0] main_sdram_bankmachine2_row = 13'd0;
+reg           main_sdram_bankmachine2_row_opened = 1'd0;
+wire          main_sdram_bankmachine2_row_hit;
+reg           main_sdram_bankmachine2_row_open = 1'd0;
+reg           main_sdram_bankmachine2_row_close = 1'd0;
+reg           main_sdram_bankmachine2_row_col_n_addr_sel = 1'd0;
+wire          main_sdram_bankmachine2_twtpcon_valid;
+reg           main_sdram_bankmachine2_twtpcon_ready = 1'd0;
+reg     [2:0] main_sdram_bankmachine2_twtpcon_count = 3'd0;
+wire          main_sdram_bankmachine2_trccon_valid;
+reg           main_sdram_bankmachine2_trccon_ready = 1'd0;
+reg     [2:0] main_sdram_bankmachine2_trccon_count = 3'd0;
+wire          main_sdram_bankmachine2_trascon_valid;
+reg           main_sdram_bankmachine2_trascon_ready = 1'd0;
+reg     [2:0] main_sdram_bankmachine2_trascon_count = 3'd0;
+wire          main_sdram_bankmachine3_req_valid;
+wire          main_sdram_bankmachine3_req_ready;
+wire          main_sdram_bankmachine3_req_we;
+wire   [21:0] main_sdram_bankmachine3_req_addr;
+wire          main_sdram_bankmachine3_req_lock;
+reg           main_sdram_bankmachine3_req_wdata_ready = 1'd0;
+reg           main_sdram_bankmachine3_req_rdata_valid = 1'd0;
+wire          main_sdram_bankmachine3_refresh_req;
+reg           main_sdram_bankmachine3_refresh_gnt = 1'd0;
+reg           main_sdram_bankmachine3_cmd_valid = 1'd0;
+reg           main_sdram_bankmachine3_cmd_ready = 1'd0;
+reg    [12:0] main_sdram_bankmachine3_cmd_payload_a = 13'd0;
+wire    [1:0] main_sdram_bankmachine3_cmd_payload_ba;
+reg           main_sdram_bankmachine3_cmd_payload_cas = 1'd0;
+reg           main_sdram_bankmachine3_cmd_payload_ras = 1'd0;
+reg           main_sdram_bankmachine3_cmd_payload_we = 1'd0;
+reg           main_sdram_bankmachine3_cmd_payload_is_cmd = 1'd0;
+reg           main_sdram_bankmachine3_cmd_payload_is_read = 1'd0;
+reg           main_sdram_bankmachine3_cmd_payload_is_write = 1'd0;
+reg           main_sdram_bankmachine3_auto_precharge = 1'd0;
+wire          main_sdram_bankmachine3_sink_valid;
+wire          main_sdram_bankmachine3_sink_ready;
+reg           main_sdram_bankmachine3_sink_first = 1'd0;
+reg           main_sdram_bankmachine3_sink_last = 1'd0;
+wire          main_sdram_bankmachine3_sink_payload_we;
+wire   [21:0] main_sdram_bankmachine3_sink_payload_addr;
+wire          main_sdram_bankmachine3_source_valid;
+wire          main_sdram_bankmachine3_source_ready;
+wire          main_sdram_bankmachine3_source_first;
+wire          main_sdram_bankmachine3_source_last;
+wire          main_sdram_bankmachine3_source_payload_we;
+wire   [21:0] main_sdram_bankmachine3_source_payload_addr;
+wire          main_sdram_bankmachine3_syncfifo3_we;
+wire          main_sdram_bankmachine3_syncfifo3_writable;
+wire          main_sdram_bankmachine3_syncfifo3_re;
+wire          main_sdram_bankmachine3_syncfifo3_readable;
+wire   [24:0] main_sdram_bankmachine3_syncfifo3_din;
+wire   [24:0] main_sdram_bankmachine3_syncfifo3_dout;
+reg     [3:0] main_sdram_bankmachine3_level = 4'd0;
+reg           main_sdram_bankmachine3_replace = 1'd0;
+reg     [2:0] main_sdram_bankmachine3_produce = 3'd0;
+reg     [2:0] main_sdram_bankmachine3_consume = 3'd0;
+reg     [2:0] main_sdram_bankmachine3_wrport_adr = 3'd0;
+wire   [24:0] main_sdram_bankmachine3_wrport_dat_r;
+wire          main_sdram_bankmachine3_wrport_we;
+wire   [24:0] main_sdram_bankmachine3_wrport_dat_w;
+wire          main_sdram_bankmachine3_do_read;
+wire    [2:0] main_sdram_bankmachine3_rdport_adr;
+wire   [24:0] main_sdram_bankmachine3_rdport_dat_r;
+wire          main_sdram_bankmachine3_fifo_in_payload_we;
+wire   [21:0] main_sdram_bankmachine3_fifo_in_payload_addr;
+wire          main_sdram_bankmachine3_fifo_in_first;
+wire          main_sdram_bankmachine3_fifo_in_last;
+wire          main_sdram_bankmachine3_fifo_out_payload_we;
+wire   [21:0] main_sdram_bankmachine3_fifo_out_payload_addr;
+wire          main_sdram_bankmachine3_fifo_out_first;
+wire          main_sdram_bankmachine3_fifo_out_last;
+wire          main_sdram_bankmachine3_sink_sink_valid;
+wire          main_sdram_bankmachine3_sink_sink_ready;
+wire          main_sdram_bankmachine3_sink_sink_first;
+wire          main_sdram_bankmachine3_sink_sink_last;
+wire          main_sdram_bankmachine3_sink_sink_payload_we;
+wire   [21:0] main_sdram_bankmachine3_sink_sink_payload_addr;
+wire          main_sdram_bankmachine3_source_source_valid;
+wire          main_sdram_bankmachine3_source_source_ready;
+wire          main_sdram_bankmachine3_source_source_first;
+wire          main_sdram_bankmachine3_source_source_last;
+wire          main_sdram_bankmachine3_source_source_payload_we;
+wire   [21:0] main_sdram_bankmachine3_source_source_payload_addr;
+wire          main_sdram_bankmachine3_pipe_valid_sink_valid;
+wire          main_sdram_bankmachine3_pipe_valid_sink_ready;
+wire          main_sdram_bankmachine3_pipe_valid_sink_first;
+wire          main_sdram_bankmachine3_pipe_valid_sink_last;
+wire          main_sdram_bankmachine3_pipe_valid_sink_payload_we;
+wire   [21:0] main_sdram_bankmachine3_pipe_valid_sink_payload_addr;
+reg           main_sdram_bankmachine3_pipe_valid_source_valid = 1'd0;
+wire          main_sdram_bankmachine3_pipe_valid_source_ready;
+reg           main_sdram_bankmachine3_pipe_valid_source_first = 1'd0;
+reg           main_sdram_bankmachine3_pipe_valid_source_last = 1'd0;
+reg           main_sdram_bankmachine3_pipe_valid_source_payload_we = 1'd0;
+reg    [21:0] main_sdram_bankmachine3_pipe_valid_source_payload_addr = 22'd0;
+reg    [12:0] main_sdram_bankmachine3_row = 13'd0;
+reg           main_sdram_bankmachine3_row_opened = 1'd0;
+wire          main_sdram_bankmachine3_row_hit;
+reg           main_sdram_bankmachine3_row_open = 1'd0;
+reg           main_sdram_bankmachine3_row_close = 1'd0;
+reg           main_sdram_bankmachine3_row_col_n_addr_sel = 1'd0;
+wire          main_sdram_bankmachine3_twtpcon_valid;
+reg           main_sdram_bankmachine3_twtpcon_ready = 1'd0;
+reg     [2:0] main_sdram_bankmachine3_twtpcon_count = 3'd0;
+wire          main_sdram_bankmachine3_trccon_valid;
+reg           main_sdram_bankmachine3_trccon_ready = 1'd0;
+reg     [2:0] main_sdram_bankmachine3_trccon_count = 3'd0;
+wire          main_sdram_bankmachine3_trascon_valid;
+reg           main_sdram_bankmachine3_trascon_ready = 1'd0;
+reg     [2:0] main_sdram_bankmachine3_trascon_count = 3'd0;
+wire          main_sdram_ras_allowed;
+wire          main_sdram_cas_allowed;
+reg           main_sdram_choose_cmd_want_reads = 1'd0;
+reg           main_sdram_choose_cmd_want_writes = 1'd0;
+reg           main_sdram_choose_cmd_want_cmds = 1'd0;
+reg           main_sdram_choose_cmd_want_activates = 1'd0;
+wire          main_sdram_choose_cmd_cmd_valid;
+reg           main_sdram_choose_cmd_cmd_ready = 1'd0;
+wire   [12:0] main_sdram_choose_cmd_cmd_payload_a;
+wire    [1:0] main_sdram_choose_cmd_cmd_payload_ba;
+reg           main_sdram_choose_cmd_cmd_payload_cas = 1'd0;
+reg           main_sdram_choose_cmd_cmd_payload_ras = 1'd0;
+reg           main_sdram_choose_cmd_cmd_payload_we = 1'd0;
+wire          main_sdram_choose_cmd_cmd_payload_is_cmd;
+wire          main_sdram_choose_cmd_cmd_payload_is_read;
+wire          main_sdram_choose_cmd_cmd_payload_is_write;
+reg     [3:0] main_sdram_choose_cmd_valids = 4'd0;
+wire    [3:0] main_sdram_choose_cmd_request;
+reg     [1:0] main_sdram_choose_cmd_grant = 2'd0;
+wire          main_sdram_choose_cmd_ce;
+reg           main_sdram_choose_req_want_reads = 1'd0;
+reg           main_sdram_choose_req_want_writes = 1'd0;
+wire          main_sdram_choose_req_want_cmds;
+reg           main_sdram_choose_req_want_activates = 1'd0;
+wire          main_sdram_choose_req_cmd_valid;
+reg           main_sdram_choose_req_cmd_ready = 1'd0;
+wire   [12:0] main_sdram_choose_req_cmd_payload_a;
+wire    [1:0] main_sdram_choose_req_cmd_payload_ba;
+reg           main_sdram_choose_req_cmd_payload_cas = 1'd0;
+reg           main_sdram_choose_req_cmd_payload_ras = 1'd0;
+reg           main_sdram_choose_req_cmd_payload_we = 1'd0;
+wire          main_sdram_choose_req_cmd_payload_is_cmd;
+wire          main_sdram_choose_req_cmd_payload_is_read;
+wire          main_sdram_choose_req_cmd_payload_is_write;
+reg     [3:0] main_sdram_choose_req_valids = 4'd0;
+wire    [3:0] main_sdram_choose_req_request;
+reg     [1:0] main_sdram_choose_req_grant = 2'd0;
+wire          main_sdram_choose_req_ce;
+reg    [12:0] main_sdram_nop_a = 13'd0;
+reg     [1:0] main_sdram_nop_ba = 2'd0;
+reg     [1:0] main_sdram_steerer_sel = 2'd0;
+reg           main_sdram_steerer0 = 1'd1;
+reg           main_sdram_steerer1 = 1'd1;
+wire          main_sdram_trrdcon_valid;
+reg           main_sdram_trrdcon_ready = 1'd0;
+reg           main_sdram_trrdcon_count = 1'd0;
+wire          main_sdram_tfawcon_valid;
+reg           main_sdram_tfawcon_ready = 1'd1;
+wire          main_sdram_tccdcon_valid;
+reg           main_sdram_tccdcon_ready = 1'd0;
+reg           main_sdram_tccdcon_count = 1'd0;
+wire          main_sdram_twtrcon_valid;
+reg           main_sdram_twtrcon_ready = 1'd0;
+reg     [2:0] main_sdram_twtrcon_count = 3'd0;
+wire          main_sdram_read_available;
+wire          main_sdram_write_available;
+reg           main_sdram_en0 = 1'd0;
+wire          main_sdram_max_time0;
+reg     [4:0] main_sdram_time0 = 5'd0;
+reg           main_sdram_en1 = 1'd0;
+wire          main_sdram_max_time1;
+reg     [3:0] main_sdram_time1 = 4'd0;
+wire          main_sdram_go_to_refresh;
+reg           main_port_cmd_valid = 1'd0;
+wire          main_port_cmd_ready;
+reg           main_port_cmd_payload_we = 1'd0;
+reg    [23:0] main_port_cmd_payload_addr = 24'd0;
+wire          main_port_wdata_valid;
+wire          main_port_wdata_ready;
+wire          main_port_wdata_first;
+wire          main_port_wdata_last;
+wire   [15:0] main_port_wdata_payload_data;
+wire    [1:0] main_port_wdata_payload_we;
+wire          main_port_rdata_valid;
+wire          main_port_rdata_ready;
+reg           main_port_rdata_first = 1'd0;
+reg           main_port_rdata_last = 1'd0;
+wire   [15:0] main_port_rdata_payload_data;
+wire   [29:0] main_wb_sdram_adr;
+wire   [31:0] main_wb_sdram_dat_w;
+reg    [31:0] main_wb_sdram_dat_r = 32'd0;
+wire    [3:0] main_wb_sdram_sel;
+wire          main_wb_sdram_cyc;
+wire          main_wb_sdram_stb;
+reg           main_wb_sdram_ack = 1'd0;
+wire          main_wb_sdram_we;
+wire    [2:0] main_wb_sdram_cti;
+wire    [1:0] main_wb_sdram_bte;
+reg           main_wb_sdram_err = 1'd0;
+wire   [29:0] main_interface_adr;
+wire  [127:0] main_interface_dat_w;
+reg   [127:0] main_interface_dat_r = 128'd0;
+wire   [15:0] main_interface_sel;
+reg           main_interface_cyc = 1'd0;
+reg           main_interface_stb = 1'd0;
+reg           main_interface_ack = 1'd0;
+reg           main_interface_we = 1'd0;
+wire    [8:0] main_data_port_adr;
+wire  [127:0] main_data_port_dat_r;
+reg    [15:0] main_data_port_we = 16'd0;
+reg   [127:0] main_data_port_dat_w = 128'd0;
+reg           main_write_from_slave = 1'd0;
+reg     [1:0] main_adr_offset_r = 2'd0;
+wire    [8:0] main_tag_port_adr;
+wire   [23:0] main_tag_port_dat_r;
+reg           main_tag_port_we = 1'd0;
+wire   [23:0] main_tag_port_dat_w;
+wire   [22:0] main_tag_do_tag;
+wire          main_tag_do_dirty;
+wire   [22:0] main_tag_di_tag;
+reg           main_tag_di_dirty = 1'd0;
+reg           main_word_clr = 1'd0;
+reg           main_word_inc = 1'd0;
+wire          main_wishbone_bridge_flush;
+reg           main_wishbone_bridge_cmd_valid = 1'd0;
+reg           main_wishbone_bridge_cmd_ready = 1'd0;
+wire          main_wishbone_bridge_cmd_last;
+wire          main_wishbone_bridge_cmd_payload_we;
+wire   [20:0] main_wishbone_bridge_cmd_payload_addr;
+reg           main_wishbone_bridge_wdata_valid = 1'd0;
+wire          main_wishbone_bridge_wdata_ready;
+reg           main_wishbone_bridge_wdata_first = 1'd0;
+reg           main_wishbone_bridge_wdata_last = 1'd0;
+wire  [127:0] main_wishbone_bridge_wdata_payload_data;
+wire   [15:0] main_wishbone_bridge_wdata_payload_we;
+wire          main_wishbone_bridge_rdata_valid;
+wire          main_wishbone_bridge_rdata_ready;
+wire          main_wishbone_bridge_rdata_first;
+wire          main_wishbone_bridge_rdata_last;
+wire  [127:0] main_wishbone_bridge_rdata_payload_data;
+reg     [2:0] main_wishbone_bridge_count = 3'd0;
+wire          main_wishbone_bridge_wdata_converter_sink_valid;
+wire          main_wishbone_bridge_wdata_converter_sink_ready;
+wire          main_wishbone_bridge_wdata_converter_sink_first;
+wire          main_wishbone_bridge_wdata_converter_sink_last;
+wire  [127:0] main_wishbone_bridge_wdata_converter_sink_payload_data;
+wire   [15:0] main_wishbone_bridge_wdata_converter_sink_payload_we;
+wire          main_wishbone_bridge_wdata_converter_source_valid;
+wire          main_wishbone_bridge_wdata_converter_source_ready;
+wire          main_wishbone_bridge_wdata_converter_source_first;
+wire          main_wishbone_bridge_wdata_converter_source_last;
+wire   [15:0] main_wishbone_bridge_wdata_converter_source_payload_data;
+wire    [1:0] main_wishbone_bridge_wdata_converter_source_payload_we;
+wire          main_wishbone_bridge_wdata_converter_converter_sink_valid;
+wire          main_wishbone_bridge_wdata_converter_converter_sink_ready;
+wire          main_wishbone_bridge_wdata_converter_converter_sink_first;
+wire          main_wishbone_bridge_wdata_converter_converter_sink_last;
+reg   [143:0] main_wishbone_bridge_wdata_converter_converter_sink_payload_data = 144'd0;
+wire          main_wishbone_bridge_wdata_converter_converter_source_valid;
+wire          main_wishbone_bridge_wdata_converter_converter_source_ready;
+wire          main_wishbone_bridge_wdata_converter_converter_source_first;
+wire          main_wishbone_bridge_wdata_converter_converter_source_last;
+reg    [17:0] main_wishbone_bridge_wdata_converter_converter_source_payload_data = 18'd0;
+wire          main_wishbone_bridge_wdata_converter_converter_source_payload_valid_token_count;
+reg     [2:0] main_wishbone_bridge_wdata_converter_converter_mux = 3'd0;
+wire          main_wishbone_bridge_wdata_converter_converter_first;
+wire          main_wishbone_bridge_wdata_converter_converter_last;
+wire          main_wishbone_bridge_wdata_converter_source_source_valid;
+wire          main_wishbone_bridge_wdata_converter_source_source_ready;
+wire          main_wishbone_bridge_wdata_converter_source_source_first;
+wire          main_wishbone_bridge_wdata_converter_source_source_last;
+wire   [17:0] main_wishbone_bridge_wdata_converter_source_source_payload_data;
+wire          main_wishbone_bridge_rdata_converter_sink_valid;
+wire          main_wishbone_bridge_rdata_converter_sink_ready;
+wire          main_wishbone_bridge_rdata_converter_sink_first;
+wire          main_wishbone_bridge_rdata_converter_sink_last;
+wire   [15:0] main_wishbone_bridge_rdata_converter_sink_payload_data;
+wire          main_wishbone_bridge_rdata_converter_source_valid;
+wire          main_wishbone_bridge_rdata_converter_source_ready;
+wire          main_wishbone_bridge_rdata_converter_source_first;
+wire          main_wishbone_bridge_rdata_converter_source_last;
+reg   [127:0] main_wishbone_bridge_rdata_converter_source_payload_data = 128'd0;
+wire          main_wishbone_bridge_rdata_converter_converter_sink_valid;
+wire          main_wishbone_bridge_rdata_converter_converter_sink_ready;
+wire          main_wishbone_bridge_rdata_converter_converter_sink_first;
+wire          main_wishbone_bridge_rdata_converter_converter_sink_last;
+wire   [15:0] main_wishbone_bridge_rdata_converter_converter_sink_payload_data;
+wire          main_wishbone_bridge_rdata_converter_converter_source_valid;
+wire          main_wishbone_bridge_rdata_converter_converter_source_ready;
+reg           main_wishbone_bridge_rdata_converter_converter_source_first = 1'd0;
+reg           main_wishbone_bridge_rdata_converter_converter_source_last = 1'd0;
+reg   [127:0] main_wishbone_bridge_rdata_converter_converter_source_payload_data = 128'd0;
+reg     [3:0] main_wishbone_bridge_rdata_converter_converter_source_payload_valid_token_count = 4'd0;
+reg     [2:0] main_wishbone_bridge_rdata_converter_converter_demux = 3'd0;
+wire          main_wishbone_bridge_rdata_converter_converter_load_part;
+reg           main_wishbone_bridge_rdata_converter_converter_strobe_all = 1'd0;
+wire          main_wishbone_bridge_rdata_converter_source_source_valid;
+wire          main_wishbone_bridge_rdata_converter_source_source_ready;
+wire          main_wishbone_bridge_rdata_converter_source_source_first;
+wire          main_wishbone_bridge_rdata_converter_source_source_last;
+wire  [127:0] main_wishbone_bridge_rdata_converter_source_source_payload_data;
+reg           main_wishbone_bridge_aborted = 1'd0;
+reg           main_wishbone_bridge_is_ongoing = 1'd0;
 reg           main_storage = 1'd0;
 reg           main_re = 1'd0;
 reg           main_chaser = 1'd0;
@@ -1091,510 +1091,258 @@ wire          main_wait;
 wire          main_done;
 reg    [25:0] main_count = 26'd52500000;
 reg           main_leds = 1'd0;
-reg           main_basesoc_tx_pin = 1'd0;
-wire          main_basesoc_rx_pin;
-wire          main_basesoc_sync_pin;
-wire          main_basesoc_clk_pin;
-reg           main_basesoc_clk_d = 1'd0;
-wire          main_basesoc_rising_edge;
-wire          main_basesoc_falling_edge;
-wire   [29:0] main_basesoc_bus_adr;
-wire   [31:0] main_basesoc_bus_dat_w;
-reg    [31:0] main_basesoc_bus_dat_r = 32'd0;
-wire    [3:0] main_basesoc_bus_sel;
-wire          main_basesoc_bus_cyc;
-wire          main_basesoc_bus_stb;
-reg           main_basesoc_bus_ack = 1'd0;
-wire          main_basesoc_bus_we;
-wire    [2:0] main_basesoc_bus_cti;
-wire    [1:0] main_basesoc_bus_bte;
-reg           main_basesoc_bus_err = 1'd0;
-reg           main_basesoc_rd_ack = 1'd0;
-reg           main_basesoc_wr_ack = 1'd0;
-wire          main_basesoc_irq;
-wire          main_basesoc_rx_ready_status;
-reg           main_basesoc_rx_ready_pending = 1'd0;
-wire          main_basesoc_rx_ready_trigger;
-reg           main_basesoc_rx_ready_clear = 1'd0;
-wire          main_basesoc_rx_error_status;
-reg           main_basesoc_rx_error_pending = 1'd0;
-wire          main_basesoc_rx_error_trigger;
-reg           main_basesoc_rx_error_clear = 1'd0;
-wire          main_basesoc_tx_ready_status;
-reg           main_basesoc_tx_ready_pending = 1'd0;
-wire          main_basesoc_tx_ready_trigger;
-reg           main_basesoc_tx_ready_clear = 1'd0;
-wire          main_basesoc_tx_error_status;
-reg           main_basesoc_tx_error_pending = 1'd0;
-wire          main_basesoc_tx_error_trigger;
-reg           main_basesoc_tx_error_clear = 1'd0;
-wire          main_basesoc_rx_ready0;
-wire          main_basesoc_rx_error0;
-wire          main_basesoc_tx_ready0;
-wire          main_basesoc_tx_error0;
-reg     [3:0] main_basesoc_status_status = 4'd0;
-wire          main_basesoc_status_we;
-reg           main_basesoc_status_re = 1'd0;
-wire          main_basesoc_rx_ready1;
-wire          main_basesoc_rx_error1;
-wire          main_basesoc_tx_ready1;
-wire          main_basesoc_tx_error1;
-reg     [3:0] main_basesoc_pending_status = 4'd0;
-wire          main_basesoc_pending_we;
-reg           main_basesoc_pending_re = 1'd0;
-reg     [3:0] main_basesoc_pending_r = 4'd0;
-wire          main_basesoc_rx_ready2;
-wire          main_basesoc_rx_error2;
-wire          main_basesoc_tx_ready2;
-wire          main_basesoc_tx_error2;
-reg     [3:0] main_basesoc_enable_storage = 4'd0;
-reg           main_basesoc_enable_re = 1'd0;
-wire          main_basesoc_csrfield_enable0;
-reg           main_basesoc_csrfield_reset0 = 1'd0;
-reg     [1:0] main_basesoc_rx_ctl_storage = 2'd0;
-reg           main_basesoc_rx_ctl_re = 1'd0;
-wire          main_basesoc_csrfield_overflow0;
-wire          main_basesoc_csrfield_underflow0;
-wire          main_basesoc_csrfield_dataready;
-wire          main_basesoc_csrfield_empty0;
-wire    [8:0] main_basesoc_csrfield_wrcount0;
-wire    [8:0] main_basesoc_csrfield_rdcount0;
-wire    [8:0] main_basesoc_csrfield_fifo_depth;
-reg           main_basesoc_csrfield_concatenate_channels0 = 1'd0;
-reg    [31:0] main_basesoc_rx_stat_status = 32'd0;
-wire          main_basesoc_rx_stat_we;
-reg           main_basesoc_rx_stat_re = 1'd0;
-reg     [1:0] main_basesoc_csrfield_format0 = 2'd1;
-reg     [5:0] main_basesoc_csrfield_sample_width0 = 6'd24;
-reg    [23:0] main_basesoc_csrfield_lrck_freq0 = 24'd48000;
-reg    [31:0] main_basesoc_rx_conf_status = 32'd12288097;
-wire          main_basesoc_rx_conf_we;
-reg           main_basesoc_rx_conf_re = 1'd0;
-reg     [2:0] main_basesoc_rx_rst_cnt = 3'd0;
-reg           main_basesoc_rx_reset = 1'd0;
-wire   [23:0] main_basesoc_rx_fifo_rx_fifo_rd_d;
-reg           main_basesoc_rx_fifo_rx_fifo_almostfull = 1'd0;
-reg           main_basesoc_rx_fifo_rx_fifo_almostempty = 1'd0;
-reg           main_basesoc_rx_fifo_rx_fifo_full = 1'd0;
-reg           main_basesoc_rx_fifo_rx_fifo_empty = 1'd0;
-reg    [12:0] main_basesoc_rx_fifo_rx_fifo_rdcount = 13'd0;
-wire          main_basesoc_rx_fifo_rx_fifo_rderr;
-wire          main_basesoc_rx_fifo_rx_fifo_wrerr;
-reg    [12:0] main_basesoc_rx_fifo_rx_fifo_wrcount = 13'd0;
-reg           main_basesoc_rx_fifo_rx_fifo_rden = 1'd0;
-reg    [23:0] main_basesoc_rx_fifo_rx_fifo_wr_d = 24'd0;
-reg           main_basesoc_rx_fifo_rx_fifo_wren = 1'd0;
-wire          main_basesoc_rx_fifo_rx_fifo_reset;
-wire   [13:0] main_basesoc_rx_fifo_level0;
-wire          main_basesoc_rx_fifo_sink_valid;
-wire          main_basesoc_rx_fifo_sink_ready;
-reg           main_basesoc_rx_fifo_sink_first = 1'd0;
-reg           main_basesoc_rx_fifo_sink_last = 1'd0;
-wire   [23:0] main_basesoc_rx_fifo_sink_payload_data;
-wire          main_basesoc_rx_fifo_source_valid;
-wire          main_basesoc_rx_fifo_source_ready;
-wire          main_basesoc_rx_fifo_source_first;
-wire          main_basesoc_rx_fifo_source_last;
-wire   [23:0] main_basesoc_rx_fifo_source_payload_data;
-wire          main_basesoc_rx_fifo_syncfifo_we;
-wire          main_basesoc_rx_fifo_syncfifo_writable;
-wire          main_basesoc_rx_fifo_syncfifo_re;
-wire          main_basesoc_rx_fifo_syncfifo_readable;
-wire   [25:0] main_basesoc_rx_fifo_syncfifo_din;
-wire   [25:0] main_basesoc_rx_fifo_syncfifo_dout;
-reg     [9:0] main_basesoc_rx_fifo_level1 = 10'd0;
-reg           main_basesoc_rx_fifo_replace = 1'd0;
-reg     [8:0] main_basesoc_rx_fifo_produce = 9'd0;
-reg     [8:0] main_basesoc_rx_fifo_consume = 9'd0;
-reg     [8:0] main_basesoc_rx_fifo_wrport_adr = 9'd0;
-wire   [25:0] main_basesoc_rx_fifo_wrport_dat_r;
-wire          main_basesoc_rx_fifo_wrport_we;
-wire   [25:0] main_basesoc_rx_fifo_wrport_dat_w;
-wire          main_basesoc_rx_fifo_do_read;
-wire    [8:0] main_basesoc_rx_fifo_rdport_adr;
-wire   [25:0] main_basesoc_rx_fifo_rdport_dat_r;
-wire   [23:0] main_basesoc_rx_fifo_fifo_in_payload_data;
-wire          main_basesoc_rx_fifo_fifo_in_first;
-wire          main_basesoc_rx_fifo_fifo_in_last;
-wire   [23:0] main_basesoc_rx_fifo_fifo_out_payload_data;
-wire          main_basesoc_rx_fifo_fifo_out_first;
-wire          main_basesoc_rx_fifo_fifo_out_last;
-wire          main_basesoc_rx_fifo_reset;
-wire          main_basesoc_bus_read;
-reg           main_basesoc_bus_read_d = 1'd0;
-reg           main_basesoc_rd_ack_pipe = 1'd0;
-reg     [4:0] main_basesoc_rx_cnt = 5'd0;
-reg           main_basesoc_rx_delay_cnt = 1'd0;
-reg     [4:0] main_basesoc_rx_fsm = 5'd0;
-wire          main_basesoc_csrfield_enable1;
-reg           main_basesoc_csrfield_reset1 = 1'd0;
-reg     [1:0] main_basesoc_tx_ctl_storage = 2'd0;
-reg           main_basesoc_tx_ctl_re = 1'd0;
-reg           main_basesoc_csrfield_overflow1 = 1'd0;
-wire          main_basesoc_csrfield_underflow1;
-wire          main_basesoc_csrfield_free;
-wire          main_basesoc_csrfield_almostfull;
-wire          main_basesoc_csrfield_full;
-wire          main_basesoc_csrfield_empty1;
-wire    [8:0] main_basesoc_csrfield_wrcount1;
-wire    [8:0] main_basesoc_csrfield_rdcount1;
-reg           main_basesoc_csrfield_concatenate_channels1 = 1'd0;
-reg    [24:0] main_basesoc_tx_stat_status = 25'd0;
-wire          main_basesoc_tx_stat_we;
-reg           main_basesoc_tx_stat_re = 1'd0;
-reg     [1:0] main_basesoc_csrfield_format1 = 2'd1;
-reg     [5:0] main_basesoc_csrfield_sample_width1 = 6'd24;
-reg    [23:0] main_basesoc_csrfield_lrck_freq1 = 24'd48000;
-reg    [31:0] main_basesoc_tx_conf_status = 32'd12288097;
-wire          main_basesoc_tx_conf_we;
-reg           main_basesoc_tx_conf_re = 1'd0;
-reg     [2:0] main_basesoc_tx_rst_cnt = 3'd0;
-reg           main_basesoc_tx_reset = 1'd0;
-wire   [23:0] main_basesoc_tx_fifo_tx_fifo_rd_d;
-reg           main_basesoc_tx_fifo_tx_fifo_almostfull = 1'd0;
-reg           main_basesoc_tx_fifo_tx_fifo_almostempty = 1'd0;
-reg           main_basesoc_tx_fifo_tx_fifo_full = 1'd0;
-reg           main_basesoc_tx_fifo_tx_fifo_empty = 1'd0;
-reg    [12:0] main_basesoc_tx_fifo_tx_fifo_rdcount = 13'd0;
-wire          main_basesoc_tx_fifo_tx_fifo_rderr;
-wire          main_basesoc_tx_fifo_tx_fifo_wrerr;
-reg    [12:0] main_basesoc_tx_fifo_tx_fifo_wrcount = 13'd0;
-reg           main_basesoc_tx_fifo_tx_fifo_rden = 1'd0;
-reg    [23:0] main_basesoc_tx_fifo_tx_fifo_wr_d = 24'd0;
-reg           main_basesoc_tx_fifo_tx_fifo_wren = 1'd0;
-wire          main_basesoc_tx_fifo_tx_fifo_reset;
-wire   [13:0] main_basesoc_tx_fifo_level0;
-wire          main_basesoc_tx_fifo_sink_valid;
-wire          main_basesoc_tx_fifo_sink_ready;
-reg           main_basesoc_tx_fifo_sink_first = 1'd0;
-reg           main_basesoc_tx_fifo_sink_last = 1'd0;
-wire   [23:0] main_basesoc_tx_fifo_sink_payload_data;
-wire          main_basesoc_tx_fifo_source_valid;
-wire          main_basesoc_tx_fifo_source_ready;
-wire          main_basesoc_tx_fifo_source_first;
-wire          main_basesoc_tx_fifo_source_last;
-wire   [23:0] main_basesoc_tx_fifo_source_payload_data;
-wire          main_basesoc_tx_fifo_syncfifo_we;
-wire          main_basesoc_tx_fifo_syncfifo_writable;
-wire          main_basesoc_tx_fifo_syncfifo_re;
-wire          main_basesoc_tx_fifo_syncfifo_readable;
-wire   [25:0] main_basesoc_tx_fifo_syncfifo_din;
-wire   [25:0] main_basesoc_tx_fifo_syncfifo_dout;
-reg     [9:0] main_basesoc_tx_fifo_level1 = 10'd0;
-reg           main_basesoc_tx_fifo_replace = 1'd0;
-reg     [8:0] main_basesoc_tx_fifo_produce = 9'd0;
-reg     [8:0] main_basesoc_tx_fifo_consume = 9'd0;
-reg     [8:0] main_basesoc_tx_fifo_wrport_adr = 9'd0;
-wire   [25:0] main_basesoc_tx_fifo_wrport_dat_r;
-wire          main_basesoc_tx_fifo_wrport_we;
-wire   [25:0] main_basesoc_tx_fifo_wrport_dat_w;
-wire          main_basesoc_tx_fifo_do_read;
-wire    [8:0] main_basesoc_tx_fifo_rdport_adr;
-wire   [25:0] main_basesoc_tx_fifo_rdport_dat_r;
-wire   [23:0] main_basesoc_tx_fifo_fifo_in_payload_data;
-wire          main_basesoc_tx_fifo_fifo_in_first;
-wire          main_basesoc_tx_fifo_fifo_in_last;
-wire   [23:0] main_basesoc_tx_fifo_fifo_out_payload_data;
-wire          main_basesoc_tx_fifo_fifo_out_first;
-wire          main_basesoc_tx_fifo_fifo_out_last;
-wire          main_basesoc_tx_fifo_reset;
-reg     [4:0] main_basesoc_tx_cnt = 5'd0;
-reg    [24:0] main_basesoc_tx_buf = 25'd0;
-reg     [2:0] main_basesoc_state = 3'd0;
-reg     [2:0] main_basesoc_next_state = 3'd0;
-reg     [4:0] main_basesoc_tx_cnt_t_next_value0 = 5'd0;
-reg           main_basesoc_tx_cnt_t_next_value_ce0 = 1'd0;
-reg    [24:0] main_basesoc_tx_buf_t_next_value1 = 25'd0;
-reg           main_basesoc_tx_buf_t_next_value_ce1 = 1'd0;
-reg           main_basesoc_tx_pin_f_next_value = 1'd0;
-reg           main_basesoc_tx_pin_f_next_value_ce = 1'd0;
-wire          scope_clk;
-reg           scope_rst = 1'd0;
-wire          main_basesoc_mux_valid;
-reg           main_basesoc_mux_ready = 1'd0;
-reg           main_basesoc_mux_first = 1'd0;
-reg           main_basesoc_mux_last = 1'd0;
-wire   [46:0] main_basesoc_mux_payload_data;
-reg           main_basesoc_mux_payload_hit = 1'd0;
-reg           main_basesoc_mux_source_valid = 1'd0;
-wire          main_basesoc_mux_source_ready;
-reg           main_basesoc_mux_source_first = 1'd0;
-reg           main_basesoc_mux_source_last = 1'd0;
-reg    [46:0] main_basesoc_mux_source_payload_data = 47'd0;
-reg           main_basesoc_mux_source_payload_hit = 1'd0;
-reg           main_basesoc_mux_value_storage = 1'd0;
-reg           main_basesoc_mux_value_re = 1'd0;
-wire          main_basesoc_mux_value;
-wire          main_basesoc_trigger_sink_sink_valid;
-wire          main_basesoc_trigger_sink_sink_ready;
-wire          main_basesoc_trigger_sink_sink_first;
-wire          main_basesoc_trigger_sink_sink_last;
-wire   [46:0] main_basesoc_trigger_sink_sink_payload_data;
-wire          main_basesoc_trigger_sink_sink_payload_hit;
-wire          main_basesoc_trigger_source_source_valid;
-wire          main_basesoc_trigger_source_source_ready;
-wire          main_basesoc_trigger_source_source_first;
-wire          main_basesoc_trigger_source_source_last;
-wire   [46:0] main_basesoc_trigger_source_source_payload_data;
-reg           main_basesoc_trigger_source_source_payload_hit = 1'd0;
-reg           main_basesoc_trigger_enable_storage = 1'd0;
-reg           main_basesoc_trigger_enable_re = 1'd0;
-wire          main_basesoc_trigger_done_status;
-wire          main_basesoc_trigger_done_we;
-reg           main_basesoc_trigger_done_re = 1'd0;
-reg           main_basesoc_trigger_mem_write_re = 1'd0;
-wire          main_basesoc_trigger_mem_write_r;
-reg           main_basesoc_trigger_mem_write_we = 1'd0;
-reg           main_basesoc_trigger_mem_write_w = 1'd0;
-reg    [46:0] main_basesoc_trigger_mem_mask_storage = 47'd0;
-reg           main_basesoc_trigger_mem_mask_re = 1'd0;
-reg    [46:0] main_basesoc_trigger_mem_value_storage = 47'd0;
-reg           main_basesoc_trigger_mem_value_re = 1'd0;
-wire          main_basesoc_trigger_mem_full_status;
-wire          main_basesoc_trigger_mem_full_we;
-reg           main_basesoc_trigger_mem_full_re = 1'd0;
-wire          main_basesoc_trigger_enable;
-reg           main_basesoc_trigger_enable_d = 1'd0;
-wire          main_basesoc_trigger_done0;
-wire          main_basesoc_trigger_mem_sink_valid;
-wire          main_basesoc_trigger_mem_sink_ready;
-reg           main_basesoc_trigger_mem_sink_first = 1'd0;
-reg           main_basesoc_trigger_mem_sink_last = 1'd0;
-wire   [46:0] main_basesoc_trigger_mem_sink_payload_mask;
-wire   [46:0] main_basesoc_trigger_mem_sink_payload_value;
-wire          main_basesoc_trigger_mem_source_valid;
-wire          main_basesoc_trigger_mem_source_ready;
-wire          main_basesoc_trigger_mem_source_first;
-wire          main_basesoc_trigger_mem_source_last;
-wire   [46:0] main_basesoc_trigger_mem_source_payload_mask;
-wire   [46:0] main_basesoc_trigger_mem_source_payload_value;
-wire          main_basesoc_trigger_mem_asyncfifo_we;
-wire          main_basesoc_trigger_mem_asyncfifo_writable;
-wire          main_basesoc_trigger_mem_asyncfifo_re;
-wire          main_basesoc_trigger_mem_asyncfifo_readable;
-wire   [95:0] main_basesoc_trigger_mem_asyncfifo_din;
-wire   [95:0] main_basesoc_trigger_mem_asyncfifo_dout;
-wire          main_basesoc_trigger_mem_graycounter0_ce;
-reg     [4:0] main_basesoc_trigger_mem_graycounter0_q = 5'd0;
-wire    [4:0] main_basesoc_trigger_mem_graycounter0_q_next;
-reg     [4:0] main_basesoc_trigger_mem_graycounter0_q_binary = 5'd0;
-reg     [4:0] main_basesoc_trigger_mem_graycounter0_q_next_binary = 5'd0;
-wire          main_basesoc_trigger_mem_graycounter1_ce;
-reg     [4:0] main_basesoc_trigger_mem_graycounter1_q = 5'd0;
-wire    [4:0] main_basesoc_trigger_mem_graycounter1_q_next;
-reg     [4:0] main_basesoc_trigger_mem_graycounter1_q_binary = 5'd0;
-reg     [4:0] main_basesoc_trigger_mem_graycounter1_q_next_binary = 5'd0;
-wire    [4:0] main_basesoc_trigger_mem_produce_rdomain;
-wire    [4:0] main_basesoc_trigger_mem_consume_wdomain;
-wire    [3:0] main_basesoc_trigger_mem_wrport_adr;
-wire   [95:0] main_basesoc_trigger_mem_wrport_dat_r;
-wire          main_basesoc_trigger_mem_wrport_we;
-wire   [95:0] main_basesoc_trigger_mem_wrport_dat_w;
-wire    [3:0] main_basesoc_trigger_mem_rdport_adr;
-wire   [95:0] main_basesoc_trigger_mem_rdport_dat_r;
-wire   [46:0] main_basesoc_trigger_mem_fifo_in_payload_mask;
-wire   [46:0] main_basesoc_trigger_mem_fifo_in_payload_value;
-wire          main_basesoc_trigger_mem_fifo_in_first;
-wire          main_basesoc_trigger_mem_fifo_in_last;
-wire   [46:0] main_basesoc_trigger_mem_fifo_out_payload_mask;
-wire   [46:0] main_basesoc_trigger_mem_fifo_out_payload_value;
-wire          main_basesoc_trigger_mem_fifo_out_first;
-wire          main_basesoc_trigger_mem_fifo_out_last;
-wire          main_basesoc_trigger_hit;
-wire          main_basesoc_trigger_wait;
-wire          main_basesoc_trigger_done1;
-reg     [5:0] main_basesoc_trigger_count = 6'd32;
-wire          main_basesoc_subsampler_sink_valid;
-wire          main_basesoc_subsampler_sink_ready;
-wire          main_basesoc_subsampler_sink_first;
-wire          main_basesoc_subsampler_sink_last;
-wire   [46:0] main_basesoc_subsampler_sink_payload_data;
-wire          main_basesoc_subsampler_sink_payload_hit;
-wire          main_basesoc_subsampler_source_valid;
-wire          main_basesoc_subsampler_source_ready;
-wire          main_basesoc_subsampler_source_first;
-wire          main_basesoc_subsampler_source_last;
-wire   [46:0] main_basesoc_subsampler_source_payload_data;
-wire          main_basesoc_subsampler_source_payload_hit;
-reg    [15:0] main_basesoc_subsampler_value_storage = 16'd0;
-reg           main_basesoc_subsampler_value_re = 1'd0;
-wire   [15:0] main_basesoc_subsampler_value;
-reg    [15:0] main_basesoc_subsampler_counter = 16'd0;
-wire          main_basesoc_subsampler_done;
-wire          main_basesoc_storage_sink_sink_valid;
-reg           main_basesoc_storage_sink_sink_ready = 1'd0;
-wire          main_basesoc_storage_sink_sink_first;
-wire          main_basesoc_storage_sink_sink_last;
-wire   [46:0] main_basesoc_storage_sink_sink_payload_data;
-wire          main_basesoc_storage_sink_sink_payload_hit;
-reg           main_basesoc_storage_enable_storage = 1'd0;
-reg           main_basesoc_storage_enable_re = 1'd0;
-wire          main_basesoc_storage_done_status;
-wire          main_basesoc_storage_done_we;
-reg           main_basesoc_storage_done_re = 1'd0;
-reg    [10:0] main_basesoc_storage_length_storage = 11'd0;
-reg           main_basesoc_storage_length_re = 1'd0;
-reg    [10:0] main_basesoc_storage_offset_storage = 11'd0;
-reg           main_basesoc_storage_offset_re = 1'd0;
-wire   [10:0] main_basesoc_storage_mem_level_status;
-wire          main_basesoc_storage_mem_level_we;
-reg           main_basesoc_storage_mem_level_re = 1'd0;
-wire   [31:0] main_basesoc_storage_mem_data_status;
-wire          main_basesoc_storage_mem_data_we;
-reg           main_basesoc_storage_mem_data_re = 1'd0;
-wire          main_basesoc_storage_enable;
-reg           main_basesoc_storage_enable_d = 1'd0;
-wire   [10:0] main_basesoc_storage_length;
-wire   [10:0] main_basesoc_storage_offset;
-reg           main_basesoc_storage_done0 = 1'd0;
-wire   [10:0] main_basesoc_storage_level;
-reg           main_basesoc_storage_mem_sink_valid = 1'd0;
-wire          main_basesoc_storage_mem_sink_ready;
-reg           main_basesoc_storage_mem_sink_first = 1'd0;
-reg           main_basesoc_storage_mem_sink_last = 1'd0;
-reg    [46:0] main_basesoc_storage_mem_sink_payload_data = 47'd0;
-wire          main_basesoc_storage_mem_source_valid;
-reg           main_basesoc_storage_mem_source_ready = 1'd0;
-wire          main_basesoc_storage_mem_source_first;
-wire          main_basesoc_storage_mem_source_last;
-wire   [46:0] main_basesoc_storage_mem_source_payload_data;
-wire          main_basesoc_storage_mem_re;
-reg           main_basesoc_storage_mem_readable = 1'd0;
-wire          main_basesoc_storage_mem_syncfifo_we;
-wire          main_basesoc_storage_mem_syncfifo_writable;
-wire          main_basesoc_storage_mem_syncfifo_re;
-wire          main_basesoc_storage_mem_syncfifo_readable;
-wire   [48:0] main_basesoc_storage_mem_syncfifo_din;
-wire   [48:0] main_basesoc_storage_mem_syncfifo_dout;
-reg    [10:0] main_basesoc_storage_mem_level0 = 11'd0;
-reg           main_basesoc_storage_mem_replace = 1'd0;
-reg     [9:0] main_basesoc_storage_mem_produce = 10'd0;
-reg     [9:0] main_basesoc_storage_mem_consume = 10'd0;
-reg     [9:0] main_basesoc_storage_mem_wrport_adr = 10'd0;
-wire   [48:0] main_basesoc_storage_mem_wrport_dat_r;
-wire          main_basesoc_storage_mem_wrport_we;
-wire   [48:0] main_basesoc_storage_mem_wrport_dat_w;
-wire          main_basesoc_storage_mem_do_read;
-wire    [9:0] main_basesoc_storage_mem_rdport_adr;
-wire   [48:0] main_basesoc_storage_mem_rdport_dat_r;
-wire          main_basesoc_storage_mem_rdport_re;
-wire   [10:0] main_basesoc_storage_mem_level1;
-wire   [46:0] main_basesoc_storage_mem_fifo_in_payload_data;
-wire          main_basesoc_storage_mem_fifo_in_first;
-wire          main_basesoc_storage_mem_fifo_in_last;
-wire   [46:0] main_basesoc_storage_mem_fifo_out_payload_data;
-wire          main_basesoc_storage_mem_fifo_out_first;
-wire          main_basesoc_storage_mem_fifo_out_last;
-reg           main_basesoc_storage_cdc_sink_valid = 1'd0;
-wire          main_basesoc_storage_cdc_sink_ready;
-reg           main_basesoc_storage_cdc_sink_first = 1'd0;
-reg           main_basesoc_storage_cdc_sink_last = 1'd0;
-reg    [46:0] main_basesoc_storage_cdc_sink_payload_data = 47'd0;
-wire          main_basesoc_storage_cdc_source_valid;
-wire          main_basesoc_storage_cdc_source_ready;
-wire          main_basesoc_storage_cdc_source_first;
-wire          main_basesoc_storage_cdc_source_last;
-wire   [46:0] main_basesoc_storage_cdc_source_payload_data;
-wire          main_basesoc_storage_cdc_asyncfifo_we;
-wire          main_basesoc_storage_cdc_asyncfifo_writable;
-wire          main_basesoc_storage_cdc_asyncfifo_re;
-wire          main_basesoc_storage_cdc_asyncfifo_readable;
-wire   [48:0] main_basesoc_storage_cdc_asyncfifo_din;
-wire   [48:0] main_basesoc_storage_cdc_asyncfifo_dout;
-wire          main_basesoc_storage_cdc_graycounter0_ce;
-reg     [2:0] main_basesoc_storage_cdc_graycounter0_q = 3'd0;
-wire    [2:0] main_basesoc_storage_cdc_graycounter0_q_next;
-reg     [2:0] main_basesoc_storage_cdc_graycounter0_q_binary = 3'd0;
-reg     [2:0] main_basesoc_storage_cdc_graycounter0_q_next_binary = 3'd0;
-wire          main_basesoc_storage_cdc_graycounter1_ce;
-reg     [2:0] main_basesoc_storage_cdc_graycounter1_q = 3'd0;
-wire    [2:0] main_basesoc_storage_cdc_graycounter1_q_next;
-reg     [2:0] main_basesoc_storage_cdc_graycounter1_q_binary = 3'd0;
-reg     [2:0] main_basesoc_storage_cdc_graycounter1_q_next_binary = 3'd0;
-wire    [2:0] main_basesoc_storage_cdc_produce_rdomain;
-wire    [2:0] main_basesoc_storage_cdc_consume_wdomain;
-wire    [1:0] main_basesoc_storage_cdc_wrport_adr;
-wire   [48:0] main_basesoc_storage_cdc_wrport_dat_r;
-wire          main_basesoc_storage_cdc_wrport_we;
-wire   [48:0] main_basesoc_storage_cdc_wrport_dat_w;
-wire    [1:0] main_basesoc_storage_cdc_rdport_adr;
-wire   [48:0] main_basesoc_storage_cdc_rdport_dat_r;
-wire   [46:0] main_basesoc_storage_cdc_fifo_in_payload_data;
-wire          main_basesoc_storage_cdc_fifo_in_first;
-wire          main_basesoc_storage_cdc_fifo_in_last;
-wire   [46:0] main_basesoc_storage_cdc_fifo_out_payload_data;
-wire          main_basesoc_storage_cdc_fifo_out_first;
-wire          main_basesoc_storage_cdc_fifo_out_last;
-reg           main_basesoc_storage_wait = 1'd0;
-wire          main_basesoc_storage_done1;
-reg    [10:0] main_basesoc_storage_count = 11'd1024;
-wire          main_basesoc_storage_read_source_valid;
-wire          main_basesoc_storage_read_source_ready;
-wire          main_basesoc_storage_read_source_first;
-wire          main_basesoc_storage_read_source_last;
-wire   [46:0] main_basesoc_storage_read_source_payload_data;
-wire          main_basesoc_storage_converter_sink_valid;
-wire          main_basesoc_storage_converter_sink_ready;
-wire          main_basesoc_storage_converter_sink_first;
-wire          main_basesoc_storage_converter_sink_last;
-wire   [63:0] main_basesoc_storage_converter_sink_payload_data;
-wire          main_basesoc_storage_converter_source_valid;
-wire          main_basesoc_storage_converter_source_ready;
-wire          main_basesoc_storage_converter_source_first;
-wire          main_basesoc_storage_converter_source_last;
-reg    [31:0] main_basesoc_storage_converter_source_payload_data = 32'd0;
-wire          main_basesoc_storage_converter_source_payload_valid_token_count;
-reg           main_basesoc_storage_converter_mux = 1'd0;
-wire          main_basesoc_storage_converter_first;
-wire          main_basesoc_storage_converter_last;
-wire          main_basesoc_storage_source_source_valid;
-wire          main_basesoc_storage_source_source_ready;
-wire          main_basesoc_storage_source_source_first;
-wire          main_basesoc_storage_source_source_last;
-wire   [31:0] main_basesoc_storage_source_source_payload_data;
-reg           main_basesoc_uartbone_phy_tx_sink_valid = 1'd0;
-reg           main_basesoc_uartbone_phy_tx_sink_ready = 1'd0;
-wire          main_basesoc_uartbone_phy_tx_sink_last;
-reg     [7:0] main_basesoc_uartbone_phy_tx_sink_payload_data = 8'd0;
-reg     [7:0] main_basesoc_uartbone_phy_tx_data = 8'd0;
-reg     [3:0] main_basesoc_uartbone_phy_tx_count = 4'd0;
-reg           main_basesoc_uartbone_phy_tx_enable = 1'd0;
-reg           main_basesoc_uartbone_phy_tx_tick = 1'd0;
-reg    [31:0] main_basesoc_uartbone_phy_tx_phase = 32'd0;
-reg           main_basesoc_uartbone_phy_rx_source_valid = 1'd0;
-reg           main_basesoc_uartbone_phy_rx_source_ready = 1'd0;
-reg     [7:0] main_basesoc_uartbone_phy_rx_source_payload_data = 8'd0;
-reg     [7:0] main_basesoc_uartbone_phy_rx_data = 8'd0;
-reg     [3:0] main_basesoc_uartbone_phy_rx_count = 4'd0;
-reg           main_basesoc_uartbone_phy_rx_enable = 1'd0;
-reg           main_basesoc_uartbone_phy_rx_tick = 1'd0;
-reg    [31:0] main_basesoc_uartbone_phy_rx_phase = 32'd0;
-wire          main_basesoc_uartbone_phy_rx_rx;
-reg           main_basesoc_uartbone_phy_rx_rx_d = 1'd0;
-wire   [31:0] main_basesoc_uartbone_wishbone_adr;
-wire   [31:0] main_basesoc_uartbone_wishbone_dat_w;
-wire   [31:0] main_basesoc_uartbone_wishbone_dat_r;
-wire    [3:0] main_basesoc_uartbone_wishbone_sel;
-reg           main_basesoc_uartbone_wishbone_cyc = 1'd0;
-reg           main_basesoc_uartbone_wishbone_stb = 1'd0;
-wire          main_basesoc_uartbone_wishbone_ack;
-reg           main_basesoc_uartbone_wishbone_we = 1'd0;
-reg     [2:0] main_basesoc_uartbone_wishbone_cti = 3'd0;
-reg     [1:0] main_basesoc_uartbone_wishbone_bte = 2'd0;
-wire          main_basesoc_uartbone_wishbone_err;
-reg     [7:0] main_basesoc_uartbone_cmd = 8'd0;
-reg           main_basesoc_uartbone_incr = 1'd0;
-reg     [7:0] main_basesoc_uartbone_length = 8'd0;
-reg    [31:0] main_basesoc_uartbone_address = 32'd0;
-reg    [31:0] main_basesoc_uartbone_data = 32'd0;
-reg     [1:0] main_basesoc_uartbone_data_bytes_count = 2'd0;
-reg     [1:0] main_basesoc_uartbone_addr_bytes_count = 2'd0;
-reg     [7:0] main_basesoc_uartbone_words_count = 8'd0;
-wire          main_basesoc_uartbone_reset;
-wire          main_basesoc_uartbone_wait;
-wire          main_basesoc_uartbone_done;
-reg    [23:0] main_basesoc_uartbone_count = 24'd10500000;
-reg           main_basesoc_uartbone_is_ongoing = 1'd0;
+reg           main_tx_pin = 1'd0;
+wire          main_rx_pin;
+wire          main_sync_pin;
+wire          main_clk_pin;
+reg           main_clk_d = 1'd0;
+wire          main_rising_edge;
+wire          main_falling_edge;
+wire   [29:0] main_bus_adr;
+wire   [31:0] main_bus_dat_w;
+reg    [31:0] main_bus_dat_r = 32'd0;
+wire    [3:0] main_bus_sel;
+wire          main_bus_cyc;
+wire          main_bus_stb;
+reg           main_bus_ack = 1'd0;
+wire          main_bus_we;
+wire    [2:0] main_bus_cti;
+wire    [1:0] main_bus_bte;
+reg           main_bus_err = 1'd0;
+reg           main_rd_ack = 1'd0;
+reg           main_wr_ack = 1'd0;
+wire          main_irq;
+wire          main_rx_ready_status;
+reg           main_rx_ready_pending = 1'd0;
+wire          main_rx_ready_trigger;
+reg           main_rx_ready_clear = 1'd0;
+wire          main_rx_error_status;
+reg           main_rx_error_pending = 1'd0;
+wire          main_rx_error_trigger;
+reg           main_rx_error_clear = 1'd0;
+wire          main_tx_ready_status;
+reg           main_tx_ready_pending = 1'd0;
+wire          main_tx_ready_trigger;
+reg           main_tx_ready_clear = 1'd0;
+wire          main_tx_error_status;
+reg           main_tx_error_pending = 1'd0;
+wire          main_tx_error_trigger;
+reg           main_tx_error_clear = 1'd0;
+wire          main_rx_ready0;
+wire          main_rx_error0;
+wire          main_tx_ready0;
+wire          main_tx_error0;
+reg     [3:0] main_status_status = 4'd0;
+wire          main_status_we;
+reg           main_status_re = 1'd0;
+wire          main_rx_ready1;
+wire          main_rx_error1;
+wire          main_tx_ready1;
+wire          main_tx_error1;
+reg     [3:0] main_pending_status = 4'd0;
+wire          main_pending_we;
+reg           main_pending_re = 1'd0;
+reg     [3:0] main_pending_r = 4'd0;
+wire          main_rx_ready2;
+wire          main_rx_error2;
+wire          main_tx_ready2;
+wire          main_tx_error2;
+reg     [3:0] main_enable_storage = 4'd0;
+reg           main_enable_re = 1'd0;
+wire          main_csrfield_enable0;
+reg           main_csrfield_reset0 = 1'd0;
+reg     [1:0] main_rx_ctl_storage = 2'd0;
+reg           main_rx_ctl_re = 1'd0;
+wire          main_csrfield_overflow0;
+wire          main_csrfield_underflow0;
+wire          main_csrfield_dataready;
+wire          main_csrfield_empty0;
+wire    [8:0] main_csrfield_wrcount0;
+wire    [8:0] main_csrfield_rdcount0;
+wire    [8:0] main_csrfield_fifo_depth;
+reg           main_csrfield_concatenate_channels0 = 1'd0;
+reg    [31:0] main_rx_stat_status = 32'd0;
+wire          main_rx_stat_we;
+reg           main_rx_stat_re = 1'd0;
+reg     [1:0] main_csrfield_format0 = 2'd1;
+reg     [5:0] main_csrfield_sample_width0 = 6'd24;
+reg    [23:0] main_csrfield_lrck_freq0 = 24'd48000;
+reg    [31:0] main_rx_conf_status = 32'd12288097;
+wire          main_rx_conf_we;
+reg           main_rx_conf_re = 1'd0;
+reg     [2:0] main_rx_rst_cnt = 3'd0;
+reg           main_rx_reset = 1'd0;
+wire   [23:0] main_rx_fifo_rx_fifo_rd_d;
+reg           main_rx_fifo_rx_fifo_almostfull = 1'd0;
+reg           main_rx_fifo_rx_fifo_almostempty = 1'd0;
+reg           main_rx_fifo_rx_fifo_full = 1'd0;
+reg           main_rx_fifo_rx_fifo_empty = 1'd0;
+reg    [12:0] main_rx_fifo_rx_fifo_rdcount = 13'd0;
+wire          main_rx_fifo_rx_fifo_rderr;
+wire          main_rx_fifo_rx_fifo_wrerr;
+reg    [12:0] main_rx_fifo_rx_fifo_wrcount = 13'd0;
+reg           main_rx_fifo_rx_fifo_rden = 1'd0;
+reg    [23:0] main_rx_fifo_rx_fifo_wr_d = 24'd0;
+reg           main_rx_fifo_rx_fifo_wren = 1'd0;
+wire          main_rx_fifo_rx_fifo_reset;
+wire   [13:0] main_rx_fifo_level0;
+wire          main_rx_fifo_sink_valid;
+wire          main_rx_fifo_sink_ready;
+reg           main_rx_fifo_sink_first = 1'd0;
+reg           main_rx_fifo_sink_last = 1'd0;
+wire   [23:0] main_rx_fifo_sink_payload_data;
+wire          main_rx_fifo_source_valid;
+wire          main_rx_fifo_source_ready;
+wire          main_rx_fifo_source_first;
+wire          main_rx_fifo_source_last;
+wire   [23:0] main_rx_fifo_source_payload_data;
+wire          main_rx_fifo_syncfifo_we;
+wire          main_rx_fifo_syncfifo_writable;
+wire          main_rx_fifo_syncfifo_re;
+wire          main_rx_fifo_syncfifo_readable;
+wire   [25:0] main_rx_fifo_syncfifo_din;
+wire   [25:0] main_rx_fifo_syncfifo_dout;
+reg     [9:0] main_rx_fifo_level1 = 10'd0;
+reg           main_rx_fifo_replace = 1'd0;
+reg     [8:0] main_rx_fifo_produce = 9'd0;
+reg     [8:0] main_rx_fifo_consume = 9'd0;
+reg     [8:0] main_rx_fifo_wrport_adr = 9'd0;
+wire   [25:0] main_rx_fifo_wrport_dat_r;
+wire          main_rx_fifo_wrport_we;
+wire   [25:0] main_rx_fifo_wrport_dat_w;
+wire          main_rx_fifo_do_read;
+wire    [8:0] main_rx_fifo_rdport_adr;
+wire   [25:0] main_rx_fifo_rdport_dat_r;
+wire   [23:0] main_rx_fifo_fifo_in_payload_data;
+wire          main_rx_fifo_fifo_in_first;
+wire          main_rx_fifo_fifo_in_last;
+wire   [23:0] main_rx_fifo_fifo_out_payload_data;
+wire          main_rx_fifo_fifo_out_first;
+wire          main_rx_fifo_fifo_out_last;
+wire          main_rx_fifo_reset;
+wire          main_bus_read;
+reg           main_bus_read_d = 1'd0;
+reg           main_rd_ack_pipe = 1'd0;
+reg     [4:0] main_rx_cnt = 5'd0;
+reg           main_rx_delay_cnt = 1'd0;
+reg     [4:0] main_rx_fsm = 5'd0;
+wire          main_csrfield_enable1;
+reg           main_csrfield_reset1 = 1'd0;
+reg     [1:0] main_tx_ctl_storage = 2'd0;
+reg           main_tx_ctl_re = 1'd0;
+reg           main_csrfield_overflow1 = 1'd0;
+wire          main_csrfield_underflow1;
+wire          main_csrfield_free;
+wire          main_csrfield_almostfull;
+wire          main_csrfield_full;
+wire          main_csrfield_empty1;
+wire    [8:0] main_csrfield_wrcount1;
+wire    [8:0] main_csrfield_rdcount1;
+reg           main_csrfield_concatenate_channels1 = 1'd0;
+reg    [24:0] main_tx_stat_status = 25'd0;
+wire          main_tx_stat_we;
+reg           main_tx_stat_re = 1'd0;
+reg     [1:0] main_csrfield_format1 = 2'd1;
+reg     [5:0] main_csrfield_sample_width1 = 6'd24;
+reg    [23:0] main_csrfield_lrck_freq1 = 24'd48000;
+reg    [31:0] main_tx_conf_status = 32'd12288097;
+wire          main_tx_conf_we;
+reg           main_tx_conf_re = 1'd0;
+reg     [2:0] main_tx_rst_cnt = 3'd0;
+reg           main_tx_reset = 1'd0;
+wire   [23:0] main_tx_fifo_tx_fifo_rd_d;
+reg           main_tx_fifo_tx_fifo_almostfull = 1'd0;
+reg           main_tx_fifo_tx_fifo_almostempty = 1'd0;
+reg           main_tx_fifo_tx_fifo_full = 1'd0;
+reg           main_tx_fifo_tx_fifo_empty = 1'd0;
+reg    [12:0] main_tx_fifo_tx_fifo_rdcount = 13'd0;
+wire          main_tx_fifo_tx_fifo_rderr;
+wire          main_tx_fifo_tx_fifo_wrerr;
+reg    [12:0] main_tx_fifo_tx_fifo_wrcount = 13'd0;
+reg           main_tx_fifo_tx_fifo_rden = 1'd0;
+reg    [23:0] main_tx_fifo_tx_fifo_wr_d = 24'd0;
+reg           main_tx_fifo_tx_fifo_wren = 1'd0;
+wire          main_tx_fifo_tx_fifo_reset;
+wire   [13:0] main_tx_fifo_level0;
+wire          main_tx_fifo_sink_valid;
+wire          main_tx_fifo_sink_ready;
+reg           main_tx_fifo_sink_first = 1'd0;
+reg           main_tx_fifo_sink_last = 1'd0;
+wire   [23:0] main_tx_fifo_sink_payload_data;
+wire          main_tx_fifo_source_valid;
+wire          main_tx_fifo_source_ready;
+wire          main_tx_fifo_source_first;
+wire          main_tx_fifo_source_last;
+wire   [23:0] main_tx_fifo_source_payload_data;
+wire          main_tx_fifo_syncfifo_we;
+wire          main_tx_fifo_syncfifo_writable;
+wire          main_tx_fifo_syncfifo_re;
+wire          main_tx_fifo_syncfifo_readable;
+wire   [25:0] main_tx_fifo_syncfifo_din;
+wire   [25:0] main_tx_fifo_syncfifo_dout;
+reg     [9:0] main_tx_fifo_level1 = 10'd0;
+reg           main_tx_fifo_replace = 1'd0;
+reg     [8:0] main_tx_fifo_produce = 9'd0;
+reg     [8:0] main_tx_fifo_consume = 9'd0;
+reg     [8:0] main_tx_fifo_wrport_adr = 9'd0;
+wire   [25:0] main_tx_fifo_wrport_dat_r;
+wire          main_tx_fifo_wrport_we;
+wire   [25:0] main_tx_fifo_wrport_dat_w;
+wire          main_tx_fifo_do_read;
+wire    [8:0] main_tx_fifo_rdport_adr;
+wire   [25:0] main_tx_fifo_rdport_dat_r;
+wire   [23:0] main_tx_fifo_fifo_in_payload_data;
+wire          main_tx_fifo_fifo_in_first;
+wire          main_tx_fifo_fifo_in_last;
+wire   [23:0] main_tx_fifo_fifo_out_payload_data;
+wire          main_tx_fifo_fifo_out_first;
+wire          main_tx_fifo_fifo_out_last;
+wire          main_tx_fifo_reset;
+reg     [4:0] main_tx_cnt = 5'd0;
+reg    [24:0] main_tx_buf = 25'd0;
+reg           main_uartbone_phy_tx_sink_valid = 1'd0;
+reg           main_uartbone_phy_tx_sink_ready = 1'd0;
+wire          main_uartbone_phy_tx_sink_last;
+reg     [7:0] main_uartbone_phy_tx_sink_payload_data = 8'd0;
+reg     [7:0] main_uartbone_phy_tx_data = 8'd0;
+reg     [3:0] main_uartbone_phy_tx_count = 4'd0;
+reg           main_uartbone_phy_tx_enable = 1'd0;
+reg           main_uartbone_phy_tx_tick = 1'd0;
+reg    [31:0] main_uartbone_phy_tx_phase = 32'd0;
+reg           main_uartbone_phy_rx_source_valid = 1'd0;
+reg           main_uartbone_phy_rx_source_ready = 1'd0;
+reg     [7:0] main_uartbone_phy_rx_source_payload_data = 8'd0;
+reg     [7:0] main_uartbone_phy_rx_data = 8'd0;
+reg     [3:0] main_uartbone_phy_rx_count = 4'd0;
+reg           main_uartbone_phy_rx_enable = 1'd0;
+reg           main_uartbone_phy_rx_tick = 1'd0;
+reg    [31:0] main_uartbone_phy_rx_phase = 32'd0;
+wire          main_uartbone_phy_rx_rx;
+reg           main_uartbone_phy_rx_rx_d = 1'd0;
+wire   [31:0] main_uartbone_wishbone_adr;
+wire   [31:0] main_uartbone_wishbone_dat_w;
+wire   [31:0] main_uartbone_wishbone_dat_r;
+wire    [3:0] main_uartbone_wishbone_sel;
+reg           main_uartbone_wishbone_cyc = 1'd0;
+reg           main_uartbone_wishbone_stb = 1'd0;
+wire          main_uartbone_wishbone_ack;
+reg           main_uartbone_wishbone_we = 1'd0;
+reg     [2:0] main_uartbone_wishbone_cti = 3'd0;
+reg     [1:0] main_uartbone_wishbone_bte = 2'd0;
+wire          main_uartbone_wishbone_err;
+reg     [7:0] main_uartbone_cmd = 8'd0;
+reg           main_uartbone_incr = 1'd0;
+reg     [7:0] main_uartbone_length = 8'd0;
+reg    [31:0] main_uartbone_address = 32'd0;
+reg    [31:0] main_uartbone_data = 32'd0;
+reg     [1:0] main_uartbone_data_bytes_count = 2'd0;
+reg     [1:0] main_uartbone_addr_bytes_count = 2'd0;
+reg     [7:0] main_uartbone_words_count = 8'd0;
+wire          main_uartbone_reset;
+wire          main_uartbone_wait;
+wire          main_uartbone_done;
+reg    [23:0] main_uartbone_count = 24'd10500000;
+reg           main_uartbone_is_ongoing = 1'd0;
 reg    [13:0] builder_basesoc_adr = 14'd0;
 reg           builder_basesoc_we = 1'd0;
 reg    [31:0] builder_basesoc_dat_w = 32'd0;
@@ -1633,125 +1381,60 @@ wire   [13:0] builder_csr_bankarray_interface0_bank_bus_adr;
 wire          builder_csr_bankarray_interface0_bank_bus_we;
 wire   [31:0] builder_csr_bankarray_interface0_bank_bus_dat_w;
 reg    [31:0] builder_csr_bankarray_interface0_bank_bus_dat_r = 32'd0;
-reg           builder_csr_bankarray_csrbank0_mux_value0_re = 1'd0;
-wire          builder_csr_bankarray_csrbank0_mux_value0_r;
-reg           builder_csr_bankarray_csrbank0_mux_value0_we = 1'd0;
-wire          builder_csr_bankarray_csrbank0_mux_value0_w;
-reg           builder_csr_bankarray_csrbank0_trigger_enable0_re = 1'd0;
-wire          builder_csr_bankarray_csrbank0_trigger_enable0_r;
-reg           builder_csr_bankarray_csrbank0_trigger_enable0_we = 1'd0;
-wire          builder_csr_bankarray_csrbank0_trigger_enable0_w;
-reg           builder_csr_bankarray_csrbank0_trigger_done_re = 1'd0;
-wire          builder_csr_bankarray_csrbank0_trigger_done_r;
-reg           builder_csr_bankarray_csrbank0_trigger_done_we = 1'd0;
-wire          builder_csr_bankarray_csrbank0_trigger_done_w;
-reg           builder_csr_bankarray_csrbank0_trigger_mem_mask1_re = 1'd0;
-wire   [14:0] builder_csr_bankarray_csrbank0_trigger_mem_mask1_r;
-reg           builder_csr_bankarray_csrbank0_trigger_mem_mask1_we = 1'd0;
-wire   [14:0] builder_csr_bankarray_csrbank0_trigger_mem_mask1_w;
-reg           builder_csr_bankarray_csrbank0_trigger_mem_mask0_re = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank0_trigger_mem_mask0_r;
-reg           builder_csr_bankarray_csrbank0_trigger_mem_mask0_we = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank0_trigger_mem_mask0_w;
-reg           builder_csr_bankarray_csrbank0_trigger_mem_value1_re = 1'd0;
-wire   [14:0] builder_csr_bankarray_csrbank0_trigger_mem_value1_r;
-reg           builder_csr_bankarray_csrbank0_trigger_mem_value1_we = 1'd0;
-wire   [14:0] builder_csr_bankarray_csrbank0_trigger_mem_value1_w;
-reg           builder_csr_bankarray_csrbank0_trigger_mem_value0_re = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank0_trigger_mem_value0_r;
-reg           builder_csr_bankarray_csrbank0_trigger_mem_value0_we = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank0_trigger_mem_value0_w;
-reg           builder_csr_bankarray_csrbank0_trigger_mem_full_re = 1'd0;
-wire          builder_csr_bankarray_csrbank0_trigger_mem_full_r;
-reg           builder_csr_bankarray_csrbank0_trigger_mem_full_we = 1'd0;
-wire          builder_csr_bankarray_csrbank0_trigger_mem_full_w;
-reg           builder_csr_bankarray_csrbank0_subsampler_value0_re = 1'd0;
-wire   [15:0] builder_csr_bankarray_csrbank0_subsampler_value0_r;
-reg           builder_csr_bankarray_csrbank0_subsampler_value0_we = 1'd0;
-wire   [15:0] builder_csr_bankarray_csrbank0_subsampler_value0_w;
-reg           builder_csr_bankarray_csrbank0_storage_enable0_re = 1'd0;
-wire          builder_csr_bankarray_csrbank0_storage_enable0_r;
-reg           builder_csr_bankarray_csrbank0_storage_enable0_we = 1'd0;
-wire          builder_csr_bankarray_csrbank0_storage_enable0_w;
-reg           builder_csr_bankarray_csrbank0_storage_done_re = 1'd0;
-wire          builder_csr_bankarray_csrbank0_storage_done_r;
-reg           builder_csr_bankarray_csrbank0_storage_done_we = 1'd0;
-wire          builder_csr_bankarray_csrbank0_storage_done_w;
-reg           builder_csr_bankarray_csrbank0_storage_length0_re = 1'd0;
-wire   [10:0] builder_csr_bankarray_csrbank0_storage_length0_r;
-reg           builder_csr_bankarray_csrbank0_storage_length0_we = 1'd0;
-wire   [10:0] builder_csr_bankarray_csrbank0_storage_length0_w;
-reg           builder_csr_bankarray_csrbank0_storage_offset0_re = 1'd0;
-wire   [10:0] builder_csr_bankarray_csrbank0_storage_offset0_r;
-reg           builder_csr_bankarray_csrbank0_storage_offset0_we = 1'd0;
-wire   [10:0] builder_csr_bankarray_csrbank0_storage_offset0_w;
-reg           builder_csr_bankarray_csrbank0_storage_mem_level_re = 1'd0;
-wire   [10:0] builder_csr_bankarray_csrbank0_storage_mem_level_r;
-reg           builder_csr_bankarray_csrbank0_storage_mem_level_we = 1'd0;
-wire   [10:0] builder_csr_bankarray_csrbank0_storage_mem_level_w;
-reg           builder_csr_bankarray_csrbank0_storage_mem_data_re = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank0_storage_mem_data_r;
-reg           builder_csr_bankarray_csrbank0_storage_mem_data_we = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank0_storage_mem_data_w;
+reg           builder_csr_bankarray_csrbank0_reset0_re = 1'd0;
+wire    [1:0] builder_csr_bankarray_csrbank0_reset0_r;
+reg           builder_csr_bankarray_csrbank0_reset0_we = 1'd0;
+wire    [1:0] builder_csr_bankarray_csrbank0_reset0_w;
+reg           builder_csr_bankarray_csrbank0_scratch0_re = 1'd0;
+wire   [31:0] builder_csr_bankarray_csrbank0_scratch0_r;
+reg           builder_csr_bankarray_csrbank0_scratch0_we = 1'd0;
+wire   [31:0] builder_csr_bankarray_csrbank0_scratch0_w;
+reg           builder_csr_bankarray_csrbank0_bus_errors_re = 1'd0;
+wire   [31:0] builder_csr_bankarray_csrbank0_bus_errors_r;
+reg           builder_csr_bankarray_csrbank0_bus_errors_we = 1'd0;
+wire   [31:0] builder_csr_bankarray_csrbank0_bus_errors_w;
 wire          builder_csr_bankarray_csrbank0_sel;
 wire   [13:0] builder_csr_bankarray_interface1_bank_bus_adr;
 wire          builder_csr_bankarray_interface1_bank_bus_we;
 wire   [31:0] builder_csr_bankarray_interface1_bank_bus_dat_w;
 reg    [31:0] builder_csr_bankarray_interface1_bank_bus_dat_r = 32'd0;
-reg           builder_csr_bankarray_csrbank1_reset0_re = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank1_reset0_r;
-reg           builder_csr_bankarray_csrbank1_reset0_we = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank1_reset0_w;
-reg           builder_csr_bankarray_csrbank1_scratch0_re = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank1_scratch0_r;
-reg           builder_csr_bankarray_csrbank1_scratch0_we = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank1_scratch0_w;
-reg           builder_csr_bankarray_csrbank1_bus_errors_re = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank1_bus_errors_r;
-reg           builder_csr_bankarray_csrbank1_bus_errors_we = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank1_bus_errors_w;
+reg           builder_csr_bankarray_csrbank1_ev_status_re = 1'd0;
+wire    [3:0] builder_csr_bankarray_csrbank1_ev_status_r;
+reg           builder_csr_bankarray_csrbank1_ev_status_we = 1'd0;
+wire    [3:0] builder_csr_bankarray_csrbank1_ev_status_w;
+reg           builder_csr_bankarray_csrbank1_ev_pending_re = 1'd0;
+wire    [3:0] builder_csr_bankarray_csrbank1_ev_pending_r;
+reg           builder_csr_bankarray_csrbank1_ev_pending_we = 1'd0;
+wire    [3:0] builder_csr_bankarray_csrbank1_ev_pending_w;
+reg           builder_csr_bankarray_csrbank1_ev_enable0_re = 1'd0;
+wire    [3:0] builder_csr_bankarray_csrbank1_ev_enable0_r;
+reg           builder_csr_bankarray_csrbank1_ev_enable0_we = 1'd0;
+wire    [3:0] builder_csr_bankarray_csrbank1_ev_enable0_w;
+reg           builder_csr_bankarray_csrbank1_rx_ctl0_re = 1'd0;
+wire    [1:0] builder_csr_bankarray_csrbank1_rx_ctl0_r;
+reg           builder_csr_bankarray_csrbank1_rx_ctl0_we = 1'd0;
+wire    [1:0] builder_csr_bankarray_csrbank1_rx_ctl0_w;
+reg           builder_csr_bankarray_csrbank1_rx_stat_re = 1'd0;
+wire   [31:0] builder_csr_bankarray_csrbank1_rx_stat_r;
+reg           builder_csr_bankarray_csrbank1_rx_stat_we = 1'd0;
+wire   [31:0] builder_csr_bankarray_csrbank1_rx_stat_w;
+reg           builder_csr_bankarray_csrbank1_rx_conf_re = 1'd0;
+wire   [31:0] builder_csr_bankarray_csrbank1_rx_conf_r;
+reg           builder_csr_bankarray_csrbank1_rx_conf_we = 1'd0;
+wire   [31:0] builder_csr_bankarray_csrbank1_rx_conf_w;
+reg           builder_csr_bankarray_csrbank1_tx_ctl0_re = 1'd0;
+wire    [1:0] builder_csr_bankarray_csrbank1_tx_ctl0_r;
+reg           builder_csr_bankarray_csrbank1_tx_ctl0_we = 1'd0;
+wire    [1:0] builder_csr_bankarray_csrbank1_tx_ctl0_w;
+reg           builder_csr_bankarray_csrbank1_tx_stat_re = 1'd0;
+wire   [24:0] builder_csr_bankarray_csrbank1_tx_stat_r;
+reg           builder_csr_bankarray_csrbank1_tx_stat_we = 1'd0;
+wire   [24:0] builder_csr_bankarray_csrbank1_tx_stat_w;
+reg           builder_csr_bankarray_csrbank1_tx_conf_re = 1'd0;
+wire   [31:0] builder_csr_bankarray_csrbank1_tx_conf_r;
+reg           builder_csr_bankarray_csrbank1_tx_conf_we = 1'd0;
+wire   [31:0] builder_csr_bankarray_csrbank1_tx_conf_w;
 wire          builder_csr_bankarray_csrbank1_sel;
-wire   [13:0] builder_csr_bankarray_interface2_bank_bus_adr;
-wire          builder_csr_bankarray_interface2_bank_bus_we;
-wire   [31:0] builder_csr_bankarray_interface2_bank_bus_dat_w;
-reg    [31:0] builder_csr_bankarray_interface2_bank_bus_dat_r = 32'd0;
-reg           builder_csr_bankarray_csrbank2_ev_status_re = 1'd0;
-wire    [3:0] builder_csr_bankarray_csrbank2_ev_status_r;
-reg           builder_csr_bankarray_csrbank2_ev_status_we = 1'd0;
-wire    [3:0] builder_csr_bankarray_csrbank2_ev_status_w;
-reg           builder_csr_bankarray_csrbank2_ev_pending_re = 1'd0;
-wire    [3:0] builder_csr_bankarray_csrbank2_ev_pending_r;
-reg           builder_csr_bankarray_csrbank2_ev_pending_we = 1'd0;
-wire    [3:0] builder_csr_bankarray_csrbank2_ev_pending_w;
-reg           builder_csr_bankarray_csrbank2_ev_enable0_re = 1'd0;
-wire    [3:0] builder_csr_bankarray_csrbank2_ev_enable0_r;
-reg           builder_csr_bankarray_csrbank2_ev_enable0_we = 1'd0;
-wire    [3:0] builder_csr_bankarray_csrbank2_ev_enable0_w;
-reg           builder_csr_bankarray_csrbank2_rx_ctl0_re = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank2_rx_ctl0_r;
-reg           builder_csr_bankarray_csrbank2_rx_ctl0_we = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank2_rx_ctl0_w;
-reg           builder_csr_bankarray_csrbank2_rx_stat_re = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank2_rx_stat_r;
-reg           builder_csr_bankarray_csrbank2_rx_stat_we = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank2_rx_stat_w;
-reg           builder_csr_bankarray_csrbank2_rx_conf_re = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank2_rx_conf_r;
-reg           builder_csr_bankarray_csrbank2_rx_conf_we = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank2_rx_conf_w;
-reg           builder_csr_bankarray_csrbank2_tx_ctl0_re = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank2_tx_ctl0_r;
-reg           builder_csr_bankarray_csrbank2_tx_ctl0_we = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank2_tx_ctl0_w;
-reg           builder_csr_bankarray_csrbank2_tx_stat_re = 1'd0;
-wire   [24:0] builder_csr_bankarray_csrbank2_tx_stat_r;
-reg           builder_csr_bankarray_csrbank2_tx_stat_we = 1'd0;
-wire   [24:0] builder_csr_bankarray_csrbank2_tx_stat_w;
-reg           builder_csr_bankarray_csrbank2_tx_conf_re = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank2_tx_conf_r;
-reg           builder_csr_bankarray_csrbank2_tx_conf_we = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank2_tx_conf_w;
-wire          builder_csr_bankarray_csrbank2_sel;
 wire   [13:0] builder_csr_bankarray_sram_bus_adr;
 wire          builder_csr_bankarray_sram_bus_we;
 wire   [31:0] builder_csr_bankarray_sram_bus_dat_w;
@@ -1760,114 +1443,114 @@ wire    [5:0] builder_csr_bankarray_adr;
 wire    [7:0] builder_csr_bankarray_dat_r;
 wire          builder_csr_bankarray_sel;
 reg           builder_csr_bankarray_sel_r = 1'd0;
+wire   [13:0] builder_csr_bankarray_interface2_bank_bus_adr;
+wire          builder_csr_bankarray_interface2_bank_bus_we;
+wire   [31:0] builder_csr_bankarray_interface2_bank_bus_dat_w;
+reg    [31:0] builder_csr_bankarray_interface2_bank_bus_dat_r = 32'd0;
+reg           builder_csr_bankarray_csrbank2_out0_re = 1'd0;
+wire          builder_csr_bankarray_csrbank2_out0_r;
+reg           builder_csr_bankarray_csrbank2_out0_we = 1'd0;
+wire          builder_csr_bankarray_csrbank2_out0_w;
+wire          builder_csr_bankarray_csrbank2_sel;
 wire   [13:0] builder_csr_bankarray_interface3_bank_bus_adr;
 wire          builder_csr_bankarray_interface3_bank_bus_we;
 wire   [31:0] builder_csr_bankarray_interface3_bank_bus_dat_w;
 reg    [31:0] builder_csr_bankarray_interface3_bank_bus_dat_r = 32'd0;
-reg           builder_csr_bankarray_csrbank3_out0_re = 1'd0;
-wire          builder_csr_bankarray_csrbank3_out0_r;
-reg           builder_csr_bankarray_csrbank3_out0_we = 1'd0;
-wire          builder_csr_bankarray_csrbank3_out0_w;
+reg           builder_csr_bankarray_csrbank3_dfii_control0_re = 1'd0;
+wire    [3:0] builder_csr_bankarray_csrbank3_dfii_control0_r;
+reg           builder_csr_bankarray_csrbank3_dfii_control0_we = 1'd0;
+wire    [3:0] builder_csr_bankarray_csrbank3_dfii_control0_w;
+reg           builder_csr_bankarray_csrbank3_dfii_pi0_command0_re = 1'd0;
+wire    [5:0] builder_csr_bankarray_csrbank3_dfii_pi0_command0_r;
+reg           builder_csr_bankarray_csrbank3_dfii_pi0_command0_we = 1'd0;
+wire    [5:0] builder_csr_bankarray_csrbank3_dfii_pi0_command0_w;
+reg           builder_csr_bankarray_csrbank3_dfii_pi0_address0_re = 1'd0;
+wire   [12:0] builder_csr_bankarray_csrbank3_dfii_pi0_address0_r;
+reg           builder_csr_bankarray_csrbank3_dfii_pi0_address0_we = 1'd0;
+wire   [12:0] builder_csr_bankarray_csrbank3_dfii_pi0_address0_w;
+reg           builder_csr_bankarray_csrbank3_dfii_pi0_baddress0_re = 1'd0;
+wire    [1:0] builder_csr_bankarray_csrbank3_dfii_pi0_baddress0_r;
+reg           builder_csr_bankarray_csrbank3_dfii_pi0_baddress0_we = 1'd0;
+wire    [1:0] builder_csr_bankarray_csrbank3_dfii_pi0_baddress0_w;
+reg           builder_csr_bankarray_csrbank3_dfii_pi0_wrdata0_re = 1'd0;
+wire   [15:0] builder_csr_bankarray_csrbank3_dfii_pi0_wrdata0_r;
+reg           builder_csr_bankarray_csrbank3_dfii_pi0_wrdata0_we = 1'd0;
+wire   [15:0] builder_csr_bankarray_csrbank3_dfii_pi0_wrdata0_w;
+reg           builder_csr_bankarray_csrbank3_dfii_pi0_rddata_re = 1'd0;
+wire   [15:0] builder_csr_bankarray_csrbank3_dfii_pi0_rddata_r;
+reg           builder_csr_bankarray_csrbank3_dfii_pi0_rddata_we = 1'd0;
+wire   [15:0] builder_csr_bankarray_csrbank3_dfii_pi0_rddata_w;
 wire          builder_csr_bankarray_csrbank3_sel;
 wire   [13:0] builder_csr_bankarray_interface4_bank_bus_adr;
 wire          builder_csr_bankarray_interface4_bank_bus_we;
 wire   [31:0] builder_csr_bankarray_interface4_bank_bus_dat_w;
 reg    [31:0] builder_csr_bankarray_interface4_bank_bus_dat_r = 32'd0;
-reg           builder_csr_bankarray_csrbank4_dfii_control0_re = 1'd0;
-wire    [3:0] builder_csr_bankarray_csrbank4_dfii_control0_r;
-reg           builder_csr_bankarray_csrbank4_dfii_control0_we = 1'd0;
-wire    [3:0] builder_csr_bankarray_csrbank4_dfii_control0_w;
-reg           builder_csr_bankarray_csrbank4_dfii_pi0_command0_re = 1'd0;
-wire    [5:0] builder_csr_bankarray_csrbank4_dfii_pi0_command0_r;
-reg           builder_csr_bankarray_csrbank4_dfii_pi0_command0_we = 1'd0;
-wire    [5:0] builder_csr_bankarray_csrbank4_dfii_pi0_command0_w;
-reg           builder_csr_bankarray_csrbank4_dfii_pi0_address0_re = 1'd0;
-wire   [12:0] builder_csr_bankarray_csrbank4_dfii_pi0_address0_r;
-reg           builder_csr_bankarray_csrbank4_dfii_pi0_address0_we = 1'd0;
-wire   [12:0] builder_csr_bankarray_csrbank4_dfii_pi0_address0_w;
-reg           builder_csr_bankarray_csrbank4_dfii_pi0_baddress0_re = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank4_dfii_pi0_baddress0_r;
-reg           builder_csr_bankarray_csrbank4_dfii_pi0_baddress0_we = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank4_dfii_pi0_baddress0_w;
-reg           builder_csr_bankarray_csrbank4_dfii_pi0_wrdata0_re = 1'd0;
-wire   [15:0] builder_csr_bankarray_csrbank4_dfii_pi0_wrdata0_r;
-reg           builder_csr_bankarray_csrbank4_dfii_pi0_wrdata0_we = 1'd0;
-wire   [15:0] builder_csr_bankarray_csrbank4_dfii_pi0_wrdata0_w;
-reg           builder_csr_bankarray_csrbank4_dfii_pi0_rddata_re = 1'd0;
-wire   [15:0] builder_csr_bankarray_csrbank4_dfii_pi0_rddata_r;
-reg           builder_csr_bankarray_csrbank4_dfii_pi0_rddata_we = 1'd0;
-wire   [15:0] builder_csr_bankarray_csrbank4_dfii_pi0_rddata_w;
+reg           builder_csr_bankarray_csrbank4_load0_re = 1'd0;
+wire   [31:0] builder_csr_bankarray_csrbank4_load0_r;
+reg           builder_csr_bankarray_csrbank4_load0_we = 1'd0;
+wire   [31:0] builder_csr_bankarray_csrbank4_load0_w;
+reg           builder_csr_bankarray_csrbank4_reload0_re = 1'd0;
+wire   [31:0] builder_csr_bankarray_csrbank4_reload0_r;
+reg           builder_csr_bankarray_csrbank4_reload0_we = 1'd0;
+wire   [31:0] builder_csr_bankarray_csrbank4_reload0_w;
+reg           builder_csr_bankarray_csrbank4_en0_re = 1'd0;
+wire          builder_csr_bankarray_csrbank4_en0_r;
+reg           builder_csr_bankarray_csrbank4_en0_we = 1'd0;
+wire          builder_csr_bankarray_csrbank4_en0_w;
+reg           builder_csr_bankarray_csrbank4_update_value0_re = 1'd0;
+wire          builder_csr_bankarray_csrbank4_update_value0_r;
+reg           builder_csr_bankarray_csrbank4_update_value0_we = 1'd0;
+wire          builder_csr_bankarray_csrbank4_update_value0_w;
+reg           builder_csr_bankarray_csrbank4_value_re = 1'd0;
+wire   [31:0] builder_csr_bankarray_csrbank4_value_r;
+reg           builder_csr_bankarray_csrbank4_value_we = 1'd0;
+wire   [31:0] builder_csr_bankarray_csrbank4_value_w;
+reg           builder_csr_bankarray_csrbank4_ev_status_re = 1'd0;
+wire          builder_csr_bankarray_csrbank4_ev_status_r;
+reg           builder_csr_bankarray_csrbank4_ev_status_we = 1'd0;
+wire          builder_csr_bankarray_csrbank4_ev_status_w;
+reg           builder_csr_bankarray_csrbank4_ev_pending_re = 1'd0;
+wire          builder_csr_bankarray_csrbank4_ev_pending_r;
+reg           builder_csr_bankarray_csrbank4_ev_pending_we = 1'd0;
+wire          builder_csr_bankarray_csrbank4_ev_pending_w;
+reg           builder_csr_bankarray_csrbank4_ev_enable0_re = 1'd0;
+wire          builder_csr_bankarray_csrbank4_ev_enable0_r;
+reg           builder_csr_bankarray_csrbank4_ev_enable0_we = 1'd0;
+wire          builder_csr_bankarray_csrbank4_ev_enable0_w;
 wire          builder_csr_bankarray_csrbank4_sel;
 wire   [13:0] builder_csr_bankarray_interface5_bank_bus_adr;
 wire          builder_csr_bankarray_interface5_bank_bus_we;
 wire   [31:0] builder_csr_bankarray_interface5_bank_bus_dat_w;
 reg    [31:0] builder_csr_bankarray_interface5_bank_bus_dat_r = 32'd0;
-reg           builder_csr_bankarray_csrbank5_load0_re = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank5_load0_r;
-reg           builder_csr_bankarray_csrbank5_load0_we = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank5_load0_w;
-reg           builder_csr_bankarray_csrbank5_reload0_re = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank5_reload0_r;
-reg           builder_csr_bankarray_csrbank5_reload0_we = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank5_reload0_w;
-reg           builder_csr_bankarray_csrbank5_en0_re = 1'd0;
-wire          builder_csr_bankarray_csrbank5_en0_r;
-reg           builder_csr_bankarray_csrbank5_en0_we = 1'd0;
-wire          builder_csr_bankarray_csrbank5_en0_w;
-reg           builder_csr_bankarray_csrbank5_update_value0_re = 1'd0;
-wire          builder_csr_bankarray_csrbank5_update_value0_r;
-reg           builder_csr_bankarray_csrbank5_update_value0_we = 1'd0;
-wire          builder_csr_bankarray_csrbank5_update_value0_w;
-reg           builder_csr_bankarray_csrbank5_value_re = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank5_value_r;
-reg           builder_csr_bankarray_csrbank5_value_we = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank5_value_w;
+reg           builder_csr_bankarray_csrbank5_txfull_re = 1'd0;
+wire          builder_csr_bankarray_csrbank5_txfull_r;
+reg           builder_csr_bankarray_csrbank5_txfull_we = 1'd0;
+wire          builder_csr_bankarray_csrbank5_txfull_w;
+reg           builder_csr_bankarray_csrbank5_rxempty_re = 1'd0;
+wire          builder_csr_bankarray_csrbank5_rxempty_r;
+reg           builder_csr_bankarray_csrbank5_rxempty_we = 1'd0;
+wire          builder_csr_bankarray_csrbank5_rxempty_w;
 reg           builder_csr_bankarray_csrbank5_ev_status_re = 1'd0;
-wire          builder_csr_bankarray_csrbank5_ev_status_r;
+wire    [1:0] builder_csr_bankarray_csrbank5_ev_status_r;
 reg           builder_csr_bankarray_csrbank5_ev_status_we = 1'd0;
-wire          builder_csr_bankarray_csrbank5_ev_status_w;
+wire    [1:0] builder_csr_bankarray_csrbank5_ev_status_w;
 reg           builder_csr_bankarray_csrbank5_ev_pending_re = 1'd0;
-wire          builder_csr_bankarray_csrbank5_ev_pending_r;
+wire    [1:0] builder_csr_bankarray_csrbank5_ev_pending_r;
 reg           builder_csr_bankarray_csrbank5_ev_pending_we = 1'd0;
-wire          builder_csr_bankarray_csrbank5_ev_pending_w;
+wire    [1:0] builder_csr_bankarray_csrbank5_ev_pending_w;
 reg           builder_csr_bankarray_csrbank5_ev_enable0_re = 1'd0;
-wire          builder_csr_bankarray_csrbank5_ev_enable0_r;
+wire    [1:0] builder_csr_bankarray_csrbank5_ev_enable0_r;
 reg           builder_csr_bankarray_csrbank5_ev_enable0_we = 1'd0;
-wire          builder_csr_bankarray_csrbank5_ev_enable0_w;
+wire    [1:0] builder_csr_bankarray_csrbank5_ev_enable0_w;
+reg           builder_csr_bankarray_csrbank5_txempty_re = 1'd0;
+wire          builder_csr_bankarray_csrbank5_txempty_r;
+reg           builder_csr_bankarray_csrbank5_txempty_we = 1'd0;
+wire          builder_csr_bankarray_csrbank5_txempty_w;
+reg           builder_csr_bankarray_csrbank5_rxfull_re = 1'd0;
+wire          builder_csr_bankarray_csrbank5_rxfull_r;
+reg           builder_csr_bankarray_csrbank5_rxfull_we = 1'd0;
+wire          builder_csr_bankarray_csrbank5_rxfull_w;
 wire          builder_csr_bankarray_csrbank5_sel;
-wire   [13:0] builder_csr_bankarray_interface6_bank_bus_adr;
-wire          builder_csr_bankarray_interface6_bank_bus_we;
-wire   [31:0] builder_csr_bankarray_interface6_bank_bus_dat_w;
-reg    [31:0] builder_csr_bankarray_interface6_bank_bus_dat_r = 32'd0;
-reg           builder_csr_bankarray_csrbank6_txfull_re = 1'd0;
-wire          builder_csr_bankarray_csrbank6_txfull_r;
-reg           builder_csr_bankarray_csrbank6_txfull_we = 1'd0;
-wire          builder_csr_bankarray_csrbank6_txfull_w;
-reg           builder_csr_bankarray_csrbank6_rxempty_re = 1'd0;
-wire          builder_csr_bankarray_csrbank6_rxempty_r;
-reg           builder_csr_bankarray_csrbank6_rxempty_we = 1'd0;
-wire          builder_csr_bankarray_csrbank6_rxempty_w;
-reg           builder_csr_bankarray_csrbank6_ev_status_re = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank6_ev_status_r;
-reg           builder_csr_bankarray_csrbank6_ev_status_we = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank6_ev_status_w;
-reg           builder_csr_bankarray_csrbank6_ev_pending_re = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank6_ev_pending_r;
-reg           builder_csr_bankarray_csrbank6_ev_pending_we = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank6_ev_pending_w;
-reg           builder_csr_bankarray_csrbank6_ev_enable0_re = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank6_ev_enable0_r;
-reg           builder_csr_bankarray_csrbank6_ev_enable0_we = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank6_ev_enable0_w;
-reg           builder_csr_bankarray_csrbank6_txempty_re = 1'd0;
-wire          builder_csr_bankarray_csrbank6_txempty_r;
-reg           builder_csr_bankarray_csrbank6_txempty_we = 1'd0;
-wire          builder_csr_bankarray_csrbank6_txempty_w;
-reg           builder_csr_bankarray_csrbank6_rxfull_re = 1'd0;
-wire          builder_csr_bankarray_csrbank6_rxfull_r;
-reg           builder_csr_bankarray_csrbank6_rxfull_we = 1'd0;
-wire          builder_csr_bankarray_csrbank6_rxfull_w;
-wire          builder_csr_bankarray_csrbank6_sel;
 wire   [13:0] builder_csr_interconnect_adr;
 wire          builder_csr_interconnect_we;
 wire   [31:0] builder_csr_interconnect_dat_w;
@@ -1875,18 +1558,18 @@ wire   [31:0] builder_csr_interconnect_dat_r;
 wire    [1:0] builder_basesoc_clks;
 reg           builder_basesoc_rs232phytx0_state = 1'd0;
 reg           builder_basesoc_rs232phytx0_next_state = 1'd0;
-reg     [3:0] main_basesoc_basesoc_tx_count_rs232phytx0_next_value0 = 4'd0;
-reg           main_basesoc_basesoc_tx_count_rs232phytx0_next_value_ce0 = 1'd0;
-reg           main_basesoc_basesoc_serial_tx_rs232phytx0_next_value1 = 1'd0;
-reg           main_basesoc_basesoc_serial_tx_rs232phytx0_next_value_ce1 = 1'd0;
-reg     [7:0] main_basesoc_basesoc_tx_data_rs232phytx0_next_value2 = 8'd0;
-reg           main_basesoc_basesoc_tx_data_rs232phytx0_next_value_ce2 = 1'd0;
+reg     [3:0] main_basesoc_tx_count_rs232phytx0_next_value0 = 4'd0;
+reg           main_basesoc_tx_count_rs232phytx0_next_value_ce0 = 1'd0;
+reg           main_basesoc_serial_tx_rs232phytx0_next_value1 = 1'd0;
+reg           main_basesoc_serial_tx_rs232phytx0_next_value_ce1 = 1'd0;
+reg     [7:0] main_basesoc_tx_data_rs232phytx0_next_value2 = 8'd0;
+reg           main_basesoc_tx_data_rs232phytx0_next_value_ce2 = 1'd0;
 reg           builder_basesoc_rs232phyrx0_state = 1'd0;
 reg           builder_basesoc_rs232phyrx0_next_state = 1'd0;
-reg     [3:0] main_basesoc_basesoc_rx_count_rs232phyrx0_next_value0 = 4'd0;
-reg           main_basesoc_basesoc_rx_count_rs232phyrx0_next_value_ce0 = 1'd0;
-reg     [7:0] main_basesoc_basesoc_rx_data_rs232phyrx0_next_value1 = 8'd0;
-reg           main_basesoc_basesoc_rx_data_rs232phyrx0_next_value_ce1 = 1'd0;
+reg     [3:0] main_basesoc_rx_count_rs232phyrx0_next_value0 = 4'd0;
+reg           main_basesoc_rx_count_rs232phyrx0_next_value_ce0 = 1'd0;
+reg     [7:0] main_basesoc_rx_data_rs232phyrx0_next_value1 = 8'd0;
+reg           main_basesoc_rx_data_rs232phyrx0_next_value_ce1 = 1'd0;
 reg     [1:0] builder_basesoc_refresher_state = 2'd0;
 reg     [1:0] builder_basesoc_refresher_next_state = 2'd0;
 reg     [2:0] builder_basesoc_bankmachine0_state = 3'd0;
@@ -1925,56 +1608,62 @@ reg     [1:0] builder_basesoc_fullmemorywe_state = 2'd0;
 reg     [1:0] builder_basesoc_fullmemorywe_next_state = 2'd0;
 reg           builder_basesoc_litedramnativeportconverter_state = 1'd0;
 reg           builder_basesoc_litedramnativeportconverter_next_state = 1'd0;
-reg     [2:0] main_basesoc_wishbone_bridge_count_litedramnativeportconverter_next_value = 3'd0;
-reg           main_basesoc_wishbone_bridge_count_litedramnativeportconverter_next_value_ce = 1'd0;
+reg     [2:0] main_wishbone_bridge_count_litedramnativeportconverter_next_value = 3'd0;
+reg           main_wishbone_bridge_count_litedramnativeportconverter_next_value_ce = 1'd0;
 reg     [1:0] builder_basesoc_fsm_state = 2'd0;
 reg     [1:0] builder_basesoc_fsm_next_state = 2'd0;
-reg           main_basesoc_wishbone_bridge_aborted_fsm_next_value = 1'd0;
-reg           main_basesoc_wishbone_bridge_aborted_fsm_next_value_ce = 1'd0;
-reg     [2:0] builder_basesoc_s7i2s_state = 3'd0;
-reg     [2:0] builder_basesoc_s7i2s_next_state = 3'd0;
-reg     [4:0] main_basesoc_rx_fsm_s7i2s_next_value0 = 5'd0;
-reg           main_basesoc_rx_fsm_s7i2s_next_value_ce0 = 1'd0;
-reg    [23:0] main_basesoc_rx_fifo_rx_fifo_wr_d_s7i2s_next_value1 = 24'd0;
-reg           main_basesoc_rx_fifo_rx_fifo_wr_d_s7i2s_next_value_ce1 = 1'd0;
-reg           main_basesoc_rx_delay_cnt_s7i2s_t_next_value = 1'd0;
-reg           main_basesoc_rx_delay_cnt_s7i2s_t_next_value_ce = 1'd0;
-reg     [4:0] main_basesoc_rx_cnt_s7i2s_f_next_value = 5'd0;
-reg           main_basesoc_rx_cnt_s7i2s_f_next_value_ce = 1'd0;
-reg     [1:0] builder_basesoc_litescopeanalyzer_state = 2'd0;
-reg     [1:0] builder_basesoc_litescopeanalyzer_next_state = 2'd0;
+reg           main_wishbone_bridge_aborted_fsm_next_value = 1'd0;
+reg           main_wishbone_bridge_aborted_fsm_next_value_ce = 1'd0;
+reg     [2:0] builder_basesoc_fsm0_state = 3'd0;
+reg     [2:0] builder_basesoc_fsm0_next_state = 3'd0;
+reg     [4:0] main_rx_fsm_fsm0_next_value0 = 5'd0;
+reg           main_rx_fsm_fsm0_next_value_ce0 = 1'd0;
+reg    [23:0] main_rx_fifo_rx_fifo_wr_d_fsm0_next_value1 = 24'd0;
+reg           main_rx_fifo_rx_fifo_wr_d_fsm0_next_value_ce1 = 1'd0;
+reg           main_rx_delay_cnt_fsm0_t_next_value = 1'd0;
+reg           main_rx_delay_cnt_fsm0_t_next_value_ce = 1'd0;
+reg     [4:0] main_rx_cnt_fsm0_f_next_value = 5'd0;
+reg           main_rx_cnt_fsm0_f_next_value_ce = 1'd0;
+reg     [2:0] builder_basesoc_fsm1_state = 3'd0;
+reg     [2:0] builder_basesoc_fsm1_next_state = 3'd0;
+reg     [4:0] main_tx_cnt_fsm1_t_next_value0 = 5'd0;
+reg           main_tx_cnt_fsm1_t_next_value_ce0 = 1'd0;
+reg    [24:0] main_tx_buf_fsm1_t_next_value1 = 25'd0;
+reg           main_tx_buf_fsm1_t_next_value_ce1 = 1'd0;
+reg           main_tx_pin_fsm1_f_next_value = 1'd0;
+reg           main_tx_pin_fsm1_f_next_value_ce = 1'd0;
 reg           builder_basesoc_rs232phytx1_state = 1'd0;
 reg           builder_basesoc_rs232phytx1_next_state = 1'd0;
-reg     [3:0] main_basesoc_uartbone_phy_tx_count_rs232phytx1_next_value0 = 4'd0;
-reg           main_basesoc_uartbone_phy_tx_count_rs232phytx1_next_value_ce0 = 1'd0;
-reg           main_basesoc_serial_debug_tx_rs232phytx1_next_value1 = 1'd0;
-reg           main_basesoc_serial_debug_tx_rs232phytx1_next_value_ce1 = 1'd0;
-reg     [7:0] main_basesoc_uartbone_phy_tx_data_rs232phytx1_next_value2 = 8'd0;
-reg           main_basesoc_uartbone_phy_tx_data_rs232phytx1_next_value_ce2 = 1'd0;
+reg     [3:0] main_uartbone_phy_tx_count_rs232phytx1_next_value0 = 4'd0;
+reg           main_uartbone_phy_tx_count_rs232phytx1_next_value_ce0 = 1'd0;
+reg           main_serial_debug_tx_rs232phytx1_next_value1 = 1'd0;
+reg           main_serial_debug_tx_rs232phytx1_next_value_ce1 = 1'd0;
+reg     [7:0] main_uartbone_phy_tx_data_rs232phytx1_next_value2 = 8'd0;
+reg           main_uartbone_phy_tx_data_rs232phytx1_next_value_ce2 = 1'd0;
 reg           builder_basesoc_rs232phyrx1_state = 1'd0;
 reg           builder_basesoc_rs232phyrx1_next_state = 1'd0;
-reg     [3:0] main_basesoc_uartbone_phy_rx_count_rs232phyrx1_next_value0 = 4'd0;
-reg           main_basesoc_uartbone_phy_rx_count_rs232phyrx1_next_value_ce0 = 1'd0;
-reg     [7:0] main_basesoc_uartbone_phy_rx_data_rs232phyrx1_next_value1 = 8'd0;
-reg           main_basesoc_uartbone_phy_rx_data_rs232phyrx1_next_value_ce1 = 1'd0;
+reg     [3:0] main_uartbone_phy_rx_count_rs232phyrx1_next_value0 = 4'd0;
+reg           main_uartbone_phy_rx_count_rs232phyrx1_next_value_ce0 = 1'd0;
+reg     [7:0] main_uartbone_phy_rx_data_rs232phyrx1_next_value1 = 8'd0;
+reg           main_uartbone_phy_rx_data_rs232phyrx1_next_value_ce1 = 1'd0;
 reg     [2:0] builder_basesoc_uartbone_state = 3'd0;
 reg     [2:0] builder_basesoc_uartbone_next_state = 3'd0;
-reg     [1:0] main_basesoc_uartbone_data_bytes_count_uartbone_next_value0 = 2'd0;
-reg           main_basesoc_uartbone_data_bytes_count_uartbone_next_value_ce0 = 1'd0;
-reg     [1:0] main_basesoc_uartbone_addr_bytes_count_uartbone_next_value1 = 2'd0;
-reg           main_basesoc_uartbone_addr_bytes_count_uartbone_next_value_ce1 = 1'd0;
-reg     [7:0] main_basesoc_uartbone_words_count_uartbone_next_value2 = 8'd0;
-reg           main_basesoc_uartbone_words_count_uartbone_next_value_ce2 = 1'd0;
-reg     [7:0] main_basesoc_uartbone_cmd_uartbone_next_value3 = 8'd0;
-reg           main_basesoc_uartbone_cmd_uartbone_next_value_ce3 = 1'd0;
-reg     [7:0] main_basesoc_uartbone_length_uartbone_next_value4 = 8'd0;
-reg           main_basesoc_uartbone_length_uartbone_next_value_ce4 = 1'd0;
-reg    [31:0] main_basesoc_uartbone_address_uartbone_next_value5 = 32'd0;
-reg           main_basesoc_uartbone_address_uartbone_next_value_ce5 = 1'd0;
-reg           main_basesoc_uartbone_incr_uartbone_next_value6 = 1'd0;
-reg           main_basesoc_uartbone_incr_uartbone_next_value_ce6 = 1'd0;
-reg    [31:0] main_basesoc_uartbone_data_uartbone_next_value7 = 32'd0;
-reg           main_basesoc_uartbone_data_uartbone_next_value_ce7 = 1'd0;
+reg     [1:0] main_uartbone_data_bytes_count_uartbone_next_value0 = 2'd0;
+reg           main_uartbone_data_bytes_count_uartbone_next_value_ce0 = 1'd0;
+reg     [1:0] main_uartbone_addr_bytes_count_uartbone_next_value1 = 2'd0;
+reg           main_uartbone_addr_bytes_count_uartbone_next_value_ce1 = 1'd0;
+reg     [7:0] main_uartbone_words_count_uartbone_next_value2 = 8'd0;
+reg           main_uartbone_words_count_uartbone_next_value_ce2 = 1'd0;
+reg     [7:0] main_uartbone_cmd_uartbone_next_value3 = 8'd0;
+reg           main_uartbone_cmd_uartbone_next_value_ce3 = 1'd0;
+reg     [7:0] main_uartbone_length_uartbone_next_value4 = 8'd0;
+reg           main_uartbone_length_uartbone_next_value_ce4 = 1'd0;
+reg    [31:0] main_uartbone_address_uartbone_next_value5 = 32'd0;
+reg           main_uartbone_address_uartbone_next_value_ce5 = 1'd0;
+reg           main_uartbone_incr_uartbone_next_value6 = 1'd0;
+reg           main_uartbone_incr_uartbone_next_value_ce6 = 1'd0;
+reg    [31:0] main_uartbone_data_uartbone_next_value7 = 32'd0;
+reg           main_uartbone_data_uartbone_next_value_ce7 = 1'd0;
 reg     [1:0] builder_basesoc_wishbone2csr_state = 2'd0;
 reg     [1:0] builder_basesoc_wishbone2csr_next_state = 2'd0;
 reg    [31:0] builder_basesoc_dat_w_wishbone2csr_next_value0 = 32'd0;
@@ -2104,32 +1793,6 @@ reg           builder_impl_multiregimpl3_regs0 = 1'd0;
 reg           builder_impl_multiregimpl3_regs1 = 1'd0;
 reg           builder_impl_multiregimpl4_regs0 = 1'd0;
 reg           builder_impl_multiregimpl4_regs1 = 1'd0;
-reg           builder_impl_multiregimpl5_regs0 = 1'd0;
-reg           builder_impl_multiregimpl5_regs1 = 1'd0;
-reg           builder_impl_multiregimpl6_regs0 = 1'd0;
-reg           builder_impl_multiregimpl6_regs1 = 1'd0;
-reg     [4:0] builder_impl_multiregimpl7_regs0 = 5'd0;
-reg     [4:0] builder_impl_multiregimpl7_regs1 = 5'd0;
-reg     [4:0] builder_impl_multiregimpl8_regs0 = 5'd0;
-reg     [4:0] builder_impl_multiregimpl8_regs1 = 5'd0;
-reg    [15:0] builder_impl_multiregimpl9_regs0 = 16'd0;
-reg    [15:0] builder_impl_multiregimpl9_regs1 = 16'd0;
-reg           builder_impl_multiregimpl10_regs0 = 1'd0;
-reg           builder_impl_multiregimpl10_regs1 = 1'd0;
-reg    [10:0] builder_impl_multiregimpl11_regs0 = 11'd0;
-reg    [10:0] builder_impl_multiregimpl11_regs1 = 11'd0;
-reg    [10:0] builder_impl_multiregimpl12_regs0 = 11'd0;
-reg    [10:0] builder_impl_multiregimpl12_regs1 = 11'd0;
-reg           builder_impl_multiregimpl13_regs0 = 1'd0;
-reg           builder_impl_multiregimpl13_regs1 = 1'd0;
-reg    [10:0] builder_impl_multiregimpl14_regs0 = 11'd0;
-reg    [10:0] builder_impl_multiregimpl14_regs1 = 11'd0;
-reg     [2:0] builder_impl_multiregimpl15_regs0 = 3'd0;
-reg     [2:0] builder_impl_multiregimpl15_regs1 = 3'd0;
-reg     [2:0] builder_impl_multiregimpl16_regs0 = 3'd0;
-reg     [2:0] builder_impl_multiregimpl16_regs1 = 3'd0;
-reg           builder_impl_multiregimpl17_regs0 = 1'd0;
-reg           builder_impl_multiregimpl17_regs1 = 1'd0;
 wire          builder_impl0;
 wire          builder_impl1;
 wire          builder_impl2;
@@ -2151,25 +1814,25 @@ wire          builder_impl15;
 // Combinatorial Logic
 //------------------------------------------------------------------------------
 
-assign main_basesoc_basesoc_reset = (main_basesoc_basesoc_soc_rst | main_basesoc_basesoc_cpu_rst);
+assign main_basesoc_reset = (main_basesoc_soc_rst | main_basesoc_cpu_rst);
 always @(*) begin
-    main_crg_rst <= 1'd0;
-    if (main_basesoc_basesoc_soc_rst) begin
-        main_crg_rst <= 1'd1;
+    main_rst <= 1'd0;
+    if (main_basesoc_soc_rst) begin
+        main_rst <= 1'd1;
     end
 end
-assign main_basesoc_basesoc_bus_error = builder_error;
+assign main_basesoc_bus_error = builder_error;
 always @(*) begin
-    main_basesoc_basesoc_interrupt <= 32'd0;
-    main_basesoc_basesoc_interrupt[1] <= main_basesoc_basesoc_timer_irq;
-    main_basesoc_basesoc_interrupt[0] <= main_basesoc_basesoc_uart_irq;
+    main_basesoc_interrupt <= 32'd0;
+    main_basesoc_interrupt[1] <= main_basesoc_timer_irq;
+    main_basesoc_interrupt[0] <= main_basesoc_uart_irq;
 end
-assign main_crg_reset = main_crg_rst;
-assign main_crg_clkin = clk50;
-assign sys_clk = main_crg_clkout0;
-assign sys_ps_clk = main_crg_clkout1;
-assign main_crg_clkout0 = builder_basesoc_clks[0];
-assign main_crg_clkout1 = builder_basesoc_clks[1];
+assign main_reset = main_rst;
+assign main_clkin = clk50;
+assign sys_clk = main_clkout0;
+assign sys_ps_clk = main_clkout1;
+assign main_clkout0 = builder_basesoc_clks[0];
+assign main_clkout1 = builder_basesoc_clks[1];
 assign builder_shared_adr = builder_rhs_array_muxed0;
 assign builder_shared_dat_w = builder_rhs_array_muxed1;
 assign builder_shared_sel = builder_rhs_array_muxed2;
@@ -2178,16 +1841,16 @@ assign builder_shared_stb = builder_rhs_array_muxed4;
 assign builder_shared_we = builder_rhs_array_muxed5;
 assign builder_shared_cti = builder_rhs_array_muxed6;
 assign builder_shared_bte = builder_rhs_array_muxed7;
-assign main_basesoc_basesoc_ibus_ibus_dat_r = builder_shared_dat_r;
-assign main_basesoc_basesoc_dbus_dbus_dat_r = builder_shared_dat_r;
-assign main_basesoc_uartbone_wishbone_dat_r = builder_shared_dat_r;
-assign main_basesoc_basesoc_ibus_ibus_ack = (builder_shared_ack & (builder_grant == 1'd0));
-assign main_basesoc_basesoc_dbus_dbus_ack = (builder_shared_ack & (builder_grant == 1'd1));
-assign main_basesoc_uartbone_wishbone_ack = (builder_shared_ack & (builder_grant == 2'd2));
-assign main_basesoc_basesoc_ibus_ibus_err = (builder_shared_err & (builder_grant == 1'd0));
-assign main_basesoc_basesoc_dbus_dbus_err = (builder_shared_err & (builder_grant == 1'd1));
-assign main_basesoc_uartbone_wishbone_err = (builder_shared_err & (builder_grant == 2'd2));
-assign builder_request = {main_basesoc_uartbone_wishbone_cyc, main_basesoc_basesoc_dbus_dbus_cyc, main_basesoc_basesoc_ibus_ibus_cyc};
+assign main_basesoc_ibus_ibus_dat_r = builder_shared_dat_r;
+assign main_basesoc_dbus_dbus_dat_r = builder_shared_dat_r;
+assign main_uartbone_wishbone_dat_r = builder_shared_dat_r;
+assign main_basesoc_ibus_ibus_ack = (builder_shared_ack & (builder_grant == 1'd0));
+assign main_basesoc_dbus_dbus_ack = (builder_shared_ack & (builder_grant == 1'd1));
+assign main_uartbone_wishbone_ack = (builder_shared_ack & (builder_grant == 2'd2));
+assign main_basesoc_ibus_ibus_err = (builder_shared_err & (builder_grant == 1'd0));
+assign main_basesoc_dbus_dbus_err = (builder_shared_err & (builder_grant == 1'd1));
+assign main_uartbone_wishbone_err = (builder_shared_err & (builder_grant == 2'd2));
+assign builder_request = {main_uartbone_wishbone_cyc, main_basesoc_dbus_dbus_cyc, main_basesoc_ibus_ibus_cyc};
 always @(*) begin
     builder_slave_sel <= 6'd0;
     builder_slave_sel[0] <= (builder_shared_adr[29:6] == 24'd15732480);
@@ -2197,41 +1860,41 @@ always @(*) begin
     builder_slave_sel[4] <= (builder_shared_adr[29:17] == 13'd5664);
     builder_slave_sel[5] <= (builder_shared_adr[29:14] == 16'd61440);
 end
-assign main_basesoc_basesoc_vexriscv_debug_bus_adr = builder_shared_adr;
-assign main_basesoc_basesoc_vexriscv_debug_bus_dat_w = builder_shared_dat_w;
-assign main_basesoc_basesoc_vexriscv_debug_bus_sel = builder_shared_sel;
-assign main_basesoc_basesoc_vexriscv_debug_bus_stb = builder_shared_stb;
-assign main_basesoc_basesoc_vexriscv_debug_bus_we = builder_shared_we;
-assign main_basesoc_basesoc_vexriscv_debug_bus_cti = builder_shared_cti;
-assign main_basesoc_basesoc_vexriscv_debug_bus_bte = builder_shared_bte;
-assign main_basesoc_basesoc_basesoc_ram_bus_adr = builder_shared_adr;
-assign main_basesoc_basesoc_basesoc_ram_bus_dat_w = builder_shared_dat_w;
-assign main_basesoc_basesoc_basesoc_ram_bus_sel = builder_shared_sel;
-assign main_basesoc_basesoc_basesoc_ram_bus_stb = builder_shared_stb;
-assign main_basesoc_basesoc_basesoc_ram_bus_we = builder_shared_we;
-assign main_basesoc_basesoc_basesoc_ram_bus_cti = builder_shared_cti;
-assign main_basesoc_basesoc_basesoc_ram_bus_bte = builder_shared_bte;
-assign main_basesoc_basesoc_ram_bus_ram_bus_adr = builder_shared_adr;
-assign main_basesoc_basesoc_ram_bus_ram_bus_dat_w = builder_shared_dat_w;
-assign main_basesoc_basesoc_ram_bus_ram_bus_sel = builder_shared_sel;
-assign main_basesoc_basesoc_ram_bus_ram_bus_stb = builder_shared_stb;
-assign main_basesoc_basesoc_ram_bus_ram_bus_we = builder_shared_we;
-assign main_basesoc_basesoc_ram_bus_ram_bus_cti = builder_shared_cti;
-assign main_basesoc_basesoc_ram_bus_ram_bus_bte = builder_shared_bte;
-assign main_basesoc_wb_sdram_adr = builder_shared_adr;
-assign main_basesoc_wb_sdram_dat_w = builder_shared_dat_w;
-assign main_basesoc_wb_sdram_sel = builder_shared_sel;
-assign main_basesoc_wb_sdram_stb = builder_shared_stb;
-assign main_basesoc_wb_sdram_we = builder_shared_we;
-assign main_basesoc_wb_sdram_cti = builder_shared_cti;
-assign main_basesoc_wb_sdram_bte = builder_shared_bte;
-assign main_basesoc_bus_adr = builder_shared_adr;
-assign main_basesoc_bus_dat_w = builder_shared_dat_w;
-assign main_basesoc_bus_sel = builder_shared_sel;
-assign main_basesoc_bus_stb = builder_shared_stb;
-assign main_basesoc_bus_we = builder_shared_we;
-assign main_basesoc_bus_cti = builder_shared_cti;
-assign main_basesoc_bus_bte = builder_shared_bte;
+assign main_basesoc_vexriscv_debug_bus_adr = builder_shared_adr;
+assign main_basesoc_vexriscv_debug_bus_dat_w = builder_shared_dat_w;
+assign main_basesoc_vexriscv_debug_bus_sel = builder_shared_sel;
+assign main_basesoc_vexriscv_debug_bus_stb = builder_shared_stb;
+assign main_basesoc_vexriscv_debug_bus_we = builder_shared_we;
+assign main_basesoc_vexriscv_debug_bus_cti = builder_shared_cti;
+assign main_basesoc_vexriscv_debug_bus_bte = builder_shared_bte;
+assign main_basesoc_basesoc_ram_bus_adr = builder_shared_adr;
+assign main_basesoc_basesoc_ram_bus_dat_w = builder_shared_dat_w;
+assign main_basesoc_basesoc_ram_bus_sel = builder_shared_sel;
+assign main_basesoc_basesoc_ram_bus_stb = builder_shared_stb;
+assign main_basesoc_basesoc_ram_bus_we = builder_shared_we;
+assign main_basesoc_basesoc_ram_bus_cti = builder_shared_cti;
+assign main_basesoc_basesoc_ram_bus_bte = builder_shared_bte;
+assign main_basesoc_ram_bus_ram_bus_adr = builder_shared_adr;
+assign main_basesoc_ram_bus_ram_bus_dat_w = builder_shared_dat_w;
+assign main_basesoc_ram_bus_ram_bus_sel = builder_shared_sel;
+assign main_basesoc_ram_bus_ram_bus_stb = builder_shared_stb;
+assign main_basesoc_ram_bus_ram_bus_we = builder_shared_we;
+assign main_basesoc_ram_bus_ram_bus_cti = builder_shared_cti;
+assign main_basesoc_ram_bus_ram_bus_bte = builder_shared_bte;
+assign main_wb_sdram_adr = builder_shared_adr;
+assign main_wb_sdram_dat_w = builder_shared_dat_w;
+assign main_wb_sdram_sel = builder_shared_sel;
+assign main_wb_sdram_stb = builder_shared_stb;
+assign main_wb_sdram_we = builder_shared_we;
+assign main_wb_sdram_cti = builder_shared_cti;
+assign main_wb_sdram_bte = builder_shared_bte;
+assign main_bus_adr = builder_shared_adr;
+assign main_bus_dat_w = builder_shared_dat_w;
+assign main_bus_sel = builder_shared_sel;
+assign main_bus_stb = builder_shared_stb;
+assign main_bus_we = builder_shared_we;
+assign main_bus_cti = builder_shared_cti;
+assign main_bus_bte = builder_shared_bte;
 assign builder_basesoc_wishbone_adr = builder_shared_adr;
 assign builder_basesoc_wishbone_dat_w = builder_shared_dat_w;
 assign builder_basesoc_wishbone_sel = builder_shared_sel;
@@ -2239,20 +1902,20 @@ assign builder_basesoc_wishbone_stb = builder_shared_stb;
 assign builder_basesoc_wishbone_we = builder_shared_we;
 assign builder_basesoc_wishbone_cti = builder_shared_cti;
 assign builder_basesoc_wishbone_bte = builder_shared_bte;
-assign main_basesoc_basesoc_vexriscv_debug_bus_cyc = (builder_shared_cyc & builder_slave_sel[0]);
-assign main_basesoc_basesoc_basesoc_ram_bus_cyc = (builder_shared_cyc & builder_slave_sel[1]);
-assign main_basesoc_basesoc_ram_bus_ram_bus_cyc = (builder_shared_cyc & builder_slave_sel[2]);
-assign main_basesoc_wb_sdram_cyc = (builder_shared_cyc & builder_slave_sel[3]);
-assign main_basesoc_bus_cyc = (builder_shared_cyc & builder_slave_sel[4]);
+assign main_basesoc_vexriscv_debug_bus_cyc = (builder_shared_cyc & builder_slave_sel[0]);
+assign main_basesoc_basesoc_ram_bus_cyc = (builder_shared_cyc & builder_slave_sel[1]);
+assign main_basesoc_ram_bus_ram_bus_cyc = (builder_shared_cyc & builder_slave_sel[2]);
+assign main_wb_sdram_cyc = (builder_shared_cyc & builder_slave_sel[3]);
+assign main_bus_cyc = (builder_shared_cyc & builder_slave_sel[4]);
 assign builder_basesoc_wishbone_cyc = (builder_shared_cyc & builder_slave_sel[5]);
-assign builder_shared_err = (((((main_basesoc_basesoc_vexriscv_debug_bus_err | main_basesoc_basesoc_basesoc_ram_bus_err) | main_basesoc_basesoc_ram_bus_ram_bus_err) | main_basesoc_wb_sdram_err) | main_basesoc_bus_err) | builder_basesoc_wishbone_err);
+assign builder_shared_err = (((((main_basesoc_vexriscv_debug_bus_err | main_basesoc_basesoc_ram_bus_err) | main_basesoc_ram_bus_ram_bus_err) | main_wb_sdram_err) | main_bus_err) | builder_basesoc_wishbone_err);
 assign builder_wait = ((builder_shared_stb & builder_shared_cyc) & (~builder_shared_ack));
 always @(*) begin
-    builder_shared_ack <= 1'd0;
-    builder_shared_dat_r <= 32'd0;
     builder_error <= 1'd0;
-    builder_shared_ack <= (((((main_basesoc_basesoc_vexriscv_debug_bus_ack | main_basesoc_basesoc_basesoc_ram_bus_ack) | main_basesoc_basesoc_ram_bus_ram_bus_ack) | main_basesoc_wb_sdram_ack) | main_basesoc_bus_ack) | builder_basesoc_wishbone_ack);
-    builder_shared_dat_r <= (((((({32{builder_slave_sel_r[0]}} & main_basesoc_basesoc_vexriscv_debug_bus_dat_r) | ({32{builder_slave_sel_r[1]}} & main_basesoc_basesoc_basesoc_ram_bus_dat_r)) | ({32{builder_slave_sel_r[2]}} & main_basesoc_basesoc_ram_bus_ram_bus_dat_r)) | ({32{builder_slave_sel_r[3]}} & main_basesoc_wb_sdram_dat_r)) | ({32{builder_slave_sel_r[4]}} & main_basesoc_bus_dat_r)) | ({32{builder_slave_sel_r[5]}} & builder_basesoc_wishbone_dat_r));
+    builder_shared_dat_r <= 32'd0;
+    builder_shared_ack <= 1'd0;
+    builder_shared_ack <= (((((main_basesoc_vexriscv_debug_bus_ack | main_basesoc_basesoc_ram_bus_ack) | main_basesoc_ram_bus_ram_bus_ack) | main_wb_sdram_ack) | main_bus_ack) | builder_basesoc_wishbone_ack);
+    builder_shared_dat_r <= (((((({32{builder_slave_sel_r[0]}} & main_basesoc_vexriscv_debug_bus_dat_r) | ({32{builder_slave_sel_r[1]}} & main_basesoc_basesoc_ram_bus_dat_r)) | ({32{builder_slave_sel_r[2]}} & main_basesoc_ram_bus_ram_bus_dat_r)) | ({32{builder_slave_sel_r[3]}} & main_wb_sdram_dat_r)) | ({32{builder_slave_sel_r[4]}} & main_bus_dat_r)) | ({32{builder_slave_sel_r[5]}} & builder_basesoc_wishbone_dat_r));
     if (builder_done) begin
         builder_shared_dat_r <= 32'd4294967295;
         builder_shared_ack <= 1'd1;
@@ -2260,556 +1923,556 @@ always @(*) begin
     end
 end
 assign builder_done = (builder_count == 1'd0);
-assign main_basesoc_basesoc_bus_errors_status = main_basesoc_basesoc_bus_errors;
+assign main_basesoc_bus_errors_status = main_basesoc_bus_errors;
 always @(*) begin
-    main_basesoc_basesoc_soc_rst <= 1'd0;
-    if (main_basesoc_basesoc_reset_re) begin
-        main_basesoc_basesoc_soc_rst <= main_basesoc_basesoc_reset_storage[0];
+    main_basesoc_soc_rst <= 1'd0;
+    if (main_basesoc_reset_re) begin
+        main_basesoc_soc_rst <= main_basesoc_reset_storage[0];
     end
 end
-assign main_basesoc_basesoc_cpu_rst = main_basesoc_basesoc_reset_storage[1];
-assign builder_csr_bankarray_csrbank1_reset0_w = main_basesoc_basesoc_reset_storage[1:0];
-assign builder_csr_bankarray_csrbank1_scratch0_w = main_basesoc_basesoc_scratch_storage[31:0];
-assign builder_csr_bankarray_csrbank1_bus_errors_w = main_basesoc_basesoc_bus_errors_status[31:0];
-assign main_basesoc_basesoc_bus_errors_we = builder_csr_bankarray_csrbank1_bus_errors_we;
-assign main_basesoc_basesoc_basesoc_adr = main_basesoc_basesoc_basesoc_ram_bus_adr[14:0];
-assign main_basesoc_basesoc_basesoc_ram_bus_dat_r = main_basesoc_basesoc_basesoc_dat_r;
+assign main_basesoc_cpu_rst = main_basesoc_reset_storage[1];
+assign builder_csr_bankarray_csrbank0_reset0_w = main_basesoc_reset_storage[1:0];
+assign builder_csr_bankarray_csrbank0_scratch0_w = main_basesoc_scratch_storage[31:0];
+assign builder_csr_bankarray_csrbank0_bus_errors_w = main_basesoc_bus_errors_status[31:0];
+assign main_basesoc_bus_errors_we = builder_csr_bankarray_csrbank0_bus_errors_we;
+assign main_basesoc_basesoc_adr = main_basesoc_basesoc_ram_bus_adr[14:0];
+assign main_basesoc_basesoc_ram_bus_dat_r = main_basesoc_basesoc_dat_r;
 always @(*) begin
-    main_basesoc_basesoc_ram_we <= 4'd0;
-    main_basesoc_basesoc_ram_we[0] <= (((main_basesoc_basesoc_ram_bus_ram_bus_cyc & main_basesoc_basesoc_ram_bus_ram_bus_stb) & main_basesoc_basesoc_ram_bus_ram_bus_we) & main_basesoc_basesoc_ram_bus_ram_bus_sel[0]);
-    main_basesoc_basesoc_ram_we[1] <= (((main_basesoc_basesoc_ram_bus_ram_bus_cyc & main_basesoc_basesoc_ram_bus_ram_bus_stb) & main_basesoc_basesoc_ram_bus_ram_bus_we) & main_basesoc_basesoc_ram_bus_ram_bus_sel[1]);
-    main_basesoc_basesoc_ram_we[2] <= (((main_basesoc_basesoc_ram_bus_ram_bus_cyc & main_basesoc_basesoc_ram_bus_ram_bus_stb) & main_basesoc_basesoc_ram_bus_ram_bus_we) & main_basesoc_basesoc_ram_bus_ram_bus_sel[2]);
-    main_basesoc_basesoc_ram_we[3] <= (((main_basesoc_basesoc_ram_bus_ram_bus_cyc & main_basesoc_basesoc_ram_bus_ram_bus_stb) & main_basesoc_basesoc_ram_bus_ram_bus_we) & main_basesoc_basesoc_ram_bus_ram_bus_sel[3]);
+    main_basesoc_ram_we <= 4'd0;
+    main_basesoc_ram_we[0] <= (((main_basesoc_ram_bus_ram_bus_cyc & main_basesoc_ram_bus_ram_bus_stb) & main_basesoc_ram_bus_ram_bus_we) & main_basesoc_ram_bus_ram_bus_sel[0]);
+    main_basesoc_ram_we[1] <= (((main_basesoc_ram_bus_ram_bus_cyc & main_basesoc_ram_bus_ram_bus_stb) & main_basesoc_ram_bus_ram_bus_we) & main_basesoc_ram_bus_ram_bus_sel[1]);
+    main_basesoc_ram_we[2] <= (((main_basesoc_ram_bus_ram_bus_cyc & main_basesoc_ram_bus_ram_bus_stb) & main_basesoc_ram_bus_ram_bus_we) & main_basesoc_ram_bus_ram_bus_sel[2]);
+    main_basesoc_ram_we[3] <= (((main_basesoc_ram_bus_ram_bus_cyc & main_basesoc_ram_bus_ram_bus_stb) & main_basesoc_ram_bus_ram_bus_we) & main_basesoc_ram_bus_ram_bus_sel[3]);
 end
-assign main_basesoc_basesoc_ram_adr = main_basesoc_basesoc_ram_bus_ram_bus_adr[10:0];
-assign main_basesoc_basesoc_ram_bus_ram_bus_dat_r = main_basesoc_basesoc_ram_dat_r;
-assign main_basesoc_basesoc_ram_dat_w = main_basesoc_basesoc_ram_bus_ram_bus_dat_w;
+assign main_basesoc_ram_adr = main_basesoc_ram_bus_ram_bus_adr[10:0];
+assign main_basesoc_ram_bus_ram_bus_dat_r = main_basesoc_ram_dat_r;
+assign main_basesoc_ram_dat_w = main_basesoc_ram_bus_ram_bus_dat_w;
 always @(*) begin
+    main_basesoc_tx_data_rs232phytx0_next_value2 <= 8'd0;
+    main_basesoc_tx_data_rs232phytx0_next_value_ce2 <= 1'd0;
+    main_basesoc_tx_sink_ready <= 1'd0;
     builder_basesoc_rs232phytx0_next_state <= 1'd0;
-    main_basesoc_basesoc_tx_sink_ready <= 1'd0;
-    main_basesoc_basesoc_tx_count_rs232phytx0_next_value0 <= 4'd0;
-    main_basesoc_basesoc_tx_count_rs232phytx0_next_value_ce0 <= 1'd0;
-    main_basesoc_basesoc_serial_tx_rs232phytx0_next_value1 <= 1'd0;
-    main_basesoc_basesoc_serial_tx_rs232phytx0_next_value_ce1 <= 1'd0;
-    main_basesoc_basesoc_tx_enable <= 1'd0;
-    main_basesoc_basesoc_tx_data_rs232phytx0_next_value2 <= 8'd0;
-    main_basesoc_basesoc_tx_data_rs232phytx0_next_value_ce2 <= 1'd0;
+    main_basesoc_tx_count_rs232phytx0_next_value0 <= 4'd0;
+    main_basesoc_tx_count_rs232phytx0_next_value_ce0 <= 1'd0;
+    main_basesoc_tx_enable <= 1'd0;
+    main_basesoc_serial_tx_rs232phytx0_next_value1 <= 1'd0;
+    main_basesoc_serial_tx_rs232phytx0_next_value_ce1 <= 1'd0;
     builder_basesoc_rs232phytx0_next_state <= builder_basesoc_rs232phytx0_state;
     case (builder_basesoc_rs232phytx0_state)
         1'd1: begin
-            main_basesoc_basesoc_tx_enable <= 1'd1;
-            if (main_basesoc_basesoc_tx_tick) begin
-                main_basesoc_basesoc_serial_tx_rs232phytx0_next_value1 <= main_basesoc_basesoc_tx_data;
-                main_basesoc_basesoc_serial_tx_rs232phytx0_next_value_ce1 <= 1'd1;
-                main_basesoc_basesoc_tx_count_rs232phytx0_next_value0 <= (main_basesoc_basesoc_tx_count + 1'd1);
-                main_basesoc_basesoc_tx_count_rs232phytx0_next_value_ce0 <= 1'd1;
-                main_basesoc_basesoc_tx_data_rs232phytx0_next_value2 <= {1'd1, main_basesoc_basesoc_tx_data[7:1]};
-                main_basesoc_basesoc_tx_data_rs232phytx0_next_value_ce2 <= 1'd1;
-                if ((main_basesoc_basesoc_tx_count == 4'd9)) begin
-                    main_basesoc_basesoc_tx_sink_ready <= 1'd1;
+            main_basesoc_tx_enable <= 1'd1;
+            if (main_basesoc_tx_tick) begin
+                main_basesoc_serial_tx_rs232phytx0_next_value1 <= main_basesoc_tx_data;
+                main_basesoc_serial_tx_rs232phytx0_next_value_ce1 <= 1'd1;
+                main_basesoc_tx_count_rs232phytx0_next_value0 <= (main_basesoc_tx_count + 1'd1);
+                main_basesoc_tx_count_rs232phytx0_next_value_ce0 <= 1'd1;
+                main_basesoc_tx_data_rs232phytx0_next_value2 <= {1'd1, main_basesoc_tx_data[7:1]};
+                main_basesoc_tx_data_rs232phytx0_next_value_ce2 <= 1'd1;
+                if ((main_basesoc_tx_count == 4'd9)) begin
+                    main_basesoc_tx_sink_ready <= 1'd1;
                     builder_basesoc_rs232phytx0_next_state <= 1'd0;
                 end
             end
         end
         default: begin
-            main_basesoc_basesoc_tx_count_rs232phytx0_next_value0 <= 1'd0;
-            main_basesoc_basesoc_tx_count_rs232phytx0_next_value_ce0 <= 1'd1;
-            main_basesoc_basesoc_serial_tx_rs232phytx0_next_value1 <= 1'd1;
-            main_basesoc_basesoc_serial_tx_rs232phytx0_next_value_ce1 <= 1'd1;
-            if (main_basesoc_basesoc_tx_sink_valid) begin
-                main_basesoc_basesoc_serial_tx_rs232phytx0_next_value1 <= 1'd0;
-                main_basesoc_basesoc_serial_tx_rs232phytx0_next_value_ce1 <= 1'd1;
-                main_basesoc_basesoc_tx_data_rs232phytx0_next_value2 <= main_basesoc_basesoc_tx_sink_payload_data;
-                main_basesoc_basesoc_tx_data_rs232phytx0_next_value_ce2 <= 1'd1;
+            main_basesoc_tx_count_rs232phytx0_next_value0 <= 1'd0;
+            main_basesoc_tx_count_rs232phytx0_next_value_ce0 <= 1'd1;
+            main_basesoc_serial_tx_rs232phytx0_next_value1 <= 1'd1;
+            main_basesoc_serial_tx_rs232phytx0_next_value_ce1 <= 1'd1;
+            if (main_basesoc_tx_sink_valid) begin
+                main_basesoc_serial_tx_rs232phytx0_next_value1 <= 1'd0;
+                main_basesoc_serial_tx_rs232phytx0_next_value_ce1 <= 1'd1;
+                main_basesoc_tx_data_rs232phytx0_next_value2 <= main_basesoc_tx_sink_payload_data;
+                main_basesoc_tx_data_rs232phytx0_next_value_ce2 <= 1'd1;
                 builder_basesoc_rs232phytx0_next_state <= 1'd1;
             end
         end
     endcase
 end
 always @(*) begin
+    main_basesoc_rx_data_rs232phyrx0_next_value1 <= 8'd0;
+    main_basesoc_rx_data_rs232phyrx0_next_value_ce1 <= 1'd0;
+    main_basesoc_rx_source_valid <= 1'd0;
+    main_basesoc_rx_source_payload_data <= 8'd0;
     builder_basesoc_rs232phyrx0_next_state <= 1'd0;
-    main_basesoc_basesoc_rx_source_valid <= 1'd0;
-    main_basesoc_basesoc_rx_count_rs232phyrx0_next_value0 <= 4'd0;
-    main_basesoc_basesoc_rx_count_rs232phyrx0_next_value_ce0 <= 1'd0;
-    main_basesoc_basesoc_rx_source_payload_data <= 8'd0;
-    main_basesoc_basesoc_rx_data_rs232phyrx0_next_value1 <= 8'd0;
-    main_basesoc_basesoc_rx_enable <= 1'd0;
-    main_basesoc_basesoc_rx_data_rs232phyrx0_next_value_ce1 <= 1'd0;
+    main_basesoc_rx_count_rs232phyrx0_next_value0 <= 4'd0;
+    main_basesoc_rx_count_rs232phyrx0_next_value_ce0 <= 1'd0;
+    main_basesoc_rx_enable <= 1'd0;
     builder_basesoc_rs232phyrx0_next_state <= builder_basesoc_rs232phyrx0_state;
     case (builder_basesoc_rs232phyrx0_state)
         1'd1: begin
-            main_basesoc_basesoc_rx_enable <= 1'd1;
-            if (main_basesoc_basesoc_rx_tick) begin
-                main_basesoc_basesoc_rx_count_rs232phyrx0_next_value0 <= (main_basesoc_basesoc_rx_count + 1'd1);
-                main_basesoc_basesoc_rx_count_rs232phyrx0_next_value_ce0 <= 1'd1;
-                main_basesoc_basesoc_rx_data_rs232phyrx0_next_value1 <= {main_basesoc_basesoc_rx_rx, main_basesoc_basesoc_rx_data[7:1]};
-                main_basesoc_basesoc_rx_data_rs232phyrx0_next_value_ce1 <= 1'd1;
-                if ((main_basesoc_basesoc_rx_count == 4'd9)) begin
-                    main_basesoc_basesoc_rx_source_valid <= (main_basesoc_basesoc_rx_rx == 1'd1);
-                    main_basesoc_basesoc_rx_source_payload_data <= main_basesoc_basesoc_rx_data;
+            main_basesoc_rx_enable <= 1'd1;
+            if (main_basesoc_rx_tick) begin
+                main_basesoc_rx_count_rs232phyrx0_next_value0 <= (main_basesoc_rx_count + 1'd1);
+                main_basesoc_rx_count_rs232phyrx0_next_value_ce0 <= 1'd1;
+                main_basesoc_rx_data_rs232phyrx0_next_value1 <= {main_basesoc_rx_rx, main_basesoc_rx_data[7:1]};
+                main_basesoc_rx_data_rs232phyrx0_next_value_ce1 <= 1'd1;
+                if ((main_basesoc_rx_count == 4'd9)) begin
+                    main_basesoc_rx_source_valid <= (main_basesoc_rx_rx == 1'd1);
+                    main_basesoc_rx_source_payload_data <= main_basesoc_rx_data;
                     builder_basesoc_rs232phyrx0_next_state <= 1'd0;
                 end
             end
         end
         default: begin
-            main_basesoc_basesoc_rx_count_rs232phyrx0_next_value0 <= 1'd0;
-            main_basesoc_basesoc_rx_count_rs232phyrx0_next_value_ce0 <= 1'd1;
-            if (((main_basesoc_basesoc_rx_rx == 1'd0) & (main_basesoc_basesoc_rx_rx_d == 1'd1))) begin
+            main_basesoc_rx_count_rs232phyrx0_next_value0 <= 1'd0;
+            main_basesoc_rx_count_rs232phyrx0_next_value_ce0 <= 1'd1;
+            if (((main_basesoc_rx_rx == 1'd0) & (main_basesoc_rx_rx_d == 1'd1))) begin
                 builder_basesoc_rs232phyrx0_next_state <= 1'd1;
             end
         end
     endcase
 end
-assign main_basesoc_basesoc_uart_uart_sink_valid = main_basesoc_basesoc_rx_source_valid;
-assign main_basesoc_basesoc_rx_source_ready = main_basesoc_basesoc_uart_uart_sink_ready;
-assign main_basesoc_basesoc_uart_uart_sink_first = main_basesoc_basesoc_rx_source_first;
-assign main_basesoc_basesoc_uart_uart_sink_last = main_basesoc_basesoc_rx_source_last;
-assign main_basesoc_basesoc_uart_uart_sink_payload_data = main_basesoc_basesoc_rx_source_payload_data;
-assign main_basesoc_basesoc_tx_sink_valid = main_basesoc_basesoc_uart_uart_source_valid;
-assign main_basesoc_basesoc_uart_uart_source_ready = main_basesoc_basesoc_tx_sink_ready;
-assign main_basesoc_basesoc_tx_sink_first = main_basesoc_basesoc_uart_uart_source_first;
-assign main_basesoc_basesoc_tx_sink_last = main_basesoc_basesoc_uart_uart_source_last;
-assign main_basesoc_basesoc_tx_sink_payload_data = main_basesoc_basesoc_uart_uart_source_payload_data;
-assign main_basesoc_basesoc_uart_tx_fifo_sink_valid = main_basesoc_basesoc_uart_rxtx_re;
-assign main_basesoc_basesoc_uart_tx_fifo_sink_payload_data = main_basesoc_basesoc_uart_rxtx_r;
-assign main_basesoc_basesoc_uart_uart_source_valid = main_basesoc_basesoc_uart_tx_fifo_source_valid;
-assign main_basesoc_basesoc_uart_tx_fifo_source_ready = main_basesoc_basesoc_uart_uart_source_ready;
-assign main_basesoc_basesoc_uart_uart_source_first = main_basesoc_basesoc_uart_tx_fifo_source_first;
-assign main_basesoc_basesoc_uart_uart_source_last = main_basesoc_basesoc_uart_tx_fifo_source_last;
-assign main_basesoc_basesoc_uart_uart_source_payload_data = main_basesoc_basesoc_uart_tx_fifo_source_payload_data;
-assign main_basesoc_basesoc_uart_txfull_status = (~main_basesoc_basesoc_uart_tx_fifo_sink_ready);
-assign main_basesoc_basesoc_uart_txempty_status = (~main_basesoc_basesoc_uart_tx_fifo_source_valid);
-assign main_basesoc_basesoc_uart_tx_trigger = main_basesoc_basesoc_uart_tx_fifo_sink_ready;
-assign main_basesoc_basesoc_uart_rx_fifo_sink_valid = main_basesoc_basesoc_uart_uart_sink_valid;
-assign main_basesoc_basesoc_uart_uart_sink_ready = main_basesoc_basesoc_uart_rx_fifo_sink_ready;
-assign main_basesoc_basesoc_uart_rx_fifo_sink_first = main_basesoc_basesoc_uart_uart_sink_first;
-assign main_basesoc_basesoc_uart_rx_fifo_sink_last = main_basesoc_basesoc_uart_uart_sink_last;
-assign main_basesoc_basesoc_uart_rx_fifo_sink_payload_data = main_basesoc_basesoc_uart_uart_sink_payload_data;
-assign main_basesoc_basesoc_uart_rxtx_w = main_basesoc_basesoc_uart_rx_fifo_source_payload_data;
-assign main_basesoc_basesoc_uart_rx_fifo_source_ready = (main_basesoc_basesoc_uart_rx_clear | (1'd0 & main_basesoc_basesoc_uart_rxtx_we));
-assign main_basesoc_basesoc_uart_rxempty_status = (~main_basesoc_basesoc_uart_rx_fifo_source_valid);
-assign main_basesoc_basesoc_uart_rxfull_status = (~main_basesoc_basesoc_uart_rx_fifo_sink_ready);
-assign main_basesoc_basesoc_uart_rx_trigger = main_basesoc_basesoc_uart_rx_fifo_source_valid;
-assign main_basesoc_basesoc_uart_tx0 = main_basesoc_basesoc_uart_tx_status;
-assign main_basesoc_basesoc_uart_tx1 = main_basesoc_basesoc_uart_tx_pending;
+assign main_basesoc_uart_uart_sink_valid = main_basesoc_rx_source_valid;
+assign main_basesoc_rx_source_ready = main_basesoc_uart_uart_sink_ready;
+assign main_basesoc_uart_uart_sink_first = main_basesoc_rx_source_first;
+assign main_basesoc_uart_uart_sink_last = main_basesoc_rx_source_last;
+assign main_basesoc_uart_uart_sink_payload_data = main_basesoc_rx_source_payload_data;
+assign main_basesoc_tx_sink_valid = main_basesoc_uart_uart_source_valid;
+assign main_basesoc_uart_uart_source_ready = main_basesoc_tx_sink_ready;
+assign main_basesoc_tx_sink_first = main_basesoc_uart_uart_source_first;
+assign main_basesoc_tx_sink_last = main_basesoc_uart_uart_source_last;
+assign main_basesoc_tx_sink_payload_data = main_basesoc_uart_uart_source_payload_data;
+assign main_basesoc_uart_tx_fifo_sink_valid = main_basesoc_uart_rxtx_re;
+assign main_basesoc_uart_tx_fifo_sink_payload_data = main_basesoc_uart_rxtx_r;
+assign main_basesoc_uart_uart_source_valid = main_basesoc_uart_tx_fifo_source_valid;
+assign main_basesoc_uart_tx_fifo_source_ready = main_basesoc_uart_uart_source_ready;
+assign main_basesoc_uart_uart_source_first = main_basesoc_uart_tx_fifo_source_first;
+assign main_basesoc_uart_uart_source_last = main_basesoc_uart_tx_fifo_source_last;
+assign main_basesoc_uart_uart_source_payload_data = main_basesoc_uart_tx_fifo_source_payload_data;
+assign main_basesoc_uart_txfull_status = (~main_basesoc_uart_tx_fifo_sink_ready);
+assign main_basesoc_uart_txempty_status = (~main_basesoc_uart_tx_fifo_source_valid);
+assign main_basesoc_uart_tx_trigger = main_basesoc_uart_tx_fifo_sink_ready;
+assign main_basesoc_uart_rx_fifo_sink_valid = main_basesoc_uart_uart_sink_valid;
+assign main_basesoc_uart_uart_sink_ready = main_basesoc_uart_rx_fifo_sink_ready;
+assign main_basesoc_uart_rx_fifo_sink_first = main_basesoc_uart_uart_sink_first;
+assign main_basesoc_uart_rx_fifo_sink_last = main_basesoc_uart_uart_sink_last;
+assign main_basesoc_uart_rx_fifo_sink_payload_data = main_basesoc_uart_uart_sink_payload_data;
+assign main_basesoc_uart_rxtx_w = main_basesoc_uart_rx_fifo_source_payload_data;
+assign main_basesoc_uart_rx_fifo_source_ready = (main_basesoc_uart_rx_clear | (1'd0 & main_basesoc_uart_rxtx_we));
+assign main_basesoc_uart_rxempty_status = (~main_basesoc_uart_rx_fifo_source_valid);
+assign main_basesoc_uart_rxfull_status = (~main_basesoc_uart_rx_fifo_sink_ready);
+assign main_basesoc_uart_rx_trigger = main_basesoc_uart_rx_fifo_source_valid;
+assign main_basesoc_uart_tx0 = main_basesoc_uart_tx_status;
+assign main_basesoc_uart_tx1 = main_basesoc_uart_tx_pending;
 always @(*) begin
-    main_basesoc_basesoc_uart_tx_clear <= 1'd0;
-    if ((main_basesoc_basesoc_uart_pending_re & main_basesoc_basesoc_uart_pending_r[0])) begin
-        main_basesoc_basesoc_uart_tx_clear <= 1'd1;
+    main_basesoc_uart_tx_clear <= 1'd0;
+    if ((main_basesoc_uart_pending_re & main_basesoc_uart_pending_r[0])) begin
+        main_basesoc_uart_tx_clear <= 1'd1;
     end
 end
-assign main_basesoc_basesoc_uart_rx0 = main_basesoc_basesoc_uart_rx_status;
-assign main_basesoc_basesoc_uart_rx1 = main_basesoc_basesoc_uart_rx_pending;
+assign main_basesoc_uart_rx0 = main_basesoc_uart_rx_status;
+assign main_basesoc_uart_rx1 = main_basesoc_uart_rx_pending;
 always @(*) begin
-    main_basesoc_basesoc_uart_rx_clear <= 1'd0;
-    if ((main_basesoc_basesoc_uart_pending_re & main_basesoc_basesoc_uart_pending_r[1])) begin
-        main_basesoc_basesoc_uart_rx_clear <= 1'd1;
+    main_basesoc_uart_rx_clear <= 1'd0;
+    if ((main_basesoc_uart_pending_re & main_basesoc_uart_pending_r[1])) begin
+        main_basesoc_uart_rx_clear <= 1'd1;
     end
 end
-assign main_basesoc_basesoc_uart_irq = ((main_basesoc_basesoc_uart_pending_status[0] & main_basesoc_basesoc_uart_enable_storage[0]) | (main_basesoc_basesoc_uart_pending_status[1] & main_basesoc_basesoc_uart_enable_storage[1]));
-assign main_basesoc_basesoc_uart_tx_status = main_basesoc_basesoc_uart_tx_trigger;
-assign main_basesoc_basesoc_uart_rx_status = main_basesoc_basesoc_uart_rx_trigger;
-assign main_basesoc_basesoc_uart_tx_fifo_syncfifo_din = {main_basesoc_basesoc_uart_tx_fifo_fifo_in_last, main_basesoc_basesoc_uart_tx_fifo_fifo_in_first, main_basesoc_basesoc_uart_tx_fifo_fifo_in_payload_data};
-assign {main_basesoc_basesoc_uart_tx_fifo_fifo_out_last, main_basesoc_basesoc_uart_tx_fifo_fifo_out_first, main_basesoc_basesoc_uart_tx_fifo_fifo_out_payload_data} = main_basesoc_basesoc_uart_tx_fifo_syncfifo_dout;
-assign main_basesoc_basesoc_uart_tx_fifo_sink_ready = main_basesoc_basesoc_uart_tx_fifo_syncfifo_writable;
-assign main_basesoc_basesoc_uart_tx_fifo_syncfifo_we = main_basesoc_basesoc_uart_tx_fifo_sink_valid;
-assign main_basesoc_basesoc_uart_tx_fifo_fifo_in_first = main_basesoc_basesoc_uart_tx_fifo_sink_first;
-assign main_basesoc_basesoc_uart_tx_fifo_fifo_in_last = main_basesoc_basesoc_uart_tx_fifo_sink_last;
-assign main_basesoc_basesoc_uart_tx_fifo_fifo_in_payload_data = main_basesoc_basesoc_uart_tx_fifo_sink_payload_data;
-assign main_basesoc_basesoc_uart_tx_fifo_source_valid = main_basesoc_basesoc_uart_tx_fifo_readable;
-assign main_basesoc_basesoc_uart_tx_fifo_source_first = main_basesoc_basesoc_uart_tx_fifo_fifo_out_first;
-assign main_basesoc_basesoc_uart_tx_fifo_source_last = main_basesoc_basesoc_uart_tx_fifo_fifo_out_last;
-assign main_basesoc_basesoc_uart_tx_fifo_source_payload_data = main_basesoc_basesoc_uart_tx_fifo_fifo_out_payload_data;
-assign main_basesoc_basesoc_uart_tx_fifo_re = main_basesoc_basesoc_uart_tx_fifo_source_ready;
-assign main_basesoc_basesoc_uart_tx_fifo_syncfifo_re = (main_basesoc_basesoc_uart_tx_fifo_syncfifo_readable & ((~main_basesoc_basesoc_uart_tx_fifo_readable) | main_basesoc_basesoc_uart_tx_fifo_re));
-assign main_basesoc_basesoc_uart_tx_fifo_level1 = (main_basesoc_basesoc_uart_tx_fifo_level0 + main_basesoc_basesoc_uart_tx_fifo_readable);
+assign main_basesoc_uart_irq = ((main_basesoc_uart_pending_status[0] & main_basesoc_uart_enable_storage[0]) | (main_basesoc_uart_pending_status[1] & main_basesoc_uart_enable_storage[1]));
+assign main_basesoc_uart_tx_status = main_basesoc_uart_tx_trigger;
+assign main_basesoc_uart_rx_status = main_basesoc_uart_rx_trigger;
+assign main_basesoc_uart_tx_fifo_syncfifo_din = {main_basesoc_uart_tx_fifo_fifo_in_last, main_basesoc_uart_tx_fifo_fifo_in_first, main_basesoc_uart_tx_fifo_fifo_in_payload_data};
+assign {main_basesoc_uart_tx_fifo_fifo_out_last, main_basesoc_uart_tx_fifo_fifo_out_first, main_basesoc_uart_tx_fifo_fifo_out_payload_data} = main_basesoc_uart_tx_fifo_syncfifo_dout;
+assign main_basesoc_uart_tx_fifo_sink_ready = main_basesoc_uart_tx_fifo_syncfifo_writable;
+assign main_basesoc_uart_tx_fifo_syncfifo_we = main_basesoc_uart_tx_fifo_sink_valid;
+assign main_basesoc_uart_tx_fifo_fifo_in_first = main_basesoc_uart_tx_fifo_sink_first;
+assign main_basesoc_uart_tx_fifo_fifo_in_last = main_basesoc_uart_tx_fifo_sink_last;
+assign main_basesoc_uart_tx_fifo_fifo_in_payload_data = main_basesoc_uart_tx_fifo_sink_payload_data;
+assign main_basesoc_uart_tx_fifo_source_valid = main_basesoc_uart_tx_fifo_readable;
+assign main_basesoc_uart_tx_fifo_source_first = main_basesoc_uart_tx_fifo_fifo_out_first;
+assign main_basesoc_uart_tx_fifo_source_last = main_basesoc_uart_tx_fifo_fifo_out_last;
+assign main_basesoc_uart_tx_fifo_source_payload_data = main_basesoc_uart_tx_fifo_fifo_out_payload_data;
+assign main_basesoc_uart_tx_fifo_re = main_basesoc_uart_tx_fifo_source_ready;
+assign main_basesoc_uart_tx_fifo_syncfifo_re = (main_basesoc_uart_tx_fifo_syncfifo_readable & ((~main_basesoc_uart_tx_fifo_readable) | main_basesoc_uart_tx_fifo_re));
+assign main_basesoc_uart_tx_fifo_level1 = (main_basesoc_uart_tx_fifo_level0 + main_basesoc_uart_tx_fifo_readable);
 always @(*) begin
-    main_basesoc_basesoc_uart_tx_fifo_wrport_adr <= 4'd0;
-    if (main_basesoc_basesoc_uart_tx_fifo_replace) begin
-        main_basesoc_basesoc_uart_tx_fifo_wrport_adr <= (main_basesoc_basesoc_uart_tx_fifo_produce - 1'd1);
+    main_basesoc_uart_tx_fifo_wrport_adr <= 4'd0;
+    if (main_basesoc_uart_tx_fifo_replace) begin
+        main_basesoc_uart_tx_fifo_wrport_adr <= (main_basesoc_uart_tx_fifo_produce - 1'd1);
     end else begin
-        main_basesoc_basesoc_uart_tx_fifo_wrport_adr <= main_basesoc_basesoc_uart_tx_fifo_produce;
+        main_basesoc_uart_tx_fifo_wrport_adr <= main_basesoc_uart_tx_fifo_produce;
     end
 end
-assign main_basesoc_basesoc_uart_tx_fifo_wrport_dat_w = main_basesoc_basesoc_uart_tx_fifo_syncfifo_din;
-assign main_basesoc_basesoc_uart_tx_fifo_wrport_we = (main_basesoc_basesoc_uart_tx_fifo_syncfifo_we & (main_basesoc_basesoc_uart_tx_fifo_syncfifo_writable | main_basesoc_basesoc_uart_tx_fifo_replace));
-assign main_basesoc_basesoc_uart_tx_fifo_do_read = (main_basesoc_basesoc_uart_tx_fifo_syncfifo_readable & main_basesoc_basesoc_uart_tx_fifo_syncfifo_re);
-assign main_basesoc_basesoc_uart_tx_fifo_rdport_adr = main_basesoc_basesoc_uart_tx_fifo_consume;
-assign main_basesoc_basesoc_uart_tx_fifo_syncfifo_dout = main_basesoc_basesoc_uart_tx_fifo_rdport_dat_r;
-assign main_basesoc_basesoc_uart_tx_fifo_rdport_re = main_basesoc_basesoc_uart_tx_fifo_do_read;
-assign main_basesoc_basesoc_uart_tx_fifo_syncfifo_writable = (main_basesoc_basesoc_uart_tx_fifo_level0 != 5'd16);
-assign main_basesoc_basesoc_uart_tx_fifo_syncfifo_readable = (main_basesoc_basesoc_uart_tx_fifo_level0 != 1'd0);
-assign main_basesoc_basesoc_uart_rx_fifo_syncfifo_din = {main_basesoc_basesoc_uart_rx_fifo_fifo_in_last, main_basesoc_basesoc_uart_rx_fifo_fifo_in_first, main_basesoc_basesoc_uart_rx_fifo_fifo_in_payload_data};
-assign {main_basesoc_basesoc_uart_rx_fifo_fifo_out_last, main_basesoc_basesoc_uart_rx_fifo_fifo_out_first, main_basesoc_basesoc_uart_rx_fifo_fifo_out_payload_data} = main_basesoc_basesoc_uart_rx_fifo_syncfifo_dout;
-assign main_basesoc_basesoc_uart_rx_fifo_sink_ready = main_basesoc_basesoc_uart_rx_fifo_syncfifo_writable;
-assign main_basesoc_basesoc_uart_rx_fifo_syncfifo_we = main_basesoc_basesoc_uart_rx_fifo_sink_valid;
-assign main_basesoc_basesoc_uart_rx_fifo_fifo_in_first = main_basesoc_basesoc_uart_rx_fifo_sink_first;
-assign main_basesoc_basesoc_uart_rx_fifo_fifo_in_last = main_basesoc_basesoc_uart_rx_fifo_sink_last;
-assign main_basesoc_basesoc_uart_rx_fifo_fifo_in_payload_data = main_basesoc_basesoc_uart_rx_fifo_sink_payload_data;
-assign main_basesoc_basesoc_uart_rx_fifo_source_valid = main_basesoc_basesoc_uart_rx_fifo_readable;
-assign main_basesoc_basesoc_uart_rx_fifo_source_first = main_basesoc_basesoc_uart_rx_fifo_fifo_out_first;
-assign main_basesoc_basesoc_uart_rx_fifo_source_last = main_basesoc_basesoc_uart_rx_fifo_fifo_out_last;
-assign main_basesoc_basesoc_uart_rx_fifo_source_payload_data = main_basesoc_basesoc_uart_rx_fifo_fifo_out_payload_data;
-assign main_basesoc_basesoc_uart_rx_fifo_re = main_basesoc_basesoc_uart_rx_fifo_source_ready;
-assign main_basesoc_basesoc_uart_rx_fifo_syncfifo_re = (main_basesoc_basesoc_uart_rx_fifo_syncfifo_readable & ((~main_basesoc_basesoc_uart_rx_fifo_readable) | main_basesoc_basesoc_uart_rx_fifo_re));
-assign main_basesoc_basesoc_uart_rx_fifo_level1 = (main_basesoc_basesoc_uart_rx_fifo_level0 + main_basesoc_basesoc_uart_rx_fifo_readable);
+assign main_basesoc_uart_tx_fifo_wrport_dat_w = main_basesoc_uart_tx_fifo_syncfifo_din;
+assign main_basesoc_uart_tx_fifo_wrport_we = (main_basesoc_uart_tx_fifo_syncfifo_we & (main_basesoc_uart_tx_fifo_syncfifo_writable | main_basesoc_uart_tx_fifo_replace));
+assign main_basesoc_uart_tx_fifo_do_read = (main_basesoc_uart_tx_fifo_syncfifo_readable & main_basesoc_uart_tx_fifo_syncfifo_re);
+assign main_basesoc_uart_tx_fifo_rdport_adr = main_basesoc_uart_tx_fifo_consume;
+assign main_basesoc_uart_tx_fifo_syncfifo_dout = main_basesoc_uart_tx_fifo_rdport_dat_r;
+assign main_basesoc_uart_tx_fifo_rdport_re = main_basesoc_uart_tx_fifo_do_read;
+assign main_basesoc_uart_tx_fifo_syncfifo_writable = (main_basesoc_uart_tx_fifo_level0 != 5'd16);
+assign main_basesoc_uart_tx_fifo_syncfifo_readable = (main_basesoc_uart_tx_fifo_level0 != 1'd0);
+assign main_basesoc_uart_rx_fifo_syncfifo_din = {main_basesoc_uart_rx_fifo_fifo_in_last, main_basesoc_uart_rx_fifo_fifo_in_first, main_basesoc_uart_rx_fifo_fifo_in_payload_data};
+assign {main_basesoc_uart_rx_fifo_fifo_out_last, main_basesoc_uart_rx_fifo_fifo_out_first, main_basesoc_uart_rx_fifo_fifo_out_payload_data} = main_basesoc_uart_rx_fifo_syncfifo_dout;
+assign main_basesoc_uart_rx_fifo_sink_ready = main_basesoc_uart_rx_fifo_syncfifo_writable;
+assign main_basesoc_uart_rx_fifo_syncfifo_we = main_basesoc_uart_rx_fifo_sink_valid;
+assign main_basesoc_uart_rx_fifo_fifo_in_first = main_basesoc_uart_rx_fifo_sink_first;
+assign main_basesoc_uart_rx_fifo_fifo_in_last = main_basesoc_uart_rx_fifo_sink_last;
+assign main_basesoc_uart_rx_fifo_fifo_in_payload_data = main_basesoc_uart_rx_fifo_sink_payload_data;
+assign main_basesoc_uart_rx_fifo_source_valid = main_basesoc_uart_rx_fifo_readable;
+assign main_basesoc_uart_rx_fifo_source_first = main_basesoc_uart_rx_fifo_fifo_out_first;
+assign main_basesoc_uart_rx_fifo_source_last = main_basesoc_uart_rx_fifo_fifo_out_last;
+assign main_basesoc_uart_rx_fifo_source_payload_data = main_basesoc_uart_rx_fifo_fifo_out_payload_data;
+assign main_basesoc_uart_rx_fifo_re = main_basesoc_uart_rx_fifo_source_ready;
+assign main_basesoc_uart_rx_fifo_syncfifo_re = (main_basesoc_uart_rx_fifo_syncfifo_readable & ((~main_basesoc_uart_rx_fifo_readable) | main_basesoc_uart_rx_fifo_re));
+assign main_basesoc_uart_rx_fifo_level1 = (main_basesoc_uart_rx_fifo_level0 + main_basesoc_uart_rx_fifo_readable);
 always @(*) begin
-    main_basesoc_basesoc_uart_rx_fifo_wrport_adr <= 4'd0;
-    if (main_basesoc_basesoc_uart_rx_fifo_replace) begin
-        main_basesoc_basesoc_uart_rx_fifo_wrport_adr <= (main_basesoc_basesoc_uart_rx_fifo_produce - 1'd1);
+    main_basesoc_uart_rx_fifo_wrport_adr <= 4'd0;
+    if (main_basesoc_uart_rx_fifo_replace) begin
+        main_basesoc_uart_rx_fifo_wrport_adr <= (main_basesoc_uart_rx_fifo_produce - 1'd1);
     end else begin
-        main_basesoc_basesoc_uart_rx_fifo_wrport_adr <= main_basesoc_basesoc_uart_rx_fifo_produce;
+        main_basesoc_uart_rx_fifo_wrport_adr <= main_basesoc_uart_rx_fifo_produce;
     end
 end
-assign main_basesoc_basesoc_uart_rx_fifo_wrport_dat_w = main_basesoc_basesoc_uart_rx_fifo_syncfifo_din;
-assign main_basesoc_basesoc_uart_rx_fifo_wrport_we = (main_basesoc_basesoc_uart_rx_fifo_syncfifo_we & (main_basesoc_basesoc_uart_rx_fifo_syncfifo_writable | main_basesoc_basesoc_uart_rx_fifo_replace));
-assign main_basesoc_basesoc_uart_rx_fifo_do_read = (main_basesoc_basesoc_uart_rx_fifo_syncfifo_readable & main_basesoc_basesoc_uart_rx_fifo_syncfifo_re);
-assign main_basesoc_basesoc_uart_rx_fifo_rdport_adr = main_basesoc_basesoc_uart_rx_fifo_consume;
-assign main_basesoc_basesoc_uart_rx_fifo_syncfifo_dout = main_basesoc_basesoc_uart_rx_fifo_rdport_dat_r;
-assign main_basesoc_basesoc_uart_rx_fifo_rdport_re = main_basesoc_basesoc_uart_rx_fifo_do_read;
-assign main_basesoc_basesoc_uart_rx_fifo_syncfifo_writable = (main_basesoc_basesoc_uart_rx_fifo_level0 != 5'd16);
-assign main_basesoc_basesoc_uart_rx_fifo_syncfifo_readable = (main_basesoc_basesoc_uart_rx_fifo_level0 != 1'd0);
-assign main_basesoc_basesoc_timer_zero_trigger = (main_basesoc_basesoc_timer_value == 1'd0);
-assign main_basesoc_basesoc_timer_zero0 = main_basesoc_basesoc_timer_zero_status;
-assign main_basesoc_basesoc_timer_zero1 = main_basesoc_basesoc_timer_zero_pending;
+assign main_basesoc_uart_rx_fifo_wrport_dat_w = main_basesoc_uart_rx_fifo_syncfifo_din;
+assign main_basesoc_uart_rx_fifo_wrport_we = (main_basesoc_uart_rx_fifo_syncfifo_we & (main_basesoc_uart_rx_fifo_syncfifo_writable | main_basesoc_uart_rx_fifo_replace));
+assign main_basesoc_uart_rx_fifo_do_read = (main_basesoc_uart_rx_fifo_syncfifo_readable & main_basesoc_uart_rx_fifo_syncfifo_re);
+assign main_basesoc_uart_rx_fifo_rdport_adr = main_basesoc_uart_rx_fifo_consume;
+assign main_basesoc_uart_rx_fifo_syncfifo_dout = main_basesoc_uart_rx_fifo_rdport_dat_r;
+assign main_basesoc_uart_rx_fifo_rdport_re = main_basesoc_uart_rx_fifo_do_read;
+assign main_basesoc_uart_rx_fifo_syncfifo_writable = (main_basesoc_uart_rx_fifo_level0 != 5'd16);
+assign main_basesoc_uart_rx_fifo_syncfifo_readable = (main_basesoc_uart_rx_fifo_level0 != 1'd0);
+assign main_basesoc_timer_zero_trigger = (main_basesoc_timer_value == 1'd0);
+assign main_basesoc_timer_zero0 = main_basesoc_timer_zero_status;
+assign main_basesoc_timer_zero1 = main_basesoc_timer_zero_pending;
 always @(*) begin
-    main_basesoc_basesoc_timer_zero_clear <= 1'd0;
-    if ((main_basesoc_basesoc_timer_pending_re & main_basesoc_basesoc_timer_pending_r)) begin
-        main_basesoc_basesoc_timer_zero_clear <= 1'd1;
+    main_basesoc_timer_zero_clear <= 1'd0;
+    if ((main_basesoc_timer_pending_re & main_basesoc_timer_pending_r)) begin
+        main_basesoc_timer_zero_clear <= 1'd1;
     end
 end
-assign main_basesoc_basesoc_timer_irq = (main_basesoc_basesoc_timer_pending_status & main_basesoc_basesoc_timer_enable_storage);
-assign main_basesoc_basesoc_timer_zero_status = main_basesoc_basesoc_timer_zero_trigger;
-assign main_dfi_p0_address = main_basesoc_sdram_master_p0_address;
-assign main_dfi_p0_bank = main_basesoc_sdram_master_p0_bank;
-assign main_dfi_p0_cas_n = main_basesoc_sdram_master_p0_cas_n;
-assign main_dfi_p0_cs_n = main_basesoc_sdram_master_p0_cs_n;
-assign main_dfi_p0_ras_n = main_basesoc_sdram_master_p0_ras_n;
-assign main_dfi_p0_we_n = main_basesoc_sdram_master_p0_we_n;
-assign main_dfi_p0_cke = main_basesoc_sdram_master_p0_cke;
-assign main_dfi_p0_odt = main_basesoc_sdram_master_p0_odt;
-assign main_dfi_p0_reset_n = main_basesoc_sdram_master_p0_reset_n;
-assign main_dfi_p0_act_n = main_basesoc_sdram_master_p0_act_n;
-assign main_dfi_p0_wrdata = main_basesoc_sdram_master_p0_wrdata;
-assign main_dfi_p0_wrdata_en = main_basesoc_sdram_master_p0_wrdata_en;
-assign main_dfi_p0_wrdata_mask = main_basesoc_sdram_master_p0_wrdata_mask;
-assign main_dfi_p0_rddata_en = main_basesoc_sdram_master_p0_rddata_en;
-assign main_basesoc_sdram_master_p0_rddata = main_dfi_p0_rddata;
-assign main_basesoc_sdram_master_p0_rddata_valid = main_dfi_p0_rddata_valid;
-assign main_basesoc_sdram_slave_p0_address = main_basesoc_sdram_dfi_p0_address;
-assign main_basesoc_sdram_slave_p0_bank = main_basesoc_sdram_dfi_p0_bank;
-assign main_basesoc_sdram_slave_p0_cas_n = main_basesoc_sdram_dfi_p0_cas_n;
-assign main_basesoc_sdram_slave_p0_cs_n = main_basesoc_sdram_dfi_p0_cs_n;
-assign main_basesoc_sdram_slave_p0_ras_n = main_basesoc_sdram_dfi_p0_ras_n;
-assign main_basesoc_sdram_slave_p0_we_n = main_basesoc_sdram_dfi_p0_we_n;
-assign main_basesoc_sdram_slave_p0_cke = main_basesoc_sdram_dfi_p0_cke;
-assign main_basesoc_sdram_slave_p0_odt = main_basesoc_sdram_dfi_p0_odt;
-assign main_basesoc_sdram_slave_p0_reset_n = main_basesoc_sdram_dfi_p0_reset_n;
-assign main_basesoc_sdram_slave_p0_act_n = main_basesoc_sdram_dfi_p0_act_n;
-assign main_basesoc_sdram_slave_p0_wrdata = main_basesoc_sdram_dfi_p0_wrdata;
-assign main_basesoc_sdram_slave_p0_wrdata_en = main_basesoc_sdram_dfi_p0_wrdata_en;
-assign main_basesoc_sdram_slave_p0_wrdata_mask = main_basesoc_sdram_dfi_p0_wrdata_mask;
-assign main_basesoc_sdram_slave_p0_rddata_en = main_basesoc_sdram_dfi_p0_rddata_en;
-assign main_basesoc_sdram_dfi_p0_rddata = main_basesoc_sdram_slave_p0_rddata;
-assign main_basesoc_sdram_dfi_p0_rddata_valid = main_basesoc_sdram_slave_p0_rddata_valid;
+assign main_basesoc_timer_irq = (main_basesoc_timer_pending_status & main_basesoc_timer_enable_storage);
+assign main_basesoc_timer_zero_status = main_basesoc_timer_zero_trigger;
+assign main_dfi_p0_address = main_sdram_master_p0_address;
+assign main_dfi_p0_bank = main_sdram_master_p0_bank;
+assign main_dfi_p0_cas_n = main_sdram_master_p0_cas_n;
+assign main_dfi_p0_cs_n = main_sdram_master_p0_cs_n;
+assign main_dfi_p0_ras_n = main_sdram_master_p0_ras_n;
+assign main_dfi_p0_we_n = main_sdram_master_p0_we_n;
+assign main_dfi_p0_cke = main_sdram_master_p0_cke;
+assign main_dfi_p0_odt = main_sdram_master_p0_odt;
+assign main_dfi_p0_reset_n = main_sdram_master_p0_reset_n;
+assign main_dfi_p0_act_n = main_sdram_master_p0_act_n;
+assign main_dfi_p0_wrdata = main_sdram_master_p0_wrdata;
+assign main_dfi_p0_wrdata_en = main_sdram_master_p0_wrdata_en;
+assign main_dfi_p0_wrdata_mask = main_sdram_master_p0_wrdata_mask;
+assign main_dfi_p0_rddata_en = main_sdram_master_p0_rddata_en;
+assign main_sdram_master_p0_rddata = main_dfi_p0_rddata;
+assign main_sdram_master_p0_rddata_valid = main_dfi_p0_rddata_valid;
+assign main_sdram_slave_p0_address = main_sdram_dfi_p0_address;
+assign main_sdram_slave_p0_bank = main_sdram_dfi_p0_bank;
+assign main_sdram_slave_p0_cas_n = main_sdram_dfi_p0_cas_n;
+assign main_sdram_slave_p0_cs_n = main_sdram_dfi_p0_cs_n;
+assign main_sdram_slave_p0_ras_n = main_sdram_dfi_p0_ras_n;
+assign main_sdram_slave_p0_we_n = main_sdram_dfi_p0_we_n;
+assign main_sdram_slave_p0_cke = main_sdram_dfi_p0_cke;
+assign main_sdram_slave_p0_odt = main_sdram_dfi_p0_odt;
+assign main_sdram_slave_p0_reset_n = main_sdram_dfi_p0_reset_n;
+assign main_sdram_slave_p0_act_n = main_sdram_dfi_p0_act_n;
+assign main_sdram_slave_p0_wrdata = main_sdram_dfi_p0_wrdata;
+assign main_sdram_slave_p0_wrdata_en = main_sdram_dfi_p0_wrdata_en;
+assign main_sdram_slave_p0_wrdata_mask = main_sdram_dfi_p0_wrdata_mask;
+assign main_sdram_slave_p0_rddata_en = main_sdram_dfi_p0_rddata_en;
+assign main_sdram_dfi_p0_rddata = main_sdram_slave_p0_rddata;
+assign main_sdram_dfi_p0_rddata_valid = main_sdram_slave_p0_rddata_valid;
 always @(*) begin
-    main_basesoc_sdram_master_p0_reset_n <= 1'd0;
-    main_basesoc_sdram_master_p0_act_n <= 1'd1;
-    main_basesoc_sdram_master_p0_wrdata <= 16'd0;
-    main_basesoc_sdram_master_p0_wrdata_en <= 1'd0;
-    main_basesoc_sdram_master_p0_wrdata_mask <= 2'd0;
-    main_basesoc_sdram_master_p0_rddata_en <= 1'd0;
-    main_basesoc_sdram_ext_dfi_p0_rddata <= 16'd0;
-    main_basesoc_sdram_ext_dfi_p0_rddata_valid <= 1'd0;
-    main_basesoc_sdram_slave_p0_rddata <= 16'd0;
-    main_basesoc_sdram_slave_p0_rddata_valid <= 1'd0;
-    main_basesoc_sdram_master_p0_address <= 13'd0;
-    main_basesoc_sdram_csr_dfi_p0_rddata <= 16'd0;
-    main_basesoc_sdram_master_p0_bank <= 2'd0;
-    main_basesoc_sdram_csr_dfi_p0_rddata_valid <= 1'd0;
-    main_basesoc_sdram_master_p0_cas_n <= 1'd1;
-    main_basesoc_sdram_master_p0_cs_n <= 1'd1;
-    main_basesoc_sdram_master_p0_ras_n <= 1'd1;
-    main_basesoc_sdram_master_p0_we_n <= 1'd1;
-    main_basesoc_sdram_master_p0_cke <= 1'd0;
-    main_basesoc_sdram_master_p0_odt <= 1'd0;
-    if (main_basesoc_sdram_sel) begin
-        if (main_basesoc_sdram_ext_dfi_sel) begin
-            main_basesoc_sdram_master_p0_address <= main_basesoc_sdram_ext_dfi_p0_address;
-            main_basesoc_sdram_master_p0_bank <= main_basesoc_sdram_ext_dfi_p0_bank;
-            main_basesoc_sdram_master_p0_cas_n <= main_basesoc_sdram_ext_dfi_p0_cas_n;
-            main_basesoc_sdram_master_p0_cs_n <= main_basesoc_sdram_ext_dfi_p0_cs_n;
-            main_basesoc_sdram_master_p0_ras_n <= main_basesoc_sdram_ext_dfi_p0_ras_n;
-            main_basesoc_sdram_master_p0_we_n <= main_basesoc_sdram_ext_dfi_p0_we_n;
-            main_basesoc_sdram_master_p0_cke <= main_basesoc_sdram_ext_dfi_p0_cke;
-            main_basesoc_sdram_master_p0_odt <= main_basesoc_sdram_ext_dfi_p0_odt;
-            main_basesoc_sdram_master_p0_reset_n <= main_basesoc_sdram_ext_dfi_p0_reset_n;
-            main_basesoc_sdram_master_p0_act_n <= main_basesoc_sdram_ext_dfi_p0_act_n;
-            main_basesoc_sdram_master_p0_wrdata <= main_basesoc_sdram_ext_dfi_p0_wrdata;
-            main_basesoc_sdram_master_p0_wrdata_en <= main_basesoc_sdram_ext_dfi_p0_wrdata_en;
-            main_basesoc_sdram_master_p0_wrdata_mask <= main_basesoc_sdram_ext_dfi_p0_wrdata_mask;
-            main_basesoc_sdram_master_p0_rddata_en <= main_basesoc_sdram_ext_dfi_p0_rddata_en;
-            main_basesoc_sdram_ext_dfi_p0_rddata <= main_basesoc_sdram_master_p0_rddata;
-            main_basesoc_sdram_ext_dfi_p0_rddata_valid <= main_basesoc_sdram_master_p0_rddata_valid;
+    main_sdram_master_p0_reset_n <= 1'd0;
+    main_sdram_master_p0_act_n <= 1'd1;
+    main_sdram_master_p0_wrdata <= 16'd0;
+    main_sdram_master_p0_wrdata_en <= 1'd0;
+    main_sdram_master_p0_wrdata_mask <= 2'd0;
+    main_sdram_master_p0_rddata_en <= 1'd0;
+    main_sdram_ext_dfi_p0_rddata <= 16'd0;
+    main_sdram_ext_dfi_p0_rddata_valid <= 1'd0;
+    main_sdram_slave_p0_rddata <= 16'd0;
+    main_sdram_slave_p0_rddata_valid <= 1'd0;
+    main_sdram_master_p0_address <= 13'd0;
+    main_sdram_csr_dfi_p0_rddata <= 16'd0;
+    main_sdram_master_p0_bank <= 2'd0;
+    main_sdram_csr_dfi_p0_rddata_valid <= 1'd0;
+    main_sdram_master_p0_cas_n <= 1'd1;
+    main_sdram_master_p0_cs_n <= 1'd1;
+    main_sdram_master_p0_ras_n <= 1'd1;
+    main_sdram_master_p0_we_n <= 1'd1;
+    main_sdram_master_p0_cke <= 1'd0;
+    main_sdram_master_p0_odt <= 1'd0;
+    if (main_sdram_sel) begin
+        if (main_sdram_ext_dfi_sel) begin
+            main_sdram_master_p0_address <= main_sdram_ext_dfi_p0_address;
+            main_sdram_master_p0_bank <= main_sdram_ext_dfi_p0_bank;
+            main_sdram_master_p0_cas_n <= main_sdram_ext_dfi_p0_cas_n;
+            main_sdram_master_p0_cs_n <= main_sdram_ext_dfi_p0_cs_n;
+            main_sdram_master_p0_ras_n <= main_sdram_ext_dfi_p0_ras_n;
+            main_sdram_master_p0_we_n <= main_sdram_ext_dfi_p0_we_n;
+            main_sdram_master_p0_cke <= main_sdram_ext_dfi_p0_cke;
+            main_sdram_master_p0_odt <= main_sdram_ext_dfi_p0_odt;
+            main_sdram_master_p0_reset_n <= main_sdram_ext_dfi_p0_reset_n;
+            main_sdram_master_p0_act_n <= main_sdram_ext_dfi_p0_act_n;
+            main_sdram_master_p0_wrdata <= main_sdram_ext_dfi_p0_wrdata;
+            main_sdram_master_p0_wrdata_en <= main_sdram_ext_dfi_p0_wrdata_en;
+            main_sdram_master_p0_wrdata_mask <= main_sdram_ext_dfi_p0_wrdata_mask;
+            main_sdram_master_p0_rddata_en <= main_sdram_ext_dfi_p0_rddata_en;
+            main_sdram_ext_dfi_p0_rddata <= main_sdram_master_p0_rddata;
+            main_sdram_ext_dfi_p0_rddata_valid <= main_sdram_master_p0_rddata_valid;
         end else begin
-            main_basesoc_sdram_master_p0_address <= main_basesoc_sdram_slave_p0_address;
-            main_basesoc_sdram_master_p0_bank <= main_basesoc_sdram_slave_p0_bank;
-            main_basesoc_sdram_master_p0_cas_n <= main_basesoc_sdram_slave_p0_cas_n;
-            main_basesoc_sdram_master_p0_cs_n <= main_basesoc_sdram_slave_p0_cs_n;
-            main_basesoc_sdram_master_p0_ras_n <= main_basesoc_sdram_slave_p0_ras_n;
-            main_basesoc_sdram_master_p0_we_n <= main_basesoc_sdram_slave_p0_we_n;
-            main_basesoc_sdram_master_p0_cke <= main_basesoc_sdram_slave_p0_cke;
-            main_basesoc_sdram_master_p0_odt <= main_basesoc_sdram_slave_p0_odt;
-            main_basesoc_sdram_master_p0_reset_n <= main_basesoc_sdram_slave_p0_reset_n;
-            main_basesoc_sdram_master_p0_act_n <= main_basesoc_sdram_slave_p0_act_n;
-            main_basesoc_sdram_master_p0_wrdata <= main_basesoc_sdram_slave_p0_wrdata;
-            main_basesoc_sdram_master_p0_wrdata_en <= main_basesoc_sdram_slave_p0_wrdata_en;
-            main_basesoc_sdram_master_p0_wrdata_mask <= main_basesoc_sdram_slave_p0_wrdata_mask;
-            main_basesoc_sdram_master_p0_rddata_en <= main_basesoc_sdram_slave_p0_rddata_en;
-            main_basesoc_sdram_slave_p0_rddata <= main_basesoc_sdram_master_p0_rddata;
-            main_basesoc_sdram_slave_p0_rddata_valid <= main_basesoc_sdram_master_p0_rddata_valid;
+            main_sdram_master_p0_address <= main_sdram_slave_p0_address;
+            main_sdram_master_p0_bank <= main_sdram_slave_p0_bank;
+            main_sdram_master_p0_cas_n <= main_sdram_slave_p0_cas_n;
+            main_sdram_master_p0_cs_n <= main_sdram_slave_p0_cs_n;
+            main_sdram_master_p0_ras_n <= main_sdram_slave_p0_ras_n;
+            main_sdram_master_p0_we_n <= main_sdram_slave_p0_we_n;
+            main_sdram_master_p0_cke <= main_sdram_slave_p0_cke;
+            main_sdram_master_p0_odt <= main_sdram_slave_p0_odt;
+            main_sdram_master_p0_reset_n <= main_sdram_slave_p0_reset_n;
+            main_sdram_master_p0_act_n <= main_sdram_slave_p0_act_n;
+            main_sdram_master_p0_wrdata <= main_sdram_slave_p0_wrdata;
+            main_sdram_master_p0_wrdata_en <= main_sdram_slave_p0_wrdata_en;
+            main_sdram_master_p0_wrdata_mask <= main_sdram_slave_p0_wrdata_mask;
+            main_sdram_master_p0_rddata_en <= main_sdram_slave_p0_rddata_en;
+            main_sdram_slave_p0_rddata <= main_sdram_master_p0_rddata;
+            main_sdram_slave_p0_rddata_valid <= main_sdram_master_p0_rddata_valid;
         end
     end else begin
-        main_basesoc_sdram_master_p0_address <= main_basesoc_sdram_csr_dfi_p0_address;
-        main_basesoc_sdram_master_p0_bank <= main_basesoc_sdram_csr_dfi_p0_bank;
-        main_basesoc_sdram_master_p0_cas_n <= main_basesoc_sdram_csr_dfi_p0_cas_n;
-        main_basesoc_sdram_master_p0_cs_n <= main_basesoc_sdram_csr_dfi_p0_cs_n;
-        main_basesoc_sdram_master_p0_ras_n <= main_basesoc_sdram_csr_dfi_p0_ras_n;
-        main_basesoc_sdram_master_p0_we_n <= main_basesoc_sdram_csr_dfi_p0_we_n;
-        main_basesoc_sdram_master_p0_cke <= main_basesoc_sdram_csr_dfi_p0_cke;
-        main_basesoc_sdram_master_p0_odt <= main_basesoc_sdram_csr_dfi_p0_odt;
-        main_basesoc_sdram_master_p0_reset_n <= main_basesoc_sdram_csr_dfi_p0_reset_n;
-        main_basesoc_sdram_master_p0_act_n <= main_basesoc_sdram_csr_dfi_p0_act_n;
-        main_basesoc_sdram_master_p0_wrdata <= main_basesoc_sdram_csr_dfi_p0_wrdata;
-        main_basesoc_sdram_master_p0_wrdata_en <= main_basesoc_sdram_csr_dfi_p0_wrdata_en;
-        main_basesoc_sdram_master_p0_wrdata_mask <= main_basesoc_sdram_csr_dfi_p0_wrdata_mask;
-        main_basesoc_sdram_master_p0_rddata_en <= main_basesoc_sdram_csr_dfi_p0_rddata_en;
-        main_basesoc_sdram_csr_dfi_p0_rddata <= main_basesoc_sdram_master_p0_rddata;
-        main_basesoc_sdram_csr_dfi_p0_rddata_valid <= main_basesoc_sdram_master_p0_rddata_valid;
+        main_sdram_master_p0_address <= main_sdram_csr_dfi_p0_address;
+        main_sdram_master_p0_bank <= main_sdram_csr_dfi_p0_bank;
+        main_sdram_master_p0_cas_n <= main_sdram_csr_dfi_p0_cas_n;
+        main_sdram_master_p0_cs_n <= main_sdram_csr_dfi_p0_cs_n;
+        main_sdram_master_p0_ras_n <= main_sdram_csr_dfi_p0_ras_n;
+        main_sdram_master_p0_we_n <= main_sdram_csr_dfi_p0_we_n;
+        main_sdram_master_p0_cke <= main_sdram_csr_dfi_p0_cke;
+        main_sdram_master_p0_odt <= main_sdram_csr_dfi_p0_odt;
+        main_sdram_master_p0_reset_n <= main_sdram_csr_dfi_p0_reset_n;
+        main_sdram_master_p0_act_n <= main_sdram_csr_dfi_p0_act_n;
+        main_sdram_master_p0_wrdata <= main_sdram_csr_dfi_p0_wrdata;
+        main_sdram_master_p0_wrdata_en <= main_sdram_csr_dfi_p0_wrdata_en;
+        main_sdram_master_p0_wrdata_mask <= main_sdram_csr_dfi_p0_wrdata_mask;
+        main_sdram_master_p0_rddata_en <= main_sdram_csr_dfi_p0_rddata_en;
+        main_sdram_csr_dfi_p0_rddata <= main_sdram_master_p0_rddata;
+        main_sdram_csr_dfi_p0_rddata_valid <= main_sdram_master_p0_rddata_valid;
     end
 end
-assign main_basesoc_sdram_csr_dfi_p0_cke = main_basesoc_sdram_cke;
-assign main_basesoc_sdram_csr_dfi_p0_odt = main_basesoc_sdram_odt;
-assign main_basesoc_sdram_csr_dfi_p0_reset_n = main_basesoc_sdram_reset_n;
+assign main_sdram_csr_dfi_p0_cke = main_sdram_cke1;
+assign main_sdram_csr_dfi_p0_odt = main_sdram_odt;
+assign main_sdram_csr_dfi_p0_reset_n = main_sdram_reset_n;
 always @(*) begin
-    main_basesoc_sdram_csr_dfi_p0_we_n <= 1'd1;
-    main_basesoc_sdram_csr_dfi_p0_cas_n <= 1'd1;
-    main_basesoc_sdram_csr_dfi_p0_cs_n <= 1'd1;
-    main_basesoc_sdram_csr_dfi_p0_ras_n <= 1'd1;
-    if (main_basesoc_sdram_command_issue_re) begin
-        main_basesoc_sdram_csr_dfi_p0_cs_n <= {1{(~main_basesoc_sdram_csrfield_cs)}};
-        main_basesoc_sdram_csr_dfi_p0_we_n <= (~main_basesoc_sdram_csrfield_we);
-        main_basesoc_sdram_csr_dfi_p0_cas_n <= (~main_basesoc_sdram_csrfield_cas);
-        main_basesoc_sdram_csr_dfi_p0_ras_n <= (~main_basesoc_sdram_csrfield_ras);
+    main_sdram_csr_dfi_p0_we_n <= 1'd1;
+    main_sdram_csr_dfi_p0_cas_n <= 1'd1;
+    main_sdram_csr_dfi_p0_cs_n <= 1'd1;
+    main_sdram_csr_dfi_p0_ras_n <= 1'd1;
+    if (main_sdram_command_issue_re) begin
+        main_sdram_csr_dfi_p0_cs_n <= {1{(~main_sdram_csrfield_cs)}};
+        main_sdram_csr_dfi_p0_we_n <= (~main_sdram_csrfield_we);
+        main_sdram_csr_dfi_p0_cas_n <= (~main_sdram_csrfield_cas);
+        main_sdram_csr_dfi_p0_ras_n <= (~main_sdram_csrfield_ras);
     end else begin
-        main_basesoc_sdram_csr_dfi_p0_cs_n <= {1{1'd1}};
-        main_basesoc_sdram_csr_dfi_p0_we_n <= 1'd1;
-        main_basesoc_sdram_csr_dfi_p0_cas_n <= 1'd1;
-        main_basesoc_sdram_csr_dfi_p0_ras_n <= 1'd1;
+        main_sdram_csr_dfi_p0_cs_n <= {1{1'd1}};
+        main_sdram_csr_dfi_p0_we_n <= 1'd1;
+        main_sdram_csr_dfi_p0_cas_n <= 1'd1;
+        main_sdram_csr_dfi_p0_ras_n <= 1'd1;
     end
 end
-assign main_basesoc_sdram_csr_dfi_p0_address = main_basesoc_sdram_address_storage;
-assign main_basesoc_sdram_csr_dfi_p0_bank = main_basesoc_sdram_baddress_storage;
-assign main_basesoc_sdram_csr_dfi_p0_wrdata_en = (main_basesoc_sdram_command_issue_re & main_basesoc_sdram_csrfield_wren);
-assign main_basesoc_sdram_csr_dfi_p0_rddata_en = (main_basesoc_sdram_command_issue_re & main_basesoc_sdram_csrfield_rden);
-assign main_basesoc_sdram_csr_dfi_p0_wrdata = main_basesoc_sdram_wrdata_storage;
-assign main_basesoc_sdram_csr_dfi_p0_wrdata_mask = 1'd0;
-assign main_basesoc_sdram_bankmachine0_req_valid = main_basesoc_sdram_interface_bank0_valid;
-assign main_basesoc_sdram_interface_bank0_ready = main_basesoc_sdram_bankmachine0_req_ready;
-assign main_basesoc_sdram_bankmachine0_req_we = main_basesoc_sdram_interface_bank0_we;
-assign main_basesoc_sdram_bankmachine0_req_addr = main_basesoc_sdram_interface_bank0_addr;
-assign main_basesoc_sdram_interface_bank0_lock = main_basesoc_sdram_bankmachine0_req_lock;
-assign main_basesoc_sdram_interface_bank0_wdata_ready = main_basesoc_sdram_bankmachine0_req_wdata_ready;
-assign main_basesoc_sdram_interface_bank0_rdata_valid = main_basesoc_sdram_bankmachine0_req_rdata_valid;
-assign main_basesoc_sdram_bankmachine1_req_valid = main_basesoc_sdram_interface_bank1_valid;
-assign main_basesoc_sdram_interface_bank1_ready = main_basesoc_sdram_bankmachine1_req_ready;
-assign main_basesoc_sdram_bankmachine1_req_we = main_basesoc_sdram_interface_bank1_we;
-assign main_basesoc_sdram_bankmachine1_req_addr = main_basesoc_sdram_interface_bank1_addr;
-assign main_basesoc_sdram_interface_bank1_lock = main_basesoc_sdram_bankmachine1_req_lock;
-assign main_basesoc_sdram_interface_bank1_wdata_ready = main_basesoc_sdram_bankmachine1_req_wdata_ready;
-assign main_basesoc_sdram_interface_bank1_rdata_valid = main_basesoc_sdram_bankmachine1_req_rdata_valid;
-assign main_basesoc_sdram_bankmachine2_req_valid = main_basesoc_sdram_interface_bank2_valid;
-assign main_basesoc_sdram_interface_bank2_ready = main_basesoc_sdram_bankmachine2_req_ready;
-assign main_basesoc_sdram_bankmachine2_req_we = main_basesoc_sdram_interface_bank2_we;
-assign main_basesoc_sdram_bankmachine2_req_addr = main_basesoc_sdram_interface_bank2_addr;
-assign main_basesoc_sdram_interface_bank2_lock = main_basesoc_sdram_bankmachine2_req_lock;
-assign main_basesoc_sdram_interface_bank2_wdata_ready = main_basesoc_sdram_bankmachine2_req_wdata_ready;
-assign main_basesoc_sdram_interface_bank2_rdata_valid = main_basesoc_sdram_bankmachine2_req_rdata_valid;
-assign main_basesoc_sdram_bankmachine3_req_valid = main_basesoc_sdram_interface_bank3_valid;
-assign main_basesoc_sdram_interface_bank3_ready = main_basesoc_sdram_bankmachine3_req_ready;
-assign main_basesoc_sdram_bankmachine3_req_we = main_basesoc_sdram_interface_bank3_we;
-assign main_basesoc_sdram_bankmachine3_req_addr = main_basesoc_sdram_interface_bank3_addr;
-assign main_basesoc_sdram_interface_bank3_lock = main_basesoc_sdram_bankmachine3_req_lock;
-assign main_basesoc_sdram_interface_bank3_wdata_ready = main_basesoc_sdram_bankmachine3_req_wdata_ready;
-assign main_basesoc_sdram_interface_bank3_rdata_valid = main_basesoc_sdram_bankmachine3_req_rdata_valid;
-assign main_basesoc_sdram_timer_wait = (~main_basesoc_sdram_timer_done0);
-assign main_basesoc_sdram_postponer_req_i = main_basesoc_sdram_timer_done0;
-assign main_basesoc_sdram_wants_refresh = main_basesoc_sdram_postponer_req_o;
-assign main_basesoc_sdram_timer_done1 = (main_basesoc_sdram_timer_count1 == 1'd0);
-assign main_basesoc_sdram_timer_done0 = main_basesoc_sdram_timer_done1;
-assign main_basesoc_sdram_timer_count0 = main_basesoc_sdram_timer_count1;
-assign main_basesoc_sdram_sequencer_start1 = (main_basesoc_sdram_sequencer_start0 | (main_basesoc_sdram_sequencer_count != 1'd0));
-assign main_basesoc_sdram_sequencer_done0 = (main_basesoc_sdram_sequencer_done1 & (main_basesoc_sdram_sequencer_count == 1'd0));
+assign main_sdram_csr_dfi_p0_address = main_sdram_address_storage;
+assign main_sdram_csr_dfi_p0_bank = main_sdram_baddress_storage;
+assign main_sdram_csr_dfi_p0_wrdata_en = (main_sdram_command_issue_re & main_sdram_csrfield_wren);
+assign main_sdram_csr_dfi_p0_rddata_en = (main_sdram_command_issue_re & main_sdram_csrfield_rden);
+assign main_sdram_csr_dfi_p0_wrdata = main_sdram_wrdata_storage;
+assign main_sdram_csr_dfi_p0_wrdata_mask = 1'd0;
+assign main_sdram_bankmachine0_req_valid = main_sdram_interface_bank0_valid;
+assign main_sdram_interface_bank0_ready = main_sdram_bankmachine0_req_ready;
+assign main_sdram_bankmachine0_req_we = main_sdram_interface_bank0_we;
+assign main_sdram_bankmachine0_req_addr = main_sdram_interface_bank0_addr;
+assign main_sdram_interface_bank0_lock = main_sdram_bankmachine0_req_lock;
+assign main_sdram_interface_bank0_wdata_ready = main_sdram_bankmachine0_req_wdata_ready;
+assign main_sdram_interface_bank0_rdata_valid = main_sdram_bankmachine0_req_rdata_valid;
+assign main_sdram_bankmachine1_req_valid = main_sdram_interface_bank1_valid;
+assign main_sdram_interface_bank1_ready = main_sdram_bankmachine1_req_ready;
+assign main_sdram_bankmachine1_req_we = main_sdram_interface_bank1_we;
+assign main_sdram_bankmachine1_req_addr = main_sdram_interface_bank1_addr;
+assign main_sdram_interface_bank1_lock = main_sdram_bankmachine1_req_lock;
+assign main_sdram_interface_bank1_wdata_ready = main_sdram_bankmachine1_req_wdata_ready;
+assign main_sdram_interface_bank1_rdata_valid = main_sdram_bankmachine1_req_rdata_valid;
+assign main_sdram_bankmachine2_req_valid = main_sdram_interface_bank2_valid;
+assign main_sdram_interface_bank2_ready = main_sdram_bankmachine2_req_ready;
+assign main_sdram_bankmachine2_req_we = main_sdram_interface_bank2_we;
+assign main_sdram_bankmachine2_req_addr = main_sdram_interface_bank2_addr;
+assign main_sdram_interface_bank2_lock = main_sdram_bankmachine2_req_lock;
+assign main_sdram_interface_bank2_wdata_ready = main_sdram_bankmachine2_req_wdata_ready;
+assign main_sdram_interface_bank2_rdata_valid = main_sdram_bankmachine2_req_rdata_valid;
+assign main_sdram_bankmachine3_req_valid = main_sdram_interface_bank3_valid;
+assign main_sdram_interface_bank3_ready = main_sdram_bankmachine3_req_ready;
+assign main_sdram_bankmachine3_req_we = main_sdram_interface_bank3_we;
+assign main_sdram_bankmachine3_req_addr = main_sdram_interface_bank3_addr;
+assign main_sdram_interface_bank3_lock = main_sdram_bankmachine3_req_lock;
+assign main_sdram_interface_bank3_wdata_ready = main_sdram_bankmachine3_req_wdata_ready;
+assign main_sdram_interface_bank3_rdata_valid = main_sdram_bankmachine3_req_rdata_valid;
+assign main_sdram_timer_wait = (~main_sdram_timer_done0);
+assign main_sdram_postponer_req_i = main_sdram_timer_done0;
+assign main_sdram_wants_refresh = main_sdram_postponer_req_o;
+assign main_sdram_timer_done1 = (main_sdram_timer_count1 == 1'd0);
+assign main_sdram_timer_done0 = main_sdram_timer_done1;
+assign main_sdram_timer_count0 = main_sdram_timer_count1;
+assign main_sdram_sequencer_start1 = (main_sdram_sequencer_start0 | (main_sdram_sequencer_count != 1'd0));
+assign main_sdram_sequencer_done0 = (main_sdram_sequencer_done1 & (main_sdram_sequencer_count == 1'd0));
 always @(*) begin
-    main_basesoc_sdram_cmd_last <= 1'd0;
-    main_basesoc_sdram_sequencer_start0 <= 1'd0;
+    main_sdram_cmd_last <= 1'd0;
+    main_sdram_sequencer_start0 <= 1'd0;
+    main_sdram_cmd_valid <= 1'd0;
     builder_basesoc_refresher_next_state <= 2'd0;
-    main_basesoc_sdram_cmd_valid <= 1'd0;
     builder_basesoc_refresher_next_state <= builder_basesoc_refresher_state;
     case (builder_basesoc_refresher_state)
         1'd1: begin
-            main_basesoc_sdram_cmd_valid <= 1'd1;
-            if (main_basesoc_sdram_cmd_ready) begin
-                main_basesoc_sdram_sequencer_start0 <= 1'd1;
+            main_sdram_cmd_valid <= 1'd1;
+            if (main_sdram_cmd_ready) begin
+                main_sdram_sequencer_start0 <= 1'd1;
                 builder_basesoc_refresher_next_state <= 2'd2;
             end
         end
         2'd2: begin
-            main_basesoc_sdram_cmd_valid <= 1'd1;
-            if (main_basesoc_sdram_sequencer_done0) begin
-                main_basesoc_sdram_cmd_valid <= 1'd0;
-                main_basesoc_sdram_cmd_last <= 1'd1;
+            main_sdram_cmd_valid <= 1'd1;
+            if (main_sdram_sequencer_done0) begin
+                main_sdram_cmd_valid <= 1'd0;
+                main_sdram_cmd_last <= 1'd1;
                 builder_basesoc_refresher_next_state <= 1'd0;
             end
         end
         default: begin
             if (1'd1) begin
-                if (main_basesoc_sdram_wants_refresh) begin
+                if (main_sdram_wants_refresh) begin
                     builder_basesoc_refresher_next_state <= 1'd1;
                 end
             end
         end
     endcase
 end
-assign main_basesoc_sdram_bankmachine0_sink_valid = main_basesoc_sdram_bankmachine0_req_valid;
-assign main_basesoc_sdram_bankmachine0_req_ready = main_basesoc_sdram_bankmachine0_sink_ready;
-assign main_basesoc_sdram_bankmachine0_sink_payload_we = main_basesoc_sdram_bankmachine0_req_we;
-assign main_basesoc_sdram_bankmachine0_sink_payload_addr = main_basesoc_sdram_bankmachine0_req_addr;
-assign main_basesoc_sdram_bankmachine0_sink_sink_valid = main_basesoc_sdram_bankmachine0_source_valid;
-assign main_basesoc_sdram_bankmachine0_source_ready = main_basesoc_sdram_bankmachine0_sink_sink_ready;
-assign main_basesoc_sdram_bankmachine0_sink_sink_first = main_basesoc_sdram_bankmachine0_source_first;
-assign main_basesoc_sdram_bankmachine0_sink_sink_last = main_basesoc_sdram_bankmachine0_source_last;
-assign main_basesoc_sdram_bankmachine0_sink_sink_payload_we = main_basesoc_sdram_bankmachine0_source_payload_we;
-assign main_basesoc_sdram_bankmachine0_sink_sink_payload_addr = main_basesoc_sdram_bankmachine0_source_payload_addr;
-assign main_basesoc_sdram_bankmachine0_source_source_ready = (main_basesoc_sdram_bankmachine0_req_wdata_ready | main_basesoc_sdram_bankmachine0_req_rdata_valid);
-assign main_basesoc_sdram_bankmachine0_req_lock = (main_basesoc_sdram_bankmachine0_source_valid | main_basesoc_sdram_bankmachine0_source_source_valid);
-assign main_basesoc_sdram_bankmachine0_row_hit = (main_basesoc_sdram_bankmachine0_row == main_basesoc_sdram_bankmachine0_source_source_payload_addr[21:9]);
-assign main_basesoc_sdram_bankmachine0_cmd_payload_ba = 1'd0;
+assign main_sdram_bankmachine0_sink_valid = main_sdram_bankmachine0_req_valid;
+assign main_sdram_bankmachine0_req_ready = main_sdram_bankmachine0_sink_ready;
+assign main_sdram_bankmachine0_sink_payload_we = main_sdram_bankmachine0_req_we;
+assign main_sdram_bankmachine0_sink_payload_addr = main_sdram_bankmachine0_req_addr;
+assign main_sdram_bankmachine0_sink_sink_valid = main_sdram_bankmachine0_source_valid;
+assign main_sdram_bankmachine0_source_ready = main_sdram_bankmachine0_sink_sink_ready;
+assign main_sdram_bankmachine0_sink_sink_first = main_sdram_bankmachine0_source_first;
+assign main_sdram_bankmachine0_sink_sink_last = main_sdram_bankmachine0_source_last;
+assign main_sdram_bankmachine0_sink_sink_payload_we = main_sdram_bankmachine0_source_payload_we;
+assign main_sdram_bankmachine0_sink_sink_payload_addr = main_sdram_bankmachine0_source_payload_addr;
+assign main_sdram_bankmachine0_source_source_ready = (main_sdram_bankmachine0_req_wdata_ready | main_sdram_bankmachine0_req_rdata_valid);
+assign main_sdram_bankmachine0_req_lock = (main_sdram_bankmachine0_source_valid | main_sdram_bankmachine0_source_source_valid);
+assign main_sdram_bankmachine0_row_hit = (main_sdram_bankmachine0_row == main_sdram_bankmachine0_source_source_payload_addr[21:9]);
+assign main_sdram_bankmachine0_cmd_payload_ba = 1'd0;
 always @(*) begin
-    main_basesoc_sdram_bankmachine0_cmd_payload_a <= 13'd0;
-    if (main_basesoc_sdram_bankmachine0_row_col_n_addr_sel) begin
-        main_basesoc_sdram_bankmachine0_cmd_payload_a <= main_basesoc_sdram_bankmachine0_source_source_payload_addr[21:9];
+    main_sdram_bankmachine0_cmd_payload_a <= 13'd0;
+    if (main_sdram_bankmachine0_row_col_n_addr_sel) begin
+        main_sdram_bankmachine0_cmd_payload_a <= main_sdram_bankmachine0_source_source_payload_addr[21:9];
     end else begin
-        main_basesoc_sdram_bankmachine0_cmd_payload_a <= ((main_basesoc_sdram_bankmachine0_auto_precharge <<< 4'd10) | {main_basesoc_sdram_bankmachine0_source_source_payload_addr[8:0], {0{1'd0}}});
+        main_sdram_bankmachine0_cmd_payload_a <= ((main_sdram_bankmachine0_auto_precharge <<< 4'd10) | {main_sdram_bankmachine0_source_source_payload_addr[8:0], {0{1'd0}}});
     end
 end
-assign main_basesoc_sdram_bankmachine0_twtpcon_valid = ((main_basesoc_sdram_bankmachine0_cmd_valid & main_basesoc_sdram_bankmachine0_cmd_ready) & main_basesoc_sdram_bankmachine0_cmd_payload_is_write);
-assign main_basesoc_sdram_bankmachine0_trccon_valid = ((main_basesoc_sdram_bankmachine0_cmd_valid & main_basesoc_sdram_bankmachine0_cmd_ready) & main_basesoc_sdram_bankmachine0_row_open);
-assign main_basesoc_sdram_bankmachine0_trascon_valid = ((main_basesoc_sdram_bankmachine0_cmd_valid & main_basesoc_sdram_bankmachine0_cmd_ready) & main_basesoc_sdram_bankmachine0_row_open);
+assign main_sdram_bankmachine0_twtpcon_valid = ((main_sdram_bankmachine0_cmd_valid & main_sdram_bankmachine0_cmd_ready) & main_sdram_bankmachine0_cmd_payload_is_write);
+assign main_sdram_bankmachine0_trccon_valid = ((main_sdram_bankmachine0_cmd_valid & main_sdram_bankmachine0_cmd_ready) & main_sdram_bankmachine0_row_open);
+assign main_sdram_bankmachine0_trascon_valid = ((main_sdram_bankmachine0_cmd_valid & main_sdram_bankmachine0_cmd_ready) & main_sdram_bankmachine0_row_open);
 always @(*) begin
-    main_basesoc_sdram_bankmachine0_auto_precharge <= 1'd0;
-    if ((main_basesoc_sdram_bankmachine0_source_valid & main_basesoc_sdram_bankmachine0_source_source_valid)) begin
-        if ((main_basesoc_sdram_bankmachine0_source_payload_addr[21:9] != main_basesoc_sdram_bankmachine0_source_source_payload_addr[21:9])) begin
-            main_basesoc_sdram_bankmachine0_auto_precharge <= (main_basesoc_sdram_bankmachine0_row_close == 1'd0);
+    main_sdram_bankmachine0_auto_precharge <= 1'd0;
+    if ((main_sdram_bankmachine0_source_valid & main_sdram_bankmachine0_source_source_valid)) begin
+        if ((main_sdram_bankmachine0_source_payload_addr[21:9] != main_sdram_bankmachine0_source_source_payload_addr[21:9])) begin
+            main_sdram_bankmachine0_auto_precharge <= (main_sdram_bankmachine0_row_close == 1'd0);
         end
     end
 end
-assign main_basesoc_sdram_bankmachine0_syncfifo0_din = {main_basesoc_sdram_bankmachine0_fifo_in_last, main_basesoc_sdram_bankmachine0_fifo_in_first, main_basesoc_sdram_bankmachine0_fifo_in_payload_addr, main_basesoc_sdram_bankmachine0_fifo_in_payload_we};
-assign {main_basesoc_sdram_bankmachine0_fifo_out_last, main_basesoc_sdram_bankmachine0_fifo_out_first, main_basesoc_sdram_bankmachine0_fifo_out_payload_addr, main_basesoc_sdram_bankmachine0_fifo_out_payload_we} = main_basesoc_sdram_bankmachine0_syncfifo0_dout;
-assign main_basesoc_sdram_bankmachine0_sink_ready = main_basesoc_sdram_bankmachine0_syncfifo0_writable;
-assign main_basesoc_sdram_bankmachine0_syncfifo0_we = main_basesoc_sdram_bankmachine0_sink_valid;
-assign main_basesoc_sdram_bankmachine0_fifo_in_first = main_basesoc_sdram_bankmachine0_sink_first;
-assign main_basesoc_sdram_bankmachine0_fifo_in_last = main_basesoc_sdram_bankmachine0_sink_last;
-assign main_basesoc_sdram_bankmachine0_fifo_in_payload_we = main_basesoc_sdram_bankmachine0_sink_payload_we;
-assign main_basesoc_sdram_bankmachine0_fifo_in_payload_addr = main_basesoc_sdram_bankmachine0_sink_payload_addr;
-assign main_basesoc_sdram_bankmachine0_source_valid = main_basesoc_sdram_bankmachine0_syncfifo0_readable;
-assign main_basesoc_sdram_bankmachine0_source_first = main_basesoc_sdram_bankmachine0_fifo_out_first;
-assign main_basesoc_sdram_bankmachine0_source_last = main_basesoc_sdram_bankmachine0_fifo_out_last;
-assign main_basesoc_sdram_bankmachine0_source_payload_we = main_basesoc_sdram_bankmachine0_fifo_out_payload_we;
-assign main_basesoc_sdram_bankmachine0_source_payload_addr = main_basesoc_sdram_bankmachine0_fifo_out_payload_addr;
-assign main_basesoc_sdram_bankmachine0_syncfifo0_re = main_basesoc_sdram_bankmachine0_source_ready;
+assign main_sdram_bankmachine0_syncfifo0_din = {main_sdram_bankmachine0_fifo_in_last, main_sdram_bankmachine0_fifo_in_first, main_sdram_bankmachine0_fifo_in_payload_addr, main_sdram_bankmachine0_fifo_in_payload_we};
+assign {main_sdram_bankmachine0_fifo_out_last, main_sdram_bankmachine0_fifo_out_first, main_sdram_bankmachine0_fifo_out_payload_addr, main_sdram_bankmachine0_fifo_out_payload_we} = main_sdram_bankmachine0_syncfifo0_dout;
+assign main_sdram_bankmachine0_sink_ready = main_sdram_bankmachine0_syncfifo0_writable;
+assign main_sdram_bankmachine0_syncfifo0_we = main_sdram_bankmachine0_sink_valid;
+assign main_sdram_bankmachine0_fifo_in_first = main_sdram_bankmachine0_sink_first;
+assign main_sdram_bankmachine0_fifo_in_last = main_sdram_bankmachine0_sink_last;
+assign main_sdram_bankmachine0_fifo_in_payload_we = main_sdram_bankmachine0_sink_payload_we;
+assign main_sdram_bankmachine0_fifo_in_payload_addr = main_sdram_bankmachine0_sink_payload_addr;
+assign main_sdram_bankmachine0_source_valid = main_sdram_bankmachine0_syncfifo0_readable;
+assign main_sdram_bankmachine0_source_first = main_sdram_bankmachine0_fifo_out_first;
+assign main_sdram_bankmachine0_source_last = main_sdram_bankmachine0_fifo_out_last;
+assign main_sdram_bankmachine0_source_payload_we = main_sdram_bankmachine0_fifo_out_payload_we;
+assign main_sdram_bankmachine0_source_payload_addr = main_sdram_bankmachine0_fifo_out_payload_addr;
+assign main_sdram_bankmachine0_syncfifo0_re = main_sdram_bankmachine0_source_ready;
 always @(*) begin
-    main_basesoc_sdram_bankmachine0_wrport_adr <= 3'd0;
-    if (main_basesoc_sdram_bankmachine0_replace) begin
-        main_basesoc_sdram_bankmachine0_wrport_adr <= (main_basesoc_sdram_bankmachine0_produce - 1'd1);
+    main_sdram_bankmachine0_wrport_adr <= 3'd0;
+    if (main_sdram_bankmachine0_replace) begin
+        main_sdram_bankmachine0_wrport_adr <= (main_sdram_bankmachine0_produce - 1'd1);
     end else begin
-        main_basesoc_sdram_bankmachine0_wrport_adr <= main_basesoc_sdram_bankmachine0_produce;
+        main_sdram_bankmachine0_wrport_adr <= main_sdram_bankmachine0_produce;
     end
 end
-assign main_basesoc_sdram_bankmachine0_wrport_dat_w = main_basesoc_sdram_bankmachine0_syncfifo0_din;
-assign main_basesoc_sdram_bankmachine0_wrport_we = (main_basesoc_sdram_bankmachine0_syncfifo0_we & (main_basesoc_sdram_bankmachine0_syncfifo0_writable | main_basesoc_sdram_bankmachine0_replace));
-assign main_basesoc_sdram_bankmachine0_do_read = (main_basesoc_sdram_bankmachine0_syncfifo0_readable & main_basesoc_sdram_bankmachine0_syncfifo0_re);
-assign main_basesoc_sdram_bankmachine0_rdport_adr = main_basesoc_sdram_bankmachine0_consume;
-assign main_basesoc_sdram_bankmachine0_syncfifo0_dout = main_basesoc_sdram_bankmachine0_rdport_dat_r;
-assign main_basesoc_sdram_bankmachine0_syncfifo0_writable = (main_basesoc_sdram_bankmachine0_level != 4'd8);
-assign main_basesoc_sdram_bankmachine0_syncfifo0_readable = (main_basesoc_sdram_bankmachine0_level != 1'd0);
-assign main_basesoc_sdram_bankmachine0_pipe_valid_sink_ready = ((~main_basesoc_sdram_bankmachine0_pipe_valid_source_valid) | main_basesoc_sdram_bankmachine0_pipe_valid_source_ready);
-assign main_basesoc_sdram_bankmachine0_pipe_valid_sink_valid = main_basesoc_sdram_bankmachine0_sink_sink_valid;
-assign main_basesoc_sdram_bankmachine0_sink_sink_ready = main_basesoc_sdram_bankmachine0_pipe_valid_sink_ready;
-assign main_basesoc_sdram_bankmachine0_pipe_valid_sink_first = main_basesoc_sdram_bankmachine0_sink_sink_first;
-assign main_basesoc_sdram_bankmachine0_pipe_valid_sink_last = main_basesoc_sdram_bankmachine0_sink_sink_last;
-assign main_basesoc_sdram_bankmachine0_pipe_valid_sink_payload_we = main_basesoc_sdram_bankmachine0_sink_sink_payload_we;
-assign main_basesoc_sdram_bankmachine0_pipe_valid_sink_payload_addr = main_basesoc_sdram_bankmachine0_sink_sink_payload_addr;
-assign main_basesoc_sdram_bankmachine0_source_source_valid = main_basesoc_sdram_bankmachine0_pipe_valid_source_valid;
-assign main_basesoc_sdram_bankmachine0_pipe_valid_source_ready = main_basesoc_sdram_bankmachine0_source_source_ready;
-assign main_basesoc_sdram_bankmachine0_source_source_first = main_basesoc_sdram_bankmachine0_pipe_valid_source_first;
-assign main_basesoc_sdram_bankmachine0_source_source_last = main_basesoc_sdram_bankmachine0_pipe_valid_source_last;
-assign main_basesoc_sdram_bankmachine0_source_source_payload_we = main_basesoc_sdram_bankmachine0_pipe_valid_source_payload_we;
-assign main_basesoc_sdram_bankmachine0_source_source_payload_addr = main_basesoc_sdram_bankmachine0_pipe_valid_source_payload_addr;
+assign main_sdram_bankmachine0_wrport_dat_w = main_sdram_bankmachine0_syncfifo0_din;
+assign main_sdram_bankmachine0_wrport_we = (main_sdram_bankmachine0_syncfifo0_we & (main_sdram_bankmachine0_syncfifo0_writable | main_sdram_bankmachine0_replace));
+assign main_sdram_bankmachine0_do_read = (main_sdram_bankmachine0_syncfifo0_readable & main_sdram_bankmachine0_syncfifo0_re);
+assign main_sdram_bankmachine0_rdport_adr = main_sdram_bankmachine0_consume;
+assign main_sdram_bankmachine0_syncfifo0_dout = main_sdram_bankmachine0_rdport_dat_r;
+assign main_sdram_bankmachine0_syncfifo0_writable = (main_sdram_bankmachine0_level != 4'd8);
+assign main_sdram_bankmachine0_syncfifo0_readable = (main_sdram_bankmachine0_level != 1'd0);
+assign main_sdram_bankmachine0_pipe_valid_sink_ready = ((~main_sdram_bankmachine0_pipe_valid_source_valid) | main_sdram_bankmachine0_pipe_valid_source_ready);
+assign main_sdram_bankmachine0_pipe_valid_sink_valid = main_sdram_bankmachine0_sink_sink_valid;
+assign main_sdram_bankmachine0_sink_sink_ready = main_sdram_bankmachine0_pipe_valid_sink_ready;
+assign main_sdram_bankmachine0_pipe_valid_sink_first = main_sdram_bankmachine0_sink_sink_first;
+assign main_sdram_bankmachine0_pipe_valid_sink_last = main_sdram_bankmachine0_sink_sink_last;
+assign main_sdram_bankmachine0_pipe_valid_sink_payload_we = main_sdram_bankmachine0_sink_sink_payload_we;
+assign main_sdram_bankmachine0_pipe_valid_sink_payload_addr = main_sdram_bankmachine0_sink_sink_payload_addr;
+assign main_sdram_bankmachine0_source_source_valid = main_sdram_bankmachine0_pipe_valid_source_valid;
+assign main_sdram_bankmachine0_pipe_valid_source_ready = main_sdram_bankmachine0_source_source_ready;
+assign main_sdram_bankmachine0_source_source_first = main_sdram_bankmachine0_pipe_valid_source_first;
+assign main_sdram_bankmachine0_source_source_last = main_sdram_bankmachine0_pipe_valid_source_last;
+assign main_sdram_bankmachine0_source_source_payload_we = main_sdram_bankmachine0_pipe_valid_source_payload_we;
+assign main_sdram_bankmachine0_source_source_payload_addr = main_sdram_bankmachine0_pipe_valid_source_payload_addr;
 always @(*) begin
-    main_basesoc_sdram_bankmachine0_req_rdata_valid <= 1'd0;
-    main_basesoc_sdram_bankmachine0_refresh_gnt <= 1'd0;
-    main_basesoc_sdram_bankmachine0_row_open <= 1'd0;
-    main_basesoc_sdram_bankmachine0_cmd_valid <= 1'd0;
-    main_basesoc_sdram_bankmachine0_row_close <= 1'd0;
-    main_basesoc_sdram_bankmachine0_row_col_n_addr_sel <= 1'd0;
+    main_sdram_bankmachine0_req_rdata_valid <= 1'd0;
+    main_sdram_bankmachine0_refresh_gnt <= 1'd0;
+    main_sdram_bankmachine0_row_open <= 1'd0;
+    main_sdram_bankmachine0_cmd_valid <= 1'd0;
+    main_sdram_bankmachine0_row_close <= 1'd0;
+    main_sdram_bankmachine0_row_col_n_addr_sel <= 1'd0;
+    main_sdram_bankmachine0_cmd_payload_cas <= 1'd0;
+    main_sdram_bankmachine0_cmd_payload_ras <= 1'd0;
+    main_sdram_bankmachine0_cmd_payload_we <= 1'd0;
+    main_sdram_bankmachine0_cmd_payload_is_cmd <= 1'd0;
+    main_sdram_bankmachine0_cmd_payload_is_read <= 1'd0;
     builder_basesoc_bankmachine0_next_state <= 3'd0;
-    main_basesoc_sdram_bankmachine0_cmd_payload_cas <= 1'd0;
-    main_basesoc_sdram_bankmachine0_cmd_payload_ras <= 1'd0;
-    main_basesoc_sdram_bankmachine0_cmd_payload_we <= 1'd0;
-    main_basesoc_sdram_bankmachine0_cmd_payload_is_cmd <= 1'd0;
-    main_basesoc_sdram_bankmachine0_cmd_payload_is_read <= 1'd0;
-    main_basesoc_sdram_bankmachine0_cmd_payload_is_write <= 1'd0;
-    main_basesoc_sdram_bankmachine0_req_wdata_ready <= 1'd0;
+    main_sdram_bankmachine0_cmd_payload_is_write <= 1'd0;
+    main_sdram_bankmachine0_req_wdata_ready <= 1'd0;
     builder_basesoc_bankmachine0_next_state <= builder_basesoc_bankmachine0_state;
     case (builder_basesoc_bankmachine0_state)
         1'd1: begin
-            if ((main_basesoc_sdram_bankmachine0_twtpcon_ready & main_basesoc_sdram_bankmachine0_trascon_ready)) begin
-                main_basesoc_sdram_bankmachine0_cmd_valid <= 1'd1;
-                if (main_basesoc_sdram_bankmachine0_cmd_ready) begin
+            if ((main_sdram_bankmachine0_twtpcon_ready & main_sdram_bankmachine0_trascon_ready)) begin
+                main_sdram_bankmachine0_cmd_valid <= 1'd1;
+                if (main_sdram_bankmachine0_cmd_ready) begin
                     builder_basesoc_bankmachine0_next_state <= 3'd5;
                 end
-                main_basesoc_sdram_bankmachine0_cmd_payload_ras <= 1'd1;
-                main_basesoc_sdram_bankmachine0_cmd_payload_we <= 1'd1;
-                main_basesoc_sdram_bankmachine0_cmd_payload_is_cmd <= 1'd1;
+                main_sdram_bankmachine0_cmd_payload_ras <= 1'd1;
+                main_sdram_bankmachine0_cmd_payload_we <= 1'd1;
+                main_sdram_bankmachine0_cmd_payload_is_cmd <= 1'd1;
             end
-            main_basesoc_sdram_bankmachine0_row_close <= 1'd1;
+            main_sdram_bankmachine0_row_close <= 1'd1;
         end
         2'd2: begin
-            if ((main_basesoc_sdram_bankmachine0_twtpcon_ready & main_basesoc_sdram_bankmachine0_trascon_ready)) begin
+            if ((main_sdram_bankmachine0_twtpcon_ready & main_sdram_bankmachine0_trascon_ready)) begin
                 builder_basesoc_bankmachine0_next_state <= 3'd5;
             end
-            main_basesoc_sdram_bankmachine0_row_close <= 1'd1;
+            main_sdram_bankmachine0_row_close <= 1'd1;
         end
         2'd3: begin
-            if (main_basesoc_sdram_bankmachine0_trccon_ready) begin
-                main_basesoc_sdram_bankmachine0_row_col_n_addr_sel <= 1'd1;
-                main_basesoc_sdram_bankmachine0_row_open <= 1'd1;
-                main_basesoc_sdram_bankmachine0_cmd_valid <= 1'd1;
-                main_basesoc_sdram_bankmachine0_cmd_payload_is_cmd <= 1'd1;
-                if (main_basesoc_sdram_bankmachine0_cmd_ready) begin
+            if (main_sdram_bankmachine0_trccon_ready) begin
+                main_sdram_bankmachine0_row_col_n_addr_sel <= 1'd1;
+                main_sdram_bankmachine0_row_open <= 1'd1;
+                main_sdram_bankmachine0_cmd_valid <= 1'd1;
+                main_sdram_bankmachine0_cmd_payload_is_cmd <= 1'd1;
+                if (main_sdram_bankmachine0_cmd_ready) begin
                     builder_basesoc_bankmachine0_next_state <= 3'd6;
                 end
-                main_basesoc_sdram_bankmachine0_cmd_payload_ras <= 1'd1;
+                main_sdram_bankmachine0_cmd_payload_ras <= 1'd1;
             end
         end
         3'd4: begin
-            if (main_basesoc_sdram_bankmachine0_twtpcon_ready) begin
-                main_basesoc_sdram_bankmachine0_refresh_gnt <= 1'd1;
+            if (main_sdram_bankmachine0_twtpcon_ready) begin
+                main_sdram_bankmachine0_refresh_gnt <= 1'd1;
             end
-            main_basesoc_sdram_bankmachine0_row_close <= 1'd1;
-            main_basesoc_sdram_bankmachine0_cmd_payload_is_cmd <= 1'd1;
-            if ((~main_basesoc_sdram_bankmachine0_refresh_req)) begin
+            main_sdram_bankmachine0_row_close <= 1'd1;
+            main_sdram_bankmachine0_cmd_payload_is_cmd <= 1'd1;
+            if ((~main_sdram_bankmachine0_refresh_req)) begin
                 builder_basesoc_bankmachine0_next_state <= 1'd0;
             end
         end
@@ -2820,23 +2483,23 @@ always @(*) begin
             builder_basesoc_bankmachine0_next_state <= 1'd0;
         end
         default: begin
-            if (main_basesoc_sdram_bankmachine0_refresh_req) begin
+            if (main_sdram_bankmachine0_refresh_req) begin
                 builder_basesoc_bankmachine0_next_state <= 3'd4;
             end else begin
-                if (main_basesoc_sdram_bankmachine0_source_source_valid) begin
-                    if (main_basesoc_sdram_bankmachine0_row_opened) begin
-                        if (main_basesoc_sdram_bankmachine0_row_hit) begin
-                            main_basesoc_sdram_bankmachine0_cmd_valid <= 1'd1;
-                            if (main_basesoc_sdram_bankmachine0_source_source_payload_we) begin
-                                main_basesoc_sdram_bankmachine0_req_wdata_ready <= main_basesoc_sdram_bankmachine0_cmd_ready;
-                                main_basesoc_sdram_bankmachine0_cmd_payload_is_write <= 1'd1;
-                                main_basesoc_sdram_bankmachine0_cmd_payload_we <= 1'd1;
+                if (main_sdram_bankmachine0_source_source_valid) begin
+                    if (main_sdram_bankmachine0_row_opened) begin
+                        if (main_sdram_bankmachine0_row_hit) begin
+                            main_sdram_bankmachine0_cmd_valid <= 1'd1;
+                            if (main_sdram_bankmachine0_source_source_payload_we) begin
+                                main_sdram_bankmachine0_req_wdata_ready <= main_sdram_bankmachine0_cmd_ready;
+                                main_sdram_bankmachine0_cmd_payload_is_write <= 1'd1;
+                                main_sdram_bankmachine0_cmd_payload_we <= 1'd1;
                             end else begin
-                                main_basesoc_sdram_bankmachine0_req_rdata_valid <= main_basesoc_sdram_bankmachine0_cmd_ready;
-                                main_basesoc_sdram_bankmachine0_cmd_payload_is_read <= 1'd1;
+                                main_sdram_bankmachine0_req_rdata_valid <= main_sdram_bankmachine0_cmd_ready;
+                                main_sdram_bankmachine0_cmd_payload_is_read <= 1'd1;
                             end
-                            main_basesoc_sdram_bankmachine0_cmd_payload_cas <= 1'd1;
-                            if ((main_basesoc_sdram_bankmachine0_cmd_ready & main_basesoc_sdram_bankmachine0_auto_precharge)) begin
+                            main_sdram_bankmachine0_cmd_payload_cas <= 1'd1;
+                            if ((main_sdram_bankmachine0_cmd_ready & main_sdram_bankmachine0_auto_precharge)) begin
                                 builder_basesoc_bankmachine0_next_state <= 2'd2;
                             end
                         end else begin
@@ -2850,135 +2513,135 @@ always @(*) begin
         end
     endcase
 end
-assign main_basesoc_sdram_bankmachine1_sink_valid = main_basesoc_sdram_bankmachine1_req_valid;
-assign main_basesoc_sdram_bankmachine1_req_ready = main_basesoc_sdram_bankmachine1_sink_ready;
-assign main_basesoc_sdram_bankmachine1_sink_payload_we = main_basesoc_sdram_bankmachine1_req_we;
-assign main_basesoc_sdram_bankmachine1_sink_payload_addr = main_basesoc_sdram_bankmachine1_req_addr;
-assign main_basesoc_sdram_bankmachine1_sink_sink_valid = main_basesoc_sdram_bankmachine1_source_valid;
-assign main_basesoc_sdram_bankmachine1_source_ready = main_basesoc_sdram_bankmachine1_sink_sink_ready;
-assign main_basesoc_sdram_bankmachine1_sink_sink_first = main_basesoc_sdram_bankmachine1_source_first;
-assign main_basesoc_sdram_bankmachine1_sink_sink_last = main_basesoc_sdram_bankmachine1_source_last;
-assign main_basesoc_sdram_bankmachine1_sink_sink_payload_we = main_basesoc_sdram_bankmachine1_source_payload_we;
-assign main_basesoc_sdram_bankmachine1_sink_sink_payload_addr = main_basesoc_sdram_bankmachine1_source_payload_addr;
-assign main_basesoc_sdram_bankmachine1_source_source_ready = (main_basesoc_sdram_bankmachine1_req_wdata_ready | main_basesoc_sdram_bankmachine1_req_rdata_valid);
-assign main_basesoc_sdram_bankmachine1_req_lock = (main_basesoc_sdram_bankmachine1_source_valid | main_basesoc_sdram_bankmachine1_source_source_valid);
-assign main_basesoc_sdram_bankmachine1_row_hit = (main_basesoc_sdram_bankmachine1_row == main_basesoc_sdram_bankmachine1_source_source_payload_addr[21:9]);
-assign main_basesoc_sdram_bankmachine1_cmd_payload_ba = 1'd1;
+assign main_sdram_bankmachine1_sink_valid = main_sdram_bankmachine1_req_valid;
+assign main_sdram_bankmachine1_req_ready = main_sdram_bankmachine1_sink_ready;
+assign main_sdram_bankmachine1_sink_payload_we = main_sdram_bankmachine1_req_we;
+assign main_sdram_bankmachine1_sink_payload_addr = main_sdram_bankmachine1_req_addr;
+assign main_sdram_bankmachine1_sink_sink_valid = main_sdram_bankmachine1_source_valid;
+assign main_sdram_bankmachine1_source_ready = main_sdram_bankmachine1_sink_sink_ready;
+assign main_sdram_bankmachine1_sink_sink_first = main_sdram_bankmachine1_source_first;
+assign main_sdram_bankmachine1_sink_sink_last = main_sdram_bankmachine1_source_last;
+assign main_sdram_bankmachine1_sink_sink_payload_we = main_sdram_bankmachine1_source_payload_we;
+assign main_sdram_bankmachine1_sink_sink_payload_addr = main_sdram_bankmachine1_source_payload_addr;
+assign main_sdram_bankmachine1_source_source_ready = (main_sdram_bankmachine1_req_wdata_ready | main_sdram_bankmachine1_req_rdata_valid);
+assign main_sdram_bankmachine1_req_lock = (main_sdram_bankmachine1_source_valid | main_sdram_bankmachine1_source_source_valid);
+assign main_sdram_bankmachine1_row_hit = (main_sdram_bankmachine1_row == main_sdram_bankmachine1_source_source_payload_addr[21:9]);
+assign main_sdram_bankmachine1_cmd_payload_ba = 1'd1;
 always @(*) begin
-    main_basesoc_sdram_bankmachine1_cmd_payload_a <= 13'd0;
-    if (main_basesoc_sdram_bankmachine1_row_col_n_addr_sel) begin
-        main_basesoc_sdram_bankmachine1_cmd_payload_a <= main_basesoc_sdram_bankmachine1_source_source_payload_addr[21:9];
+    main_sdram_bankmachine1_cmd_payload_a <= 13'd0;
+    if (main_sdram_bankmachine1_row_col_n_addr_sel) begin
+        main_sdram_bankmachine1_cmd_payload_a <= main_sdram_bankmachine1_source_source_payload_addr[21:9];
     end else begin
-        main_basesoc_sdram_bankmachine1_cmd_payload_a <= ((main_basesoc_sdram_bankmachine1_auto_precharge <<< 4'd10) | {main_basesoc_sdram_bankmachine1_source_source_payload_addr[8:0], {0{1'd0}}});
+        main_sdram_bankmachine1_cmd_payload_a <= ((main_sdram_bankmachine1_auto_precharge <<< 4'd10) | {main_sdram_bankmachine1_source_source_payload_addr[8:0], {0{1'd0}}});
     end
 end
-assign main_basesoc_sdram_bankmachine1_twtpcon_valid = ((main_basesoc_sdram_bankmachine1_cmd_valid & main_basesoc_sdram_bankmachine1_cmd_ready) & main_basesoc_sdram_bankmachine1_cmd_payload_is_write);
-assign main_basesoc_sdram_bankmachine1_trccon_valid = ((main_basesoc_sdram_bankmachine1_cmd_valid & main_basesoc_sdram_bankmachine1_cmd_ready) & main_basesoc_sdram_bankmachine1_row_open);
-assign main_basesoc_sdram_bankmachine1_trascon_valid = ((main_basesoc_sdram_bankmachine1_cmd_valid & main_basesoc_sdram_bankmachine1_cmd_ready) & main_basesoc_sdram_bankmachine1_row_open);
+assign main_sdram_bankmachine1_twtpcon_valid = ((main_sdram_bankmachine1_cmd_valid & main_sdram_bankmachine1_cmd_ready) & main_sdram_bankmachine1_cmd_payload_is_write);
+assign main_sdram_bankmachine1_trccon_valid = ((main_sdram_bankmachine1_cmd_valid & main_sdram_bankmachine1_cmd_ready) & main_sdram_bankmachine1_row_open);
+assign main_sdram_bankmachine1_trascon_valid = ((main_sdram_bankmachine1_cmd_valid & main_sdram_bankmachine1_cmd_ready) & main_sdram_bankmachine1_row_open);
 always @(*) begin
-    main_basesoc_sdram_bankmachine1_auto_precharge <= 1'd0;
-    if ((main_basesoc_sdram_bankmachine1_source_valid & main_basesoc_sdram_bankmachine1_source_source_valid)) begin
-        if ((main_basesoc_sdram_bankmachine1_source_payload_addr[21:9] != main_basesoc_sdram_bankmachine1_source_source_payload_addr[21:9])) begin
-            main_basesoc_sdram_bankmachine1_auto_precharge <= (main_basesoc_sdram_bankmachine1_row_close == 1'd0);
+    main_sdram_bankmachine1_auto_precharge <= 1'd0;
+    if ((main_sdram_bankmachine1_source_valid & main_sdram_bankmachine1_source_source_valid)) begin
+        if ((main_sdram_bankmachine1_source_payload_addr[21:9] != main_sdram_bankmachine1_source_source_payload_addr[21:9])) begin
+            main_sdram_bankmachine1_auto_precharge <= (main_sdram_bankmachine1_row_close == 1'd0);
         end
     end
 end
-assign main_basesoc_sdram_bankmachine1_syncfifo1_din = {main_basesoc_sdram_bankmachine1_fifo_in_last, main_basesoc_sdram_bankmachine1_fifo_in_first, main_basesoc_sdram_bankmachine1_fifo_in_payload_addr, main_basesoc_sdram_bankmachine1_fifo_in_payload_we};
-assign {main_basesoc_sdram_bankmachine1_fifo_out_last, main_basesoc_sdram_bankmachine1_fifo_out_first, main_basesoc_sdram_bankmachine1_fifo_out_payload_addr, main_basesoc_sdram_bankmachine1_fifo_out_payload_we} = main_basesoc_sdram_bankmachine1_syncfifo1_dout;
-assign main_basesoc_sdram_bankmachine1_sink_ready = main_basesoc_sdram_bankmachine1_syncfifo1_writable;
-assign main_basesoc_sdram_bankmachine1_syncfifo1_we = main_basesoc_sdram_bankmachine1_sink_valid;
-assign main_basesoc_sdram_bankmachine1_fifo_in_first = main_basesoc_sdram_bankmachine1_sink_first;
-assign main_basesoc_sdram_bankmachine1_fifo_in_last = main_basesoc_sdram_bankmachine1_sink_last;
-assign main_basesoc_sdram_bankmachine1_fifo_in_payload_we = main_basesoc_sdram_bankmachine1_sink_payload_we;
-assign main_basesoc_sdram_bankmachine1_fifo_in_payload_addr = main_basesoc_sdram_bankmachine1_sink_payload_addr;
-assign main_basesoc_sdram_bankmachine1_source_valid = main_basesoc_sdram_bankmachine1_syncfifo1_readable;
-assign main_basesoc_sdram_bankmachine1_source_first = main_basesoc_sdram_bankmachine1_fifo_out_first;
-assign main_basesoc_sdram_bankmachine1_source_last = main_basesoc_sdram_bankmachine1_fifo_out_last;
-assign main_basesoc_sdram_bankmachine1_source_payload_we = main_basesoc_sdram_bankmachine1_fifo_out_payload_we;
-assign main_basesoc_sdram_bankmachine1_source_payload_addr = main_basesoc_sdram_bankmachine1_fifo_out_payload_addr;
-assign main_basesoc_sdram_bankmachine1_syncfifo1_re = main_basesoc_sdram_bankmachine1_source_ready;
+assign main_sdram_bankmachine1_syncfifo1_din = {main_sdram_bankmachine1_fifo_in_last, main_sdram_bankmachine1_fifo_in_first, main_sdram_bankmachine1_fifo_in_payload_addr, main_sdram_bankmachine1_fifo_in_payload_we};
+assign {main_sdram_bankmachine1_fifo_out_last, main_sdram_bankmachine1_fifo_out_first, main_sdram_bankmachine1_fifo_out_payload_addr, main_sdram_bankmachine1_fifo_out_payload_we} = main_sdram_bankmachine1_syncfifo1_dout;
+assign main_sdram_bankmachine1_sink_ready = main_sdram_bankmachine1_syncfifo1_writable;
+assign main_sdram_bankmachine1_syncfifo1_we = main_sdram_bankmachine1_sink_valid;
+assign main_sdram_bankmachine1_fifo_in_first = main_sdram_bankmachine1_sink_first;
+assign main_sdram_bankmachine1_fifo_in_last = main_sdram_bankmachine1_sink_last;
+assign main_sdram_bankmachine1_fifo_in_payload_we = main_sdram_bankmachine1_sink_payload_we;
+assign main_sdram_bankmachine1_fifo_in_payload_addr = main_sdram_bankmachine1_sink_payload_addr;
+assign main_sdram_bankmachine1_source_valid = main_sdram_bankmachine1_syncfifo1_readable;
+assign main_sdram_bankmachine1_source_first = main_sdram_bankmachine1_fifo_out_first;
+assign main_sdram_bankmachine1_source_last = main_sdram_bankmachine1_fifo_out_last;
+assign main_sdram_bankmachine1_source_payload_we = main_sdram_bankmachine1_fifo_out_payload_we;
+assign main_sdram_bankmachine1_source_payload_addr = main_sdram_bankmachine1_fifo_out_payload_addr;
+assign main_sdram_bankmachine1_syncfifo1_re = main_sdram_bankmachine1_source_ready;
 always @(*) begin
-    main_basesoc_sdram_bankmachine1_wrport_adr <= 3'd0;
-    if (main_basesoc_sdram_bankmachine1_replace) begin
-        main_basesoc_sdram_bankmachine1_wrport_adr <= (main_basesoc_sdram_bankmachine1_produce - 1'd1);
+    main_sdram_bankmachine1_wrport_adr <= 3'd0;
+    if (main_sdram_bankmachine1_replace) begin
+        main_sdram_bankmachine1_wrport_adr <= (main_sdram_bankmachine1_produce - 1'd1);
     end else begin
-        main_basesoc_sdram_bankmachine1_wrport_adr <= main_basesoc_sdram_bankmachine1_produce;
+        main_sdram_bankmachine1_wrport_adr <= main_sdram_bankmachine1_produce;
     end
 end
-assign main_basesoc_sdram_bankmachine1_wrport_dat_w = main_basesoc_sdram_bankmachine1_syncfifo1_din;
-assign main_basesoc_sdram_bankmachine1_wrport_we = (main_basesoc_sdram_bankmachine1_syncfifo1_we & (main_basesoc_sdram_bankmachine1_syncfifo1_writable | main_basesoc_sdram_bankmachine1_replace));
-assign main_basesoc_sdram_bankmachine1_do_read = (main_basesoc_sdram_bankmachine1_syncfifo1_readable & main_basesoc_sdram_bankmachine1_syncfifo1_re);
-assign main_basesoc_sdram_bankmachine1_rdport_adr = main_basesoc_sdram_bankmachine1_consume;
-assign main_basesoc_sdram_bankmachine1_syncfifo1_dout = main_basesoc_sdram_bankmachine1_rdport_dat_r;
-assign main_basesoc_sdram_bankmachine1_syncfifo1_writable = (main_basesoc_sdram_bankmachine1_level != 4'd8);
-assign main_basesoc_sdram_bankmachine1_syncfifo1_readable = (main_basesoc_sdram_bankmachine1_level != 1'd0);
-assign main_basesoc_sdram_bankmachine1_pipe_valid_sink_ready = ((~main_basesoc_sdram_bankmachine1_pipe_valid_source_valid) | main_basesoc_sdram_bankmachine1_pipe_valid_source_ready);
-assign main_basesoc_sdram_bankmachine1_pipe_valid_sink_valid = main_basesoc_sdram_bankmachine1_sink_sink_valid;
-assign main_basesoc_sdram_bankmachine1_sink_sink_ready = main_basesoc_sdram_bankmachine1_pipe_valid_sink_ready;
-assign main_basesoc_sdram_bankmachine1_pipe_valid_sink_first = main_basesoc_sdram_bankmachine1_sink_sink_first;
-assign main_basesoc_sdram_bankmachine1_pipe_valid_sink_last = main_basesoc_sdram_bankmachine1_sink_sink_last;
-assign main_basesoc_sdram_bankmachine1_pipe_valid_sink_payload_we = main_basesoc_sdram_bankmachine1_sink_sink_payload_we;
-assign main_basesoc_sdram_bankmachine1_pipe_valid_sink_payload_addr = main_basesoc_sdram_bankmachine1_sink_sink_payload_addr;
-assign main_basesoc_sdram_bankmachine1_source_source_valid = main_basesoc_sdram_bankmachine1_pipe_valid_source_valid;
-assign main_basesoc_sdram_bankmachine1_pipe_valid_source_ready = main_basesoc_sdram_bankmachine1_source_source_ready;
-assign main_basesoc_sdram_bankmachine1_source_source_first = main_basesoc_sdram_bankmachine1_pipe_valid_source_first;
-assign main_basesoc_sdram_bankmachine1_source_source_last = main_basesoc_sdram_bankmachine1_pipe_valid_source_last;
-assign main_basesoc_sdram_bankmachine1_source_source_payload_we = main_basesoc_sdram_bankmachine1_pipe_valid_source_payload_we;
-assign main_basesoc_sdram_bankmachine1_source_source_payload_addr = main_basesoc_sdram_bankmachine1_pipe_valid_source_payload_addr;
+assign main_sdram_bankmachine1_wrport_dat_w = main_sdram_bankmachine1_syncfifo1_din;
+assign main_sdram_bankmachine1_wrport_we = (main_sdram_bankmachine1_syncfifo1_we & (main_sdram_bankmachine1_syncfifo1_writable | main_sdram_bankmachine1_replace));
+assign main_sdram_bankmachine1_do_read = (main_sdram_bankmachine1_syncfifo1_readable & main_sdram_bankmachine1_syncfifo1_re);
+assign main_sdram_bankmachine1_rdport_adr = main_sdram_bankmachine1_consume;
+assign main_sdram_bankmachine1_syncfifo1_dout = main_sdram_bankmachine1_rdport_dat_r;
+assign main_sdram_bankmachine1_syncfifo1_writable = (main_sdram_bankmachine1_level != 4'd8);
+assign main_sdram_bankmachine1_syncfifo1_readable = (main_sdram_bankmachine1_level != 1'd0);
+assign main_sdram_bankmachine1_pipe_valid_sink_ready = ((~main_sdram_bankmachine1_pipe_valid_source_valid) | main_sdram_bankmachine1_pipe_valid_source_ready);
+assign main_sdram_bankmachine1_pipe_valid_sink_valid = main_sdram_bankmachine1_sink_sink_valid;
+assign main_sdram_bankmachine1_sink_sink_ready = main_sdram_bankmachine1_pipe_valid_sink_ready;
+assign main_sdram_bankmachine1_pipe_valid_sink_first = main_sdram_bankmachine1_sink_sink_first;
+assign main_sdram_bankmachine1_pipe_valid_sink_last = main_sdram_bankmachine1_sink_sink_last;
+assign main_sdram_bankmachine1_pipe_valid_sink_payload_we = main_sdram_bankmachine1_sink_sink_payload_we;
+assign main_sdram_bankmachine1_pipe_valid_sink_payload_addr = main_sdram_bankmachine1_sink_sink_payload_addr;
+assign main_sdram_bankmachine1_source_source_valid = main_sdram_bankmachine1_pipe_valid_source_valid;
+assign main_sdram_bankmachine1_pipe_valid_source_ready = main_sdram_bankmachine1_source_source_ready;
+assign main_sdram_bankmachine1_source_source_first = main_sdram_bankmachine1_pipe_valid_source_first;
+assign main_sdram_bankmachine1_source_source_last = main_sdram_bankmachine1_pipe_valid_source_last;
+assign main_sdram_bankmachine1_source_source_payload_we = main_sdram_bankmachine1_pipe_valid_source_payload_we;
+assign main_sdram_bankmachine1_source_source_payload_addr = main_sdram_bankmachine1_pipe_valid_source_payload_addr;
 always @(*) begin
-    main_basesoc_sdram_bankmachine1_row_close <= 1'd0;
-    main_basesoc_sdram_bankmachine1_row_col_n_addr_sel <= 1'd0;
-    main_basesoc_sdram_bankmachine1_cmd_payload_cas <= 1'd0;
-    main_basesoc_sdram_bankmachine1_cmd_payload_ras <= 1'd0;
-    main_basesoc_sdram_bankmachine1_cmd_payload_we <= 1'd0;
+    main_sdram_bankmachine1_row_close <= 1'd0;
+    main_sdram_bankmachine1_row_col_n_addr_sel <= 1'd0;
+    main_sdram_bankmachine1_cmd_payload_cas <= 1'd0;
+    main_sdram_bankmachine1_cmd_payload_ras <= 1'd0;
+    main_sdram_bankmachine1_cmd_payload_we <= 1'd0;
+    main_sdram_bankmachine1_cmd_payload_is_cmd <= 1'd0;
+    main_sdram_bankmachine1_cmd_payload_is_read <= 1'd0;
+    main_sdram_bankmachine1_cmd_payload_is_write <= 1'd0;
+    main_sdram_bankmachine1_req_wdata_ready <= 1'd0;
     builder_basesoc_bankmachine1_next_state <= 3'd0;
-    main_basesoc_sdram_bankmachine1_cmd_payload_is_cmd <= 1'd0;
-    main_basesoc_sdram_bankmachine1_cmd_payload_is_read <= 1'd0;
-    main_basesoc_sdram_bankmachine1_cmd_payload_is_write <= 1'd0;
-    main_basesoc_sdram_bankmachine1_req_wdata_ready <= 1'd0;
-    main_basesoc_sdram_bankmachine1_req_rdata_valid <= 1'd0;
-    main_basesoc_sdram_bankmachine1_refresh_gnt <= 1'd0;
-    main_basesoc_sdram_bankmachine1_row_open <= 1'd0;
-    main_basesoc_sdram_bankmachine1_cmd_valid <= 1'd0;
+    main_sdram_bankmachine1_req_rdata_valid <= 1'd0;
+    main_sdram_bankmachine1_refresh_gnt <= 1'd0;
+    main_sdram_bankmachine1_row_open <= 1'd0;
+    main_sdram_bankmachine1_cmd_valid <= 1'd0;
     builder_basesoc_bankmachine1_next_state <= builder_basesoc_bankmachine1_state;
     case (builder_basesoc_bankmachine1_state)
         1'd1: begin
-            if ((main_basesoc_sdram_bankmachine1_twtpcon_ready & main_basesoc_sdram_bankmachine1_trascon_ready)) begin
-                main_basesoc_sdram_bankmachine1_cmd_valid <= 1'd1;
-                if (main_basesoc_sdram_bankmachine1_cmd_ready) begin
+            if ((main_sdram_bankmachine1_twtpcon_ready & main_sdram_bankmachine1_trascon_ready)) begin
+                main_sdram_bankmachine1_cmd_valid <= 1'd1;
+                if (main_sdram_bankmachine1_cmd_ready) begin
                     builder_basesoc_bankmachine1_next_state <= 3'd5;
                 end
-                main_basesoc_sdram_bankmachine1_cmd_payload_ras <= 1'd1;
-                main_basesoc_sdram_bankmachine1_cmd_payload_we <= 1'd1;
-                main_basesoc_sdram_bankmachine1_cmd_payload_is_cmd <= 1'd1;
+                main_sdram_bankmachine1_cmd_payload_ras <= 1'd1;
+                main_sdram_bankmachine1_cmd_payload_we <= 1'd1;
+                main_sdram_bankmachine1_cmd_payload_is_cmd <= 1'd1;
             end
-            main_basesoc_sdram_bankmachine1_row_close <= 1'd1;
+            main_sdram_bankmachine1_row_close <= 1'd1;
         end
         2'd2: begin
-            if ((main_basesoc_sdram_bankmachine1_twtpcon_ready & main_basesoc_sdram_bankmachine1_trascon_ready)) begin
+            if ((main_sdram_bankmachine1_twtpcon_ready & main_sdram_bankmachine1_trascon_ready)) begin
                 builder_basesoc_bankmachine1_next_state <= 3'd5;
             end
-            main_basesoc_sdram_bankmachine1_row_close <= 1'd1;
+            main_sdram_bankmachine1_row_close <= 1'd1;
         end
         2'd3: begin
-            if (main_basesoc_sdram_bankmachine1_trccon_ready) begin
-                main_basesoc_sdram_bankmachine1_row_col_n_addr_sel <= 1'd1;
-                main_basesoc_sdram_bankmachine1_row_open <= 1'd1;
-                main_basesoc_sdram_bankmachine1_cmd_valid <= 1'd1;
-                main_basesoc_sdram_bankmachine1_cmd_payload_is_cmd <= 1'd1;
-                if (main_basesoc_sdram_bankmachine1_cmd_ready) begin
+            if (main_sdram_bankmachine1_trccon_ready) begin
+                main_sdram_bankmachine1_row_col_n_addr_sel <= 1'd1;
+                main_sdram_bankmachine1_row_open <= 1'd1;
+                main_sdram_bankmachine1_cmd_valid <= 1'd1;
+                main_sdram_bankmachine1_cmd_payload_is_cmd <= 1'd1;
+                if (main_sdram_bankmachine1_cmd_ready) begin
                     builder_basesoc_bankmachine1_next_state <= 3'd6;
                 end
-                main_basesoc_sdram_bankmachine1_cmd_payload_ras <= 1'd1;
+                main_sdram_bankmachine1_cmd_payload_ras <= 1'd1;
             end
         end
         3'd4: begin
-            if (main_basesoc_sdram_bankmachine1_twtpcon_ready) begin
-                main_basesoc_sdram_bankmachine1_refresh_gnt <= 1'd1;
+            if (main_sdram_bankmachine1_twtpcon_ready) begin
+                main_sdram_bankmachine1_refresh_gnt <= 1'd1;
             end
-            main_basesoc_sdram_bankmachine1_row_close <= 1'd1;
-            main_basesoc_sdram_bankmachine1_cmd_payload_is_cmd <= 1'd1;
-            if ((~main_basesoc_sdram_bankmachine1_refresh_req)) begin
+            main_sdram_bankmachine1_row_close <= 1'd1;
+            main_sdram_bankmachine1_cmd_payload_is_cmd <= 1'd1;
+            if ((~main_sdram_bankmachine1_refresh_req)) begin
                 builder_basesoc_bankmachine1_next_state <= 1'd0;
             end
         end
@@ -2989,23 +2652,23 @@ always @(*) begin
             builder_basesoc_bankmachine1_next_state <= 1'd0;
         end
         default: begin
-            if (main_basesoc_sdram_bankmachine1_refresh_req) begin
+            if (main_sdram_bankmachine1_refresh_req) begin
                 builder_basesoc_bankmachine1_next_state <= 3'd4;
             end else begin
-                if (main_basesoc_sdram_bankmachine1_source_source_valid) begin
-                    if (main_basesoc_sdram_bankmachine1_row_opened) begin
-                        if (main_basesoc_sdram_bankmachine1_row_hit) begin
-                            main_basesoc_sdram_bankmachine1_cmd_valid <= 1'd1;
-                            if (main_basesoc_sdram_bankmachine1_source_source_payload_we) begin
-                                main_basesoc_sdram_bankmachine1_req_wdata_ready <= main_basesoc_sdram_bankmachine1_cmd_ready;
-                                main_basesoc_sdram_bankmachine1_cmd_payload_is_write <= 1'd1;
-                                main_basesoc_sdram_bankmachine1_cmd_payload_we <= 1'd1;
+                if (main_sdram_bankmachine1_source_source_valid) begin
+                    if (main_sdram_bankmachine1_row_opened) begin
+                        if (main_sdram_bankmachine1_row_hit) begin
+                            main_sdram_bankmachine1_cmd_valid <= 1'd1;
+                            if (main_sdram_bankmachine1_source_source_payload_we) begin
+                                main_sdram_bankmachine1_req_wdata_ready <= main_sdram_bankmachine1_cmd_ready;
+                                main_sdram_bankmachine1_cmd_payload_is_write <= 1'd1;
+                                main_sdram_bankmachine1_cmd_payload_we <= 1'd1;
                             end else begin
-                                main_basesoc_sdram_bankmachine1_req_rdata_valid <= main_basesoc_sdram_bankmachine1_cmd_ready;
-                                main_basesoc_sdram_bankmachine1_cmd_payload_is_read <= 1'd1;
+                                main_sdram_bankmachine1_req_rdata_valid <= main_sdram_bankmachine1_cmd_ready;
+                                main_sdram_bankmachine1_cmd_payload_is_read <= 1'd1;
                             end
-                            main_basesoc_sdram_bankmachine1_cmd_payload_cas <= 1'd1;
-                            if ((main_basesoc_sdram_bankmachine1_cmd_ready & main_basesoc_sdram_bankmachine1_auto_precharge)) begin
+                            main_sdram_bankmachine1_cmd_payload_cas <= 1'd1;
+                            if ((main_sdram_bankmachine1_cmd_ready & main_sdram_bankmachine1_auto_precharge)) begin
                                 builder_basesoc_bankmachine1_next_state <= 2'd2;
                             end
                         end else begin
@@ -3019,135 +2682,135 @@ always @(*) begin
         end
     endcase
 end
-assign main_basesoc_sdram_bankmachine2_sink_valid = main_basesoc_sdram_bankmachine2_req_valid;
-assign main_basesoc_sdram_bankmachine2_req_ready = main_basesoc_sdram_bankmachine2_sink_ready;
-assign main_basesoc_sdram_bankmachine2_sink_payload_we = main_basesoc_sdram_bankmachine2_req_we;
-assign main_basesoc_sdram_bankmachine2_sink_payload_addr = main_basesoc_sdram_bankmachine2_req_addr;
-assign main_basesoc_sdram_bankmachine2_sink_sink_valid = main_basesoc_sdram_bankmachine2_source_valid;
-assign main_basesoc_sdram_bankmachine2_source_ready = main_basesoc_sdram_bankmachine2_sink_sink_ready;
-assign main_basesoc_sdram_bankmachine2_sink_sink_first = main_basesoc_sdram_bankmachine2_source_first;
-assign main_basesoc_sdram_bankmachine2_sink_sink_last = main_basesoc_sdram_bankmachine2_source_last;
-assign main_basesoc_sdram_bankmachine2_sink_sink_payload_we = main_basesoc_sdram_bankmachine2_source_payload_we;
-assign main_basesoc_sdram_bankmachine2_sink_sink_payload_addr = main_basesoc_sdram_bankmachine2_source_payload_addr;
-assign main_basesoc_sdram_bankmachine2_source_source_ready = (main_basesoc_sdram_bankmachine2_req_wdata_ready | main_basesoc_sdram_bankmachine2_req_rdata_valid);
-assign main_basesoc_sdram_bankmachine2_req_lock = (main_basesoc_sdram_bankmachine2_source_valid | main_basesoc_sdram_bankmachine2_source_source_valid);
-assign main_basesoc_sdram_bankmachine2_row_hit = (main_basesoc_sdram_bankmachine2_row == main_basesoc_sdram_bankmachine2_source_source_payload_addr[21:9]);
-assign main_basesoc_sdram_bankmachine2_cmd_payload_ba = 2'd2;
+assign main_sdram_bankmachine2_sink_valid = main_sdram_bankmachine2_req_valid;
+assign main_sdram_bankmachine2_req_ready = main_sdram_bankmachine2_sink_ready;
+assign main_sdram_bankmachine2_sink_payload_we = main_sdram_bankmachine2_req_we;
+assign main_sdram_bankmachine2_sink_payload_addr = main_sdram_bankmachine2_req_addr;
+assign main_sdram_bankmachine2_sink_sink_valid = main_sdram_bankmachine2_source_valid;
+assign main_sdram_bankmachine2_source_ready = main_sdram_bankmachine2_sink_sink_ready;
+assign main_sdram_bankmachine2_sink_sink_first = main_sdram_bankmachine2_source_first;
+assign main_sdram_bankmachine2_sink_sink_last = main_sdram_bankmachine2_source_last;
+assign main_sdram_bankmachine2_sink_sink_payload_we = main_sdram_bankmachine2_source_payload_we;
+assign main_sdram_bankmachine2_sink_sink_payload_addr = main_sdram_bankmachine2_source_payload_addr;
+assign main_sdram_bankmachine2_source_source_ready = (main_sdram_bankmachine2_req_wdata_ready | main_sdram_bankmachine2_req_rdata_valid);
+assign main_sdram_bankmachine2_req_lock = (main_sdram_bankmachine2_source_valid | main_sdram_bankmachine2_source_source_valid);
+assign main_sdram_bankmachine2_row_hit = (main_sdram_bankmachine2_row == main_sdram_bankmachine2_source_source_payload_addr[21:9]);
+assign main_sdram_bankmachine2_cmd_payload_ba = 2'd2;
 always @(*) begin
-    main_basesoc_sdram_bankmachine2_cmd_payload_a <= 13'd0;
-    if (main_basesoc_sdram_bankmachine2_row_col_n_addr_sel) begin
-        main_basesoc_sdram_bankmachine2_cmd_payload_a <= main_basesoc_sdram_bankmachine2_source_source_payload_addr[21:9];
+    main_sdram_bankmachine2_cmd_payload_a <= 13'd0;
+    if (main_sdram_bankmachine2_row_col_n_addr_sel) begin
+        main_sdram_bankmachine2_cmd_payload_a <= main_sdram_bankmachine2_source_source_payload_addr[21:9];
     end else begin
-        main_basesoc_sdram_bankmachine2_cmd_payload_a <= ((main_basesoc_sdram_bankmachine2_auto_precharge <<< 4'd10) | {main_basesoc_sdram_bankmachine2_source_source_payload_addr[8:0], {0{1'd0}}});
+        main_sdram_bankmachine2_cmd_payload_a <= ((main_sdram_bankmachine2_auto_precharge <<< 4'd10) | {main_sdram_bankmachine2_source_source_payload_addr[8:0], {0{1'd0}}});
     end
 end
-assign main_basesoc_sdram_bankmachine2_twtpcon_valid = ((main_basesoc_sdram_bankmachine2_cmd_valid & main_basesoc_sdram_bankmachine2_cmd_ready) & main_basesoc_sdram_bankmachine2_cmd_payload_is_write);
-assign main_basesoc_sdram_bankmachine2_trccon_valid = ((main_basesoc_sdram_bankmachine2_cmd_valid & main_basesoc_sdram_bankmachine2_cmd_ready) & main_basesoc_sdram_bankmachine2_row_open);
-assign main_basesoc_sdram_bankmachine2_trascon_valid = ((main_basesoc_sdram_bankmachine2_cmd_valid & main_basesoc_sdram_bankmachine2_cmd_ready) & main_basesoc_sdram_bankmachine2_row_open);
+assign main_sdram_bankmachine2_twtpcon_valid = ((main_sdram_bankmachine2_cmd_valid & main_sdram_bankmachine2_cmd_ready) & main_sdram_bankmachine2_cmd_payload_is_write);
+assign main_sdram_bankmachine2_trccon_valid = ((main_sdram_bankmachine2_cmd_valid & main_sdram_bankmachine2_cmd_ready) & main_sdram_bankmachine2_row_open);
+assign main_sdram_bankmachine2_trascon_valid = ((main_sdram_bankmachine2_cmd_valid & main_sdram_bankmachine2_cmd_ready) & main_sdram_bankmachine2_row_open);
 always @(*) begin
-    main_basesoc_sdram_bankmachine2_auto_precharge <= 1'd0;
-    if ((main_basesoc_sdram_bankmachine2_source_valid & main_basesoc_sdram_bankmachine2_source_source_valid)) begin
-        if ((main_basesoc_sdram_bankmachine2_source_payload_addr[21:9] != main_basesoc_sdram_bankmachine2_source_source_payload_addr[21:9])) begin
-            main_basesoc_sdram_bankmachine2_auto_precharge <= (main_basesoc_sdram_bankmachine2_row_close == 1'd0);
+    main_sdram_bankmachine2_auto_precharge <= 1'd0;
+    if ((main_sdram_bankmachine2_source_valid & main_sdram_bankmachine2_source_source_valid)) begin
+        if ((main_sdram_bankmachine2_source_payload_addr[21:9] != main_sdram_bankmachine2_source_source_payload_addr[21:9])) begin
+            main_sdram_bankmachine2_auto_precharge <= (main_sdram_bankmachine2_row_close == 1'd0);
         end
     end
 end
-assign main_basesoc_sdram_bankmachine2_syncfifo2_din = {main_basesoc_sdram_bankmachine2_fifo_in_last, main_basesoc_sdram_bankmachine2_fifo_in_first, main_basesoc_sdram_bankmachine2_fifo_in_payload_addr, main_basesoc_sdram_bankmachine2_fifo_in_payload_we};
-assign {main_basesoc_sdram_bankmachine2_fifo_out_last, main_basesoc_sdram_bankmachine2_fifo_out_first, main_basesoc_sdram_bankmachine2_fifo_out_payload_addr, main_basesoc_sdram_bankmachine2_fifo_out_payload_we} = main_basesoc_sdram_bankmachine2_syncfifo2_dout;
-assign main_basesoc_sdram_bankmachine2_sink_ready = main_basesoc_sdram_bankmachine2_syncfifo2_writable;
-assign main_basesoc_sdram_bankmachine2_syncfifo2_we = main_basesoc_sdram_bankmachine2_sink_valid;
-assign main_basesoc_sdram_bankmachine2_fifo_in_first = main_basesoc_sdram_bankmachine2_sink_first;
-assign main_basesoc_sdram_bankmachine2_fifo_in_last = main_basesoc_sdram_bankmachine2_sink_last;
-assign main_basesoc_sdram_bankmachine2_fifo_in_payload_we = main_basesoc_sdram_bankmachine2_sink_payload_we;
-assign main_basesoc_sdram_bankmachine2_fifo_in_payload_addr = main_basesoc_sdram_bankmachine2_sink_payload_addr;
-assign main_basesoc_sdram_bankmachine2_source_valid = main_basesoc_sdram_bankmachine2_syncfifo2_readable;
-assign main_basesoc_sdram_bankmachine2_source_first = main_basesoc_sdram_bankmachine2_fifo_out_first;
-assign main_basesoc_sdram_bankmachine2_source_last = main_basesoc_sdram_bankmachine2_fifo_out_last;
-assign main_basesoc_sdram_bankmachine2_source_payload_we = main_basesoc_sdram_bankmachine2_fifo_out_payload_we;
-assign main_basesoc_sdram_bankmachine2_source_payload_addr = main_basesoc_sdram_bankmachine2_fifo_out_payload_addr;
-assign main_basesoc_sdram_bankmachine2_syncfifo2_re = main_basesoc_sdram_bankmachine2_source_ready;
+assign main_sdram_bankmachine2_syncfifo2_din = {main_sdram_bankmachine2_fifo_in_last, main_sdram_bankmachine2_fifo_in_first, main_sdram_bankmachine2_fifo_in_payload_addr, main_sdram_bankmachine2_fifo_in_payload_we};
+assign {main_sdram_bankmachine2_fifo_out_last, main_sdram_bankmachine2_fifo_out_first, main_sdram_bankmachine2_fifo_out_payload_addr, main_sdram_bankmachine2_fifo_out_payload_we} = main_sdram_bankmachine2_syncfifo2_dout;
+assign main_sdram_bankmachine2_sink_ready = main_sdram_bankmachine2_syncfifo2_writable;
+assign main_sdram_bankmachine2_syncfifo2_we = main_sdram_bankmachine2_sink_valid;
+assign main_sdram_bankmachine2_fifo_in_first = main_sdram_bankmachine2_sink_first;
+assign main_sdram_bankmachine2_fifo_in_last = main_sdram_bankmachine2_sink_last;
+assign main_sdram_bankmachine2_fifo_in_payload_we = main_sdram_bankmachine2_sink_payload_we;
+assign main_sdram_bankmachine2_fifo_in_payload_addr = main_sdram_bankmachine2_sink_payload_addr;
+assign main_sdram_bankmachine2_source_valid = main_sdram_bankmachine2_syncfifo2_readable;
+assign main_sdram_bankmachine2_source_first = main_sdram_bankmachine2_fifo_out_first;
+assign main_sdram_bankmachine2_source_last = main_sdram_bankmachine2_fifo_out_last;
+assign main_sdram_bankmachine2_source_payload_we = main_sdram_bankmachine2_fifo_out_payload_we;
+assign main_sdram_bankmachine2_source_payload_addr = main_sdram_bankmachine2_fifo_out_payload_addr;
+assign main_sdram_bankmachine2_syncfifo2_re = main_sdram_bankmachine2_source_ready;
 always @(*) begin
-    main_basesoc_sdram_bankmachine2_wrport_adr <= 3'd0;
-    if (main_basesoc_sdram_bankmachine2_replace) begin
-        main_basesoc_sdram_bankmachine2_wrport_adr <= (main_basesoc_sdram_bankmachine2_produce - 1'd1);
+    main_sdram_bankmachine2_wrport_adr <= 3'd0;
+    if (main_sdram_bankmachine2_replace) begin
+        main_sdram_bankmachine2_wrport_adr <= (main_sdram_bankmachine2_produce - 1'd1);
     end else begin
-        main_basesoc_sdram_bankmachine2_wrport_adr <= main_basesoc_sdram_bankmachine2_produce;
+        main_sdram_bankmachine2_wrport_adr <= main_sdram_bankmachine2_produce;
     end
 end
-assign main_basesoc_sdram_bankmachine2_wrport_dat_w = main_basesoc_sdram_bankmachine2_syncfifo2_din;
-assign main_basesoc_sdram_bankmachine2_wrport_we = (main_basesoc_sdram_bankmachine2_syncfifo2_we & (main_basesoc_sdram_bankmachine2_syncfifo2_writable | main_basesoc_sdram_bankmachine2_replace));
-assign main_basesoc_sdram_bankmachine2_do_read = (main_basesoc_sdram_bankmachine2_syncfifo2_readable & main_basesoc_sdram_bankmachine2_syncfifo2_re);
-assign main_basesoc_sdram_bankmachine2_rdport_adr = main_basesoc_sdram_bankmachine2_consume;
-assign main_basesoc_sdram_bankmachine2_syncfifo2_dout = main_basesoc_sdram_bankmachine2_rdport_dat_r;
-assign main_basesoc_sdram_bankmachine2_syncfifo2_writable = (main_basesoc_sdram_bankmachine2_level != 4'd8);
-assign main_basesoc_sdram_bankmachine2_syncfifo2_readable = (main_basesoc_sdram_bankmachine2_level != 1'd0);
-assign main_basesoc_sdram_bankmachine2_pipe_valid_sink_ready = ((~main_basesoc_sdram_bankmachine2_pipe_valid_source_valid) | main_basesoc_sdram_bankmachine2_pipe_valid_source_ready);
-assign main_basesoc_sdram_bankmachine2_pipe_valid_sink_valid = main_basesoc_sdram_bankmachine2_sink_sink_valid;
-assign main_basesoc_sdram_bankmachine2_sink_sink_ready = main_basesoc_sdram_bankmachine2_pipe_valid_sink_ready;
-assign main_basesoc_sdram_bankmachine2_pipe_valid_sink_first = main_basesoc_sdram_bankmachine2_sink_sink_first;
-assign main_basesoc_sdram_bankmachine2_pipe_valid_sink_last = main_basesoc_sdram_bankmachine2_sink_sink_last;
-assign main_basesoc_sdram_bankmachine2_pipe_valid_sink_payload_we = main_basesoc_sdram_bankmachine2_sink_sink_payload_we;
-assign main_basesoc_sdram_bankmachine2_pipe_valid_sink_payload_addr = main_basesoc_sdram_bankmachine2_sink_sink_payload_addr;
-assign main_basesoc_sdram_bankmachine2_source_source_valid = main_basesoc_sdram_bankmachine2_pipe_valid_source_valid;
-assign main_basesoc_sdram_bankmachine2_pipe_valid_source_ready = main_basesoc_sdram_bankmachine2_source_source_ready;
-assign main_basesoc_sdram_bankmachine2_source_source_first = main_basesoc_sdram_bankmachine2_pipe_valid_source_first;
-assign main_basesoc_sdram_bankmachine2_source_source_last = main_basesoc_sdram_bankmachine2_pipe_valid_source_last;
-assign main_basesoc_sdram_bankmachine2_source_source_payload_we = main_basesoc_sdram_bankmachine2_pipe_valid_source_payload_we;
-assign main_basesoc_sdram_bankmachine2_source_source_payload_addr = main_basesoc_sdram_bankmachine2_pipe_valid_source_payload_addr;
+assign main_sdram_bankmachine2_wrport_dat_w = main_sdram_bankmachine2_syncfifo2_din;
+assign main_sdram_bankmachine2_wrport_we = (main_sdram_bankmachine2_syncfifo2_we & (main_sdram_bankmachine2_syncfifo2_writable | main_sdram_bankmachine2_replace));
+assign main_sdram_bankmachine2_do_read = (main_sdram_bankmachine2_syncfifo2_readable & main_sdram_bankmachine2_syncfifo2_re);
+assign main_sdram_bankmachine2_rdport_adr = main_sdram_bankmachine2_consume;
+assign main_sdram_bankmachine2_syncfifo2_dout = main_sdram_bankmachine2_rdport_dat_r;
+assign main_sdram_bankmachine2_syncfifo2_writable = (main_sdram_bankmachine2_level != 4'd8);
+assign main_sdram_bankmachine2_syncfifo2_readable = (main_sdram_bankmachine2_level != 1'd0);
+assign main_sdram_bankmachine2_pipe_valid_sink_ready = ((~main_sdram_bankmachine2_pipe_valid_source_valid) | main_sdram_bankmachine2_pipe_valid_source_ready);
+assign main_sdram_bankmachine2_pipe_valid_sink_valid = main_sdram_bankmachine2_sink_sink_valid;
+assign main_sdram_bankmachine2_sink_sink_ready = main_sdram_bankmachine2_pipe_valid_sink_ready;
+assign main_sdram_bankmachine2_pipe_valid_sink_first = main_sdram_bankmachine2_sink_sink_first;
+assign main_sdram_bankmachine2_pipe_valid_sink_last = main_sdram_bankmachine2_sink_sink_last;
+assign main_sdram_bankmachine2_pipe_valid_sink_payload_we = main_sdram_bankmachine2_sink_sink_payload_we;
+assign main_sdram_bankmachine2_pipe_valid_sink_payload_addr = main_sdram_bankmachine2_sink_sink_payload_addr;
+assign main_sdram_bankmachine2_source_source_valid = main_sdram_bankmachine2_pipe_valid_source_valid;
+assign main_sdram_bankmachine2_pipe_valid_source_ready = main_sdram_bankmachine2_source_source_ready;
+assign main_sdram_bankmachine2_source_source_first = main_sdram_bankmachine2_pipe_valid_source_first;
+assign main_sdram_bankmachine2_source_source_last = main_sdram_bankmachine2_pipe_valid_source_last;
+assign main_sdram_bankmachine2_source_source_payload_we = main_sdram_bankmachine2_pipe_valid_source_payload_we;
+assign main_sdram_bankmachine2_source_source_payload_addr = main_sdram_bankmachine2_pipe_valid_source_payload_addr;
 always @(*) begin
-    main_basesoc_sdram_bankmachine2_cmd_payload_cas <= 1'd0;
-    main_basesoc_sdram_bankmachine2_cmd_payload_ras <= 1'd0;
-    main_basesoc_sdram_bankmachine2_cmd_payload_we <= 1'd0;
-    main_basesoc_sdram_bankmachine2_cmd_payload_is_cmd <= 1'd0;
+    main_sdram_bankmachine2_cmd_payload_cas <= 1'd0;
+    main_sdram_bankmachine2_cmd_payload_ras <= 1'd0;
+    main_sdram_bankmachine2_cmd_payload_we <= 1'd0;
+    main_sdram_bankmachine2_cmd_payload_is_cmd <= 1'd0;
+    main_sdram_bankmachine2_cmd_payload_is_read <= 1'd0;
+    main_sdram_bankmachine2_cmd_payload_is_write <= 1'd0;
+    main_sdram_bankmachine2_req_wdata_ready <= 1'd0;
+    main_sdram_bankmachine2_req_rdata_valid <= 1'd0;
     builder_basesoc_bankmachine2_next_state <= 3'd0;
-    main_basesoc_sdram_bankmachine2_cmd_payload_is_read <= 1'd0;
-    main_basesoc_sdram_bankmachine2_cmd_payload_is_write <= 1'd0;
-    main_basesoc_sdram_bankmachine2_req_wdata_ready <= 1'd0;
-    main_basesoc_sdram_bankmachine2_req_rdata_valid <= 1'd0;
-    main_basesoc_sdram_bankmachine2_refresh_gnt <= 1'd0;
-    main_basesoc_sdram_bankmachine2_row_open <= 1'd0;
-    main_basesoc_sdram_bankmachine2_cmd_valid <= 1'd0;
-    main_basesoc_sdram_bankmachine2_row_close <= 1'd0;
-    main_basesoc_sdram_bankmachine2_row_col_n_addr_sel <= 1'd0;
+    main_sdram_bankmachine2_refresh_gnt <= 1'd0;
+    main_sdram_bankmachine2_row_open <= 1'd0;
+    main_sdram_bankmachine2_cmd_valid <= 1'd0;
+    main_sdram_bankmachine2_row_close <= 1'd0;
+    main_sdram_bankmachine2_row_col_n_addr_sel <= 1'd0;
     builder_basesoc_bankmachine2_next_state <= builder_basesoc_bankmachine2_state;
     case (builder_basesoc_bankmachine2_state)
         1'd1: begin
-            if ((main_basesoc_sdram_bankmachine2_twtpcon_ready & main_basesoc_sdram_bankmachine2_trascon_ready)) begin
-                main_basesoc_sdram_bankmachine2_cmd_valid <= 1'd1;
-                if (main_basesoc_sdram_bankmachine2_cmd_ready) begin
+            if ((main_sdram_bankmachine2_twtpcon_ready & main_sdram_bankmachine2_trascon_ready)) begin
+                main_sdram_bankmachine2_cmd_valid <= 1'd1;
+                if (main_sdram_bankmachine2_cmd_ready) begin
                     builder_basesoc_bankmachine2_next_state <= 3'd5;
                 end
-                main_basesoc_sdram_bankmachine2_cmd_payload_ras <= 1'd1;
-                main_basesoc_sdram_bankmachine2_cmd_payload_we <= 1'd1;
-                main_basesoc_sdram_bankmachine2_cmd_payload_is_cmd <= 1'd1;
+                main_sdram_bankmachine2_cmd_payload_ras <= 1'd1;
+                main_sdram_bankmachine2_cmd_payload_we <= 1'd1;
+                main_sdram_bankmachine2_cmd_payload_is_cmd <= 1'd1;
             end
-            main_basesoc_sdram_bankmachine2_row_close <= 1'd1;
+            main_sdram_bankmachine2_row_close <= 1'd1;
         end
         2'd2: begin
-            if ((main_basesoc_sdram_bankmachine2_twtpcon_ready & main_basesoc_sdram_bankmachine2_trascon_ready)) begin
+            if ((main_sdram_bankmachine2_twtpcon_ready & main_sdram_bankmachine2_trascon_ready)) begin
                 builder_basesoc_bankmachine2_next_state <= 3'd5;
             end
-            main_basesoc_sdram_bankmachine2_row_close <= 1'd1;
+            main_sdram_bankmachine2_row_close <= 1'd1;
         end
         2'd3: begin
-            if (main_basesoc_sdram_bankmachine2_trccon_ready) begin
-                main_basesoc_sdram_bankmachine2_row_col_n_addr_sel <= 1'd1;
-                main_basesoc_sdram_bankmachine2_row_open <= 1'd1;
-                main_basesoc_sdram_bankmachine2_cmd_valid <= 1'd1;
-                main_basesoc_sdram_bankmachine2_cmd_payload_is_cmd <= 1'd1;
-                if (main_basesoc_sdram_bankmachine2_cmd_ready) begin
+            if (main_sdram_bankmachine2_trccon_ready) begin
+                main_sdram_bankmachine2_row_col_n_addr_sel <= 1'd1;
+                main_sdram_bankmachine2_row_open <= 1'd1;
+                main_sdram_bankmachine2_cmd_valid <= 1'd1;
+                main_sdram_bankmachine2_cmd_payload_is_cmd <= 1'd1;
+                if (main_sdram_bankmachine2_cmd_ready) begin
                     builder_basesoc_bankmachine2_next_state <= 3'd6;
                 end
-                main_basesoc_sdram_bankmachine2_cmd_payload_ras <= 1'd1;
+                main_sdram_bankmachine2_cmd_payload_ras <= 1'd1;
             end
         end
         3'd4: begin
-            if (main_basesoc_sdram_bankmachine2_twtpcon_ready) begin
-                main_basesoc_sdram_bankmachine2_refresh_gnt <= 1'd1;
+            if (main_sdram_bankmachine2_twtpcon_ready) begin
+                main_sdram_bankmachine2_refresh_gnt <= 1'd1;
             end
-            main_basesoc_sdram_bankmachine2_row_close <= 1'd1;
-            main_basesoc_sdram_bankmachine2_cmd_payload_is_cmd <= 1'd1;
-            if ((~main_basesoc_sdram_bankmachine2_refresh_req)) begin
+            main_sdram_bankmachine2_row_close <= 1'd1;
+            main_sdram_bankmachine2_cmd_payload_is_cmd <= 1'd1;
+            if ((~main_sdram_bankmachine2_refresh_req)) begin
                 builder_basesoc_bankmachine2_next_state <= 1'd0;
             end
         end
@@ -3158,23 +2821,23 @@ always @(*) begin
             builder_basesoc_bankmachine2_next_state <= 1'd0;
         end
         default: begin
-            if (main_basesoc_sdram_bankmachine2_refresh_req) begin
+            if (main_sdram_bankmachine2_refresh_req) begin
                 builder_basesoc_bankmachine2_next_state <= 3'd4;
             end else begin
-                if (main_basesoc_sdram_bankmachine2_source_source_valid) begin
-                    if (main_basesoc_sdram_bankmachine2_row_opened) begin
-                        if (main_basesoc_sdram_bankmachine2_row_hit) begin
-                            main_basesoc_sdram_bankmachine2_cmd_valid <= 1'd1;
-                            if (main_basesoc_sdram_bankmachine2_source_source_payload_we) begin
-                                main_basesoc_sdram_bankmachine2_req_wdata_ready <= main_basesoc_sdram_bankmachine2_cmd_ready;
-                                main_basesoc_sdram_bankmachine2_cmd_payload_is_write <= 1'd1;
-                                main_basesoc_sdram_bankmachine2_cmd_payload_we <= 1'd1;
+                if (main_sdram_bankmachine2_source_source_valid) begin
+                    if (main_sdram_bankmachine2_row_opened) begin
+                        if (main_sdram_bankmachine2_row_hit) begin
+                            main_sdram_bankmachine2_cmd_valid <= 1'd1;
+                            if (main_sdram_bankmachine2_source_source_payload_we) begin
+                                main_sdram_bankmachine2_req_wdata_ready <= main_sdram_bankmachine2_cmd_ready;
+                                main_sdram_bankmachine2_cmd_payload_is_write <= 1'd1;
+                                main_sdram_bankmachine2_cmd_payload_we <= 1'd1;
                             end else begin
-                                main_basesoc_sdram_bankmachine2_req_rdata_valid <= main_basesoc_sdram_bankmachine2_cmd_ready;
-                                main_basesoc_sdram_bankmachine2_cmd_payload_is_read <= 1'd1;
+                                main_sdram_bankmachine2_req_rdata_valid <= main_sdram_bankmachine2_cmd_ready;
+                                main_sdram_bankmachine2_cmd_payload_is_read <= 1'd1;
                             end
-                            main_basesoc_sdram_bankmachine2_cmd_payload_cas <= 1'd1;
-                            if ((main_basesoc_sdram_bankmachine2_cmd_ready & main_basesoc_sdram_bankmachine2_auto_precharge)) begin
+                            main_sdram_bankmachine2_cmd_payload_cas <= 1'd1;
+                            if ((main_sdram_bankmachine2_cmd_ready & main_sdram_bankmachine2_auto_precharge)) begin
                                 builder_basesoc_bankmachine2_next_state <= 2'd2;
                             end
                         end else begin
@@ -3188,135 +2851,135 @@ always @(*) begin
         end
     endcase
 end
-assign main_basesoc_sdram_bankmachine3_sink_valid = main_basesoc_sdram_bankmachine3_req_valid;
-assign main_basesoc_sdram_bankmachine3_req_ready = main_basesoc_sdram_bankmachine3_sink_ready;
-assign main_basesoc_sdram_bankmachine3_sink_payload_we = main_basesoc_sdram_bankmachine3_req_we;
-assign main_basesoc_sdram_bankmachine3_sink_payload_addr = main_basesoc_sdram_bankmachine3_req_addr;
-assign main_basesoc_sdram_bankmachine3_sink_sink_valid = main_basesoc_sdram_bankmachine3_source_valid;
-assign main_basesoc_sdram_bankmachine3_source_ready = main_basesoc_sdram_bankmachine3_sink_sink_ready;
-assign main_basesoc_sdram_bankmachine3_sink_sink_first = main_basesoc_sdram_bankmachine3_source_first;
-assign main_basesoc_sdram_bankmachine3_sink_sink_last = main_basesoc_sdram_bankmachine3_source_last;
-assign main_basesoc_sdram_bankmachine3_sink_sink_payload_we = main_basesoc_sdram_bankmachine3_source_payload_we;
-assign main_basesoc_sdram_bankmachine3_sink_sink_payload_addr = main_basesoc_sdram_bankmachine3_source_payload_addr;
-assign main_basesoc_sdram_bankmachine3_source_source_ready = (main_basesoc_sdram_bankmachine3_req_wdata_ready | main_basesoc_sdram_bankmachine3_req_rdata_valid);
-assign main_basesoc_sdram_bankmachine3_req_lock = (main_basesoc_sdram_bankmachine3_source_valid | main_basesoc_sdram_bankmachine3_source_source_valid);
-assign main_basesoc_sdram_bankmachine3_row_hit = (main_basesoc_sdram_bankmachine3_row == main_basesoc_sdram_bankmachine3_source_source_payload_addr[21:9]);
-assign main_basesoc_sdram_bankmachine3_cmd_payload_ba = 2'd3;
+assign main_sdram_bankmachine3_sink_valid = main_sdram_bankmachine3_req_valid;
+assign main_sdram_bankmachine3_req_ready = main_sdram_bankmachine3_sink_ready;
+assign main_sdram_bankmachine3_sink_payload_we = main_sdram_bankmachine3_req_we;
+assign main_sdram_bankmachine3_sink_payload_addr = main_sdram_bankmachine3_req_addr;
+assign main_sdram_bankmachine3_sink_sink_valid = main_sdram_bankmachine3_source_valid;
+assign main_sdram_bankmachine3_source_ready = main_sdram_bankmachine3_sink_sink_ready;
+assign main_sdram_bankmachine3_sink_sink_first = main_sdram_bankmachine3_source_first;
+assign main_sdram_bankmachine3_sink_sink_last = main_sdram_bankmachine3_source_last;
+assign main_sdram_bankmachine3_sink_sink_payload_we = main_sdram_bankmachine3_source_payload_we;
+assign main_sdram_bankmachine3_sink_sink_payload_addr = main_sdram_bankmachine3_source_payload_addr;
+assign main_sdram_bankmachine3_source_source_ready = (main_sdram_bankmachine3_req_wdata_ready | main_sdram_bankmachine3_req_rdata_valid);
+assign main_sdram_bankmachine3_req_lock = (main_sdram_bankmachine3_source_valid | main_sdram_bankmachine3_source_source_valid);
+assign main_sdram_bankmachine3_row_hit = (main_sdram_bankmachine3_row == main_sdram_bankmachine3_source_source_payload_addr[21:9]);
+assign main_sdram_bankmachine3_cmd_payload_ba = 2'd3;
 always @(*) begin
-    main_basesoc_sdram_bankmachine3_cmd_payload_a <= 13'd0;
-    if (main_basesoc_sdram_bankmachine3_row_col_n_addr_sel) begin
-        main_basesoc_sdram_bankmachine3_cmd_payload_a <= main_basesoc_sdram_bankmachine3_source_source_payload_addr[21:9];
+    main_sdram_bankmachine3_cmd_payload_a <= 13'd0;
+    if (main_sdram_bankmachine3_row_col_n_addr_sel) begin
+        main_sdram_bankmachine3_cmd_payload_a <= main_sdram_bankmachine3_source_source_payload_addr[21:9];
     end else begin
-        main_basesoc_sdram_bankmachine3_cmd_payload_a <= ((main_basesoc_sdram_bankmachine3_auto_precharge <<< 4'd10) | {main_basesoc_sdram_bankmachine3_source_source_payload_addr[8:0], {0{1'd0}}});
+        main_sdram_bankmachine3_cmd_payload_a <= ((main_sdram_bankmachine3_auto_precharge <<< 4'd10) | {main_sdram_bankmachine3_source_source_payload_addr[8:0], {0{1'd0}}});
     end
 end
-assign main_basesoc_sdram_bankmachine3_twtpcon_valid = ((main_basesoc_sdram_bankmachine3_cmd_valid & main_basesoc_sdram_bankmachine3_cmd_ready) & main_basesoc_sdram_bankmachine3_cmd_payload_is_write);
-assign main_basesoc_sdram_bankmachine3_trccon_valid = ((main_basesoc_sdram_bankmachine3_cmd_valid & main_basesoc_sdram_bankmachine3_cmd_ready) & main_basesoc_sdram_bankmachine3_row_open);
-assign main_basesoc_sdram_bankmachine3_trascon_valid = ((main_basesoc_sdram_bankmachine3_cmd_valid & main_basesoc_sdram_bankmachine3_cmd_ready) & main_basesoc_sdram_bankmachine3_row_open);
+assign main_sdram_bankmachine3_twtpcon_valid = ((main_sdram_bankmachine3_cmd_valid & main_sdram_bankmachine3_cmd_ready) & main_sdram_bankmachine3_cmd_payload_is_write);
+assign main_sdram_bankmachine3_trccon_valid = ((main_sdram_bankmachine3_cmd_valid & main_sdram_bankmachine3_cmd_ready) & main_sdram_bankmachine3_row_open);
+assign main_sdram_bankmachine3_trascon_valid = ((main_sdram_bankmachine3_cmd_valid & main_sdram_bankmachine3_cmd_ready) & main_sdram_bankmachine3_row_open);
 always @(*) begin
-    main_basesoc_sdram_bankmachine3_auto_precharge <= 1'd0;
-    if ((main_basesoc_sdram_bankmachine3_source_valid & main_basesoc_sdram_bankmachine3_source_source_valid)) begin
-        if ((main_basesoc_sdram_bankmachine3_source_payload_addr[21:9] != main_basesoc_sdram_bankmachine3_source_source_payload_addr[21:9])) begin
-            main_basesoc_sdram_bankmachine3_auto_precharge <= (main_basesoc_sdram_bankmachine3_row_close == 1'd0);
+    main_sdram_bankmachine3_auto_precharge <= 1'd0;
+    if ((main_sdram_bankmachine3_source_valid & main_sdram_bankmachine3_source_source_valid)) begin
+        if ((main_sdram_bankmachine3_source_payload_addr[21:9] != main_sdram_bankmachine3_source_source_payload_addr[21:9])) begin
+            main_sdram_bankmachine3_auto_precharge <= (main_sdram_bankmachine3_row_close == 1'd0);
         end
     end
 end
-assign main_basesoc_sdram_bankmachine3_syncfifo3_din = {main_basesoc_sdram_bankmachine3_fifo_in_last, main_basesoc_sdram_bankmachine3_fifo_in_first, main_basesoc_sdram_bankmachine3_fifo_in_payload_addr, main_basesoc_sdram_bankmachine3_fifo_in_payload_we};
-assign {main_basesoc_sdram_bankmachine3_fifo_out_last, main_basesoc_sdram_bankmachine3_fifo_out_first, main_basesoc_sdram_bankmachine3_fifo_out_payload_addr, main_basesoc_sdram_bankmachine3_fifo_out_payload_we} = main_basesoc_sdram_bankmachine3_syncfifo3_dout;
-assign main_basesoc_sdram_bankmachine3_sink_ready = main_basesoc_sdram_bankmachine3_syncfifo3_writable;
-assign main_basesoc_sdram_bankmachine3_syncfifo3_we = main_basesoc_sdram_bankmachine3_sink_valid;
-assign main_basesoc_sdram_bankmachine3_fifo_in_first = main_basesoc_sdram_bankmachine3_sink_first;
-assign main_basesoc_sdram_bankmachine3_fifo_in_last = main_basesoc_sdram_bankmachine3_sink_last;
-assign main_basesoc_sdram_bankmachine3_fifo_in_payload_we = main_basesoc_sdram_bankmachine3_sink_payload_we;
-assign main_basesoc_sdram_bankmachine3_fifo_in_payload_addr = main_basesoc_sdram_bankmachine3_sink_payload_addr;
-assign main_basesoc_sdram_bankmachine3_source_valid = main_basesoc_sdram_bankmachine3_syncfifo3_readable;
-assign main_basesoc_sdram_bankmachine3_source_first = main_basesoc_sdram_bankmachine3_fifo_out_first;
-assign main_basesoc_sdram_bankmachine3_source_last = main_basesoc_sdram_bankmachine3_fifo_out_last;
-assign main_basesoc_sdram_bankmachine3_source_payload_we = main_basesoc_sdram_bankmachine3_fifo_out_payload_we;
-assign main_basesoc_sdram_bankmachine3_source_payload_addr = main_basesoc_sdram_bankmachine3_fifo_out_payload_addr;
-assign main_basesoc_sdram_bankmachine3_syncfifo3_re = main_basesoc_sdram_bankmachine3_source_ready;
+assign main_sdram_bankmachine3_syncfifo3_din = {main_sdram_bankmachine3_fifo_in_last, main_sdram_bankmachine3_fifo_in_first, main_sdram_bankmachine3_fifo_in_payload_addr, main_sdram_bankmachine3_fifo_in_payload_we};
+assign {main_sdram_bankmachine3_fifo_out_last, main_sdram_bankmachine3_fifo_out_first, main_sdram_bankmachine3_fifo_out_payload_addr, main_sdram_bankmachine3_fifo_out_payload_we} = main_sdram_bankmachine3_syncfifo3_dout;
+assign main_sdram_bankmachine3_sink_ready = main_sdram_bankmachine3_syncfifo3_writable;
+assign main_sdram_bankmachine3_syncfifo3_we = main_sdram_bankmachine3_sink_valid;
+assign main_sdram_bankmachine3_fifo_in_first = main_sdram_bankmachine3_sink_first;
+assign main_sdram_bankmachine3_fifo_in_last = main_sdram_bankmachine3_sink_last;
+assign main_sdram_bankmachine3_fifo_in_payload_we = main_sdram_bankmachine3_sink_payload_we;
+assign main_sdram_bankmachine3_fifo_in_payload_addr = main_sdram_bankmachine3_sink_payload_addr;
+assign main_sdram_bankmachine3_source_valid = main_sdram_bankmachine3_syncfifo3_readable;
+assign main_sdram_bankmachine3_source_first = main_sdram_bankmachine3_fifo_out_first;
+assign main_sdram_bankmachine3_source_last = main_sdram_bankmachine3_fifo_out_last;
+assign main_sdram_bankmachine3_source_payload_we = main_sdram_bankmachine3_fifo_out_payload_we;
+assign main_sdram_bankmachine3_source_payload_addr = main_sdram_bankmachine3_fifo_out_payload_addr;
+assign main_sdram_bankmachine3_syncfifo3_re = main_sdram_bankmachine3_source_ready;
 always @(*) begin
-    main_basesoc_sdram_bankmachine3_wrport_adr <= 3'd0;
-    if (main_basesoc_sdram_bankmachine3_replace) begin
-        main_basesoc_sdram_bankmachine3_wrport_adr <= (main_basesoc_sdram_bankmachine3_produce - 1'd1);
+    main_sdram_bankmachine3_wrport_adr <= 3'd0;
+    if (main_sdram_bankmachine3_replace) begin
+        main_sdram_bankmachine3_wrport_adr <= (main_sdram_bankmachine3_produce - 1'd1);
     end else begin
-        main_basesoc_sdram_bankmachine3_wrport_adr <= main_basesoc_sdram_bankmachine3_produce;
+        main_sdram_bankmachine3_wrport_adr <= main_sdram_bankmachine3_produce;
     end
 end
-assign main_basesoc_sdram_bankmachine3_wrport_dat_w = main_basesoc_sdram_bankmachine3_syncfifo3_din;
-assign main_basesoc_sdram_bankmachine3_wrport_we = (main_basesoc_sdram_bankmachine3_syncfifo3_we & (main_basesoc_sdram_bankmachine3_syncfifo3_writable | main_basesoc_sdram_bankmachine3_replace));
-assign main_basesoc_sdram_bankmachine3_do_read = (main_basesoc_sdram_bankmachine3_syncfifo3_readable & main_basesoc_sdram_bankmachine3_syncfifo3_re);
-assign main_basesoc_sdram_bankmachine3_rdport_adr = main_basesoc_sdram_bankmachine3_consume;
-assign main_basesoc_sdram_bankmachine3_syncfifo3_dout = main_basesoc_sdram_bankmachine3_rdport_dat_r;
-assign main_basesoc_sdram_bankmachine3_syncfifo3_writable = (main_basesoc_sdram_bankmachine3_level != 4'd8);
-assign main_basesoc_sdram_bankmachine3_syncfifo3_readable = (main_basesoc_sdram_bankmachine3_level != 1'd0);
-assign main_basesoc_sdram_bankmachine3_pipe_valid_sink_ready = ((~main_basesoc_sdram_bankmachine3_pipe_valid_source_valid) | main_basesoc_sdram_bankmachine3_pipe_valid_source_ready);
-assign main_basesoc_sdram_bankmachine3_pipe_valid_sink_valid = main_basesoc_sdram_bankmachine3_sink_sink_valid;
-assign main_basesoc_sdram_bankmachine3_sink_sink_ready = main_basesoc_sdram_bankmachine3_pipe_valid_sink_ready;
-assign main_basesoc_sdram_bankmachine3_pipe_valid_sink_first = main_basesoc_sdram_bankmachine3_sink_sink_first;
-assign main_basesoc_sdram_bankmachine3_pipe_valid_sink_last = main_basesoc_sdram_bankmachine3_sink_sink_last;
-assign main_basesoc_sdram_bankmachine3_pipe_valid_sink_payload_we = main_basesoc_sdram_bankmachine3_sink_sink_payload_we;
-assign main_basesoc_sdram_bankmachine3_pipe_valid_sink_payload_addr = main_basesoc_sdram_bankmachine3_sink_sink_payload_addr;
-assign main_basesoc_sdram_bankmachine3_source_source_valid = main_basesoc_sdram_bankmachine3_pipe_valid_source_valid;
-assign main_basesoc_sdram_bankmachine3_pipe_valid_source_ready = main_basesoc_sdram_bankmachine3_source_source_ready;
-assign main_basesoc_sdram_bankmachine3_source_source_first = main_basesoc_sdram_bankmachine3_pipe_valid_source_first;
-assign main_basesoc_sdram_bankmachine3_source_source_last = main_basesoc_sdram_bankmachine3_pipe_valid_source_last;
-assign main_basesoc_sdram_bankmachine3_source_source_payload_we = main_basesoc_sdram_bankmachine3_pipe_valid_source_payload_we;
-assign main_basesoc_sdram_bankmachine3_source_source_payload_addr = main_basesoc_sdram_bankmachine3_pipe_valid_source_payload_addr;
+assign main_sdram_bankmachine3_wrport_dat_w = main_sdram_bankmachine3_syncfifo3_din;
+assign main_sdram_bankmachine3_wrport_we = (main_sdram_bankmachine3_syncfifo3_we & (main_sdram_bankmachine3_syncfifo3_writable | main_sdram_bankmachine3_replace));
+assign main_sdram_bankmachine3_do_read = (main_sdram_bankmachine3_syncfifo3_readable & main_sdram_bankmachine3_syncfifo3_re);
+assign main_sdram_bankmachine3_rdport_adr = main_sdram_bankmachine3_consume;
+assign main_sdram_bankmachine3_syncfifo3_dout = main_sdram_bankmachine3_rdport_dat_r;
+assign main_sdram_bankmachine3_syncfifo3_writable = (main_sdram_bankmachine3_level != 4'd8);
+assign main_sdram_bankmachine3_syncfifo3_readable = (main_sdram_bankmachine3_level != 1'd0);
+assign main_sdram_bankmachine3_pipe_valid_sink_ready = ((~main_sdram_bankmachine3_pipe_valid_source_valid) | main_sdram_bankmachine3_pipe_valid_source_ready);
+assign main_sdram_bankmachine3_pipe_valid_sink_valid = main_sdram_bankmachine3_sink_sink_valid;
+assign main_sdram_bankmachine3_sink_sink_ready = main_sdram_bankmachine3_pipe_valid_sink_ready;
+assign main_sdram_bankmachine3_pipe_valid_sink_first = main_sdram_bankmachine3_sink_sink_first;
+assign main_sdram_bankmachine3_pipe_valid_sink_last = main_sdram_bankmachine3_sink_sink_last;
+assign main_sdram_bankmachine3_pipe_valid_sink_payload_we = main_sdram_bankmachine3_sink_sink_payload_we;
+assign main_sdram_bankmachine3_pipe_valid_sink_payload_addr = main_sdram_bankmachine3_sink_sink_payload_addr;
+assign main_sdram_bankmachine3_source_source_valid = main_sdram_bankmachine3_pipe_valid_source_valid;
+assign main_sdram_bankmachine3_pipe_valid_source_ready = main_sdram_bankmachine3_source_source_ready;
+assign main_sdram_bankmachine3_source_source_first = main_sdram_bankmachine3_pipe_valid_source_first;
+assign main_sdram_bankmachine3_source_source_last = main_sdram_bankmachine3_pipe_valid_source_last;
+assign main_sdram_bankmachine3_source_source_payload_we = main_sdram_bankmachine3_pipe_valid_source_payload_we;
+assign main_sdram_bankmachine3_source_source_payload_addr = main_sdram_bankmachine3_pipe_valid_source_payload_addr;
 always @(*) begin
-    main_basesoc_sdram_bankmachine3_cmd_payload_is_cmd <= 1'd0;
-    main_basesoc_sdram_bankmachine3_cmd_payload_is_read <= 1'd0;
-    main_basesoc_sdram_bankmachine3_cmd_payload_is_write <= 1'd0;
-    main_basesoc_sdram_bankmachine3_req_wdata_ready <= 1'd0;
+    main_sdram_bankmachine3_cmd_payload_is_cmd <= 1'd0;
+    main_sdram_bankmachine3_cmd_payload_is_read <= 1'd0;
+    main_sdram_bankmachine3_cmd_payload_is_write <= 1'd0;
+    main_sdram_bankmachine3_req_wdata_ready <= 1'd0;
+    main_sdram_bankmachine3_req_rdata_valid <= 1'd0;
+    main_sdram_bankmachine3_refresh_gnt <= 1'd0;
+    main_sdram_bankmachine3_row_open <= 1'd0;
+    main_sdram_bankmachine3_cmd_valid <= 1'd0;
     builder_basesoc_bankmachine3_next_state <= 3'd0;
-    main_basesoc_sdram_bankmachine3_req_rdata_valid <= 1'd0;
-    main_basesoc_sdram_bankmachine3_refresh_gnt <= 1'd0;
-    main_basesoc_sdram_bankmachine3_row_open <= 1'd0;
-    main_basesoc_sdram_bankmachine3_cmd_valid <= 1'd0;
-    main_basesoc_sdram_bankmachine3_row_close <= 1'd0;
-    main_basesoc_sdram_bankmachine3_row_col_n_addr_sel <= 1'd0;
-    main_basesoc_sdram_bankmachine3_cmd_payload_cas <= 1'd0;
-    main_basesoc_sdram_bankmachine3_cmd_payload_ras <= 1'd0;
-    main_basesoc_sdram_bankmachine3_cmd_payload_we <= 1'd0;
+    main_sdram_bankmachine3_row_close <= 1'd0;
+    main_sdram_bankmachine3_row_col_n_addr_sel <= 1'd0;
+    main_sdram_bankmachine3_cmd_payload_cas <= 1'd0;
+    main_sdram_bankmachine3_cmd_payload_ras <= 1'd0;
+    main_sdram_bankmachine3_cmd_payload_we <= 1'd0;
     builder_basesoc_bankmachine3_next_state <= builder_basesoc_bankmachine3_state;
     case (builder_basesoc_bankmachine3_state)
         1'd1: begin
-            if ((main_basesoc_sdram_bankmachine3_twtpcon_ready & main_basesoc_sdram_bankmachine3_trascon_ready)) begin
-                main_basesoc_sdram_bankmachine3_cmd_valid <= 1'd1;
-                if (main_basesoc_sdram_bankmachine3_cmd_ready) begin
+            if ((main_sdram_bankmachine3_twtpcon_ready & main_sdram_bankmachine3_trascon_ready)) begin
+                main_sdram_bankmachine3_cmd_valid <= 1'd1;
+                if (main_sdram_bankmachine3_cmd_ready) begin
                     builder_basesoc_bankmachine3_next_state <= 3'd5;
                 end
-                main_basesoc_sdram_bankmachine3_cmd_payload_ras <= 1'd1;
-                main_basesoc_sdram_bankmachine3_cmd_payload_we <= 1'd1;
-                main_basesoc_sdram_bankmachine3_cmd_payload_is_cmd <= 1'd1;
+                main_sdram_bankmachine3_cmd_payload_ras <= 1'd1;
+                main_sdram_bankmachine3_cmd_payload_we <= 1'd1;
+                main_sdram_bankmachine3_cmd_payload_is_cmd <= 1'd1;
             end
-            main_basesoc_sdram_bankmachine3_row_close <= 1'd1;
+            main_sdram_bankmachine3_row_close <= 1'd1;
         end
         2'd2: begin
-            if ((main_basesoc_sdram_bankmachine3_twtpcon_ready & main_basesoc_sdram_bankmachine3_trascon_ready)) begin
+            if ((main_sdram_bankmachine3_twtpcon_ready & main_sdram_bankmachine3_trascon_ready)) begin
                 builder_basesoc_bankmachine3_next_state <= 3'd5;
             end
-            main_basesoc_sdram_bankmachine3_row_close <= 1'd1;
+            main_sdram_bankmachine3_row_close <= 1'd1;
         end
         2'd3: begin
-            if (main_basesoc_sdram_bankmachine3_trccon_ready) begin
-                main_basesoc_sdram_bankmachine3_row_col_n_addr_sel <= 1'd1;
-                main_basesoc_sdram_bankmachine3_row_open <= 1'd1;
-                main_basesoc_sdram_bankmachine3_cmd_valid <= 1'd1;
-                main_basesoc_sdram_bankmachine3_cmd_payload_is_cmd <= 1'd1;
-                if (main_basesoc_sdram_bankmachine3_cmd_ready) begin
+            if (main_sdram_bankmachine3_trccon_ready) begin
+                main_sdram_bankmachine3_row_col_n_addr_sel <= 1'd1;
+                main_sdram_bankmachine3_row_open <= 1'd1;
+                main_sdram_bankmachine3_cmd_valid <= 1'd1;
+                main_sdram_bankmachine3_cmd_payload_is_cmd <= 1'd1;
+                if (main_sdram_bankmachine3_cmd_ready) begin
                     builder_basesoc_bankmachine3_next_state <= 3'd6;
                 end
-                main_basesoc_sdram_bankmachine3_cmd_payload_ras <= 1'd1;
+                main_sdram_bankmachine3_cmd_payload_ras <= 1'd1;
             end
         end
         3'd4: begin
-            if (main_basesoc_sdram_bankmachine3_twtpcon_ready) begin
-                main_basesoc_sdram_bankmachine3_refresh_gnt <= 1'd1;
+            if (main_sdram_bankmachine3_twtpcon_ready) begin
+                main_sdram_bankmachine3_refresh_gnt <= 1'd1;
             end
-            main_basesoc_sdram_bankmachine3_row_close <= 1'd1;
-            main_basesoc_sdram_bankmachine3_cmd_payload_is_cmd <= 1'd1;
-            if ((~main_basesoc_sdram_bankmachine3_refresh_req)) begin
+            main_sdram_bankmachine3_row_close <= 1'd1;
+            main_sdram_bankmachine3_cmd_payload_is_cmd <= 1'd1;
+            if ((~main_sdram_bankmachine3_refresh_req)) begin
                 builder_basesoc_bankmachine3_next_state <= 1'd0;
             end
         end
@@ -3327,23 +2990,23 @@ always @(*) begin
             builder_basesoc_bankmachine3_next_state <= 1'd0;
         end
         default: begin
-            if (main_basesoc_sdram_bankmachine3_refresh_req) begin
+            if (main_sdram_bankmachine3_refresh_req) begin
                 builder_basesoc_bankmachine3_next_state <= 3'd4;
             end else begin
-                if (main_basesoc_sdram_bankmachine3_source_source_valid) begin
-                    if (main_basesoc_sdram_bankmachine3_row_opened) begin
-                        if (main_basesoc_sdram_bankmachine3_row_hit) begin
-                            main_basesoc_sdram_bankmachine3_cmd_valid <= 1'd1;
-                            if (main_basesoc_sdram_bankmachine3_source_source_payload_we) begin
-                                main_basesoc_sdram_bankmachine3_req_wdata_ready <= main_basesoc_sdram_bankmachine3_cmd_ready;
-                                main_basesoc_sdram_bankmachine3_cmd_payload_is_write <= 1'd1;
-                                main_basesoc_sdram_bankmachine3_cmd_payload_we <= 1'd1;
+                if (main_sdram_bankmachine3_source_source_valid) begin
+                    if (main_sdram_bankmachine3_row_opened) begin
+                        if (main_sdram_bankmachine3_row_hit) begin
+                            main_sdram_bankmachine3_cmd_valid <= 1'd1;
+                            if (main_sdram_bankmachine3_source_source_payload_we) begin
+                                main_sdram_bankmachine3_req_wdata_ready <= main_sdram_bankmachine3_cmd_ready;
+                                main_sdram_bankmachine3_cmd_payload_is_write <= 1'd1;
+                                main_sdram_bankmachine3_cmd_payload_we <= 1'd1;
                             end else begin
-                                main_basesoc_sdram_bankmachine3_req_rdata_valid <= main_basesoc_sdram_bankmachine3_cmd_ready;
-                                main_basesoc_sdram_bankmachine3_cmd_payload_is_read <= 1'd1;
+                                main_sdram_bankmachine3_req_rdata_valid <= main_sdram_bankmachine3_cmd_ready;
+                                main_sdram_bankmachine3_cmd_payload_is_read <= 1'd1;
                             end
-                            main_basesoc_sdram_bankmachine3_cmd_payload_cas <= 1'd1;
-                            if ((main_basesoc_sdram_bankmachine3_cmd_ready & main_basesoc_sdram_bankmachine3_auto_precharge)) begin
+                            main_sdram_bankmachine3_cmd_payload_cas <= 1'd1;
+                            if ((main_sdram_bankmachine3_cmd_ready & main_sdram_bankmachine3_auto_precharge)) begin
                                 builder_basesoc_bankmachine3_next_state <= 2'd2;
                             end
                         end else begin
@@ -3357,178 +3020,178 @@ always @(*) begin
         end
     endcase
 end
-assign main_basesoc_sdram_choose_req_want_cmds = 1'd1;
-assign main_basesoc_sdram_trrdcon_valid = ((main_basesoc_sdram_choose_req_cmd_valid & main_basesoc_sdram_choose_req_cmd_ready) & ((main_basesoc_sdram_choose_req_cmd_payload_ras & (~main_basesoc_sdram_choose_req_cmd_payload_cas)) & (~main_basesoc_sdram_choose_req_cmd_payload_we)));
-assign main_basesoc_sdram_tfawcon_valid = ((main_basesoc_sdram_choose_req_cmd_valid & main_basesoc_sdram_choose_req_cmd_ready) & ((main_basesoc_sdram_choose_req_cmd_payload_ras & (~main_basesoc_sdram_choose_req_cmd_payload_cas)) & (~main_basesoc_sdram_choose_req_cmd_payload_we)));
-assign main_basesoc_sdram_ras_allowed = (main_basesoc_sdram_trrdcon_ready & main_basesoc_sdram_tfawcon_ready);
-assign main_basesoc_sdram_tccdcon_valid = ((main_basesoc_sdram_choose_req_cmd_valid & main_basesoc_sdram_choose_req_cmd_ready) & (main_basesoc_sdram_choose_req_cmd_payload_is_write | main_basesoc_sdram_choose_req_cmd_payload_is_read));
-assign main_basesoc_sdram_cas_allowed = main_basesoc_sdram_tccdcon_ready;
-assign main_basesoc_sdram_twtrcon_valid = ((main_basesoc_sdram_choose_req_cmd_valid & main_basesoc_sdram_choose_req_cmd_ready) & main_basesoc_sdram_choose_req_cmd_payload_is_write);
-assign main_basesoc_sdram_read_available = ((((main_basesoc_sdram_bankmachine0_cmd_valid & main_basesoc_sdram_bankmachine0_cmd_payload_is_read) | (main_basesoc_sdram_bankmachine1_cmd_valid & main_basesoc_sdram_bankmachine1_cmd_payload_is_read)) | (main_basesoc_sdram_bankmachine2_cmd_valid & main_basesoc_sdram_bankmachine2_cmd_payload_is_read)) | (main_basesoc_sdram_bankmachine3_cmd_valid & main_basesoc_sdram_bankmachine3_cmd_payload_is_read));
-assign main_basesoc_sdram_write_available = ((((main_basesoc_sdram_bankmachine0_cmd_valid & main_basesoc_sdram_bankmachine0_cmd_payload_is_write) | (main_basesoc_sdram_bankmachine1_cmd_valid & main_basesoc_sdram_bankmachine1_cmd_payload_is_write)) | (main_basesoc_sdram_bankmachine2_cmd_valid & main_basesoc_sdram_bankmachine2_cmd_payload_is_write)) | (main_basesoc_sdram_bankmachine3_cmd_valid & main_basesoc_sdram_bankmachine3_cmd_payload_is_write));
-assign main_basesoc_sdram_max_time0 = (main_basesoc_sdram_time0 == 1'd0);
-assign main_basesoc_sdram_max_time1 = (main_basesoc_sdram_time1 == 1'd0);
-assign main_basesoc_sdram_bankmachine0_refresh_req = main_basesoc_sdram_cmd_valid;
-assign main_basesoc_sdram_bankmachine1_refresh_req = main_basesoc_sdram_cmd_valid;
-assign main_basesoc_sdram_bankmachine2_refresh_req = main_basesoc_sdram_cmd_valid;
-assign main_basesoc_sdram_bankmachine3_refresh_req = main_basesoc_sdram_cmd_valid;
-assign main_basesoc_sdram_go_to_refresh = (((main_basesoc_sdram_bankmachine0_refresh_gnt & main_basesoc_sdram_bankmachine1_refresh_gnt) & main_basesoc_sdram_bankmachine2_refresh_gnt) & main_basesoc_sdram_bankmachine3_refresh_gnt);
-assign main_basesoc_sdram_interface_rdata = {main_basesoc_sdram_dfi_p0_rddata};
-assign {main_basesoc_sdram_dfi_p0_wrdata} = main_basesoc_sdram_interface_wdata;
-assign {main_basesoc_sdram_dfi_p0_wrdata_mask} = (~main_basesoc_sdram_interface_wdata_we);
+assign main_sdram_choose_req_want_cmds = 1'd1;
+assign main_sdram_trrdcon_valid = ((main_sdram_choose_req_cmd_valid & main_sdram_choose_req_cmd_ready) & ((main_sdram_choose_req_cmd_payload_ras & (~main_sdram_choose_req_cmd_payload_cas)) & (~main_sdram_choose_req_cmd_payload_we)));
+assign main_sdram_tfawcon_valid = ((main_sdram_choose_req_cmd_valid & main_sdram_choose_req_cmd_ready) & ((main_sdram_choose_req_cmd_payload_ras & (~main_sdram_choose_req_cmd_payload_cas)) & (~main_sdram_choose_req_cmd_payload_we)));
+assign main_sdram_ras_allowed = (main_sdram_trrdcon_ready & main_sdram_tfawcon_ready);
+assign main_sdram_tccdcon_valid = ((main_sdram_choose_req_cmd_valid & main_sdram_choose_req_cmd_ready) & (main_sdram_choose_req_cmd_payload_is_write | main_sdram_choose_req_cmd_payload_is_read));
+assign main_sdram_cas_allowed = main_sdram_tccdcon_ready;
+assign main_sdram_twtrcon_valid = ((main_sdram_choose_req_cmd_valid & main_sdram_choose_req_cmd_ready) & main_sdram_choose_req_cmd_payload_is_write);
+assign main_sdram_read_available = ((((main_sdram_bankmachine0_cmd_valid & main_sdram_bankmachine0_cmd_payload_is_read) | (main_sdram_bankmachine1_cmd_valid & main_sdram_bankmachine1_cmd_payload_is_read)) | (main_sdram_bankmachine2_cmd_valid & main_sdram_bankmachine2_cmd_payload_is_read)) | (main_sdram_bankmachine3_cmd_valid & main_sdram_bankmachine3_cmd_payload_is_read));
+assign main_sdram_write_available = ((((main_sdram_bankmachine0_cmd_valid & main_sdram_bankmachine0_cmd_payload_is_write) | (main_sdram_bankmachine1_cmd_valid & main_sdram_bankmachine1_cmd_payload_is_write)) | (main_sdram_bankmachine2_cmd_valid & main_sdram_bankmachine2_cmd_payload_is_write)) | (main_sdram_bankmachine3_cmd_valid & main_sdram_bankmachine3_cmd_payload_is_write));
+assign main_sdram_max_time0 = (main_sdram_time0 == 1'd0);
+assign main_sdram_max_time1 = (main_sdram_time1 == 1'd0);
+assign main_sdram_bankmachine0_refresh_req = main_sdram_cmd_valid;
+assign main_sdram_bankmachine1_refresh_req = main_sdram_cmd_valid;
+assign main_sdram_bankmachine2_refresh_req = main_sdram_cmd_valid;
+assign main_sdram_bankmachine3_refresh_req = main_sdram_cmd_valid;
+assign main_sdram_go_to_refresh = (((main_sdram_bankmachine0_refresh_gnt & main_sdram_bankmachine1_refresh_gnt) & main_sdram_bankmachine2_refresh_gnt) & main_sdram_bankmachine3_refresh_gnt);
+assign main_sdram_interface_rdata = {main_sdram_dfi_p0_rddata};
+assign {main_sdram_dfi_p0_wrdata} = main_sdram_interface_wdata;
+assign {main_sdram_dfi_p0_wrdata_mask} = (~main_sdram_interface_wdata_we);
 always @(*) begin
-    main_basesoc_sdram_choose_cmd_valids <= 4'd0;
-    main_basesoc_sdram_choose_cmd_valids[0] <= (main_basesoc_sdram_bankmachine0_cmd_valid & (((main_basesoc_sdram_bankmachine0_cmd_payload_is_cmd & main_basesoc_sdram_choose_cmd_want_cmds) & ((~((main_basesoc_sdram_bankmachine0_cmd_payload_ras & (~main_basesoc_sdram_bankmachine0_cmd_payload_cas)) & (~main_basesoc_sdram_bankmachine0_cmd_payload_we))) | main_basesoc_sdram_choose_cmd_want_activates)) | ((main_basesoc_sdram_bankmachine0_cmd_payload_is_read == main_basesoc_sdram_choose_cmd_want_reads) & (main_basesoc_sdram_bankmachine0_cmd_payload_is_write == main_basesoc_sdram_choose_cmd_want_writes))));
-    main_basesoc_sdram_choose_cmd_valids[1] <= (main_basesoc_sdram_bankmachine1_cmd_valid & (((main_basesoc_sdram_bankmachine1_cmd_payload_is_cmd & main_basesoc_sdram_choose_cmd_want_cmds) & ((~((main_basesoc_sdram_bankmachine1_cmd_payload_ras & (~main_basesoc_sdram_bankmachine1_cmd_payload_cas)) & (~main_basesoc_sdram_bankmachine1_cmd_payload_we))) | main_basesoc_sdram_choose_cmd_want_activates)) | ((main_basesoc_sdram_bankmachine1_cmd_payload_is_read == main_basesoc_sdram_choose_cmd_want_reads) & (main_basesoc_sdram_bankmachine1_cmd_payload_is_write == main_basesoc_sdram_choose_cmd_want_writes))));
-    main_basesoc_sdram_choose_cmd_valids[2] <= (main_basesoc_sdram_bankmachine2_cmd_valid & (((main_basesoc_sdram_bankmachine2_cmd_payload_is_cmd & main_basesoc_sdram_choose_cmd_want_cmds) & ((~((main_basesoc_sdram_bankmachine2_cmd_payload_ras & (~main_basesoc_sdram_bankmachine2_cmd_payload_cas)) & (~main_basesoc_sdram_bankmachine2_cmd_payload_we))) | main_basesoc_sdram_choose_cmd_want_activates)) | ((main_basesoc_sdram_bankmachine2_cmd_payload_is_read == main_basesoc_sdram_choose_cmd_want_reads) & (main_basesoc_sdram_bankmachine2_cmd_payload_is_write == main_basesoc_sdram_choose_cmd_want_writes))));
-    main_basesoc_sdram_choose_cmd_valids[3] <= (main_basesoc_sdram_bankmachine3_cmd_valid & (((main_basesoc_sdram_bankmachine3_cmd_payload_is_cmd & main_basesoc_sdram_choose_cmd_want_cmds) & ((~((main_basesoc_sdram_bankmachine3_cmd_payload_ras & (~main_basesoc_sdram_bankmachine3_cmd_payload_cas)) & (~main_basesoc_sdram_bankmachine3_cmd_payload_we))) | main_basesoc_sdram_choose_cmd_want_activates)) | ((main_basesoc_sdram_bankmachine3_cmd_payload_is_read == main_basesoc_sdram_choose_cmd_want_reads) & (main_basesoc_sdram_bankmachine3_cmd_payload_is_write == main_basesoc_sdram_choose_cmd_want_writes))));
+    main_sdram_choose_cmd_valids <= 4'd0;
+    main_sdram_choose_cmd_valids[0] <= (main_sdram_bankmachine0_cmd_valid & (((main_sdram_bankmachine0_cmd_payload_is_cmd & main_sdram_choose_cmd_want_cmds) & ((~((main_sdram_bankmachine0_cmd_payload_ras & (~main_sdram_bankmachine0_cmd_payload_cas)) & (~main_sdram_bankmachine0_cmd_payload_we))) | main_sdram_choose_cmd_want_activates)) | ((main_sdram_bankmachine0_cmd_payload_is_read == main_sdram_choose_cmd_want_reads) & (main_sdram_bankmachine0_cmd_payload_is_write == main_sdram_choose_cmd_want_writes))));
+    main_sdram_choose_cmd_valids[1] <= (main_sdram_bankmachine1_cmd_valid & (((main_sdram_bankmachine1_cmd_payload_is_cmd & main_sdram_choose_cmd_want_cmds) & ((~((main_sdram_bankmachine1_cmd_payload_ras & (~main_sdram_bankmachine1_cmd_payload_cas)) & (~main_sdram_bankmachine1_cmd_payload_we))) | main_sdram_choose_cmd_want_activates)) | ((main_sdram_bankmachine1_cmd_payload_is_read == main_sdram_choose_cmd_want_reads) & (main_sdram_bankmachine1_cmd_payload_is_write == main_sdram_choose_cmd_want_writes))));
+    main_sdram_choose_cmd_valids[2] <= (main_sdram_bankmachine2_cmd_valid & (((main_sdram_bankmachine2_cmd_payload_is_cmd & main_sdram_choose_cmd_want_cmds) & ((~((main_sdram_bankmachine2_cmd_payload_ras & (~main_sdram_bankmachine2_cmd_payload_cas)) & (~main_sdram_bankmachine2_cmd_payload_we))) | main_sdram_choose_cmd_want_activates)) | ((main_sdram_bankmachine2_cmd_payload_is_read == main_sdram_choose_cmd_want_reads) & (main_sdram_bankmachine2_cmd_payload_is_write == main_sdram_choose_cmd_want_writes))));
+    main_sdram_choose_cmd_valids[3] <= (main_sdram_bankmachine3_cmd_valid & (((main_sdram_bankmachine3_cmd_payload_is_cmd & main_sdram_choose_cmd_want_cmds) & ((~((main_sdram_bankmachine3_cmd_payload_ras & (~main_sdram_bankmachine3_cmd_payload_cas)) & (~main_sdram_bankmachine3_cmd_payload_we))) | main_sdram_choose_cmd_want_activates)) | ((main_sdram_bankmachine3_cmd_payload_is_read == main_sdram_choose_cmd_want_reads) & (main_sdram_bankmachine3_cmd_payload_is_write == main_sdram_choose_cmd_want_writes))));
 end
-assign main_basesoc_sdram_choose_cmd_request = main_basesoc_sdram_choose_cmd_valids;
-assign main_basesoc_sdram_choose_cmd_cmd_valid = builder_rhs_array_muxed8;
-assign main_basesoc_sdram_choose_cmd_cmd_payload_a = builder_rhs_array_muxed9;
-assign main_basesoc_sdram_choose_cmd_cmd_payload_ba = builder_rhs_array_muxed10;
-assign main_basesoc_sdram_choose_cmd_cmd_payload_is_read = builder_rhs_array_muxed11;
-assign main_basesoc_sdram_choose_cmd_cmd_payload_is_write = builder_rhs_array_muxed12;
-assign main_basesoc_sdram_choose_cmd_cmd_payload_is_cmd = builder_rhs_array_muxed13;
+assign main_sdram_choose_cmd_request = main_sdram_choose_cmd_valids;
+assign main_sdram_choose_cmd_cmd_valid = builder_rhs_array_muxed8;
+assign main_sdram_choose_cmd_cmd_payload_a = builder_rhs_array_muxed9;
+assign main_sdram_choose_cmd_cmd_payload_ba = builder_rhs_array_muxed10;
+assign main_sdram_choose_cmd_cmd_payload_is_read = builder_rhs_array_muxed11;
+assign main_sdram_choose_cmd_cmd_payload_is_write = builder_rhs_array_muxed12;
+assign main_sdram_choose_cmd_cmd_payload_is_cmd = builder_rhs_array_muxed13;
 always @(*) begin
-    main_basesoc_sdram_choose_cmd_cmd_payload_cas <= 1'd0;
-    if (main_basesoc_sdram_choose_cmd_cmd_valid) begin
-        main_basesoc_sdram_choose_cmd_cmd_payload_cas <= builder_t_array_muxed0;
-    end
-end
-always @(*) begin
-    main_basesoc_sdram_choose_cmd_cmd_payload_ras <= 1'd0;
-    if (main_basesoc_sdram_choose_cmd_cmd_valid) begin
-        main_basesoc_sdram_choose_cmd_cmd_payload_ras <= builder_t_array_muxed1;
+    main_sdram_choose_cmd_cmd_payload_cas <= 1'd0;
+    if (main_sdram_choose_cmd_cmd_valid) begin
+        main_sdram_choose_cmd_cmd_payload_cas <= builder_t_array_muxed0;
     end
 end
 always @(*) begin
-    main_basesoc_sdram_choose_cmd_cmd_payload_we <= 1'd0;
-    if (main_basesoc_sdram_choose_cmd_cmd_valid) begin
-        main_basesoc_sdram_choose_cmd_cmd_payload_we <= builder_t_array_muxed2;
-    end
-end
-assign main_basesoc_sdram_choose_cmd_ce = (main_basesoc_sdram_choose_cmd_cmd_ready | (~main_basesoc_sdram_choose_cmd_cmd_valid));
-always @(*) begin
-    main_basesoc_sdram_choose_req_valids <= 4'd0;
-    main_basesoc_sdram_choose_req_valids[0] <= (main_basesoc_sdram_bankmachine0_cmd_valid & (((main_basesoc_sdram_bankmachine0_cmd_payload_is_cmd & main_basesoc_sdram_choose_req_want_cmds) & ((~((main_basesoc_sdram_bankmachine0_cmd_payload_ras & (~main_basesoc_sdram_bankmachine0_cmd_payload_cas)) & (~main_basesoc_sdram_bankmachine0_cmd_payload_we))) | main_basesoc_sdram_choose_req_want_activates)) | ((main_basesoc_sdram_bankmachine0_cmd_payload_is_read == main_basesoc_sdram_choose_req_want_reads) & (main_basesoc_sdram_bankmachine0_cmd_payload_is_write == main_basesoc_sdram_choose_req_want_writes))));
-    main_basesoc_sdram_choose_req_valids[1] <= (main_basesoc_sdram_bankmachine1_cmd_valid & (((main_basesoc_sdram_bankmachine1_cmd_payload_is_cmd & main_basesoc_sdram_choose_req_want_cmds) & ((~((main_basesoc_sdram_bankmachine1_cmd_payload_ras & (~main_basesoc_sdram_bankmachine1_cmd_payload_cas)) & (~main_basesoc_sdram_bankmachine1_cmd_payload_we))) | main_basesoc_sdram_choose_req_want_activates)) | ((main_basesoc_sdram_bankmachine1_cmd_payload_is_read == main_basesoc_sdram_choose_req_want_reads) & (main_basesoc_sdram_bankmachine1_cmd_payload_is_write == main_basesoc_sdram_choose_req_want_writes))));
-    main_basesoc_sdram_choose_req_valids[2] <= (main_basesoc_sdram_bankmachine2_cmd_valid & (((main_basesoc_sdram_bankmachine2_cmd_payload_is_cmd & main_basesoc_sdram_choose_req_want_cmds) & ((~((main_basesoc_sdram_bankmachine2_cmd_payload_ras & (~main_basesoc_sdram_bankmachine2_cmd_payload_cas)) & (~main_basesoc_sdram_bankmachine2_cmd_payload_we))) | main_basesoc_sdram_choose_req_want_activates)) | ((main_basesoc_sdram_bankmachine2_cmd_payload_is_read == main_basesoc_sdram_choose_req_want_reads) & (main_basesoc_sdram_bankmachine2_cmd_payload_is_write == main_basesoc_sdram_choose_req_want_writes))));
-    main_basesoc_sdram_choose_req_valids[3] <= (main_basesoc_sdram_bankmachine3_cmd_valid & (((main_basesoc_sdram_bankmachine3_cmd_payload_is_cmd & main_basesoc_sdram_choose_req_want_cmds) & ((~((main_basesoc_sdram_bankmachine3_cmd_payload_ras & (~main_basesoc_sdram_bankmachine3_cmd_payload_cas)) & (~main_basesoc_sdram_bankmachine3_cmd_payload_we))) | main_basesoc_sdram_choose_req_want_activates)) | ((main_basesoc_sdram_bankmachine3_cmd_payload_is_read == main_basesoc_sdram_choose_req_want_reads) & (main_basesoc_sdram_bankmachine3_cmd_payload_is_write == main_basesoc_sdram_choose_req_want_writes))));
-end
-assign main_basesoc_sdram_choose_req_request = main_basesoc_sdram_choose_req_valids;
-assign main_basesoc_sdram_choose_req_cmd_valid = builder_rhs_array_muxed14;
-assign main_basesoc_sdram_choose_req_cmd_payload_a = builder_rhs_array_muxed15;
-assign main_basesoc_sdram_choose_req_cmd_payload_ba = builder_rhs_array_muxed16;
-assign main_basesoc_sdram_choose_req_cmd_payload_is_read = builder_rhs_array_muxed17;
-assign main_basesoc_sdram_choose_req_cmd_payload_is_write = builder_rhs_array_muxed18;
-assign main_basesoc_sdram_choose_req_cmd_payload_is_cmd = builder_rhs_array_muxed19;
-always @(*) begin
-    main_basesoc_sdram_choose_req_cmd_payload_cas <= 1'd0;
-    if (main_basesoc_sdram_choose_req_cmd_valid) begin
-        main_basesoc_sdram_choose_req_cmd_payload_cas <= builder_t_array_muxed3;
+    main_sdram_choose_cmd_cmd_payload_ras <= 1'd0;
+    if (main_sdram_choose_cmd_cmd_valid) begin
+        main_sdram_choose_cmd_cmd_payload_ras <= builder_t_array_muxed1;
     end
 end
 always @(*) begin
-    main_basesoc_sdram_choose_req_cmd_payload_ras <= 1'd0;
-    if (main_basesoc_sdram_choose_req_cmd_valid) begin
-        main_basesoc_sdram_choose_req_cmd_payload_ras <= builder_t_array_muxed4;
+    main_sdram_choose_cmd_cmd_payload_we <= 1'd0;
+    if (main_sdram_choose_cmd_cmd_valid) begin
+        main_sdram_choose_cmd_cmd_payload_we <= builder_t_array_muxed2;
+    end
+end
+assign main_sdram_choose_cmd_ce = (main_sdram_choose_cmd_cmd_ready | (~main_sdram_choose_cmd_cmd_valid));
+always @(*) begin
+    main_sdram_choose_req_valids <= 4'd0;
+    main_sdram_choose_req_valids[0] <= (main_sdram_bankmachine0_cmd_valid & (((main_sdram_bankmachine0_cmd_payload_is_cmd & main_sdram_choose_req_want_cmds) & ((~((main_sdram_bankmachine0_cmd_payload_ras & (~main_sdram_bankmachine0_cmd_payload_cas)) & (~main_sdram_bankmachine0_cmd_payload_we))) | main_sdram_choose_req_want_activates)) | ((main_sdram_bankmachine0_cmd_payload_is_read == main_sdram_choose_req_want_reads) & (main_sdram_bankmachine0_cmd_payload_is_write == main_sdram_choose_req_want_writes))));
+    main_sdram_choose_req_valids[1] <= (main_sdram_bankmachine1_cmd_valid & (((main_sdram_bankmachine1_cmd_payload_is_cmd & main_sdram_choose_req_want_cmds) & ((~((main_sdram_bankmachine1_cmd_payload_ras & (~main_sdram_bankmachine1_cmd_payload_cas)) & (~main_sdram_bankmachine1_cmd_payload_we))) | main_sdram_choose_req_want_activates)) | ((main_sdram_bankmachine1_cmd_payload_is_read == main_sdram_choose_req_want_reads) & (main_sdram_bankmachine1_cmd_payload_is_write == main_sdram_choose_req_want_writes))));
+    main_sdram_choose_req_valids[2] <= (main_sdram_bankmachine2_cmd_valid & (((main_sdram_bankmachine2_cmd_payload_is_cmd & main_sdram_choose_req_want_cmds) & ((~((main_sdram_bankmachine2_cmd_payload_ras & (~main_sdram_bankmachine2_cmd_payload_cas)) & (~main_sdram_bankmachine2_cmd_payload_we))) | main_sdram_choose_req_want_activates)) | ((main_sdram_bankmachine2_cmd_payload_is_read == main_sdram_choose_req_want_reads) & (main_sdram_bankmachine2_cmd_payload_is_write == main_sdram_choose_req_want_writes))));
+    main_sdram_choose_req_valids[3] <= (main_sdram_bankmachine3_cmd_valid & (((main_sdram_bankmachine3_cmd_payload_is_cmd & main_sdram_choose_req_want_cmds) & ((~((main_sdram_bankmachine3_cmd_payload_ras & (~main_sdram_bankmachine3_cmd_payload_cas)) & (~main_sdram_bankmachine3_cmd_payload_we))) | main_sdram_choose_req_want_activates)) | ((main_sdram_bankmachine3_cmd_payload_is_read == main_sdram_choose_req_want_reads) & (main_sdram_bankmachine3_cmd_payload_is_write == main_sdram_choose_req_want_writes))));
+end
+assign main_sdram_choose_req_request = main_sdram_choose_req_valids;
+assign main_sdram_choose_req_cmd_valid = builder_rhs_array_muxed14;
+assign main_sdram_choose_req_cmd_payload_a = builder_rhs_array_muxed15;
+assign main_sdram_choose_req_cmd_payload_ba = builder_rhs_array_muxed16;
+assign main_sdram_choose_req_cmd_payload_is_read = builder_rhs_array_muxed17;
+assign main_sdram_choose_req_cmd_payload_is_write = builder_rhs_array_muxed18;
+assign main_sdram_choose_req_cmd_payload_is_cmd = builder_rhs_array_muxed19;
+always @(*) begin
+    main_sdram_choose_req_cmd_payload_cas <= 1'd0;
+    if (main_sdram_choose_req_cmd_valid) begin
+        main_sdram_choose_req_cmd_payload_cas <= builder_t_array_muxed3;
     end
 end
 always @(*) begin
-    main_basesoc_sdram_choose_req_cmd_payload_we <= 1'd0;
-    if (main_basesoc_sdram_choose_req_cmd_valid) begin
-        main_basesoc_sdram_choose_req_cmd_payload_we <= builder_t_array_muxed5;
+    main_sdram_choose_req_cmd_payload_ras <= 1'd0;
+    if (main_sdram_choose_req_cmd_valid) begin
+        main_sdram_choose_req_cmd_payload_ras <= builder_t_array_muxed4;
     end
 end
 always @(*) begin
-    main_basesoc_sdram_bankmachine0_cmd_ready <= 1'd0;
-    if (((main_basesoc_sdram_choose_cmd_cmd_valid & main_basesoc_sdram_choose_cmd_cmd_ready) & (main_basesoc_sdram_choose_cmd_grant == 1'd0))) begin
-        main_basesoc_sdram_bankmachine0_cmd_ready <= 1'd1;
-    end
-    if (((main_basesoc_sdram_choose_req_cmd_valid & main_basesoc_sdram_choose_req_cmd_ready) & (main_basesoc_sdram_choose_req_grant == 1'd0))) begin
-        main_basesoc_sdram_bankmachine0_cmd_ready <= 1'd1;
+    main_sdram_choose_req_cmd_payload_we <= 1'd0;
+    if (main_sdram_choose_req_cmd_valid) begin
+        main_sdram_choose_req_cmd_payload_we <= builder_t_array_muxed5;
     end
 end
 always @(*) begin
-    main_basesoc_sdram_bankmachine1_cmd_ready <= 1'd0;
-    if (((main_basesoc_sdram_choose_cmd_cmd_valid & main_basesoc_sdram_choose_cmd_cmd_ready) & (main_basesoc_sdram_choose_cmd_grant == 1'd1))) begin
-        main_basesoc_sdram_bankmachine1_cmd_ready <= 1'd1;
+    main_sdram_bankmachine0_cmd_ready <= 1'd0;
+    if (((main_sdram_choose_cmd_cmd_valid & main_sdram_choose_cmd_cmd_ready) & (main_sdram_choose_cmd_grant == 1'd0))) begin
+        main_sdram_bankmachine0_cmd_ready <= 1'd1;
     end
-    if (((main_basesoc_sdram_choose_req_cmd_valid & main_basesoc_sdram_choose_req_cmd_ready) & (main_basesoc_sdram_choose_req_grant == 1'd1))) begin
-        main_basesoc_sdram_bankmachine1_cmd_ready <= 1'd1;
-    end
-end
-always @(*) begin
-    main_basesoc_sdram_bankmachine2_cmd_ready <= 1'd0;
-    if (((main_basesoc_sdram_choose_cmd_cmd_valid & main_basesoc_sdram_choose_cmd_cmd_ready) & (main_basesoc_sdram_choose_cmd_grant == 2'd2))) begin
-        main_basesoc_sdram_bankmachine2_cmd_ready <= 1'd1;
-    end
-    if (((main_basesoc_sdram_choose_req_cmd_valid & main_basesoc_sdram_choose_req_cmd_ready) & (main_basesoc_sdram_choose_req_grant == 2'd2))) begin
-        main_basesoc_sdram_bankmachine2_cmd_ready <= 1'd1;
+    if (((main_sdram_choose_req_cmd_valid & main_sdram_choose_req_cmd_ready) & (main_sdram_choose_req_grant == 1'd0))) begin
+        main_sdram_bankmachine0_cmd_ready <= 1'd1;
     end
 end
 always @(*) begin
-    main_basesoc_sdram_bankmachine3_cmd_ready <= 1'd0;
-    if (((main_basesoc_sdram_choose_cmd_cmd_valid & main_basesoc_sdram_choose_cmd_cmd_ready) & (main_basesoc_sdram_choose_cmd_grant == 2'd3))) begin
-        main_basesoc_sdram_bankmachine3_cmd_ready <= 1'd1;
+    main_sdram_bankmachine1_cmd_ready <= 1'd0;
+    if (((main_sdram_choose_cmd_cmd_valid & main_sdram_choose_cmd_cmd_ready) & (main_sdram_choose_cmd_grant == 1'd1))) begin
+        main_sdram_bankmachine1_cmd_ready <= 1'd1;
     end
-    if (((main_basesoc_sdram_choose_req_cmd_valid & main_basesoc_sdram_choose_req_cmd_ready) & (main_basesoc_sdram_choose_req_grant == 2'd3))) begin
-        main_basesoc_sdram_bankmachine3_cmd_ready <= 1'd1;
+    if (((main_sdram_choose_req_cmd_valid & main_sdram_choose_req_cmd_ready) & (main_sdram_choose_req_grant == 1'd1))) begin
+        main_sdram_bankmachine1_cmd_ready <= 1'd1;
     end
 end
-assign main_basesoc_sdram_choose_req_ce = (main_basesoc_sdram_choose_req_cmd_ready | (~main_basesoc_sdram_choose_req_cmd_valid));
-assign main_basesoc_sdram_dfi_p0_reset_n = 1'd1;
-assign main_basesoc_sdram_dfi_p0_cke = {1{main_basesoc_sdram_steerer0}};
-assign main_basesoc_sdram_dfi_p0_odt = {1{main_basesoc_sdram_steerer1}};
 always @(*) begin
-    main_basesoc_sdram_choose_req_cmd_ready <= 1'd0;
-    main_basesoc_sdram_steerer_sel <= 2'd0;
+    main_sdram_bankmachine2_cmd_ready <= 1'd0;
+    if (((main_sdram_choose_cmd_cmd_valid & main_sdram_choose_cmd_cmd_ready) & (main_sdram_choose_cmd_grant == 2'd2))) begin
+        main_sdram_bankmachine2_cmd_ready <= 1'd1;
+    end
+    if (((main_sdram_choose_req_cmd_valid & main_sdram_choose_req_cmd_ready) & (main_sdram_choose_req_grant == 2'd2))) begin
+        main_sdram_bankmachine2_cmd_ready <= 1'd1;
+    end
+end
+always @(*) begin
+    main_sdram_bankmachine3_cmd_ready <= 1'd0;
+    if (((main_sdram_choose_cmd_cmd_valid & main_sdram_choose_cmd_cmd_ready) & (main_sdram_choose_cmd_grant == 2'd3))) begin
+        main_sdram_bankmachine3_cmd_ready <= 1'd1;
+    end
+    if (((main_sdram_choose_req_cmd_valid & main_sdram_choose_req_cmd_ready) & (main_sdram_choose_req_grant == 2'd3))) begin
+        main_sdram_bankmachine3_cmd_ready <= 1'd1;
+    end
+end
+assign main_sdram_choose_req_ce = (main_sdram_choose_req_cmd_ready | (~main_sdram_choose_req_cmd_valid));
+assign main_sdram_dfi_p0_reset_n = 1'd1;
+assign main_sdram_dfi_p0_cke = {1{main_sdram_steerer0}};
+assign main_sdram_dfi_p0_odt = {1{main_sdram_steerer1}};
+always @(*) begin
+    main_sdram_choose_req_cmd_ready <= 1'd0;
+    main_sdram_steerer_sel <= 2'd0;
+    main_sdram_en1 <= 1'd0;
     builder_basesoc_multiplexer_next_state <= 3'd0;
-    main_basesoc_sdram_en1 <= 1'd0;
-    main_basesoc_sdram_en0 <= 1'd0;
-    main_basesoc_sdram_choose_req_want_reads <= 1'd0;
-    main_basesoc_sdram_choose_req_want_writes <= 1'd0;
-    main_basesoc_sdram_cmd_ready <= 1'd0;
-    main_basesoc_sdram_choose_req_want_activates <= 1'd0;
-    main_basesoc_sdram_choose_req_want_activates <= main_basesoc_sdram_ras_allowed;
+    main_sdram_en0 <= 1'd0;
+    main_sdram_choose_req_want_reads <= 1'd0;
+    main_sdram_choose_req_want_writes <= 1'd0;
+    main_sdram_cmd_ready <= 1'd0;
+    main_sdram_choose_req_want_activates <= 1'd0;
+    main_sdram_choose_req_want_activates <= main_sdram_ras_allowed;
     builder_basesoc_multiplexer_next_state <= builder_basesoc_multiplexer_state;
     case (builder_basesoc_multiplexer_state)
         1'd1: begin
-            main_basesoc_sdram_en1 <= 1'd1;
-            main_basesoc_sdram_choose_req_want_writes <= 1'd1;
+            main_sdram_en1 <= 1'd1;
+            main_sdram_choose_req_want_writes <= 1'd1;
             if (1'd1) begin
-                main_basesoc_sdram_choose_req_cmd_ready <= (main_basesoc_sdram_cas_allowed & ((~((main_basesoc_sdram_choose_req_cmd_payload_ras & (~main_basesoc_sdram_choose_req_cmd_payload_cas)) & (~main_basesoc_sdram_choose_req_cmd_payload_we))) | main_basesoc_sdram_ras_allowed));
+                main_sdram_choose_req_cmd_ready <= (main_sdram_cas_allowed & ((~((main_sdram_choose_req_cmd_payload_ras & (~main_sdram_choose_req_cmd_payload_cas)) & (~main_sdram_choose_req_cmd_payload_we))) | main_sdram_ras_allowed));
             end else begin
-                main_basesoc_sdram_choose_req_want_activates <= main_basesoc_sdram_ras_allowed;
-                main_basesoc_sdram_choose_req_cmd_ready <= ((~((main_basesoc_sdram_choose_req_cmd_payload_ras & (~main_basesoc_sdram_choose_req_cmd_payload_cas)) & (~main_basesoc_sdram_choose_req_cmd_payload_we))) | main_basesoc_sdram_ras_allowed);
-                main_basesoc_sdram_choose_req_cmd_ready <= main_basesoc_sdram_cas_allowed;
+                main_sdram_choose_req_want_activates <= main_sdram_ras_allowed;
+                main_sdram_choose_req_cmd_ready <= ((~((main_sdram_choose_req_cmd_payload_ras & (~main_sdram_choose_req_cmd_payload_cas)) & (~main_sdram_choose_req_cmd_payload_we))) | main_sdram_ras_allowed);
+                main_sdram_choose_req_cmd_ready <= main_sdram_cas_allowed;
             end
-            main_basesoc_sdram_steerer_sel <= 1'd0;
+            main_sdram_steerer_sel <= 1'd0;
             if (1'd1) begin
-                main_basesoc_sdram_steerer_sel <= 2'd2;
+                main_sdram_steerer_sel <= 2'd2;
             end
             if (1'd1) begin
-                main_basesoc_sdram_steerer_sel <= 1'd1;
+                main_sdram_steerer_sel <= 1'd1;
             end
-            if (main_basesoc_sdram_read_available) begin
-                if (((~main_basesoc_sdram_write_available) | main_basesoc_sdram_max_time1)) begin
+            if (main_sdram_read_available) begin
+                if (((~main_sdram_write_available) | main_sdram_max_time1)) begin
                     builder_basesoc_multiplexer_next_state <= 2'd3;
                 end
             end
-            if (main_basesoc_sdram_go_to_refresh) begin
+            if (main_sdram_go_to_refresh) begin
                 builder_basesoc_multiplexer_next_state <= 2'd2;
             end
         end
         2'd2: begin
-            main_basesoc_sdram_steerer_sel <= 2'd3;
-            main_basesoc_sdram_cmd_ready <= 1'd1;
-            if (main_basesoc_sdram_cmd_last) begin
+            main_sdram_steerer_sel <= 2'd3;
+            main_sdram_cmd_ready <= 1'd1;
+            if (main_sdram_cmd_last) begin
                 builder_basesoc_multiplexer_next_state <= 1'd0;
             end
         end
         2'd3: begin
-            if (main_basesoc_sdram_twtrcon_ready) begin
+            if (main_sdram_twtrcon_ready) begin
                 builder_basesoc_multiplexer_next_state <= 1'd0;
             end
         end
@@ -3542,165 +3205,165 @@ always @(*) begin
             builder_basesoc_multiplexer_next_state <= 1'd1;
         end
         default: begin
-            main_basesoc_sdram_en0 <= 1'd1;
-            main_basesoc_sdram_choose_req_want_reads <= 1'd1;
+            main_sdram_en0 <= 1'd1;
+            main_sdram_choose_req_want_reads <= 1'd1;
             if (1'd1) begin
-                main_basesoc_sdram_choose_req_cmd_ready <= (main_basesoc_sdram_cas_allowed & ((~((main_basesoc_sdram_choose_req_cmd_payload_ras & (~main_basesoc_sdram_choose_req_cmd_payload_cas)) & (~main_basesoc_sdram_choose_req_cmd_payload_we))) | main_basesoc_sdram_ras_allowed));
+                main_sdram_choose_req_cmd_ready <= (main_sdram_cas_allowed & ((~((main_sdram_choose_req_cmd_payload_ras & (~main_sdram_choose_req_cmd_payload_cas)) & (~main_sdram_choose_req_cmd_payload_we))) | main_sdram_ras_allowed));
             end else begin
-                main_basesoc_sdram_choose_req_want_activates <= main_basesoc_sdram_ras_allowed;
-                main_basesoc_sdram_choose_req_cmd_ready <= ((~((main_basesoc_sdram_choose_req_cmd_payload_ras & (~main_basesoc_sdram_choose_req_cmd_payload_cas)) & (~main_basesoc_sdram_choose_req_cmd_payload_we))) | main_basesoc_sdram_ras_allowed);
-                main_basesoc_sdram_choose_req_cmd_ready <= main_basesoc_sdram_cas_allowed;
+                main_sdram_choose_req_want_activates <= main_sdram_ras_allowed;
+                main_sdram_choose_req_cmd_ready <= ((~((main_sdram_choose_req_cmd_payload_ras & (~main_sdram_choose_req_cmd_payload_cas)) & (~main_sdram_choose_req_cmd_payload_we))) | main_sdram_ras_allowed);
+                main_sdram_choose_req_cmd_ready <= main_sdram_cas_allowed;
             end
-            main_basesoc_sdram_steerer_sel <= 1'd0;
+            main_sdram_steerer_sel <= 1'd0;
             if (1'd1) begin
-                main_basesoc_sdram_steerer_sel <= 2'd2;
+                main_sdram_steerer_sel <= 2'd2;
             end
             if (1'd1) begin
-                main_basesoc_sdram_steerer_sel <= 1'd1;
+                main_sdram_steerer_sel <= 1'd1;
             end
-            if (main_basesoc_sdram_write_available) begin
-                if (((~main_basesoc_sdram_read_available) | main_basesoc_sdram_max_time0)) begin
+            if (main_sdram_write_available) begin
+                if (((~main_sdram_read_available) | main_sdram_max_time0)) begin
                     builder_basesoc_multiplexer_next_state <= 3'd4;
                 end
             end
-            if (main_basesoc_sdram_go_to_refresh) begin
+            if (main_sdram_go_to_refresh) begin
                 builder_basesoc_multiplexer_next_state <= 2'd2;
             end
         end
     endcase
 end
-assign builder_basesoc_roundrobin0_request = {(((main_basesoc_port_cmd_payload_addr[10:9] == 1'd0) & (~(((builder_basesoc_locked0 | (main_basesoc_sdram_interface_bank1_lock & (builder_basesoc_roundrobin1_grant == 1'd0))) | (main_basesoc_sdram_interface_bank2_lock & (builder_basesoc_roundrobin2_grant == 1'd0))) | (main_basesoc_sdram_interface_bank3_lock & (builder_basesoc_roundrobin3_grant == 1'd0))))) & main_basesoc_port_cmd_valid)};
-assign builder_basesoc_roundrobin0_ce = ((~main_basesoc_sdram_interface_bank0_valid) & (~main_basesoc_sdram_interface_bank0_lock));
-assign main_basesoc_sdram_interface_bank0_addr = builder_rhs_array_muxed20;
-assign main_basesoc_sdram_interface_bank0_we = builder_rhs_array_muxed21;
-assign main_basesoc_sdram_interface_bank0_valid = builder_rhs_array_muxed22;
-assign builder_basesoc_roundrobin1_request = {(((main_basesoc_port_cmd_payload_addr[10:9] == 1'd1) & (~(((builder_basesoc_locked1 | (main_basesoc_sdram_interface_bank0_lock & (builder_basesoc_roundrobin0_grant == 1'd0))) | (main_basesoc_sdram_interface_bank2_lock & (builder_basesoc_roundrobin2_grant == 1'd0))) | (main_basesoc_sdram_interface_bank3_lock & (builder_basesoc_roundrobin3_grant == 1'd0))))) & main_basesoc_port_cmd_valid)};
-assign builder_basesoc_roundrobin1_ce = ((~main_basesoc_sdram_interface_bank1_valid) & (~main_basesoc_sdram_interface_bank1_lock));
-assign main_basesoc_sdram_interface_bank1_addr = builder_rhs_array_muxed23;
-assign main_basesoc_sdram_interface_bank1_we = builder_rhs_array_muxed24;
-assign main_basesoc_sdram_interface_bank1_valid = builder_rhs_array_muxed25;
-assign builder_basesoc_roundrobin2_request = {(((main_basesoc_port_cmd_payload_addr[10:9] == 2'd2) & (~(((builder_basesoc_locked2 | (main_basesoc_sdram_interface_bank0_lock & (builder_basesoc_roundrobin0_grant == 1'd0))) | (main_basesoc_sdram_interface_bank1_lock & (builder_basesoc_roundrobin1_grant == 1'd0))) | (main_basesoc_sdram_interface_bank3_lock & (builder_basesoc_roundrobin3_grant == 1'd0))))) & main_basesoc_port_cmd_valid)};
-assign builder_basesoc_roundrobin2_ce = ((~main_basesoc_sdram_interface_bank2_valid) & (~main_basesoc_sdram_interface_bank2_lock));
-assign main_basesoc_sdram_interface_bank2_addr = builder_rhs_array_muxed26;
-assign main_basesoc_sdram_interface_bank2_we = builder_rhs_array_muxed27;
-assign main_basesoc_sdram_interface_bank2_valid = builder_rhs_array_muxed28;
-assign builder_basesoc_roundrobin3_request = {(((main_basesoc_port_cmd_payload_addr[10:9] == 2'd3) & (~(((builder_basesoc_locked3 | (main_basesoc_sdram_interface_bank0_lock & (builder_basesoc_roundrobin0_grant == 1'd0))) | (main_basesoc_sdram_interface_bank1_lock & (builder_basesoc_roundrobin1_grant == 1'd0))) | (main_basesoc_sdram_interface_bank2_lock & (builder_basesoc_roundrobin2_grant == 1'd0))))) & main_basesoc_port_cmd_valid)};
-assign builder_basesoc_roundrobin3_ce = ((~main_basesoc_sdram_interface_bank3_valid) & (~main_basesoc_sdram_interface_bank3_lock));
-assign main_basesoc_sdram_interface_bank3_addr = builder_rhs_array_muxed29;
-assign main_basesoc_sdram_interface_bank3_we = builder_rhs_array_muxed30;
-assign main_basesoc_sdram_interface_bank3_valid = builder_rhs_array_muxed31;
-assign main_basesoc_port_cmd_ready = ((((1'd0 | (((builder_basesoc_roundrobin0_grant == 1'd0) & ((main_basesoc_port_cmd_payload_addr[10:9] == 1'd0) & (~(((builder_basesoc_locked0 | (main_basesoc_sdram_interface_bank1_lock & (builder_basesoc_roundrobin1_grant == 1'd0))) | (main_basesoc_sdram_interface_bank2_lock & (builder_basesoc_roundrobin2_grant == 1'd0))) | (main_basesoc_sdram_interface_bank3_lock & (builder_basesoc_roundrobin3_grant == 1'd0)))))) & main_basesoc_sdram_interface_bank0_ready)) | (((builder_basesoc_roundrobin1_grant == 1'd0) & ((main_basesoc_port_cmd_payload_addr[10:9] == 1'd1) & (~(((builder_basesoc_locked1 | (main_basesoc_sdram_interface_bank0_lock & (builder_basesoc_roundrobin0_grant == 1'd0))) | (main_basesoc_sdram_interface_bank2_lock & (builder_basesoc_roundrobin2_grant == 1'd0))) | (main_basesoc_sdram_interface_bank3_lock & (builder_basesoc_roundrobin3_grant == 1'd0)))))) & main_basesoc_sdram_interface_bank1_ready)) | (((builder_basesoc_roundrobin2_grant == 1'd0) & ((main_basesoc_port_cmd_payload_addr[10:9] == 2'd2) & (~(((builder_basesoc_locked2 | (main_basesoc_sdram_interface_bank0_lock & (builder_basesoc_roundrobin0_grant == 1'd0))) | (main_basesoc_sdram_interface_bank1_lock & (builder_basesoc_roundrobin1_grant == 1'd0))) | (main_basesoc_sdram_interface_bank3_lock & (builder_basesoc_roundrobin3_grant == 1'd0)))))) & main_basesoc_sdram_interface_bank2_ready)) | (((builder_basesoc_roundrobin3_grant == 1'd0) & ((main_basesoc_port_cmd_payload_addr[10:9] == 2'd3) & (~(((builder_basesoc_locked3 | (main_basesoc_sdram_interface_bank0_lock & (builder_basesoc_roundrobin0_grant == 1'd0))) | (main_basesoc_sdram_interface_bank1_lock & (builder_basesoc_roundrobin1_grant == 1'd0))) | (main_basesoc_sdram_interface_bank2_lock & (builder_basesoc_roundrobin2_grant == 1'd0)))))) & main_basesoc_sdram_interface_bank3_ready));
-assign main_basesoc_port_wdata_ready = builder_basesoc_new_master_wdata_ready;
-assign main_basesoc_port_rdata_valid = builder_basesoc_new_master_rdata_valid4;
+assign builder_basesoc_roundrobin0_request = {(((main_port_cmd_payload_addr[10:9] == 1'd0) & (~(((builder_basesoc_locked0 | (main_sdram_interface_bank1_lock & (builder_basesoc_roundrobin1_grant == 1'd0))) | (main_sdram_interface_bank2_lock & (builder_basesoc_roundrobin2_grant == 1'd0))) | (main_sdram_interface_bank3_lock & (builder_basesoc_roundrobin3_grant == 1'd0))))) & main_port_cmd_valid)};
+assign builder_basesoc_roundrobin0_ce = ((~main_sdram_interface_bank0_valid) & (~main_sdram_interface_bank0_lock));
+assign main_sdram_interface_bank0_addr = builder_rhs_array_muxed20;
+assign main_sdram_interface_bank0_we = builder_rhs_array_muxed21;
+assign main_sdram_interface_bank0_valid = builder_rhs_array_muxed22;
+assign builder_basesoc_roundrobin1_request = {(((main_port_cmd_payload_addr[10:9] == 1'd1) & (~(((builder_basesoc_locked1 | (main_sdram_interface_bank0_lock & (builder_basesoc_roundrobin0_grant == 1'd0))) | (main_sdram_interface_bank2_lock & (builder_basesoc_roundrobin2_grant == 1'd0))) | (main_sdram_interface_bank3_lock & (builder_basesoc_roundrobin3_grant == 1'd0))))) & main_port_cmd_valid)};
+assign builder_basesoc_roundrobin1_ce = ((~main_sdram_interface_bank1_valid) & (~main_sdram_interface_bank1_lock));
+assign main_sdram_interface_bank1_addr = builder_rhs_array_muxed23;
+assign main_sdram_interface_bank1_we = builder_rhs_array_muxed24;
+assign main_sdram_interface_bank1_valid = builder_rhs_array_muxed25;
+assign builder_basesoc_roundrobin2_request = {(((main_port_cmd_payload_addr[10:9] == 2'd2) & (~(((builder_basesoc_locked2 | (main_sdram_interface_bank0_lock & (builder_basesoc_roundrobin0_grant == 1'd0))) | (main_sdram_interface_bank1_lock & (builder_basesoc_roundrobin1_grant == 1'd0))) | (main_sdram_interface_bank3_lock & (builder_basesoc_roundrobin3_grant == 1'd0))))) & main_port_cmd_valid)};
+assign builder_basesoc_roundrobin2_ce = ((~main_sdram_interface_bank2_valid) & (~main_sdram_interface_bank2_lock));
+assign main_sdram_interface_bank2_addr = builder_rhs_array_muxed26;
+assign main_sdram_interface_bank2_we = builder_rhs_array_muxed27;
+assign main_sdram_interface_bank2_valid = builder_rhs_array_muxed28;
+assign builder_basesoc_roundrobin3_request = {(((main_port_cmd_payload_addr[10:9] == 2'd3) & (~(((builder_basesoc_locked3 | (main_sdram_interface_bank0_lock & (builder_basesoc_roundrobin0_grant == 1'd0))) | (main_sdram_interface_bank1_lock & (builder_basesoc_roundrobin1_grant == 1'd0))) | (main_sdram_interface_bank2_lock & (builder_basesoc_roundrobin2_grant == 1'd0))))) & main_port_cmd_valid)};
+assign builder_basesoc_roundrobin3_ce = ((~main_sdram_interface_bank3_valid) & (~main_sdram_interface_bank3_lock));
+assign main_sdram_interface_bank3_addr = builder_rhs_array_muxed29;
+assign main_sdram_interface_bank3_we = builder_rhs_array_muxed30;
+assign main_sdram_interface_bank3_valid = builder_rhs_array_muxed31;
+assign main_port_cmd_ready = ((((1'd0 | (((builder_basesoc_roundrobin0_grant == 1'd0) & ((main_port_cmd_payload_addr[10:9] == 1'd0) & (~(((builder_basesoc_locked0 | (main_sdram_interface_bank1_lock & (builder_basesoc_roundrobin1_grant == 1'd0))) | (main_sdram_interface_bank2_lock & (builder_basesoc_roundrobin2_grant == 1'd0))) | (main_sdram_interface_bank3_lock & (builder_basesoc_roundrobin3_grant == 1'd0)))))) & main_sdram_interface_bank0_ready)) | (((builder_basesoc_roundrobin1_grant == 1'd0) & ((main_port_cmd_payload_addr[10:9] == 1'd1) & (~(((builder_basesoc_locked1 | (main_sdram_interface_bank0_lock & (builder_basesoc_roundrobin0_grant == 1'd0))) | (main_sdram_interface_bank2_lock & (builder_basesoc_roundrobin2_grant == 1'd0))) | (main_sdram_interface_bank3_lock & (builder_basesoc_roundrobin3_grant == 1'd0)))))) & main_sdram_interface_bank1_ready)) | (((builder_basesoc_roundrobin2_grant == 1'd0) & ((main_port_cmd_payload_addr[10:9] == 2'd2) & (~(((builder_basesoc_locked2 | (main_sdram_interface_bank0_lock & (builder_basesoc_roundrobin0_grant == 1'd0))) | (main_sdram_interface_bank1_lock & (builder_basesoc_roundrobin1_grant == 1'd0))) | (main_sdram_interface_bank3_lock & (builder_basesoc_roundrobin3_grant == 1'd0)))))) & main_sdram_interface_bank2_ready)) | (((builder_basesoc_roundrobin3_grant == 1'd0) & ((main_port_cmd_payload_addr[10:9] == 2'd3) & (~(((builder_basesoc_locked3 | (main_sdram_interface_bank0_lock & (builder_basesoc_roundrobin0_grant == 1'd0))) | (main_sdram_interface_bank1_lock & (builder_basesoc_roundrobin1_grant == 1'd0))) | (main_sdram_interface_bank2_lock & (builder_basesoc_roundrobin2_grant == 1'd0)))))) & main_sdram_interface_bank3_ready));
+assign main_port_wdata_ready = builder_basesoc_new_master_wdata_ready;
+assign main_port_rdata_valid = builder_basesoc_new_master_rdata_valid4;
 always @(*) begin
-    main_basesoc_sdram_interface_wdata <= 16'd0;
-    main_basesoc_sdram_interface_wdata_we <= 2'd0;
+    main_sdram_interface_wdata <= 16'd0;
+    main_sdram_interface_wdata_we <= 2'd0;
     case ({builder_basesoc_new_master_wdata_ready})
         1'd1: begin
-            main_basesoc_sdram_interface_wdata <= main_basesoc_port_wdata_payload_data;
-            main_basesoc_sdram_interface_wdata_we <= main_basesoc_port_wdata_payload_we;
+            main_sdram_interface_wdata <= main_port_wdata_payload_data;
+            main_sdram_interface_wdata_we <= main_port_wdata_payload_we;
         end
         default: begin
-            main_basesoc_sdram_interface_wdata <= 1'd0;
-            main_basesoc_sdram_interface_wdata_we <= 1'd0;
+            main_sdram_interface_wdata <= 1'd0;
+            main_sdram_interface_wdata_we <= 1'd0;
         end
     endcase
 end
-assign main_basesoc_port_rdata_payload_data = main_basesoc_sdram_interface_rdata;
+assign main_port_rdata_payload_data = main_sdram_interface_rdata;
 assign builder_basesoc_roundrobin0_grant = 1'd0;
 assign builder_basesoc_roundrobin1_grant = 1'd0;
 assign builder_basesoc_roundrobin2_grant = 1'd0;
 assign builder_basesoc_roundrobin3_grant = 1'd0;
-assign main_basesoc_data_port_adr = main_basesoc_wb_sdram_adr[10:2];
+assign main_data_port_adr = main_wb_sdram_adr[10:2];
 always @(*) begin
-    main_basesoc_data_port_we <= 16'd0;
-    main_basesoc_data_port_dat_w <= 128'd0;
-    if (main_basesoc_write_from_slave) begin
-        main_basesoc_data_port_dat_w <= main_basesoc_interface_dat_r;
-        main_basesoc_data_port_we <= {16{1'd1}};
+    main_data_port_we <= 16'd0;
+    main_data_port_dat_w <= 128'd0;
+    if (main_write_from_slave) begin
+        main_data_port_dat_w <= main_interface_dat_r;
+        main_data_port_we <= {16{1'd1}};
     end else begin
-        main_basesoc_data_port_dat_w <= {4{main_basesoc_wb_sdram_dat_w}};
-        if ((((main_basesoc_wb_sdram_cyc & main_basesoc_wb_sdram_stb) & main_basesoc_wb_sdram_we) & main_basesoc_wb_sdram_ack)) begin
-            main_basesoc_data_port_we <= {({4{(main_basesoc_wb_sdram_adr[1:0] == 2'd3)}} & main_basesoc_wb_sdram_sel), ({4{(main_basesoc_wb_sdram_adr[1:0] == 2'd2)}} & main_basesoc_wb_sdram_sel), ({4{(main_basesoc_wb_sdram_adr[1:0] == 1'd1)}} & main_basesoc_wb_sdram_sel), ({4{(main_basesoc_wb_sdram_adr[1:0] == 1'd0)}} & main_basesoc_wb_sdram_sel)};
+        main_data_port_dat_w <= {4{main_wb_sdram_dat_w}};
+        if ((((main_wb_sdram_cyc & main_wb_sdram_stb) & main_wb_sdram_we) & main_wb_sdram_ack)) begin
+            main_data_port_we <= {({4{(main_wb_sdram_adr[1:0] == 2'd3)}} & main_wb_sdram_sel), ({4{(main_wb_sdram_adr[1:0] == 2'd2)}} & main_wb_sdram_sel), ({4{(main_wb_sdram_adr[1:0] == 1'd1)}} & main_wb_sdram_sel), ({4{(main_wb_sdram_adr[1:0] == 1'd0)}} & main_wb_sdram_sel)};
         end
     end
 end
-assign main_basesoc_interface_dat_w = main_basesoc_data_port_dat_r;
-assign main_basesoc_interface_sel = 16'd65535;
+assign main_interface_dat_w = main_data_port_dat_r;
+assign main_interface_sel = 16'd65535;
 always @(*) begin
-    main_basesoc_wb_sdram_dat_r <= 32'd0;
-    case (main_basesoc_adr_offset_r)
+    main_wb_sdram_dat_r <= 32'd0;
+    case (main_adr_offset_r)
         1'd0: begin
-            main_basesoc_wb_sdram_dat_r <= main_basesoc_data_port_dat_r[31:0];
+            main_wb_sdram_dat_r <= main_data_port_dat_r[31:0];
         end
         1'd1: begin
-            main_basesoc_wb_sdram_dat_r <= main_basesoc_data_port_dat_r[63:32];
+            main_wb_sdram_dat_r <= main_data_port_dat_r[63:32];
         end
         2'd2: begin
-            main_basesoc_wb_sdram_dat_r <= main_basesoc_data_port_dat_r[95:64];
+            main_wb_sdram_dat_r <= main_data_port_dat_r[95:64];
         end
         default: begin
-            main_basesoc_wb_sdram_dat_r <= main_basesoc_data_port_dat_r[127:96];
+            main_wb_sdram_dat_r <= main_data_port_dat_r[127:96];
         end
     endcase
 end
-assign {main_basesoc_tag_do_dirty, main_basesoc_tag_do_tag} = main_basesoc_tag_port_dat_r;
-assign main_basesoc_tag_port_dat_w = {main_basesoc_tag_di_dirty, main_basesoc_tag_di_tag};
-assign main_basesoc_tag_port_adr = main_basesoc_wb_sdram_adr[10:2];
-assign main_basesoc_tag_di_tag = main_basesoc_wb_sdram_adr[29:11];
-assign main_basesoc_interface_adr = {main_basesoc_tag_do_tag, main_basesoc_wb_sdram_adr[10:2]};
+assign {main_tag_do_dirty, main_tag_do_tag} = main_tag_port_dat_r;
+assign main_tag_port_dat_w = {main_tag_di_dirty, main_tag_di_tag};
+assign main_tag_port_adr = main_wb_sdram_adr[10:2];
+assign main_tag_di_tag = main_wb_sdram_adr[29:11];
+assign main_interface_adr = {main_tag_do_tag, main_wb_sdram_adr[10:2]};
 always @(*) begin
-    main_basesoc_word_clr <= 1'd0;
-    main_basesoc_word_inc <= 1'd0;
-    main_basesoc_write_from_slave <= 1'd0;
-    main_basesoc_interface_cyc <= 1'd0;
-    main_basesoc_interface_stb <= 1'd0;
+    main_word_clr <= 1'd0;
+    main_word_inc <= 1'd0;
+    main_write_from_slave <= 1'd0;
+    main_interface_cyc <= 1'd0;
+    main_interface_stb <= 1'd0;
+    main_tag_port_we <= 1'd0;
+    main_interface_we <= 1'd0;
     builder_basesoc_fullmemorywe_next_state <= 2'd0;
-    main_basesoc_tag_port_we <= 1'd0;
-    main_basesoc_interface_we <= 1'd0;
-    main_basesoc_wb_sdram_ack <= 1'd0;
-    main_basesoc_tag_di_dirty <= 1'd0;
+    main_wb_sdram_ack <= 1'd0;
+    main_tag_di_dirty <= 1'd0;
     builder_basesoc_fullmemorywe_next_state <= builder_basesoc_fullmemorywe_state;
     case (builder_basesoc_fullmemorywe_state)
         1'd1: begin
-            main_basesoc_word_clr <= 1'd1;
-            if ((main_basesoc_tag_do_tag == main_basesoc_wb_sdram_adr[29:11])) begin
-                main_basesoc_wb_sdram_ack <= 1'd1;
-                if (main_basesoc_wb_sdram_we) begin
-                    main_basesoc_tag_di_dirty <= 1'd1;
-                    main_basesoc_tag_port_we <= 1'd1;
+            main_word_clr <= 1'd1;
+            if ((main_tag_do_tag == main_wb_sdram_adr[29:11])) begin
+                main_wb_sdram_ack <= 1'd1;
+                if (main_wb_sdram_we) begin
+                    main_tag_di_dirty <= 1'd1;
+                    main_tag_port_we <= 1'd1;
                 end
                 builder_basesoc_fullmemorywe_next_state <= 1'd0;
             end else begin
-                if (main_basesoc_tag_do_dirty) begin
+                if (main_tag_do_dirty) begin
                     builder_basesoc_fullmemorywe_next_state <= 2'd2;
                 end else begin
-                    main_basesoc_tag_port_we <= 1'd1;
-                    main_basesoc_word_clr <= 1'd1;
+                    main_tag_port_we <= 1'd1;
+                    main_word_clr <= 1'd1;
                     builder_basesoc_fullmemorywe_next_state <= 2'd3;
                 end
             end
         end
         2'd2: begin
-            main_basesoc_interface_stb <= 1'd1;
-            main_basesoc_interface_cyc <= 1'd1;
-            main_basesoc_interface_we <= 1'd1;
-            if (main_basesoc_interface_ack) begin
-                main_basesoc_word_inc <= 1'd1;
+            main_interface_stb <= 1'd1;
+            main_interface_cyc <= 1'd1;
+            main_interface_we <= 1'd1;
+            if (main_interface_ack) begin
+                main_word_inc <= 1'd1;
                 if (1'd1) begin
-                    main_basesoc_tag_port_we <= 1'd1;
-                    main_basesoc_word_clr <= 1'd1;
+                    main_tag_port_we <= 1'd1;
+                    main_word_clr <= 1'd1;
                     builder_basesoc_fullmemorywe_next_state <= 2'd3;
                 end
             end
         end
         2'd3: begin
-            main_basesoc_interface_stb <= 1'd1;
-            main_basesoc_interface_cyc <= 1'd1;
-            main_basesoc_interface_we <= 1'd0;
-            if (main_basesoc_interface_ack) begin
-                main_basesoc_write_from_slave <= 1'd1;
-                main_basesoc_word_inc <= 1'd1;
+            main_interface_stb <= 1'd1;
+            main_interface_cyc <= 1'd1;
+            main_interface_we <= 1'd0;
+            if (main_interface_ack) begin
+                main_write_from_slave <= 1'd1;
+                main_word_inc <= 1'd1;
                 if (1'd1) begin
                     builder_basesoc_fullmemorywe_next_state <= 1'd1;
                 end else begin
@@ -3709,217 +3372,217 @@ always @(*) begin
             end
         end
         default: begin
-            if ((main_basesoc_wb_sdram_cyc & main_basesoc_wb_sdram_stb)) begin
+            if ((main_wb_sdram_cyc & main_wb_sdram_stb)) begin
                 builder_basesoc_fullmemorywe_next_state <= 1'd1;
             end
         end
     endcase
 end
-assign main_basesoc_wishbone_bridge_cmd_payload_addr = (main_basesoc_interface_adr - 27'd67108864);
-assign main_basesoc_wishbone_bridge_cmd_payload_we = main_basesoc_interface_we;
-assign main_basesoc_wishbone_bridge_cmd_last = (~main_basesoc_interface_we);
-assign main_basesoc_wishbone_bridge_flush = (~main_basesoc_interface_cyc);
+assign main_wishbone_bridge_cmd_payload_addr = (main_interface_adr - 27'd67108864);
+assign main_wishbone_bridge_cmd_payload_we = main_interface_we;
+assign main_wishbone_bridge_cmd_last = (~main_interface_we);
+assign main_wishbone_bridge_flush = (~main_interface_cyc);
 always @(*) begin
-    main_basesoc_wishbone_bridge_wdata_valid <= 1'd0;
-    main_basesoc_wishbone_bridge_wdata_valid <= (main_basesoc_interface_stb & main_basesoc_interface_we);
+    main_wishbone_bridge_wdata_valid <= 1'd0;
+    main_wishbone_bridge_wdata_valid <= (main_interface_stb & main_interface_we);
     if (1'd0) begin
-        if ((~main_basesoc_wishbone_bridge_is_ongoing)) begin
-            main_basesoc_wishbone_bridge_wdata_valid <= 1'd0;
+        if ((~main_wishbone_bridge_is_ongoing)) begin
+            main_wishbone_bridge_wdata_valid <= 1'd0;
         end
     end
 end
-assign main_basesoc_wishbone_bridge_wdata_payload_data = main_basesoc_interface_dat_w;
-assign main_basesoc_wishbone_bridge_wdata_payload_we = main_basesoc_interface_sel;
-assign main_basesoc_wishbone_bridge_rdata_ready = 1'd1;
+assign main_wishbone_bridge_wdata_payload_data = main_interface_dat_w;
+assign main_wishbone_bridge_wdata_payload_we = main_interface_sel;
+assign main_wishbone_bridge_rdata_ready = 1'd1;
 always @(*) begin
-    main_basesoc_wishbone_bridge_cmd_ready <= 1'd0;
+    main_wishbone_bridge_cmd_ready <= 1'd0;
+    main_wishbone_bridge_count_litedramnativeportconverter_next_value_ce <= 1'd0;
+    main_port_cmd_payload_we <= 1'd0;
+    main_port_cmd_payload_addr <= 24'd0;
+    main_port_cmd_valid <= 1'd0;
     builder_basesoc_litedramnativeportconverter_next_state <= 1'd0;
-    main_basesoc_port_cmd_payload_we <= 1'd0;
-    main_basesoc_wishbone_bridge_count_litedramnativeportconverter_next_value <= 3'd0;
-    main_basesoc_port_cmd_payload_addr <= 24'd0;
-    main_basesoc_wishbone_bridge_count_litedramnativeportconverter_next_value_ce <= 1'd0;
-    main_basesoc_port_cmd_valid <= 1'd0;
+    main_wishbone_bridge_count_litedramnativeportconverter_next_value <= 3'd0;
     builder_basesoc_litedramnativeportconverter_next_state <= builder_basesoc_litedramnativeportconverter_state;
     case (builder_basesoc_litedramnativeportconverter_state)
         1'd1: begin
-            main_basesoc_port_cmd_valid <= 1'd1;
-            main_basesoc_port_cmd_payload_we <= main_basesoc_wishbone_bridge_cmd_payload_we;
-            main_basesoc_port_cmd_payload_addr <= ((main_basesoc_wishbone_bridge_cmd_payload_addr * 4'd8) + main_basesoc_wishbone_bridge_count);
-            if (main_basesoc_port_cmd_ready) begin
-                main_basesoc_wishbone_bridge_count_litedramnativeportconverter_next_value <= (main_basesoc_wishbone_bridge_count + 1'd1);
-                main_basesoc_wishbone_bridge_count_litedramnativeportconverter_next_value_ce <= 1'd1;
-                if ((main_basesoc_wishbone_bridge_count == 3'd7)) begin
-                    main_basesoc_wishbone_bridge_cmd_ready <= 1'd1;
+            main_port_cmd_valid <= 1'd1;
+            main_port_cmd_payload_we <= main_wishbone_bridge_cmd_payload_we;
+            main_port_cmd_payload_addr <= ((main_wishbone_bridge_cmd_payload_addr * 4'd8) + main_wishbone_bridge_count);
+            if (main_port_cmd_ready) begin
+                main_wishbone_bridge_count_litedramnativeportconverter_next_value <= (main_wishbone_bridge_count + 1'd1);
+                main_wishbone_bridge_count_litedramnativeportconverter_next_value_ce <= 1'd1;
+                if ((main_wishbone_bridge_count == 3'd7)) begin
+                    main_wishbone_bridge_cmd_ready <= 1'd1;
                     builder_basesoc_litedramnativeportconverter_next_state <= 1'd0;
                 end
             end
         end
         default: begin
-            main_basesoc_wishbone_bridge_count_litedramnativeportconverter_next_value <= 1'd0;
-            main_basesoc_wishbone_bridge_count_litedramnativeportconverter_next_value_ce <= 1'd1;
-            if (main_basesoc_wishbone_bridge_cmd_valid) begin
+            main_wishbone_bridge_count_litedramnativeportconverter_next_value <= 1'd0;
+            main_wishbone_bridge_count_litedramnativeportconverter_next_value_ce <= 1'd1;
+            if (main_wishbone_bridge_cmd_valid) begin
                 builder_basesoc_litedramnativeportconverter_next_state <= 1'd1;
             end
         end
     endcase
 end
-assign main_basesoc_wishbone_bridge_wdata_converter_converter_sink_valid = main_basesoc_wishbone_bridge_wdata_converter_sink_valid;
-assign main_basesoc_wishbone_bridge_wdata_converter_converter_sink_first = main_basesoc_wishbone_bridge_wdata_converter_sink_first;
-assign main_basesoc_wishbone_bridge_wdata_converter_converter_sink_last = main_basesoc_wishbone_bridge_wdata_converter_sink_last;
-assign main_basesoc_wishbone_bridge_wdata_converter_sink_ready = main_basesoc_wishbone_bridge_wdata_converter_converter_sink_ready;
+assign main_wishbone_bridge_wdata_converter_converter_sink_valid = main_wishbone_bridge_wdata_converter_sink_valid;
+assign main_wishbone_bridge_wdata_converter_converter_sink_first = main_wishbone_bridge_wdata_converter_sink_first;
+assign main_wishbone_bridge_wdata_converter_converter_sink_last = main_wishbone_bridge_wdata_converter_sink_last;
+assign main_wishbone_bridge_wdata_converter_sink_ready = main_wishbone_bridge_wdata_converter_converter_sink_ready;
 always @(*) begin
-    main_basesoc_wishbone_bridge_wdata_converter_converter_sink_payload_data <= 144'd0;
-    main_basesoc_wishbone_bridge_wdata_converter_converter_sink_payload_data[15:0] <= main_basesoc_wishbone_bridge_wdata_converter_sink_payload_data[15:0];
-    main_basesoc_wishbone_bridge_wdata_converter_converter_sink_payload_data[17:16] <= main_basesoc_wishbone_bridge_wdata_converter_sink_payload_we[1:0];
-    main_basesoc_wishbone_bridge_wdata_converter_converter_sink_payload_data[33:18] <= main_basesoc_wishbone_bridge_wdata_converter_sink_payload_data[31:16];
-    main_basesoc_wishbone_bridge_wdata_converter_converter_sink_payload_data[35:34] <= main_basesoc_wishbone_bridge_wdata_converter_sink_payload_we[3:2];
-    main_basesoc_wishbone_bridge_wdata_converter_converter_sink_payload_data[51:36] <= main_basesoc_wishbone_bridge_wdata_converter_sink_payload_data[47:32];
-    main_basesoc_wishbone_bridge_wdata_converter_converter_sink_payload_data[53:52] <= main_basesoc_wishbone_bridge_wdata_converter_sink_payload_we[5:4];
-    main_basesoc_wishbone_bridge_wdata_converter_converter_sink_payload_data[69:54] <= main_basesoc_wishbone_bridge_wdata_converter_sink_payload_data[63:48];
-    main_basesoc_wishbone_bridge_wdata_converter_converter_sink_payload_data[71:70] <= main_basesoc_wishbone_bridge_wdata_converter_sink_payload_we[7:6];
-    main_basesoc_wishbone_bridge_wdata_converter_converter_sink_payload_data[87:72] <= main_basesoc_wishbone_bridge_wdata_converter_sink_payload_data[79:64];
-    main_basesoc_wishbone_bridge_wdata_converter_converter_sink_payload_data[89:88] <= main_basesoc_wishbone_bridge_wdata_converter_sink_payload_we[9:8];
-    main_basesoc_wishbone_bridge_wdata_converter_converter_sink_payload_data[105:90] <= main_basesoc_wishbone_bridge_wdata_converter_sink_payload_data[95:80];
-    main_basesoc_wishbone_bridge_wdata_converter_converter_sink_payload_data[107:106] <= main_basesoc_wishbone_bridge_wdata_converter_sink_payload_we[11:10];
-    main_basesoc_wishbone_bridge_wdata_converter_converter_sink_payload_data[123:108] <= main_basesoc_wishbone_bridge_wdata_converter_sink_payload_data[111:96];
-    main_basesoc_wishbone_bridge_wdata_converter_converter_sink_payload_data[125:124] <= main_basesoc_wishbone_bridge_wdata_converter_sink_payload_we[13:12];
-    main_basesoc_wishbone_bridge_wdata_converter_converter_sink_payload_data[141:126] <= main_basesoc_wishbone_bridge_wdata_converter_sink_payload_data[127:112];
-    main_basesoc_wishbone_bridge_wdata_converter_converter_sink_payload_data[143:142] <= main_basesoc_wishbone_bridge_wdata_converter_sink_payload_we[15:14];
+    main_wishbone_bridge_wdata_converter_converter_sink_payload_data <= 144'd0;
+    main_wishbone_bridge_wdata_converter_converter_sink_payload_data[15:0] <= main_wishbone_bridge_wdata_converter_sink_payload_data[15:0];
+    main_wishbone_bridge_wdata_converter_converter_sink_payload_data[17:16] <= main_wishbone_bridge_wdata_converter_sink_payload_we[1:0];
+    main_wishbone_bridge_wdata_converter_converter_sink_payload_data[33:18] <= main_wishbone_bridge_wdata_converter_sink_payload_data[31:16];
+    main_wishbone_bridge_wdata_converter_converter_sink_payload_data[35:34] <= main_wishbone_bridge_wdata_converter_sink_payload_we[3:2];
+    main_wishbone_bridge_wdata_converter_converter_sink_payload_data[51:36] <= main_wishbone_bridge_wdata_converter_sink_payload_data[47:32];
+    main_wishbone_bridge_wdata_converter_converter_sink_payload_data[53:52] <= main_wishbone_bridge_wdata_converter_sink_payload_we[5:4];
+    main_wishbone_bridge_wdata_converter_converter_sink_payload_data[69:54] <= main_wishbone_bridge_wdata_converter_sink_payload_data[63:48];
+    main_wishbone_bridge_wdata_converter_converter_sink_payload_data[71:70] <= main_wishbone_bridge_wdata_converter_sink_payload_we[7:6];
+    main_wishbone_bridge_wdata_converter_converter_sink_payload_data[87:72] <= main_wishbone_bridge_wdata_converter_sink_payload_data[79:64];
+    main_wishbone_bridge_wdata_converter_converter_sink_payload_data[89:88] <= main_wishbone_bridge_wdata_converter_sink_payload_we[9:8];
+    main_wishbone_bridge_wdata_converter_converter_sink_payload_data[105:90] <= main_wishbone_bridge_wdata_converter_sink_payload_data[95:80];
+    main_wishbone_bridge_wdata_converter_converter_sink_payload_data[107:106] <= main_wishbone_bridge_wdata_converter_sink_payload_we[11:10];
+    main_wishbone_bridge_wdata_converter_converter_sink_payload_data[123:108] <= main_wishbone_bridge_wdata_converter_sink_payload_data[111:96];
+    main_wishbone_bridge_wdata_converter_converter_sink_payload_data[125:124] <= main_wishbone_bridge_wdata_converter_sink_payload_we[13:12];
+    main_wishbone_bridge_wdata_converter_converter_sink_payload_data[141:126] <= main_wishbone_bridge_wdata_converter_sink_payload_data[127:112];
+    main_wishbone_bridge_wdata_converter_converter_sink_payload_data[143:142] <= main_wishbone_bridge_wdata_converter_sink_payload_we[15:14];
 end
-assign main_basesoc_wishbone_bridge_wdata_converter_source_valid = main_basesoc_wishbone_bridge_wdata_converter_source_source_valid;
-assign main_basesoc_wishbone_bridge_wdata_converter_source_first = main_basesoc_wishbone_bridge_wdata_converter_source_source_first;
-assign main_basesoc_wishbone_bridge_wdata_converter_source_last = main_basesoc_wishbone_bridge_wdata_converter_source_source_last;
-assign main_basesoc_wishbone_bridge_wdata_converter_source_source_ready = main_basesoc_wishbone_bridge_wdata_converter_source_ready;
-assign {main_basesoc_wishbone_bridge_wdata_converter_source_payload_we, main_basesoc_wishbone_bridge_wdata_converter_source_payload_data} = main_basesoc_wishbone_bridge_wdata_converter_source_source_payload_data;
-assign main_basesoc_wishbone_bridge_wdata_converter_source_source_valid = main_basesoc_wishbone_bridge_wdata_converter_converter_source_valid;
-assign main_basesoc_wishbone_bridge_wdata_converter_converter_source_ready = main_basesoc_wishbone_bridge_wdata_converter_source_source_ready;
-assign main_basesoc_wishbone_bridge_wdata_converter_source_source_first = main_basesoc_wishbone_bridge_wdata_converter_converter_source_first;
-assign main_basesoc_wishbone_bridge_wdata_converter_source_source_last = main_basesoc_wishbone_bridge_wdata_converter_converter_source_last;
-assign main_basesoc_wishbone_bridge_wdata_converter_source_source_payload_data = main_basesoc_wishbone_bridge_wdata_converter_converter_source_payload_data;
-assign main_basesoc_wishbone_bridge_wdata_converter_converter_first = (main_basesoc_wishbone_bridge_wdata_converter_converter_mux == 1'd0);
-assign main_basesoc_wishbone_bridge_wdata_converter_converter_last = (main_basesoc_wishbone_bridge_wdata_converter_converter_mux == 3'd7);
-assign main_basesoc_wishbone_bridge_wdata_converter_converter_source_valid = main_basesoc_wishbone_bridge_wdata_converter_converter_sink_valid;
-assign main_basesoc_wishbone_bridge_wdata_converter_converter_source_first = (main_basesoc_wishbone_bridge_wdata_converter_converter_sink_first & main_basesoc_wishbone_bridge_wdata_converter_converter_first);
-assign main_basesoc_wishbone_bridge_wdata_converter_converter_source_last = (main_basesoc_wishbone_bridge_wdata_converter_converter_sink_last & main_basesoc_wishbone_bridge_wdata_converter_converter_last);
-assign main_basesoc_wishbone_bridge_wdata_converter_converter_sink_ready = (main_basesoc_wishbone_bridge_wdata_converter_converter_last & main_basesoc_wishbone_bridge_wdata_converter_converter_source_ready);
+assign main_wishbone_bridge_wdata_converter_source_valid = main_wishbone_bridge_wdata_converter_source_source_valid;
+assign main_wishbone_bridge_wdata_converter_source_first = main_wishbone_bridge_wdata_converter_source_source_first;
+assign main_wishbone_bridge_wdata_converter_source_last = main_wishbone_bridge_wdata_converter_source_source_last;
+assign main_wishbone_bridge_wdata_converter_source_source_ready = main_wishbone_bridge_wdata_converter_source_ready;
+assign {main_wishbone_bridge_wdata_converter_source_payload_we, main_wishbone_bridge_wdata_converter_source_payload_data} = main_wishbone_bridge_wdata_converter_source_source_payload_data;
+assign main_wishbone_bridge_wdata_converter_source_source_valid = main_wishbone_bridge_wdata_converter_converter_source_valid;
+assign main_wishbone_bridge_wdata_converter_converter_source_ready = main_wishbone_bridge_wdata_converter_source_source_ready;
+assign main_wishbone_bridge_wdata_converter_source_source_first = main_wishbone_bridge_wdata_converter_converter_source_first;
+assign main_wishbone_bridge_wdata_converter_source_source_last = main_wishbone_bridge_wdata_converter_converter_source_last;
+assign main_wishbone_bridge_wdata_converter_source_source_payload_data = main_wishbone_bridge_wdata_converter_converter_source_payload_data;
+assign main_wishbone_bridge_wdata_converter_converter_first = (main_wishbone_bridge_wdata_converter_converter_mux == 1'd0);
+assign main_wishbone_bridge_wdata_converter_converter_last = (main_wishbone_bridge_wdata_converter_converter_mux == 3'd7);
+assign main_wishbone_bridge_wdata_converter_converter_source_valid = main_wishbone_bridge_wdata_converter_converter_sink_valid;
+assign main_wishbone_bridge_wdata_converter_converter_source_first = (main_wishbone_bridge_wdata_converter_converter_sink_first & main_wishbone_bridge_wdata_converter_converter_first);
+assign main_wishbone_bridge_wdata_converter_converter_source_last = (main_wishbone_bridge_wdata_converter_converter_sink_last & main_wishbone_bridge_wdata_converter_converter_last);
+assign main_wishbone_bridge_wdata_converter_converter_sink_ready = (main_wishbone_bridge_wdata_converter_converter_last & main_wishbone_bridge_wdata_converter_converter_source_ready);
 always @(*) begin
-    main_basesoc_wishbone_bridge_wdata_converter_converter_source_payload_data <= 18'd0;
-    case (main_basesoc_wishbone_bridge_wdata_converter_converter_mux)
+    main_wishbone_bridge_wdata_converter_converter_source_payload_data <= 18'd0;
+    case (main_wishbone_bridge_wdata_converter_converter_mux)
         1'd0: begin
-            main_basesoc_wishbone_bridge_wdata_converter_converter_source_payload_data <= main_basesoc_wishbone_bridge_wdata_converter_converter_sink_payload_data[17:0];
+            main_wishbone_bridge_wdata_converter_converter_source_payload_data <= main_wishbone_bridge_wdata_converter_converter_sink_payload_data[17:0];
         end
         1'd1: begin
-            main_basesoc_wishbone_bridge_wdata_converter_converter_source_payload_data <= main_basesoc_wishbone_bridge_wdata_converter_converter_sink_payload_data[35:18];
+            main_wishbone_bridge_wdata_converter_converter_source_payload_data <= main_wishbone_bridge_wdata_converter_converter_sink_payload_data[35:18];
         end
         2'd2: begin
-            main_basesoc_wishbone_bridge_wdata_converter_converter_source_payload_data <= main_basesoc_wishbone_bridge_wdata_converter_converter_sink_payload_data[53:36];
+            main_wishbone_bridge_wdata_converter_converter_source_payload_data <= main_wishbone_bridge_wdata_converter_converter_sink_payload_data[53:36];
         end
         2'd3: begin
-            main_basesoc_wishbone_bridge_wdata_converter_converter_source_payload_data <= main_basesoc_wishbone_bridge_wdata_converter_converter_sink_payload_data[71:54];
+            main_wishbone_bridge_wdata_converter_converter_source_payload_data <= main_wishbone_bridge_wdata_converter_converter_sink_payload_data[71:54];
         end
         3'd4: begin
-            main_basesoc_wishbone_bridge_wdata_converter_converter_source_payload_data <= main_basesoc_wishbone_bridge_wdata_converter_converter_sink_payload_data[89:72];
+            main_wishbone_bridge_wdata_converter_converter_source_payload_data <= main_wishbone_bridge_wdata_converter_converter_sink_payload_data[89:72];
         end
         3'd5: begin
-            main_basesoc_wishbone_bridge_wdata_converter_converter_source_payload_data <= main_basesoc_wishbone_bridge_wdata_converter_converter_sink_payload_data[107:90];
+            main_wishbone_bridge_wdata_converter_converter_source_payload_data <= main_wishbone_bridge_wdata_converter_converter_sink_payload_data[107:90];
         end
         3'd6: begin
-            main_basesoc_wishbone_bridge_wdata_converter_converter_source_payload_data <= main_basesoc_wishbone_bridge_wdata_converter_converter_sink_payload_data[125:108];
+            main_wishbone_bridge_wdata_converter_converter_source_payload_data <= main_wishbone_bridge_wdata_converter_converter_sink_payload_data[125:108];
         end
         default: begin
-            main_basesoc_wishbone_bridge_wdata_converter_converter_source_payload_data <= main_basesoc_wishbone_bridge_wdata_converter_converter_sink_payload_data[143:126];
+            main_wishbone_bridge_wdata_converter_converter_source_payload_data <= main_wishbone_bridge_wdata_converter_converter_sink_payload_data[143:126];
         end
     endcase
 end
-assign main_basesoc_wishbone_bridge_wdata_converter_converter_source_payload_valid_token_count = main_basesoc_wishbone_bridge_wdata_converter_converter_last;
-assign main_basesoc_wishbone_bridge_wdata_converter_sink_valid = main_basesoc_wishbone_bridge_wdata_valid;
-assign main_basesoc_wishbone_bridge_wdata_ready = main_basesoc_wishbone_bridge_wdata_converter_sink_ready;
-assign main_basesoc_wishbone_bridge_wdata_converter_sink_first = main_basesoc_wishbone_bridge_wdata_first;
-assign main_basesoc_wishbone_bridge_wdata_converter_sink_last = main_basesoc_wishbone_bridge_wdata_last;
-assign main_basesoc_wishbone_bridge_wdata_converter_sink_payload_data = main_basesoc_wishbone_bridge_wdata_payload_data;
-assign main_basesoc_wishbone_bridge_wdata_converter_sink_payload_we = main_basesoc_wishbone_bridge_wdata_payload_we;
-assign main_basesoc_port_wdata_valid = main_basesoc_wishbone_bridge_wdata_converter_source_valid;
-assign main_basesoc_wishbone_bridge_wdata_converter_source_ready = main_basesoc_port_wdata_ready;
-assign main_basesoc_port_wdata_first = main_basesoc_wishbone_bridge_wdata_converter_source_first;
-assign main_basesoc_port_wdata_last = main_basesoc_wishbone_bridge_wdata_converter_source_last;
-assign main_basesoc_port_wdata_payload_data = main_basesoc_wishbone_bridge_wdata_converter_source_payload_data;
-assign main_basesoc_port_wdata_payload_we = main_basesoc_wishbone_bridge_wdata_converter_source_payload_we;
-assign main_basesoc_wishbone_bridge_rdata_converter_converter_sink_valid = main_basesoc_wishbone_bridge_rdata_converter_sink_valid;
-assign main_basesoc_wishbone_bridge_rdata_converter_converter_sink_first = main_basesoc_wishbone_bridge_rdata_converter_sink_first;
-assign main_basesoc_wishbone_bridge_rdata_converter_converter_sink_last = main_basesoc_wishbone_bridge_rdata_converter_sink_last;
-assign main_basesoc_wishbone_bridge_rdata_converter_sink_ready = main_basesoc_wishbone_bridge_rdata_converter_converter_sink_ready;
-assign main_basesoc_wishbone_bridge_rdata_converter_converter_sink_payload_data = {main_basesoc_wishbone_bridge_rdata_converter_sink_payload_data};
-assign main_basesoc_wishbone_bridge_rdata_converter_source_valid = main_basesoc_wishbone_bridge_rdata_converter_source_source_valid;
-assign main_basesoc_wishbone_bridge_rdata_converter_source_first = main_basesoc_wishbone_bridge_rdata_converter_source_source_first;
-assign main_basesoc_wishbone_bridge_rdata_converter_source_last = main_basesoc_wishbone_bridge_rdata_converter_source_source_last;
-assign main_basesoc_wishbone_bridge_rdata_converter_source_source_ready = main_basesoc_wishbone_bridge_rdata_converter_source_ready;
+assign main_wishbone_bridge_wdata_converter_converter_source_payload_valid_token_count = main_wishbone_bridge_wdata_converter_converter_last;
+assign main_wishbone_bridge_wdata_converter_sink_valid = main_wishbone_bridge_wdata_valid;
+assign main_wishbone_bridge_wdata_ready = main_wishbone_bridge_wdata_converter_sink_ready;
+assign main_wishbone_bridge_wdata_converter_sink_first = main_wishbone_bridge_wdata_first;
+assign main_wishbone_bridge_wdata_converter_sink_last = main_wishbone_bridge_wdata_last;
+assign main_wishbone_bridge_wdata_converter_sink_payload_data = main_wishbone_bridge_wdata_payload_data;
+assign main_wishbone_bridge_wdata_converter_sink_payload_we = main_wishbone_bridge_wdata_payload_we;
+assign main_port_wdata_valid = main_wishbone_bridge_wdata_converter_source_valid;
+assign main_wishbone_bridge_wdata_converter_source_ready = main_port_wdata_ready;
+assign main_port_wdata_first = main_wishbone_bridge_wdata_converter_source_first;
+assign main_port_wdata_last = main_wishbone_bridge_wdata_converter_source_last;
+assign main_port_wdata_payload_data = main_wishbone_bridge_wdata_converter_source_payload_data;
+assign main_port_wdata_payload_we = main_wishbone_bridge_wdata_converter_source_payload_we;
+assign main_wishbone_bridge_rdata_converter_converter_sink_valid = main_wishbone_bridge_rdata_converter_sink_valid;
+assign main_wishbone_bridge_rdata_converter_converter_sink_first = main_wishbone_bridge_rdata_converter_sink_first;
+assign main_wishbone_bridge_rdata_converter_converter_sink_last = main_wishbone_bridge_rdata_converter_sink_last;
+assign main_wishbone_bridge_rdata_converter_sink_ready = main_wishbone_bridge_rdata_converter_converter_sink_ready;
+assign main_wishbone_bridge_rdata_converter_converter_sink_payload_data = {main_wishbone_bridge_rdata_converter_sink_payload_data};
+assign main_wishbone_bridge_rdata_converter_source_valid = main_wishbone_bridge_rdata_converter_source_source_valid;
+assign main_wishbone_bridge_rdata_converter_source_first = main_wishbone_bridge_rdata_converter_source_source_first;
+assign main_wishbone_bridge_rdata_converter_source_last = main_wishbone_bridge_rdata_converter_source_source_last;
+assign main_wishbone_bridge_rdata_converter_source_source_ready = main_wishbone_bridge_rdata_converter_source_ready;
 always @(*) begin
-    main_basesoc_wishbone_bridge_rdata_converter_source_payload_data <= 128'd0;
-    main_basesoc_wishbone_bridge_rdata_converter_source_payload_data[15:0] <= main_basesoc_wishbone_bridge_rdata_converter_source_source_payload_data[15:0];
-    main_basesoc_wishbone_bridge_rdata_converter_source_payload_data[31:16] <= main_basesoc_wishbone_bridge_rdata_converter_source_source_payload_data[31:16];
-    main_basesoc_wishbone_bridge_rdata_converter_source_payload_data[47:32] <= main_basesoc_wishbone_bridge_rdata_converter_source_source_payload_data[47:32];
-    main_basesoc_wishbone_bridge_rdata_converter_source_payload_data[63:48] <= main_basesoc_wishbone_bridge_rdata_converter_source_source_payload_data[63:48];
-    main_basesoc_wishbone_bridge_rdata_converter_source_payload_data[79:64] <= main_basesoc_wishbone_bridge_rdata_converter_source_source_payload_data[79:64];
-    main_basesoc_wishbone_bridge_rdata_converter_source_payload_data[95:80] <= main_basesoc_wishbone_bridge_rdata_converter_source_source_payload_data[95:80];
-    main_basesoc_wishbone_bridge_rdata_converter_source_payload_data[111:96] <= main_basesoc_wishbone_bridge_rdata_converter_source_source_payload_data[111:96];
-    main_basesoc_wishbone_bridge_rdata_converter_source_payload_data[127:112] <= main_basesoc_wishbone_bridge_rdata_converter_source_source_payload_data[127:112];
+    main_wishbone_bridge_rdata_converter_source_payload_data <= 128'd0;
+    main_wishbone_bridge_rdata_converter_source_payload_data[15:0] <= main_wishbone_bridge_rdata_converter_source_source_payload_data[15:0];
+    main_wishbone_bridge_rdata_converter_source_payload_data[31:16] <= main_wishbone_bridge_rdata_converter_source_source_payload_data[31:16];
+    main_wishbone_bridge_rdata_converter_source_payload_data[47:32] <= main_wishbone_bridge_rdata_converter_source_source_payload_data[47:32];
+    main_wishbone_bridge_rdata_converter_source_payload_data[63:48] <= main_wishbone_bridge_rdata_converter_source_source_payload_data[63:48];
+    main_wishbone_bridge_rdata_converter_source_payload_data[79:64] <= main_wishbone_bridge_rdata_converter_source_source_payload_data[79:64];
+    main_wishbone_bridge_rdata_converter_source_payload_data[95:80] <= main_wishbone_bridge_rdata_converter_source_source_payload_data[95:80];
+    main_wishbone_bridge_rdata_converter_source_payload_data[111:96] <= main_wishbone_bridge_rdata_converter_source_source_payload_data[111:96];
+    main_wishbone_bridge_rdata_converter_source_payload_data[127:112] <= main_wishbone_bridge_rdata_converter_source_source_payload_data[127:112];
 end
-assign main_basesoc_wishbone_bridge_rdata_converter_source_source_valid = main_basesoc_wishbone_bridge_rdata_converter_converter_source_valid;
-assign main_basesoc_wishbone_bridge_rdata_converter_converter_source_ready = main_basesoc_wishbone_bridge_rdata_converter_source_source_ready;
-assign main_basesoc_wishbone_bridge_rdata_converter_source_source_first = main_basesoc_wishbone_bridge_rdata_converter_converter_source_first;
-assign main_basesoc_wishbone_bridge_rdata_converter_source_source_last = main_basesoc_wishbone_bridge_rdata_converter_converter_source_last;
-assign main_basesoc_wishbone_bridge_rdata_converter_source_source_payload_data = main_basesoc_wishbone_bridge_rdata_converter_converter_source_payload_data;
-assign main_basesoc_wishbone_bridge_rdata_converter_converter_sink_ready = ((~main_basesoc_wishbone_bridge_rdata_converter_converter_strobe_all) | main_basesoc_wishbone_bridge_rdata_converter_converter_source_ready);
-assign main_basesoc_wishbone_bridge_rdata_converter_converter_source_valid = main_basesoc_wishbone_bridge_rdata_converter_converter_strobe_all;
-assign main_basesoc_wishbone_bridge_rdata_converter_converter_load_part = (main_basesoc_wishbone_bridge_rdata_converter_converter_sink_valid & main_basesoc_wishbone_bridge_rdata_converter_converter_sink_ready);
-assign main_basesoc_wishbone_bridge_rdata_converter_sink_valid = main_basesoc_port_rdata_valid;
-assign main_basesoc_port_rdata_ready = main_basesoc_wishbone_bridge_rdata_converter_sink_ready;
-assign main_basesoc_wishbone_bridge_rdata_converter_sink_first = main_basesoc_port_rdata_first;
-assign main_basesoc_wishbone_bridge_rdata_converter_sink_last = main_basesoc_port_rdata_last;
-assign main_basesoc_wishbone_bridge_rdata_converter_sink_payload_data = main_basesoc_port_rdata_payload_data;
-assign main_basesoc_wishbone_bridge_rdata_valid = main_basesoc_wishbone_bridge_rdata_converter_source_valid;
-assign main_basesoc_wishbone_bridge_rdata_converter_source_ready = main_basesoc_wishbone_bridge_rdata_ready;
-assign main_basesoc_wishbone_bridge_rdata_first = main_basesoc_wishbone_bridge_rdata_converter_source_first;
-assign main_basesoc_wishbone_bridge_rdata_last = main_basesoc_wishbone_bridge_rdata_converter_source_last;
-assign main_basesoc_wishbone_bridge_rdata_payload_data = main_basesoc_wishbone_bridge_rdata_converter_source_payload_data;
+assign main_wishbone_bridge_rdata_converter_source_source_valid = main_wishbone_bridge_rdata_converter_converter_source_valid;
+assign main_wishbone_bridge_rdata_converter_converter_source_ready = main_wishbone_bridge_rdata_converter_source_source_ready;
+assign main_wishbone_bridge_rdata_converter_source_source_first = main_wishbone_bridge_rdata_converter_converter_source_first;
+assign main_wishbone_bridge_rdata_converter_source_source_last = main_wishbone_bridge_rdata_converter_converter_source_last;
+assign main_wishbone_bridge_rdata_converter_source_source_payload_data = main_wishbone_bridge_rdata_converter_converter_source_payload_data;
+assign main_wishbone_bridge_rdata_converter_converter_sink_ready = ((~main_wishbone_bridge_rdata_converter_converter_strobe_all) | main_wishbone_bridge_rdata_converter_converter_source_ready);
+assign main_wishbone_bridge_rdata_converter_converter_source_valid = main_wishbone_bridge_rdata_converter_converter_strobe_all;
+assign main_wishbone_bridge_rdata_converter_converter_load_part = (main_wishbone_bridge_rdata_converter_converter_sink_valid & main_wishbone_bridge_rdata_converter_converter_sink_ready);
+assign main_wishbone_bridge_rdata_converter_sink_valid = main_port_rdata_valid;
+assign main_port_rdata_ready = main_wishbone_bridge_rdata_converter_sink_ready;
+assign main_wishbone_bridge_rdata_converter_sink_first = main_port_rdata_first;
+assign main_wishbone_bridge_rdata_converter_sink_last = main_port_rdata_last;
+assign main_wishbone_bridge_rdata_converter_sink_payload_data = main_port_rdata_payload_data;
+assign main_wishbone_bridge_rdata_valid = main_wishbone_bridge_rdata_converter_source_valid;
+assign main_wishbone_bridge_rdata_converter_source_ready = main_wishbone_bridge_rdata_ready;
+assign main_wishbone_bridge_rdata_first = main_wishbone_bridge_rdata_converter_source_first;
+assign main_wishbone_bridge_rdata_last = main_wishbone_bridge_rdata_converter_source_last;
+assign main_wishbone_bridge_rdata_payload_data = main_wishbone_bridge_rdata_converter_source_payload_data;
 always @(*) begin
-    main_basesoc_interface_ack <= 1'd0;
-    main_basesoc_wishbone_bridge_aborted_fsm_next_value <= 1'd0;
-    main_basesoc_wishbone_bridge_aborted_fsm_next_value_ce <= 1'd0;
-    main_basesoc_wishbone_bridge_is_ongoing <= 1'd0;
-    main_basesoc_interface_dat_r <= 128'd0;
+    main_interface_ack <= 1'd0;
     builder_basesoc_fsm_next_state <= 2'd0;
-    main_basesoc_wishbone_bridge_cmd_valid <= 1'd0;
+    main_wishbone_bridge_is_ongoing <= 1'd0;
+    main_interface_dat_r <= 128'd0;
+    main_wishbone_bridge_aborted_fsm_next_value <= 1'd0;
+    main_wishbone_bridge_aborted_fsm_next_value_ce <= 1'd0;
+    main_wishbone_bridge_cmd_valid <= 1'd0;
     builder_basesoc_fsm_next_state <= builder_basesoc_fsm_state;
     case (builder_basesoc_fsm_state)
         1'd1: begin
-            main_basesoc_wishbone_bridge_is_ongoing <= 1'd1;
-            main_basesoc_wishbone_bridge_aborted_fsm_next_value <= ((~main_basesoc_interface_cyc) | main_basesoc_wishbone_bridge_aborted);
-            main_basesoc_wishbone_bridge_aborted_fsm_next_value_ce <= 1'd1;
-            if ((main_basesoc_wishbone_bridge_wdata_valid & main_basesoc_wishbone_bridge_wdata_ready)) begin
-                main_basesoc_interface_ack <= (main_basesoc_interface_cyc & (~main_basesoc_wishbone_bridge_aborted));
+            main_wishbone_bridge_is_ongoing <= 1'd1;
+            main_wishbone_bridge_aborted_fsm_next_value <= ((~main_interface_cyc) | main_wishbone_bridge_aborted);
+            main_wishbone_bridge_aborted_fsm_next_value_ce <= 1'd1;
+            if ((main_wishbone_bridge_wdata_valid & main_wishbone_bridge_wdata_ready)) begin
+                main_interface_ack <= (main_interface_cyc & (~main_wishbone_bridge_aborted));
                 builder_basesoc_fsm_next_state <= 1'd0;
             end
         end
         2'd2: begin
-            main_basesoc_wishbone_bridge_aborted_fsm_next_value <= ((~main_basesoc_interface_cyc) | main_basesoc_wishbone_bridge_aborted);
-            main_basesoc_wishbone_bridge_aborted_fsm_next_value_ce <= 1'd1;
-            if (main_basesoc_wishbone_bridge_rdata_valid) begin
-                main_basesoc_interface_ack <= (main_basesoc_interface_cyc & (~main_basesoc_wishbone_bridge_aborted));
-                main_basesoc_interface_dat_r <= main_basesoc_wishbone_bridge_rdata_payload_data;
+            main_wishbone_bridge_aborted_fsm_next_value <= ((~main_interface_cyc) | main_wishbone_bridge_aborted);
+            main_wishbone_bridge_aborted_fsm_next_value_ce <= 1'd1;
+            if (main_wishbone_bridge_rdata_valid) begin
+                main_interface_ack <= (main_interface_cyc & (~main_wishbone_bridge_aborted));
+                main_interface_dat_r <= main_wishbone_bridge_rdata_payload_data;
                 builder_basesoc_fsm_next_state <= 1'd0;
             end
         end
         default: begin
-            main_basesoc_wishbone_bridge_cmd_valid <= (main_basesoc_interface_cyc & main_basesoc_interface_stb);
-            if (((main_basesoc_wishbone_bridge_cmd_valid & main_basesoc_wishbone_bridge_cmd_ready) & main_basesoc_interface_we)) begin
+            main_wishbone_bridge_cmd_valid <= (main_interface_cyc & main_interface_stb);
+            if (((main_wishbone_bridge_cmd_valid & main_wishbone_bridge_cmd_ready) & main_interface_we)) begin
                 builder_basesoc_fsm_next_state <= 1'd1;
             end
-            if (((main_basesoc_wishbone_bridge_cmd_valid & main_basesoc_wishbone_bridge_cmd_ready) & (~main_basesoc_interface_we))) begin
+            if (((main_wishbone_bridge_cmd_valid & main_wishbone_bridge_cmd_ready) & (~main_interface_we))) begin
                 builder_basesoc_fsm_next_state <= 2'd2;
             end
-            main_basesoc_wishbone_bridge_aborted_fsm_next_value <= 1'd0;
-            main_basesoc_wishbone_bridge_aborted_fsm_next_value_ce <= 1'd1;
+            main_wishbone_bridge_aborted_fsm_next_value <= 1'd0;
+            main_wishbone_bridge_aborted_fsm_next_value_ce <= 1'd1;
         end
     endcase
 end
@@ -3934,838 +3597,567 @@ always @(*) begin
 end
 assign {user_led0} = (main_leds ^ 1'd0);
 assign main_done = (main_count == 1'd0);
-assign i2s_tx = main_basesoc_tx_pin;
-assign main_basesoc_rising_edge = (main_basesoc_clk_pin & (~main_basesoc_clk_d));
-assign main_basesoc_falling_edge = ((~main_basesoc_clk_pin) & main_basesoc_clk_d);
+assign i2s_tx = main_tx_pin;
+assign main_rising_edge = (main_clk_pin & (~main_clk_d));
+assign main_falling_edge = ((~main_clk_pin) & main_clk_d);
 always @(*) begin
-    main_basesoc_bus_ack <= 1'd0;
-    if (main_basesoc_bus_we) begin
-        main_basesoc_bus_ack <= main_basesoc_wr_ack;
+    main_bus_ack <= 1'd0;
+    if (main_bus_we) begin
+        main_bus_ack <= main_wr_ack;
     end else begin
-        main_basesoc_bus_ack <= main_basesoc_rd_ack;
+        main_bus_ack <= main_rd_ack;
     end
 end
-assign main_basesoc_csrfield_fifo_depth = 9'd256;
-assign main_basesoc_rx_fifo_rx_fifo_reset = main_basesoc_rx_reset;
-assign main_basesoc_csrfield_overflow0 = main_basesoc_rx_fifo_rx_fifo_wrerr;
-assign main_basesoc_csrfield_underflow0 = main_basesoc_rx_fifo_rx_fifo_rderr;
-assign main_basesoc_csrfield_dataready = main_basesoc_rx_fifo_rx_fifo_almostfull;
-assign main_basesoc_csrfield_wrcount0 = main_basesoc_rx_fifo_rx_fifo_wrcount;
-assign main_basesoc_csrfield_rdcount0 = main_basesoc_rx_fifo_rx_fifo_rdcount;
-assign main_basesoc_csrfield_empty0 = main_basesoc_rx_fifo_rx_fifo_empty;
-assign main_basesoc_rx_ready_trigger = main_basesoc_rx_fifo_rx_fifo_almostfull;
-assign main_basesoc_rx_error_trigger = (main_basesoc_rx_fifo_rx_fifo_wrerr | main_basesoc_rx_fifo_rx_fifo_rderr);
-assign main_basesoc_bus_read = (((main_basesoc_bus_cyc & main_basesoc_bus_stb) & (~main_basesoc_bus_we)) & (main_basesoc_bus_cti == 1'd0));
-assign main_basesoc_tx_fifo_tx_fifo_reset = main_basesoc_tx_reset;
-assign main_basesoc_csrfield_underflow1 = main_basesoc_tx_fifo_tx_fifo_rderr;
-assign main_basesoc_csrfield_free = main_basesoc_tx_fifo_tx_fifo_almostempty;
-assign main_basesoc_csrfield_almostfull = main_basesoc_tx_fifo_tx_fifo_almostfull;
-assign main_basesoc_csrfield_full = main_basesoc_tx_fifo_tx_fifo_full;
-assign main_basesoc_csrfield_empty1 = main_basesoc_tx_fifo_tx_fifo_empty;
-assign main_basesoc_csrfield_rdcount1 = main_basesoc_tx_fifo_tx_fifo_rdcount;
-assign main_basesoc_csrfield_wrcount1 = main_basesoc_tx_fifo_tx_fifo_wrcount;
-assign main_basesoc_tx_ready_trigger = main_basesoc_tx_fifo_tx_fifo_almostempty;
-assign main_basesoc_tx_error_trigger = (main_basesoc_tx_fifo_tx_fifo_wrerr | main_basesoc_tx_fifo_tx_fifo_rderr);
-assign main_basesoc_rx_ready0 = main_basesoc_rx_ready_status;
-assign main_basesoc_rx_ready1 = main_basesoc_rx_ready_pending;
+assign main_csrfield_fifo_depth = 9'd256;
+assign main_rx_fifo_rx_fifo_reset = main_rx_reset;
+assign main_csrfield_overflow0 = main_rx_fifo_rx_fifo_wrerr;
+assign main_csrfield_underflow0 = main_rx_fifo_rx_fifo_rderr;
+assign main_csrfield_dataready = main_rx_fifo_rx_fifo_almostfull;
+assign main_csrfield_wrcount0 = main_rx_fifo_rx_fifo_wrcount;
+assign main_csrfield_rdcount0 = main_rx_fifo_rx_fifo_rdcount;
+assign main_csrfield_empty0 = main_rx_fifo_rx_fifo_empty;
+assign main_rx_ready_trigger = main_rx_fifo_rx_fifo_almostfull;
+assign main_rx_error_trigger = (main_rx_fifo_rx_fifo_wrerr | main_rx_fifo_rx_fifo_rderr);
+assign main_bus_read = (((main_bus_cyc & main_bus_stb) & (~main_bus_we)) & (main_bus_cti == 1'd0));
+assign main_tx_fifo_tx_fifo_reset = main_tx_reset;
+assign main_csrfield_underflow1 = main_tx_fifo_tx_fifo_rderr;
+assign main_csrfield_free = main_tx_fifo_tx_fifo_almostempty;
+assign main_csrfield_almostfull = main_tx_fifo_tx_fifo_almostfull;
+assign main_csrfield_full = main_tx_fifo_tx_fifo_full;
+assign main_csrfield_empty1 = main_tx_fifo_tx_fifo_empty;
+assign main_csrfield_rdcount1 = main_tx_fifo_tx_fifo_rdcount;
+assign main_csrfield_wrcount1 = main_tx_fifo_tx_fifo_wrcount;
+assign main_tx_ready_trigger = main_tx_fifo_tx_fifo_almostempty;
+assign main_tx_error_trigger = (main_tx_fifo_tx_fifo_wrerr | main_tx_fifo_tx_fifo_rderr);
+assign main_rx_ready0 = main_rx_ready_status;
+assign main_rx_ready1 = main_rx_ready_pending;
 always @(*) begin
-    main_basesoc_rx_ready_clear <= 1'd0;
-    if ((main_basesoc_pending_re & main_basesoc_pending_r[0])) begin
-        main_basesoc_rx_ready_clear <= 1'd1;
+    main_rx_ready_clear <= 1'd0;
+    if ((main_pending_re & main_pending_r[0])) begin
+        main_rx_ready_clear <= 1'd1;
     end
 end
-assign main_basesoc_rx_error0 = main_basesoc_rx_error_status;
-assign main_basesoc_rx_error1 = main_basesoc_rx_error_pending;
+assign main_rx_error0 = main_rx_error_status;
+assign main_rx_error1 = main_rx_error_pending;
 always @(*) begin
-    main_basesoc_rx_error_clear <= 1'd0;
-    if ((main_basesoc_pending_re & main_basesoc_pending_r[1])) begin
-        main_basesoc_rx_error_clear <= 1'd1;
+    main_rx_error_clear <= 1'd0;
+    if ((main_pending_re & main_pending_r[1])) begin
+        main_rx_error_clear <= 1'd1;
     end
 end
-assign main_basesoc_tx_ready0 = main_basesoc_tx_ready_status;
-assign main_basesoc_tx_ready1 = main_basesoc_tx_ready_pending;
+assign main_tx_ready0 = main_tx_ready_status;
+assign main_tx_ready1 = main_tx_ready_pending;
 always @(*) begin
-    main_basesoc_tx_ready_clear <= 1'd0;
-    if ((main_basesoc_pending_re & main_basesoc_pending_r[2])) begin
-        main_basesoc_tx_ready_clear <= 1'd1;
+    main_tx_ready_clear <= 1'd0;
+    if ((main_pending_re & main_pending_r[2])) begin
+        main_tx_ready_clear <= 1'd1;
     end
 end
-assign main_basesoc_tx_error0 = main_basesoc_tx_error_status;
-assign main_basesoc_tx_error1 = main_basesoc_tx_error_pending;
+assign main_tx_error0 = main_tx_error_status;
+assign main_tx_error1 = main_tx_error_pending;
 always @(*) begin
-    main_basesoc_tx_error_clear <= 1'd0;
-    if ((main_basesoc_pending_re & main_basesoc_pending_r[3])) begin
-        main_basesoc_tx_error_clear <= 1'd1;
+    main_tx_error_clear <= 1'd0;
+    if ((main_pending_re & main_pending_r[3])) begin
+        main_tx_error_clear <= 1'd1;
     end
 end
-assign main_basesoc_irq = ((((main_basesoc_pending_status[0] & main_basesoc_enable_storage[0]) | (main_basesoc_pending_status[1] & main_basesoc_enable_storage[1])) | (main_basesoc_pending_status[2] & main_basesoc_enable_storage[2])) | (main_basesoc_pending_status[3] & main_basesoc_enable_storage[3]));
-assign main_basesoc_rx_ready_status = 1'd0;
-assign main_basesoc_rx_error_status = 1'd0;
-assign main_basesoc_tx_ready_status = 1'd0;
-assign main_basesoc_tx_error_status = 1'd0;
-assign main_basesoc_rx_fifo_reset = main_basesoc_rx_fifo_rx_fifo_reset;
-assign main_basesoc_rx_fifo_level0 = main_basesoc_rx_fifo_level1;
-assign main_basesoc_rx_fifo_sink_payload_data = main_basesoc_rx_fifo_rx_fifo_wr_d;
-assign main_basesoc_rx_fifo_sink_valid = main_basesoc_rx_fifo_rx_fifo_wren;
-assign main_basesoc_rx_fifo_rx_fifo_rd_d = main_basesoc_rx_fifo_source_payload_data;
-assign main_basesoc_rx_fifo_source_ready = main_basesoc_rx_fifo_rx_fifo_rden;
-assign main_basesoc_rx_fifo_rx_fifo_wrerr = ((~main_basesoc_rx_fifo_sink_ready) & main_basesoc_rx_fifo_rx_fifo_wren);
-assign main_basesoc_rx_fifo_rx_fifo_rderr = (main_basesoc_rx_fifo_source_ready & main_basesoc_rx_fifo_rx_fifo_rden);
+assign main_irq = ((((main_pending_status[0] & main_enable_storage[0]) | (main_pending_status[1] & main_enable_storage[1])) | (main_pending_status[2] & main_enable_storage[2])) | (main_pending_status[3] & main_enable_storage[3]));
+assign main_rx_ready_status = 1'd0;
+assign main_rx_error_status = 1'd0;
+assign main_tx_ready_status = 1'd0;
+assign main_tx_error_status = 1'd0;
+assign main_rx_fifo_reset = main_rx_fifo_rx_fifo_reset;
+assign main_rx_fifo_level0 = main_rx_fifo_level1;
+assign main_rx_fifo_sink_payload_data = main_rx_fifo_rx_fifo_wr_d;
+assign main_rx_fifo_sink_valid = main_rx_fifo_rx_fifo_wren;
+assign main_rx_fifo_rx_fifo_rd_d = main_rx_fifo_source_payload_data;
+assign main_rx_fifo_source_ready = main_rx_fifo_rx_fifo_rden;
+assign main_rx_fifo_rx_fifo_wrerr = ((~main_rx_fifo_sink_ready) & main_rx_fifo_rx_fifo_wren);
+assign main_rx_fifo_rx_fifo_rderr = (main_rx_fifo_source_ready & main_rx_fifo_rx_fifo_rden);
 always @(*) begin
-    main_basesoc_rx_fifo_rx_fifo_empty <= 1'd0;
-    if ((main_basesoc_rx_fifo_level0 == 1'd0)) begin
-        main_basesoc_rx_fifo_rx_fifo_empty <= 1'd1;
+    main_rx_fifo_rx_fifo_empty <= 1'd0;
+    if ((main_rx_fifo_level0 == 1'd0)) begin
+        main_rx_fifo_rx_fifo_empty <= 1'd1;
     end else begin
-        main_basesoc_rx_fifo_rx_fifo_empty <= 1'd0;
+        main_rx_fifo_rx_fifo_empty <= 1'd0;
     end
 end
 always @(*) begin
-    main_basesoc_rx_fifo_rx_fifo_full <= 1'd0;
-    if ((main_basesoc_rx_fifo_level0 == 10'd512)) begin
-        main_basesoc_rx_fifo_rx_fifo_full <= 1'd1;
+    main_rx_fifo_rx_fifo_full <= 1'd0;
+    if ((main_rx_fifo_level0 == 10'd512)) begin
+        main_rx_fifo_rx_fifo_full <= 1'd1;
     end else begin
-        main_basesoc_rx_fifo_rx_fifo_full <= 1'd0;
+        main_rx_fifo_rx_fifo_full <= 1'd0;
     end
 end
-assign main_basesoc_rx_fifo_syncfifo_din = {main_basesoc_rx_fifo_fifo_in_last, main_basesoc_rx_fifo_fifo_in_first, main_basesoc_rx_fifo_fifo_in_payload_data};
-assign {main_basesoc_rx_fifo_fifo_out_last, main_basesoc_rx_fifo_fifo_out_first, main_basesoc_rx_fifo_fifo_out_payload_data} = main_basesoc_rx_fifo_syncfifo_dout;
-assign main_basesoc_rx_fifo_sink_ready = main_basesoc_rx_fifo_syncfifo_writable;
-assign main_basesoc_rx_fifo_syncfifo_we = main_basesoc_rx_fifo_sink_valid;
-assign main_basesoc_rx_fifo_fifo_in_first = main_basesoc_rx_fifo_sink_first;
-assign main_basesoc_rx_fifo_fifo_in_last = main_basesoc_rx_fifo_sink_last;
-assign main_basesoc_rx_fifo_fifo_in_payload_data = main_basesoc_rx_fifo_sink_payload_data;
-assign main_basesoc_rx_fifo_source_valid = main_basesoc_rx_fifo_syncfifo_readable;
-assign main_basesoc_rx_fifo_source_first = main_basesoc_rx_fifo_fifo_out_first;
-assign main_basesoc_rx_fifo_source_last = main_basesoc_rx_fifo_fifo_out_last;
-assign main_basesoc_rx_fifo_source_payload_data = main_basesoc_rx_fifo_fifo_out_payload_data;
-assign main_basesoc_rx_fifo_syncfifo_re = main_basesoc_rx_fifo_source_ready;
+assign main_rx_fifo_syncfifo_din = {main_rx_fifo_fifo_in_last, main_rx_fifo_fifo_in_first, main_rx_fifo_fifo_in_payload_data};
+assign {main_rx_fifo_fifo_out_last, main_rx_fifo_fifo_out_first, main_rx_fifo_fifo_out_payload_data} = main_rx_fifo_syncfifo_dout;
+assign main_rx_fifo_sink_ready = main_rx_fifo_syncfifo_writable;
+assign main_rx_fifo_syncfifo_we = main_rx_fifo_sink_valid;
+assign main_rx_fifo_fifo_in_first = main_rx_fifo_sink_first;
+assign main_rx_fifo_fifo_in_last = main_rx_fifo_sink_last;
+assign main_rx_fifo_fifo_in_payload_data = main_rx_fifo_sink_payload_data;
+assign main_rx_fifo_source_valid = main_rx_fifo_syncfifo_readable;
+assign main_rx_fifo_source_first = main_rx_fifo_fifo_out_first;
+assign main_rx_fifo_source_last = main_rx_fifo_fifo_out_last;
+assign main_rx_fifo_source_payload_data = main_rx_fifo_fifo_out_payload_data;
+assign main_rx_fifo_syncfifo_re = main_rx_fifo_source_ready;
 always @(*) begin
-    main_basesoc_rx_fifo_wrport_adr <= 9'd0;
-    if (main_basesoc_rx_fifo_replace) begin
-        main_basesoc_rx_fifo_wrport_adr <= (main_basesoc_rx_fifo_produce - 1'd1);
+    main_rx_fifo_wrport_adr <= 9'd0;
+    if (main_rx_fifo_replace) begin
+        main_rx_fifo_wrport_adr <= (main_rx_fifo_produce - 1'd1);
     end else begin
-        main_basesoc_rx_fifo_wrport_adr <= main_basesoc_rx_fifo_produce;
+        main_rx_fifo_wrport_adr <= main_rx_fifo_produce;
     end
 end
-assign main_basesoc_rx_fifo_wrport_dat_w = main_basesoc_rx_fifo_syncfifo_din;
-assign main_basesoc_rx_fifo_wrport_we = (main_basesoc_rx_fifo_syncfifo_we & (main_basesoc_rx_fifo_syncfifo_writable | main_basesoc_rx_fifo_replace));
-assign main_basesoc_rx_fifo_do_read = (main_basesoc_rx_fifo_syncfifo_readable & main_basesoc_rx_fifo_syncfifo_re);
-assign main_basesoc_rx_fifo_rdport_adr = main_basesoc_rx_fifo_consume;
-assign main_basesoc_rx_fifo_syncfifo_dout = main_basesoc_rx_fifo_rdport_dat_r;
-assign main_basesoc_rx_fifo_syncfifo_writable = (main_basesoc_rx_fifo_level1 != 10'd512);
-assign main_basesoc_rx_fifo_syncfifo_readable = (main_basesoc_rx_fifo_level1 != 1'd0);
+assign main_rx_fifo_wrport_dat_w = main_rx_fifo_syncfifo_din;
+assign main_rx_fifo_wrport_we = (main_rx_fifo_syncfifo_we & (main_rx_fifo_syncfifo_writable | main_rx_fifo_replace));
+assign main_rx_fifo_do_read = (main_rx_fifo_syncfifo_readable & main_rx_fifo_syncfifo_re);
+assign main_rx_fifo_rdport_adr = main_rx_fifo_consume;
+assign main_rx_fifo_syncfifo_dout = main_rx_fifo_rdport_dat_r;
+assign main_rx_fifo_syncfifo_writable = (main_rx_fifo_level1 != 10'd512);
+assign main_rx_fifo_syncfifo_readable = (main_rx_fifo_level1 != 1'd0);
 always @(*) begin
-    main_basesoc_rx_fifo_rx_fifo_wr_d_s7i2s_next_value1 <= 24'd0;
-    main_basesoc_rx_fifo_rx_fifo_wr_d_s7i2s_next_value_ce1 <= 1'd0;
-    main_basesoc_rx_delay_cnt_s7i2s_t_next_value <= 1'd0;
-    main_basesoc_rx_delay_cnt_s7i2s_t_next_value_ce <= 1'd0;
-    main_basesoc_rx_fifo_rx_fifo_wren <= 1'd0;
-    builder_basesoc_s7i2s_next_state <= 3'd0;
-    main_basesoc_rx_cnt_s7i2s_f_next_value <= 5'd0;
-    main_basesoc_rx_fsm_s7i2s_next_value0 <= 5'd0;
-    main_basesoc_rx_cnt_s7i2s_f_next_value_ce <= 1'd0;
-    main_basesoc_rx_fsm_s7i2s_next_value_ce0 <= 1'd0;
-    builder_basesoc_s7i2s_next_state <= builder_basesoc_s7i2s_state;
-    case (builder_basesoc_s7i2s_state)
+    builder_basesoc_fsm0_next_state <= 3'd0;
+    main_rx_cnt_fsm0_f_next_value <= 5'd0;
+    main_rx_fsm_fsm0_next_value0 <= 5'd0;
+    main_rx_cnt_fsm0_f_next_value_ce <= 1'd0;
+    main_rx_fsm_fsm0_next_value_ce0 <= 1'd0;
+    main_rx_fifo_rx_fifo_wr_d_fsm0_next_value1 <= 24'd0;
+    main_rx_fifo_rx_fifo_wr_d_fsm0_next_value_ce1 <= 1'd0;
+    main_rx_delay_cnt_fsm0_t_next_value <= 1'd0;
+    main_rx_delay_cnt_fsm0_t_next_value_ce <= 1'd0;
+    main_rx_fifo_rx_fifo_wren <= 1'd0;
+    builder_basesoc_fsm0_next_state <= builder_basesoc_fsm0_state;
+    case (builder_basesoc_fsm0_state)
         1'd1: begin
-            main_basesoc_rx_fsm_s7i2s_next_value0 <= 2'd2;
-            main_basesoc_rx_fsm_s7i2s_next_value_ce0 <= 1'd1;
-            if ((main_basesoc_rising_edge & (~main_basesoc_sync_pin))) begin
-                if ((main_basesoc_rx_delay_cnt > 1'd0)) begin
-                    main_basesoc_rx_delay_cnt_s7i2s_t_next_value <= (main_basesoc_rx_delay_cnt - 1'd1);
-                    main_basesoc_rx_delay_cnt_s7i2s_t_next_value_ce <= 1'd1;
-                    builder_basesoc_s7i2s_next_state <= 1'd1;
+            main_rx_fsm_fsm0_next_value0 <= 2'd2;
+            main_rx_fsm_fsm0_next_value_ce0 <= 1'd1;
+            if ((main_rising_edge & (~main_sync_pin))) begin
+                if ((main_rx_delay_cnt > 1'd0)) begin
+                    main_rx_delay_cnt_fsm0_t_next_value <= (main_rx_delay_cnt - 1'd1);
+                    main_rx_delay_cnt_fsm0_t_next_value_ce <= 1'd1;
+                    builder_basesoc_fsm0_next_state <= 1'd1;
                 end else begin
-                    builder_basesoc_s7i2s_next_state <= 2'd2;
-                    main_basesoc_rx_delay_cnt_s7i2s_t_next_value <= 1'd1;
-                    main_basesoc_rx_delay_cnt_s7i2s_t_next_value_ce <= 1'd1;
-                    main_basesoc_rx_cnt_s7i2s_f_next_value <= 5'd24;
-                    main_basesoc_rx_cnt_s7i2s_f_next_value_ce <= 1'd1;
+                    builder_basesoc_fsm0_next_state <= 2'd2;
+                    main_rx_delay_cnt_fsm0_t_next_value <= 1'd1;
+                    main_rx_delay_cnt_fsm0_t_next_value_ce <= 1'd1;
+                    main_rx_cnt_fsm0_f_next_value <= 5'd24;
+                    main_rx_cnt_fsm0_f_next_value_ce <= 1'd1;
                 end
             end
         end
         2'd2: begin
-            main_basesoc_rx_fsm_s7i2s_next_value0 <= 2'd3;
-            main_basesoc_rx_fsm_s7i2s_next_value_ce0 <= 1'd1;
-            if ((~main_basesoc_csrfield_enable0)) begin
-                builder_basesoc_s7i2s_next_state <= 1'd0;
+            main_rx_fsm_fsm0_next_value0 <= 2'd3;
+            main_rx_fsm_fsm0_next_value_ce0 <= 1'd1;
+            if ((~main_csrfield_enable0)) begin
+                builder_basesoc_fsm0_next_state <= 1'd0;
             end else begin
-                main_basesoc_rx_fifo_rx_fifo_wr_d_s7i2s_next_value1 <= {main_basesoc_rx_fifo_rx_fifo_wr_d[22:0], main_basesoc_rx_pin};
-                main_basesoc_rx_fifo_rx_fifo_wr_d_s7i2s_next_value_ce1 <= 1'd1;
-                main_basesoc_rx_cnt_s7i2s_f_next_value <= (main_basesoc_rx_cnt - 1'd1);
-                main_basesoc_rx_cnt_s7i2s_f_next_value_ce <= 1'd1;
-                builder_basesoc_s7i2s_next_state <= 2'd3;
+                main_rx_fifo_rx_fifo_wr_d_fsm0_next_value1 <= {main_rx_fifo_rx_fifo_wr_d[22:0], main_rx_pin};
+                main_rx_fifo_rx_fifo_wr_d_fsm0_next_value_ce1 <= 1'd1;
+                main_rx_cnt_fsm0_f_next_value <= (main_rx_cnt - 1'd1);
+                main_rx_cnt_fsm0_f_next_value_ce <= 1'd1;
+                builder_basesoc_fsm0_next_state <= 2'd3;
             end
         end
         2'd3: begin
-            main_basesoc_rx_fsm_s7i2s_next_value0 <= 3'd5;
-            main_basesoc_rx_fsm_s7i2s_next_value_ce0 <= 1'd1;
-            if ((~main_basesoc_csrfield_enable0)) begin
-                builder_basesoc_s7i2s_next_state <= 1'd0;
+            main_rx_fsm_fsm0_next_value0 <= 3'd5;
+            main_rx_fsm_fsm0_next_value_ce0 <= 1'd1;
+            if ((~main_csrfield_enable0)) begin
+                builder_basesoc_fsm0_next_state <= 1'd0;
             end else begin
-                if (main_basesoc_rising_edge) begin
-                    if ((main_basesoc_rx_cnt == 1'd0)) begin
-                        if (main_basesoc_sync_pin) begin
-                            if ((main_basesoc_rx_delay_cnt == 1'd0)) begin
-                                main_basesoc_rx_cnt_s7i2s_f_next_value <= 5'd24;
-                                main_basesoc_rx_cnt_s7i2s_f_next_value_ce <= 1'd1;
-                                main_basesoc_rx_delay_cnt_s7i2s_t_next_value <= 1'd1;
-                                main_basesoc_rx_delay_cnt_s7i2s_t_next_value_ce <= 1'd1;
-                                builder_basesoc_s7i2s_next_state <= 3'd4;
-                                main_basesoc_rx_fifo_rx_fifo_wren <= (~main_basesoc_rx_reset);
+                if (main_rising_edge) begin
+                    if ((main_rx_cnt == 1'd0)) begin
+                        if (main_sync_pin) begin
+                            if ((main_rx_delay_cnt == 1'd0)) begin
+                                main_rx_cnt_fsm0_f_next_value <= 5'd24;
+                                main_rx_cnt_fsm0_f_next_value_ce <= 1'd1;
+                                main_rx_delay_cnt_fsm0_t_next_value <= 1'd1;
+                                main_rx_delay_cnt_fsm0_t_next_value_ce <= 1'd1;
+                                builder_basesoc_fsm0_next_state <= 3'd4;
+                                main_rx_fifo_rx_fifo_wren <= (~main_rx_reset);
                             end else begin
-                                main_basesoc_rx_delay_cnt_s7i2s_t_next_value <= (main_basesoc_rx_delay_cnt - 1'd1);
-                                main_basesoc_rx_delay_cnt_s7i2s_t_next_value_ce <= 1'd1;
-                                builder_basesoc_s7i2s_next_state <= 2'd3;
+                                main_rx_delay_cnt_fsm0_t_next_value <= (main_rx_delay_cnt - 1'd1);
+                                main_rx_delay_cnt_fsm0_t_next_value_ce <= 1'd1;
+                                builder_basesoc_fsm0_next_state <= 2'd3;
                             end
                         end else begin
-                            builder_basesoc_s7i2s_next_state <= 2'd3;
+                            builder_basesoc_fsm0_next_state <= 2'd3;
                         end
                     end else begin
-                        if ((main_basesoc_rx_cnt > 1'd0)) begin
-                            builder_basesoc_s7i2s_next_state <= 2'd2;
+                        if ((main_rx_cnt > 1'd0)) begin
+                            builder_basesoc_fsm0_next_state <= 2'd2;
                         end
                     end
                 end
             end
         end
         3'd4: begin
-            main_basesoc_rx_fsm_s7i2s_next_value0 <= 3'd6;
-            main_basesoc_rx_fsm_s7i2s_next_value_ce0 <= 1'd1;
-            if ((~main_basesoc_csrfield_enable0)) begin
-                builder_basesoc_s7i2s_next_state <= 1'd0;
+            main_rx_fsm_fsm0_next_value0 <= 3'd6;
+            main_rx_fsm_fsm0_next_value_ce0 <= 1'd1;
+            if ((~main_csrfield_enable0)) begin
+                builder_basesoc_fsm0_next_state <= 1'd0;
             end else begin
-                main_basesoc_rx_fifo_rx_fifo_wr_d_s7i2s_next_value1 <= {main_basesoc_rx_fifo_rx_fifo_wr_d[22:0], main_basesoc_rx_pin};
-                main_basesoc_rx_fifo_rx_fifo_wr_d_s7i2s_next_value_ce1 <= 1'd1;
-                main_basesoc_rx_cnt_s7i2s_f_next_value <= (main_basesoc_rx_cnt - 1'd1);
-                main_basesoc_rx_cnt_s7i2s_f_next_value_ce <= 1'd1;
-                builder_basesoc_s7i2s_next_state <= 3'd5;
+                main_rx_fifo_rx_fifo_wr_d_fsm0_next_value1 <= {main_rx_fifo_rx_fifo_wr_d[22:0], main_rx_pin};
+                main_rx_fifo_rx_fifo_wr_d_fsm0_next_value_ce1 <= 1'd1;
+                main_rx_cnt_fsm0_f_next_value <= (main_rx_cnt - 1'd1);
+                main_rx_cnt_fsm0_f_next_value_ce <= 1'd1;
+                builder_basesoc_fsm0_next_state <= 3'd5;
             end
         end
         3'd5: begin
-            main_basesoc_rx_fsm_s7i2s_next_value0 <= 3'd7;
-            main_basesoc_rx_fsm_s7i2s_next_value_ce0 <= 1'd1;
-            if ((~main_basesoc_csrfield_enable0)) begin
-                builder_basesoc_s7i2s_next_state <= 1'd0;
+            main_rx_fsm_fsm0_next_value0 <= 3'd7;
+            main_rx_fsm_fsm0_next_value_ce0 <= 1'd1;
+            if ((~main_csrfield_enable0)) begin
+                builder_basesoc_fsm0_next_state <= 1'd0;
             end else begin
-                if (main_basesoc_rising_edge) begin
-                    if (((main_basesoc_rx_cnt == 1'd0) & (~main_basesoc_sync_pin))) begin
-                        if ((main_basesoc_rx_delay_cnt == 1'd0)) begin
-                            main_basesoc_rx_cnt_s7i2s_f_next_value <= 5'd24;
-                            main_basesoc_rx_cnt_s7i2s_f_next_value_ce <= 1'd1;
-                            main_basesoc_rx_delay_cnt_s7i2s_t_next_value <= 1'd1;
-                            main_basesoc_rx_delay_cnt_s7i2s_t_next_value_ce <= 1'd1;
-                            builder_basesoc_s7i2s_next_state <= 2'd2;
-                            main_basesoc_rx_fifo_rx_fifo_wren <= (~main_basesoc_rx_reset);
+                if (main_rising_edge) begin
+                    if (((main_rx_cnt == 1'd0) & (~main_sync_pin))) begin
+                        if ((main_rx_delay_cnt == 1'd0)) begin
+                            main_rx_cnt_fsm0_f_next_value <= 5'd24;
+                            main_rx_cnt_fsm0_f_next_value_ce <= 1'd1;
+                            main_rx_delay_cnt_fsm0_t_next_value <= 1'd1;
+                            main_rx_delay_cnt_fsm0_t_next_value_ce <= 1'd1;
+                            builder_basesoc_fsm0_next_state <= 2'd2;
+                            main_rx_fifo_rx_fifo_wren <= (~main_rx_reset);
                         end else begin
-                            main_basesoc_rx_delay_cnt_s7i2s_t_next_value <= (main_basesoc_rx_delay_cnt - 1'd1);
-                            main_basesoc_rx_delay_cnt_s7i2s_t_next_value_ce <= 1'd1;
-                            builder_basesoc_s7i2s_next_state <= 3'd5;
+                            main_rx_delay_cnt_fsm0_t_next_value <= (main_rx_delay_cnt - 1'd1);
+                            main_rx_delay_cnt_fsm0_t_next_value_ce <= 1'd1;
+                            builder_basesoc_fsm0_next_state <= 3'd5;
                         end
                     end else begin
-                        if ((main_basesoc_rx_cnt > 1'd0)) begin
-                            builder_basesoc_s7i2s_next_state <= 3'd4;
+                        if ((main_rx_cnt > 1'd0)) begin
+                            builder_basesoc_fsm0_next_state <= 3'd4;
                         end
                     end
                 end
             end
         end
         default: begin
-            main_basesoc_rx_fsm_s7i2s_next_value0 <= 1'd1;
-            main_basesoc_rx_fsm_s7i2s_next_value_ce0 <= 1'd1;
-            main_basesoc_rx_fifo_rx_fifo_wr_d_s7i2s_next_value1 <= 1'd0;
-            main_basesoc_rx_fifo_rx_fifo_wr_d_s7i2s_next_value_ce1 <= 1'd1;
-            if (main_basesoc_csrfield_enable0) begin
-                if ((main_basesoc_rising_edge & (~main_basesoc_sync_pin))) begin
-                    builder_basesoc_s7i2s_next_state <= 1'd1;
-                    main_basesoc_rx_delay_cnt_s7i2s_t_next_value <= 1'd1;
-                    main_basesoc_rx_delay_cnt_s7i2s_t_next_value_ce <= 1'd1;
+            main_rx_fsm_fsm0_next_value0 <= 1'd1;
+            main_rx_fsm_fsm0_next_value_ce0 <= 1'd1;
+            main_rx_fifo_rx_fifo_wr_d_fsm0_next_value1 <= 1'd0;
+            main_rx_fifo_rx_fifo_wr_d_fsm0_next_value_ce1 <= 1'd1;
+            if (main_csrfield_enable0) begin
+                if ((main_rising_edge & (~main_sync_pin))) begin
+                    builder_basesoc_fsm0_next_state <= 1'd1;
+                    main_rx_delay_cnt_fsm0_t_next_value <= 1'd1;
+                    main_rx_delay_cnt_fsm0_t_next_value_ce <= 1'd1;
                 end
             end
         end
     endcase
 end
-assign main_basesoc_tx_fifo_reset = main_basesoc_tx_fifo_tx_fifo_reset;
-assign main_basesoc_tx_fifo_level0 = main_basesoc_tx_fifo_level1;
-assign main_basesoc_tx_fifo_sink_payload_data = main_basesoc_tx_fifo_tx_fifo_wr_d;
-assign main_basesoc_tx_fifo_sink_valid = main_basesoc_tx_fifo_tx_fifo_wren;
-assign main_basesoc_tx_fifo_tx_fifo_rd_d = main_basesoc_tx_fifo_source_payload_data;
-assign main_basesoc_tx_fifo_source_ready = main_basesoc_tx_fifo_tx_fifo_rden;
-assign main_basesoc_tx_fifo_tx_fifo_wrerr = ((~main_basesoc_tx_fifo_sink_ready) & main_basesoc_tx_fifo_tx_fifo_wren);
-assign main_basesoc_tx_fifo_tx_fifo_rderr = (main_basesoc_tx_fifo_source_ready & main_basesoc_tx_fifo_tx_fifo_rden);
+assign main_tx_fifo_reset = main_tx_fifo_tx_fifo_reset;
+assign main_tx_fifo_level0 = main_tx_fifo_level1;
+assign main_tx_fifo_sink_payload_data = main_tx_fifo_tx_fifo_wr_d;
+assign main_tx_fifo_sink_valid = main_tx_fifo_tx_fifo_wren;
+assign main_tx_fifo_tx_fifo_rd_d = main_tx_fifo_source_payload_data;
+assign main_tx_fifo_source_ready = main_tx_fifo_tx_fifo_rden;
+assign main_tx_fifo_tx_fifo_wrerr = ((~main_tx_fifo_sink_ready) & main_tx_fifo_tx_fifo_wren);
+assign main_tx_fifo_tx_fifo_rderr = (main_tx_fifo_source_ready & main_tx_fifo_tx_fifo_rden);
 always @(*) begin
-    main_basesoc_tx_fifo_tx_fifo_empty <= 1'd0;
-    if ((main_basesoc_tx_fifo_level0 == 1'd0)) begin
-        main_basesoc_tx_fifo_tx_fifo_empty <= 1'd1;
+    main_tx_fifo_tx_fifo_empty <= 1'd0;
+    if ((main_tx_fifo_level0 == 1'd0)) begin
+        main_tx_fifo_tx_fifo_empty <= 1'd1;
     end else begin
-        main_basesoc_tx_fifo_tx_fifo_empty <= 1'd0;
+        main_tx_fifo_tx_fifo_empty <= 1'd0;
     end
 end
 always @(*) begin
-    main_basesoc_tx_fifo_tx_fifo_full <= 1'd0;
-    if ((main_basesoc_tx_fifo_level0 == 10'd512)) begin
-        main_basesoc_tx_fifo_tx_fifo_full <= 1'd1;
+    main_tx_fifo_tx_fifo_full <= 1'd0;
+    if ((main_tx_fifo_level0 == 10'd512)) begin
+        main_tx_fifo_tx_fifo_full <= 1'd1;
     end else begin
-        main_basesoc_tx_fifo_tx_fifo_full <= 1'd0;
+        main_tx_fifo_tx_fifo_full <= 1'd0;
     end
 end
-assign main_basesoc_tx_fifo_syncfifo_din = {main_basesoc_tx_fifo_fifo_in_last, main_basesoc_tx_fifo_fifo_in_first, main_basesoc_tx_fifo_fifo_in_payload_data};
-assign {main_basesoc_tx_fifo_fifo_out_last, main_basesoc_tx_fifo_fifo_out_first, main_basesoc_tx_fifo_fifo_out_payload_data} = main_basesoc_tx_fifo_syncfifo_dout;
-assign main_basesoc_tx_fifo_sink_ready = main_basesoc_tx_fifo_syncfifo_writable;
-assign main_basesoc_tx_fifo_syncfifo_we = main_basesoc_tx_fifo_sink_valid;
-assign main_basesoc_tx_fifo_fifo_in_first = main_basesoc_tx_fifo_sink_first;
-assign main_basesoc_tx_fifo_fifo_in_last = main_basesoc_tx_fifo_sink_last;
-assign main_basesoc_tx_fifo_fifo_in_payload_data = main_basesoc_tx_fifo_sink_payload_data;
-assign main_basesoc_tx_fifo_source_valid = main_basesoc_tx_fifo_syncfifo_readable;
-assign main_basesoc_tx_fifo_source_first = main_basesoc_tx_fifo_fifo_out_first;
-assign main_basesoc_tx_fifo_source_last = main_basesoc_tx_fifo_fifo_out_last;
-assign main_basesoc_tx_fifo_source_payload_data = main_basesoc_tx_fifo_fifo_out_payload_data;
-assign main_basesoc_tx_fifo_syncfifo_re = main_basesoc_tx_fifo_source_ready;
+assign main_tx_fifo_syncfifo_din = {main_tx_fifo_fifo_in_last, main_tx_fifo_fifo_in_first, main_tx_fifo_fifo_in_payload_data};
+assign {main_tx_fifo_fifo_out_last, main_tx_fifo_fifo_out_first, main_tx_fifo_fifo_out_payload_data} = main_tx_fifo_syncfifo_dout;
+assign main_tx_fifo_sink_ready = main_tx_fifo_syncfifo_writable;
+assign main_tx_fifo_syncfifo_we = main_tx_fifo_sink_valid;
+assign main_tx_fifo_fifo_in_first = main_tx_fifo_sink_first;
+assign main_tx_fifo_fifo_in_last = main_tx_fifo_sink_last;
+assign main_tx_fifo_fifo_in_payload_data = main_tx_fifo_sink_payload_data;
+assign main_tx_fifo_source_valid = main_tx_fifo_syncfifo_readable;
+assign main_tx_fifo_source_first = main_tx_fifo_fifo_out_first;
+assign main_tx_fifo_source_last = main_tx_fifo_fifo_out_last;
+assign main_tx_fifo_source_payload_data = main_tx_fifo_fifo_out_payload_data;
+assign main_tx_fifo_syncfifo_re = main_tx_fifo_source_ready;
 always @(*) begin
-    main_basesoc_tx_fifo_wrport_adr <= 9'd0;
-    if (main_basesoc_tx_fifo_replace) begin
-        main_basesoc_tx_fifo_wrport_adr <= (main_basesoc_tx_fifo_produce - 1'd1);
+    main_tx_fifo_wrport_adr <= 9'd0;
+    if (main_tx_fifo_replace) begin
+        main_tx_fifo_wrport_adr <= (main_tx_fifo_produce - 1'd1);
     end else begin
-        main_basesoc_tx_fifo_wrport_adr <= main_basesoc_tx_fifo_produce;
+        main_tx_fifo_wrport_adr <= main_tx_fifo_produce;
     end
 end
-assign main_basesoc_tx_fifo_wrport_dat_w = main_basesoc_tx_fifo_syncfifo_din;
-assign main_basesoc_tx_fifo_wrport_we = (main_basesoc_tx_fifo_syncfifo_we & (main_basesoc_tx_fifo_syncfifo_writable | main_basesoc_tx_fifo_replace));
-assign main_basesoc_tx_fifo_do_read = (main_basesoc_tx_fifo_syncfifo_readable & main_basesoc_tx_fifo_syncfifo_re);
-assign main_basesoc_tx_fifo_rdport_adr = main_basesoc_tx_fifo_consume;
-assign main_basesoc_tx_fifo_syncfifo_dout = main_basesoc_tx_fifo_rdport_dat_r;
-assign main_basesoc_tx_fifo_syncfifo_writable = (main_basesoc_tx_fifo_level1 != 10'd512);
-assign main_basesoc_tx_fifo_syncfifo_readable = (main_basesoc_tx_fifo_level1 != 1'd0);
+assign main_tx_fifo_wrport_dat_w = main_tx_fifo_syncfifo_din;
+assign main_tx_fifo_wrport_we = (main_tx_fifo_syncfifo_we & (main_tx_fifo_syncfifo_writable | main_tx_fifo_replace));
+assign main_tx_fifo_do_read = (main_tx_fifo_syncfifo_readable & main_tx_fifo_syncfifo_re);
+assign main_tx_fifo_rdport_adr = main_tx_fifo_consume;
+assign main_tx_fifo_syncfifo_dout = main_tx_fifo_rdport_dat_r;
+assign main_tx_fifo_syncfifo_writable = (main_tx_fifo_level1 != 10'd512);
+assign main_tx_fifo_syncfifo_readable = (main_tx_fifo_level1 != 1'd0);
 always @(*) begin
-    main_basesoc_tx_fifo_tx_fifo_rden <= 1'd0;
-    main_basesoc_tx_pin_f_next_value_ce <= 1'd0;
-    main_basesoc_next_state <= 3'd0;
-    main_basesoc_tx_cnt_t_next_value0 <= 5'd0;
-    main_basesoc_tx_cnt_t_next_value_ce0 <= 1'd0;
-    main_basesoc_tx_buf_t_next_value1 <= 25'd0;
-    main_basesoc_tx_buf_t_next_value_ce1 <= 1'd0;
-    main_basesoc_tx_pin_f_next_value <= 1'd0;
-    main_basesoc_next_state <= main_basesoc_state;
-    case (main_basesoc_state)
+    main_tx_fifo_tx_fifo_rden <= 1'd0;
+    builder_basesoc_fsm1_next_state <= 3'd0;
+    main_tx_cnt_fsm1_t_next_value0 <= 5'd0;
+    main_tx_cnt_fsm1_t_next_value_ce0 <= 1'd0;
+    main_tx_buf_fsm1_t_next_value1 <= 25'd0;
+    main_tx_buf_fsm1_t_next_value_ce1 <= 1'd0;
+    main_tx_pin_fsm1_f_next_value <= 1'd0;
+    main_tx_pin_fsm1_f_next_value_ce <= 1'd0;
+    builder_basesoc_fsm1_next_state <= builder_basesoc_fsm1_state;
+    case (builder_basesoc_fsm1_state)
         1'd1: begin
-            if ((main_basesoc_rising_edge & (~main_basesoc_sync_pin))) begin
-                main_basesoc_next_state <= 2'd2;
-                main_basesoc_tx_cnt_t_next_value0 <= 5'd25;
-                main_basesoc_tx_cnt_t_next_value_ce0 <= 1'd1;
-                main_basesoc_tx_buf_t_next_value1 <= {1'd0, main_basesoc_tx_fifo_tx_fifo_rd_d};
-                main_basesoc_tx_buf_t_next_value_ce1 <= 1'd1;
-                main_basesoc_tx_fifo_tx_fifo_rden <= (~main_basesoc_tx_reset);
+            if ((main_rising_edge & (~main_sync_pin))) begin
+                builder_basesoc_fsm1_next_state <= 2'd2;
+                main_tx_cnt_fsm1_t_next_value0 <= 5'd25;
+                main_tx_cnt_fsm1_t_next_value_ce0 <= 1'd1;
+                main_tx_buf_fsm1_t_next_value1 <= {1'd0, main_tx_fifo_tx_fifo_rd_d};
+                main_tx_buf_fsm1_t_next_value_ce1 <= 1'd1;
+                main_tx_fifo_tx_fifo_rden <= (~main_tx_reset);
             end
         end
         2'd2: begin
-            if (main_basesoc_falling_edge) begin
-                main_basesoc_next_state <= 2'd3;
+            if (main_falling_edge) begin
+                builder_basesoc_fsm1_next_state <= 2'd3;
             end
         end
         2'd3: begin
-            if ((~main_basesoc_csrfield_enable1)) begin
-                main_basesoc_next_state <= 1'd0;
+            if ((~main_csrfield_enable1)) begin
+                builder_basesoc_fsm1_next_state <= 1'd0;
             end else begin
-                main_basesoc_tx_pin_f_next_value <= main_basesoc_tx_buf[23];
-                main_basesoc_tx_pin_f_next_value_ce <= 1'd1;
-                main_basesoc_tx_buf_t_next_value1 <= {main_basesoc_tx_buf[23:0], 1'd0};
-                main_basesoc_tx_buf_t_next_value_ce1 <= 1'd1;
-                main_basesoc_tx_cnt_t_next_value0 <= (main_basesoc_tx_cnt - 1'd1);
-                main_basesoc_tx_cnt_t_next_value_ce0 <= 1'd1;
-                main_basesoc_next_state <= 3'd4;
+                main_tx_pin_fsm1_f_next_value <= main_tx_buf[23];
+                main_tx_pin_fsm1_f_next_value_ce <= 1'd1;
+                main_tx_buf_fsm1_t_next_value1 <= {main_tx_buf[23:0], 1'd0};
+                main_tx_buf_fsm1_t_next_value_ce1 <= 1'd1;
+                main_tx_cnt_fsm1_t_next_value0 <= (main_tx_cnt - 1'd1);
+                main_tx_cnt_fsm1_t_next_value_ce0 <= 1'd1;
+                builder_basesoc_fsm1_next_state <= 3'd4;
             end
         end
         3'd4: begin
-            if ((~main_basesoc_csrfield_enable1)) begin
-                main_basesoc_next_state <= 1'd0;
+            if ((~main_csrfield_enable1)) begin
+                builder_basesoc_fsm1_next_state <= 1'd0;
             end else begin
-                if (main_basesoc_rising_edge) begin
-                    if ((main_basesoc_tx_cnt == 1'd0)) begin
-                        if (main_basesoc_sync_pin) begin
-                            main_basesoc_tx_cnt_t_next_value0 <= 5'd25;
-                            main_basesoc_tx_cnt_t_next_value_ce0 <= 1'd1;
-                            main_basesoc_next_state <= 3'd5;
-                            main_basesoc_tx_buf_t_next_value1 <= {1'd0, main_basesoc_tx_fifo_tx_fifo_rd_d};
-                            main_basesoc_tx_buf_t_next_value_ce1 <= 1'd1;
-                            main_basesoc_tx_fifo_tx_fifo_rden <= (~main_basesoc_tx_reset);
+                if (main_rising_edge) begin
+                    if ((main_tx_cnt == 1'd0)) begin
+                        if (main_sync_pin) begin
+                            main_tx_cnt_fsm1_t_next_value0 <= 5'd25;
+                            main_tx_cnt_fsm1_t_next_value_ce0 <= 1'd1;
+                            builder_basesoc_fsm1_next_state <= 3'd5;
+                            main_tx_buf_fsm1_t_next_value1 <= {1'd0, main_tx_fifo_tx_fifo_rd_d};
+                            main_tx_buf_fsm1_t_next_value_ce1 <= 1'd1;
+                            main_tx_fifo_tx_fifo_rden <= (~main_tx_reset);
                         end else begin
-                            main_basesoc_next_state <= 3'd4;
+                            builder_basesoc_fsm1_next_state <= 3'd4;
                         end
                     end else begin
-                        if ((main_basesoc_tx_cnt > 1'd0)) begin
-                            main_basesoc_next_state <= 2'd2;
+                        if ((main_tx_cnt > 1'd0)) begin
+                            builder_basesoc_fsm1_next_state <= 2'd2;
                         end
                     end
                 end
             end
         end
         3'd5: begin
-            if (main_basesoc_falling_edge) begin
-                main_basesoc_next_state <= 3'd6;
+            if (main_falling_edge) begin
+                builder_basesoc_fsm1_next_state <= 3'd6;
             end
         end
         3'd6: begin
-            if ((~main_basesoc_csrfield_enable1)) begin
-                main_basesoc_next_state <= 1'd0;
+            if ((~main_csrfield_enable1)) begin
+                builder_basesoc_fsm1_next_state <= 1'd0;
             end else begin
-                main_basesoc_tx_pin_f_next_value <= main_basesoc_tx_buf[23];
-                main_basesoc_tx_pin_f_next_value_ce <= 1'd1;
-                main_basesoc_tx_buf_t_next_value1 <= {main_basesoc_tx_buf[23:0], 1'd0};
-                main_basesoc_tx_buf_t_next_value_ce1 <= 1'd1;
-                main_basesoc_tx_cnt_t_next_value0 <= (main_basesoc_tx_cnt - 1'd1);
-                main_basesoc_tx_cnt_t_next_value_ce0 <= 1'd1;
-                main_basesoc_next_state <= 3'd7;
+                main_tx_pin_fsm1_f_next_value <= main_tx_buf[23];
+                main_tx_pin_fsm1_f_next_value_ce <= 1'd1;
+                main_tx_buf_fsm1_t_next_value1 <= {main_tx_buf[23:0], 1'd0};
+                main_tx_buf_fsm1_t_next_value_ce1 <= 1'd1;
+                main_tx_cnt_fsm1_t_next_value0 <= (main_tx_cnt - 1'd1);
+                main_tx_cnt_fsm1_t_next_value_ce0 <= 1'd1;
+                builder_basesoc_fsm1_next_state <= 3'd7;
             end
         end
         3'd7: begin
-            if ((~main_basesoc_csrfield_enable1)) begin
-                main_basesoc_next_state <= 1'd0;
+            if ((~main_csrfield_enable1)) begin
+                builder_basesoc_fsm1_next_state <= 1'd0;
             end else begin
-                if (main_basesoc_rising_edge) begin
-                    if (((main_basesoc_tx_cnt == 1'd0) & (~main_basesoc_sync_pin))) begin
-                        main_basesoc_tx_cnt_t_next_value0 <= 5'd25;
-                        main_basesoc_tx_cnt_t_next_value_ce0 <= 1'd1;
-                        main_basesoc_next_state <= 2'd2;
-                        main_basesoc_tx_buf_t_next_value1 <= {1'd0, main_basesoc_tx_fifo_tx_fifo_rd_d};
-                        main_basesoc_tx_buf_t_next_value_ce1 <= 1'd1;
-                        main_basesoc_tx_fifo_tx_fifo_rden <= (~main_basesoc_tx_reset);
+                if (main_rising_edge) begin
+                    if (((main_tx_cnt == 1'd0) & (~main_sync_pin))) begin
+                        main_tx_cnt_fsm1_t_next_value0 <= 5'd25;
+                        main_tx_cnt_fsm1_t_next_value_ce0 <= 1'd1;
+                        builder_basesoc_fsm1_next_state <= 2'd2;
+                        main_tx_buf_fsm1_t_next_value1 <= {1'd0, main_tx_fifo_tx_fifo_rd_d};
+                        main_tx_buf_fsm1_t_next_value_ce1 <= 1'd1;
+                        main_tx_fifo_tx_fifo_rden <= (~main_tx_reset);
                     end else begin
-                        if ((main_basesoc_tx_cnt > 1'd0)) begin
-                            main_basesoc_next_state <= 3'd5;
+                        if ((main_tx_cnt > 1'd0)) begin
+                            builder_basesoc_fsm1_next_state <= 3'd5;
                         end
                     end
                 end
             end
         end
         default: begin
-            if (main_basesoc_csrfield_enable1) begin
-                if ((main_basesoc_rising_edge & (~main_basesoc_sync_pin))) begin
-                    main_basesoc_next_state <= 1'd1;
+            if (main_csrfield_enable1) begin
+                if ((main_rising_edge & (~main_sync_pin))) begin
+                    builder_basesoc_fsm1_next_state <= 1'd1;
                 end
             end
         end
     endcase
 end
-assign scope_clk = sys_clk;
-assign main_basesoc_mux_valid = 1'd1;
-assign main_basesoc_mux_payload_data = {main_basesoc_csrfield_enable0, main_basesoc_rx_fsm, i2s_rx, i2s_tx, main_basesoc_clk_pin, main_basesoc_sync_pin, main_basesoc_state, main_basesoc_tx_cnt, main_basesoc_rx_cnt, main_basesoc_rx_fifo_rx_fifo_rd_d};
 always @(*) begin
-    main_basesoc_mux_source_valid <= 1'd0;
-    main_basesoc_mux_source_first <= 1'd0;
-    main_basesoc_mux_source_last <= 1'd0;
-    main_basesoc_mux_ready <= 1'd0;
-    main_basesoc_mux_source_payload_data <= 47'd0;
-    main_basesoc_mux_source_payload_hit <= 1'd0;
-    case (main_basesoc_mux_value)
-        1'd0: begin
-            main_basesoc_mux_source_valid <= main_basesoc_mux_valid;
-            main_basesoc_mux_ready <= main_basesoc_mux_source_ready;
-            main_basesoc_mux_source_first <= main_basesoc_mux_first;
-            main_basesoc_mux_source_last <= main_basesoc_mux_last;
-            main_basesoc_mux_source_payload_data <= main_basesoc_mux_payload_data;
-            main_basesoc_mux_source_payload_hit <= main_basesoc_mux_payload_hit;
-        end
-    endcase
-end
-assign main_basesoc_trigger_mem_sink_valid = main_basesoc_trigger_mem_write_re;
-assign main_basesoc_trigger_mem_sink_payload_mask = main_basesoc_trigger_mem_mask_storage;
-assign main_basesoc_trigger_mem_sink_payload_value = main_basesoc_trigger_mem_value_storage;
-assign main_basesoc_trigger_mem_full_status = (~main_basesoc_trigger_mem_sink_ready);
-assign main_basesoc_trigger_wait = (~((~main_basesoc_trigger_enable) & main_basesoc_trigger_enable_d));
-assign main_basesoc_trigger_hit = ((main_basesoc_trigger_sink_sink_payload_data & main_basesoc_trigger_mem_source_payload_mask) == (main_basesoc_trigger_mem_source_payload_value & main_basesoc_trigger_mem_source_payload_mask));
-assign main_basesoc_trigger_mem_source_ready = ((main_basesoc_trigger_enable & main_basesoc_trigger_hit) | (~main_basesoc_trigger_done1));
-assign main_basesoc_trigger_source_source_valid = main_basesoc_trigger_sink_sink_valid;
-assign main_basesoc_trigger_sink_sink_ready = main_basesoc_trigger_source_source_ready;
-assign main_basesoc_trigger_source_source_first = main_basesoc_trigger_sink_sink_first;
-assign main_basesoc_trigger_source_source_last = main_basesoc_trigger_sink_sink_last;
-assign main_basesoc_trigger_source_source_payload_data = main_basesoc_trigger_sink_sink_payload_data;
-assign main_basesoc_trigger_done0 = (~main_basesoc_trigger_mem_source_valid);
-always @(*) begin
-    main_basesoc_trigger_source_source_payload_hit <= 1'd0;
-    main_basesoc_trigger_source_source_payload_hit <= main_basesoc_trigger_sink_sink_payload_hit;
-    main_basesoc_trigger_source_source_payload_hit <= main_basesoc_trigger_done0;
-end
-assign main_basesoc_trigger_mem_asyncfifo_din = {main_basesoc_trigger_mem_fifo_in_last, main_basesoc_trigger_mem_fifo_in_first, main_basesoc_trigger_mem_fifo_in_payload_value, main_basesoc_trigger_mem_fifo_in_payload_mask};
-assign {main_basesoc_trigger_mem_fifo_out_last, main_basesoc_trigger_mem_fifo_out_first, main_basesoc_trigger_mem_fifo_out_payload_value, main_basesoc_trigger_mem_fifo_out_payload_mask} = main_basesoc_trigger_mem_asyncfifo_dout;
-assign main_basesoc_trigger_mem_sink_ready = main_basesoc_trigger_mem_asyncfifo_writable;
-assign main_basesoc_trigger_mem_asyncfifo_we = main_basesoc_trigger_mem_sink_valid;
-assign main_basesoc_trigger_mem_fifo_in_first = main_basesoc_trigger_mem_sink_first;
-assign main_basesoc_trigger_mem_fifo_in_last = main_basesoc_trigger_mem_sink_last;
-assign main_basesoc_trigger_mem_fifo_in_payload_mask = main_basesoc_trigger_mem_sink_payload_mask;
-assign main_basesoc_trigger_mem_fifo_in_payload_value = main_basesoc_trigger_mem_sink_payload_value;
-assign main_basesoc_trigger_mem_source_valid = main_basesoc_trigger_mem_asyncfifo_readable;
-assign main_basesoc_trigger_mem_source_first = main_basesoc_trigger_mem_fifo_out_first;
-assign main_basesoc_trigger_mem_source_last = main_basesoc_trigger_mem_fifo_out_last;
-assign main_basesoc_trigger_mem_source_payload_mask = main_basesoc_trigger_mem_fifo_out_payload_mask;
-assign main_basesoc_trigger_mem_source_payload_value = main_basesoc_trigger_mem_fifo_out_payload_value;
-assign main_basesoc_trigger_mem_asyncfifo_re = main_basesoc_trigger_mem_source_ready;
-assign main_basesoc_trigger_mem_graycounter0_ce = (main_basesoc_trigger_mem_asyncfifo_writable & main_basesoc_trigger_mem_asyncfifo_we);
-assign main_basesoc_trigger_mem_graycounter1_ce = (main_basesoc_trigger_mem_asyncfifo_readable & main_basesoc_trigger_mem_asyncfifo_re);
-assign main_basesoc_trigger_mem_asyncfifo_writable = (((main_basesoc_trigger_mem_graycounter0_q[4] == main_basesoc_trigger_mem_consume_wdomain[4]) | (main_basesoc_trigger_mem_graycounter0_q[3] == main_basesoc_trigger_mem_consume_wdomain[3])) | (main_basesoc_trigger_mem_graycounter0_q[2:0] != main_basesoc_trigger_mem_consume_wdomain[2:0]));
-assign main_basesoc_trigger_mem_asyncfifo_readable = (main_basesoc_trigger_mem_graycounter1_q != main_basesoc_trigger_mem_produce_rdomain);
-assign main_basesoc_trigger_mem_wrport_adr = main_basesoc_trigger_mem_graycounter0_q_binary[3:0];
-assign main_basesoc_trigger_mem_wrport_dat_w = main_basesoc_trigger_mem_asyncfifo_din;
-assign main_basesoc_trigger_mem_wrport_we = main_basesoc_trigger_mem_graycounter0_ce;
-assign main_basesoc_trigger_mem_rdport_adr = main_basesoc_trigger_mem_graycounter1_q_next_binary[3:0];
-assign main_basesoc_trigger_mem_asyncfifo_dout = main_basesoc_trigger_mem_rdport_dat_r;
-always @(*) begin
-    main_basesoc_trigger_mem_graycounter0_q_next_binary <= 5'd0;
-    if (main_basesoc_trigger_mem_graycounter0_ce) begin
-        main_basesoc_trigger_mem_graycounter0_q_next_binary <= (main_basesoc_trigger_mem_graycounter0_q_binary + 1'd1);
-    end else begin
-        main_basesoc_trigger_mem_graycounter0_q_next_binary <= main_basesoc_trigger_mem_graycounter0_q_binary;
-    end
-end
-assign main_basesoc_trigger_mem_graycounter0_q_next = (main_basesoc_trigger_mem_graycounter0_q_next_binary ^ main_basesoc_trigger_mem_graycounter0_q_next_binary[4:1]);
-always @(*) begin
-    main_basesoc_trigger_mem_graycounter1_q_next_binary <= 5'd0;
-    if (main_basesoc_trigger_mem_graycounter1_ce) begin
-        main_basesoc_trigger_mem_graycounter1_q_next_binary <= (main_basesoc_trigger_mem_graycounter1_q_binary + 1'd1);
-    end else begin
-        main_basesoc_trigger_mem_graycounter1_q_next_binary <= main_basesoc_trigger_mem_graycounter1_q_binary;
-    end
-end
-assign main_basesoc_trigger_mem_graycounter1_q_next = (main_basesoc_trigger_mem_graycounter1_q_next_binary ^ main_basesoc_trigger_mem_graycounter1_q_next_binary[4:1]);
-assign main_basesoc_trigger_done1 = (main_basesoc_trigger_count == 1'd0);
-assign main_basesoc_subsampler_done = (main_basesoc_subsampler_counter == main_basesoc_subsampler_value);
-assign main_basesoc_subsampler_sink_ready = main_basesoc_subsampler_source_ready;
-assign main_basesoc_subsampler_source_first = main_basesoc_subsampler_sink_first;
-assign main_basesoc_subsampler_source_last = main_basesoc_subsampler_sink_last;
-assign main_basesoc_subsampler_source_payload_data = main_basesoc_subsampler_sink_payload_data;
-assign main_basesoc_subsampler_source_payload_hit = main_basesoc_subsampler_sink_payload_hit;
-assign main_basesoc_subsampler_source_valid = (main_basesoc_subsampler_sink_valid & main_basesoc_subsampler_done);
-assign main_basesoc_storage_level = main_basesoc_storage_mem_level1;
-assign main_basesoc_storage_converter_sink_valid = main_basesoc_storage_cdc_source_valid;
-assign main_basesoc_storage_cdc_source_ready = main_basesoc_storage_converter_sink_ready;
-assign main_basesoc_storage_converter_sink_first = main_basesoc_storage_cdc_source_first;
-assign main_basesoc_storage_converter_sink_last = main_basesoc_storage_cdc_source_last;
-assign main_basesoc_storage_converter_sink_payload_data = main_basesoc_storage_cdc_source_payload_data;
-assign main_basesoc_storage_read_source_valid = main_basesoc_storage_source_source_valid;
-assign main_basesoc_storage_source_source_ready = main_basesoc_storage_read_source_ready;
-assign main_basesoc_storage_read_source_first = main_basesoc_storage_source_source_first;
-assign main_basesoc_storage_read_source_last = main_basesoc_storage_source_source_last;
-assign main_basesoc_storage_read_source_payload_data = main_basesoc_storage_source_source_payload_data;
-assign main_basesoc_storage_read_source_ready = (main_basesoc_storage_mem_data_we | (~main_basesoc_storage_enable_storage));
-assign main_basesoc_storage_mem_data_status = main_basesoc_storage_read_source_payload_data;
-assign main_basesoc_storage_mem_syncfifo_din = {main_basesoc_storage_mem_fifo_in_last, main_basesoc_storage_mem_fifo_in_first, main_basesoc_storage_mem_fifo_in_payload_data};
-assign {main_basesoc_storage_mem_fifo_out_last, main_basesoc_storage_mem_fifo_out_first, main_basesoc_storage_mem_fifo_out_payload_data} = main_basesoc_storage_mem_syncfifo_dout;
-assign main_basesoc_storage_mem_sink_ready = main_basesoc_storage_mem_syncfifo_writable;
-assign main_basesoc_storage_mem_syncfifo_we = main_basesoc_storage_mem_sink_valid;
-assign main_basesoc_storage_mem_fifo_in_first = main_basesoc_storage_mem_sink_first;
-assign main_basesoc_storage_mem_fifo_in_last = main_basesoc_storage_mem_sink_last;
-assign main_basesoc_storage_mem_fifo_in_payload_data = main_basesoc_storage_mem_sink_payload_data;
-assign main_basesoc_storage_mem_source_valid = main_basesoc_storage_mem_readable;
-assign main_basesoc_storage_mem_source_first = main_basesoc_storage_mem_fifo_out_first;
-assign main_basesoc_storage_mem_source_last = main_basesoc_storage_mem_fifo_out_last;
-assign main_basesoc_storage_mem_source_payload_data = main_basesoc_storage_mem_fifo_out_payload_data;
-assign main_basesoc_storage_mem_re = main_basesoc_storage_mem_source_ready;
-assign main_basesoc_storage_mem_syncfifo_re = (main_basesoc_storage_mem_syncfifo_readable & ((~main_basesoc_storage_mem_readable) | main_basesoc_storage_mem_re));
-assign main_basesoc_storage_mem_level1 = (main_basesoc_storage_mem_level0 + main_basesoc_storage_mem_readable);
-always @(*) begin
-    main_basesoc_storage_mem_wrport_adr <= 10'd0;
-    if (main_basesoc_storage_mem_replace) begin
-        main_basesoc_storage_mem_wrport_adr <= (main_basesoc_storage_mem_produce - 1'd1);
-    end else begin
-        main_basesoc_storage_mem_wrport_adr <= main_basesoc_storage_mem_produce;
-    end
-end
-assign main_basesoc_storage_mem_wrport_dat_w = main_basesoc_storage_mem_syncfifo_din;
-assign main_basesoc_storage_mem_wrport_we = (main_basesoc_storage_mem_syncfifo_we & (main_basesoc_storage_mem_syncfifo_writable | main_basesoc_storage_mem_replace));
-assign main_basesoc_storage_mem_do_read = (main_basesoc_storage_mem_syncfifo_readable & main_basesoc_storage_mem_syncfifo_re);
-assign main_basesoc_storage_mem_rdport_adr = main_basesoc_storage_mem_consume;
-assign main_basesoc_storage_mem_syncfifo_dout = main_basesoc_storage_mem_rdport_dat_r;
-assign main_basesoc_storage_mem_rdport_re = main_basesoc_storage_mem_do_read;
-assign main_basesoc_storage_mem_syncfifo_writable = (main_basesoc_storage_mem_level0 != 11'd1024);
-assign main_basesoc_storage_mem_syncfifo_readable = (main_basesoc_storage_mem_level0 != 1'd0);
-assign main_basesoc_storage_cdc_asyncfifo_din = {main_basesoc_storage_cdc_fifo_in_last, main_basesoc_storage_cdc_fifo_in_first, main_basesoc_storage_cdc_fifo_in_payload_data};
-assign {main_basesoc_storage_cdc_fifo_out_last, main_basesoc_storage_cdc_fifo_out_first, main_basesoc_storage_cdc_fifo_out_payload_data} = main_basesoc_storage_cdc_asyncfifo_dout;
-assign main_basesoc_storage_cdc_sink_ready = main_basesoc_storage_cdc_asyncfifo_writable;
-assign main_basesoc_storage_cdc_asyncfifo_we = main_basesoc_storage_cdc_sink_valid;
-assign main_basesoc_storage_cdc_fifo_in_first = main_basesoc_storage_cdc_sink_first;
-assign main_basesoc_storage_cdc_fifo_in_last = main_basesoc_storage_cdc_sink_last;
-assign main_basesoc_storage_cdc_fifo_in_payload_data = main_basesoc_storage_cdc_sink_payload_data;
-assign main_basesoc_storage_cdc_source_valid = main_basesoc_storage_cdc_asyncfifo_readable;
-assign main_basesoc_storage_cdc_source_first = main_basesoc_storage_cdc_fifo_out_first;
-assign main_basesoc_storage_cdc_source_last = main_basesoc_storage_cdc_fifo_out_last;
-assign main_basesoc_storage_cdc_source_payload_data = main_basesoc_storage_cdc_fifo_out_payload_data;
-assign main_basesoc_storage_cdc_asyncfifo_re = main_basesoc_storage_cdc_source_ready;
-assign main_basesoc_storage_cdc_graycounter0_ce = (main_basesoc_storage_cdc_asyncfifo_writable & main_basesoc_storage_cdc_asyncfifo_we);
-assign main_basesoc_storage_cdc_graycounter1_ce = (main_basesoc_storage_cdc_asyncfifo_readable & main_basesoc_storage_cdc_asyncfifo_re);
-assign main_basesoc_storage_cdc_asyncfifo_writable = (((main_basesoc_storage_cdc_graycounter0_q[2] == main_basesoc_storage_cdc_consume_wdomain[2]) | (main_basesoc_storage_cdc_graycounter0_q[1] == main_basesoc_storage_cdc_consume_wdomain[1])) | (main_basesoc_storage_cdc_graycounter0_q[0] != main_basesoc_storage_cdc_consume_wdomain[0]));
-assign main_basesoc_storage_cdc_asyncfifo_readable = (main_basesoc_storage_cdc_graycounter1_q != main_basesoc_storage_cdc_produce_rdomain);
-assign main_basesoc_storage_cdc_wrport_adr = main_basesoc_storage_cdc_graycounter0_q_binary[1:0];
-assign main_basesoc_storage_cdc_wrport_dat_w = main_basesoc_storage_cdc_asyncfifo_din;
-assign main_basesoc_storage_cdc_wrport_we = main_basesoc_storage_cdc_graycounter0_ce;
-assign main_basesoc_storage_cdc_rdport_adr = main_basesoc_storage_cdc_graycounter1_q_next_binary[1:0];
-assign main_basesoc_storage_cdc_asyncfifo_dout = main_basesoc_storage_cdc_rdport_dat_r;
-always @(*) begin
-    main_basesoc_storage_cdc_graycounter0_q_next_binary <= 3'd0;
-    if (main_basesoc_storage_cdc_graycounter0_ce) begin
-        main_basesoc_storage_cdc_graycounter0_q_next_binary <= (main_basesoc_storage_cdc_graycounter0_q_binary + 1'd1);
-    end else begin
-        main_basesoc_storage_cdc_graycounter0_q_next_binary <= main_basesoc_storage_cdc_graycounter0_q_binary;
-    end
-end
-assign main_basesoc_storage_cdc_graycounter0_q_next = (main_basesoc_storage_cdc_graycounter0_q_next_binary ^ main_basesoc_storage_cdc_graycounter0_q_next_binary[2:1]);
-always @(*) begin
-    main_basesoc_storage_cdc_graycounter1_q_next_binary <= 3'd0;
-    if (main_basesoc_storage_cdc_graycounter1_ce) begin
-        main_basesoc_storage_cdc_graycounter1_q_next_binary <= (main_basesoc_storage_cdc_graycounter1_q_binary + 1'd1);
-    end else begin
-        main_basesoc_storage_cdc_graycounter1_q_next_binary <= main_basesoc_storage_cdc_graycounter1_q_binary;
-    end
-end
-assign main_basesoc_storage_cdc_graycounter1_q_next = (main_basesoc_storage_cdc_graycounter1_q_next_binary ^ main_basesoc_storage_cdc_graycounter1_q_next_binary[2:1]);
-assign main_basesoc_storage_done1 = (main_basesoc_storage_count == 1'd0);
-always @(*) begin
-    main_basesoc_storage_mem_sink_first <= 1'd0;
-    main_basesoc_storage_mem_sink_last <= 1'd0;
-    main_basesoc_storage_wait <= 1'd0;
-    main_basesoc_storage_mem_sink_payload_data <= 47'd0;
-    main_basesoc_storage_mem_source_ready <= 1'd0;
-    main_basesoc_storage_cdc_sink_first <= 1'd0;
-    main_basesoc_storage_cdc_sink_valid <= 1'd0;
-    main_basesoc_storage_done0 <= 1'd0;
-    main_basesoc_storage_sink_sink_ready <= 1'd0;
-    main_basesoc_storage_cdc_sink_last <= 1'd0;
-    builder_basesoc_litescopeanalyzer_next_state <= 2'd0;
-    main_basesoc_storage_cdc_sink_payload_data <= 47'd0;
-    main_basesoc_storage_mem_sink_valid <= 1'd0;
-    builder_basesoc_litescopeanalyzer_next_state <= builder_basesoc_litescopeanalyzer_state;
-    case (builder_basesoc_litescopeanalyzer_state)
-        1'd1: begin
-            main_basesoc_storage_sink_sink_ready <= 1'd1;
-            main_basesoc_storage_wait <= 1'd1;
-            main_basesoc_storage_mem_source_ready <= 1'd1;
-            if (main_basesoc_storage_done1) begin
-                builder_basesoc_litescopeanalyzer_next_state <= 2'd2;
-            end
-        end
-        2'd2: begin
-            main_basesoc_storage_mem_sink_valid <= main_basesoc_storage_sink_sink_valid;
-            main_basesoc_storage_sink_sink_ready <= main_basesoc_storage_mem_sink_ready;
-            main_basesoc_storage_mem_sink_first <= main_basesoc_storage_sink_sink_first;
-            main_basesoc_storage_mem_sink_last <= main_basesoc_storage_sink_sink_last;
-            main_basesoc_storage_mem_sink_payload_data <= main_basesoc_storage_sink_sink_payload_data;
-            if ((main_basesoc_storage_sink_sink_valid & main_basesoc_storage_sink_sink_payload_hit)) begin
-                builder_basesoc_litescopeanalyzer_next_state <= 2'd3;
-            end
-            main_basesoc_storage_mem_source_ready <= (main_basesoc_storage_mem_level1 >= main_basesoc_storage_offset);
-        end
-        2'd3: begin
-            main_basesoc_storage_mem_sink_valid <= main_basesoc_storage_sink_sink_valid;
-            main_basesoc_storage_sink_sink_ready <= main_basesoc_storage_mem_sink_ready;
-            main_basesoc_storage_mem_sink_first <= main_basesoc_storage_sink_sink_first;
-            main_basesoc_storage_mem_sink_last <= main_basesoc_storage_sink_sink_last;
-            main_basesoc_storage_mem_sink_payload_data <= main_basesoc_storage_sink_sink_payload_data;
-            if ((main_basesoc_storage_mem_level1 >= main_basesoc_storage_length)) begin
-                builder_basesoc_litescopeanalyzer_next_state <= 1'd0;
-            end
-        end
-        default: begin
-            main_basesoc_storage_done0 <= 1'd1;
-            if ((main_basesoc_storage_enable & (~main_basesoc_storage_enable_d))) begin
-                builder_basesoc_litescopeanalyzer_next_state <= 1'd1;
-            end
-            main_basesoc_storage_sink_sink_ready <= 1'd1;
-            main_basesoc_storage_cdc_sink_valid <= main_basesoc_storage_mem_source_valid;
-            main_basesoc_storage_mem_source_ready <= main_basesoc_storage_cdc_sink_ready;
-            main_basesoc_storage_cdc_sink_first <= main_basesoc_storage_mem_source_first;
-            main_basesoc_storage_cdc_sink_last <= main_basesoc_storage_mem_source_last;
-            main_basesoc_storage_cdc_sink_payload_data <= main_basesoc_storage_mem_source_payload_data;
-        end
-    endcase
-end
-assign main_basesoc_storage_source_source_valid = main_basesoc_storage_converter_source_valid;
-assign main_basesoc_storage_converter_source_ready = main_basesoc_storage_source_source_ready;
-assign main_basesoc_storage_source_source_first = main_basesoc_storage_converter_source_first;
-assign main_basesoc_storage_source_source_last = main_basesoc_storage_converter_source_last;
-assign main_basesoc_storage_source_source_payload_data = main_basesoc_storage_converter_source_payload_data;
-assign main_basesoc_storage_converter_first = (main_basesoc_storage_converter_mux == 1'd0);
-assign main_basesoc_storage_converter_last = (main_basesoc_storage_converter_mux == 1'd1);
-assign main_basesoc_storage_converter_source_valid = main_basesoc_storage_converter_sink_valid;
-assign main_basesoc_storage_converter_source_first = (main_basesoc_storage_converter_sink_first & main_basesoc_storage_converter_first);
-assign main_basesoc_storage_converter_source_last = (main_basesoc_storage_converter_sink_last & main_basesoc_storage_converter_last);
-assign main_basesoc_storage_converter_sink_ready = (main_basesoc_storage_converter_last & main_basesoc_storage_converter_source_ready);
-always @(*) begin
-    main_basesoc_storage_converter_source_payload_data <= 32'd0;
-    case (main_basesoc_storage_converter_mux)
-        1'd0: begin
-            main_basesoc_storage_converter_source_payload_data <= main_basesoc_storage_converter_sink_payload_data[31:0];
-        end
-        default: begin
-            main_basesoc_storage_converter_source_payload_data <= main_basesoc_storage_converter_sink_payload_data[63:32];
-        end
-    endcase
-end
-assign main_basesoc_storage_converter_source_payload_valid_token_count = main_basesoc_storage_converter_last;
-assign main_basesoc_trigger_sink_sink_valid = main_basesoc_mux_source_valid;
-assign main_basesoc_mux_source_ready = main_basesoc_trigger_sink_sink_ready;
-assign main_basesoc_trigger_sink_sink_first = main_basesoc_mux_source_first;
-assign main_basesoc_trigger_sink_sink_last = main_basesoc_mux_source_last;
-assign main_basesoc_trigger_sink_sink_payload_data = main_basesoc_mux_source_payload_data;
-assign main_basesoc_trigger_sink_sink_payload_hit = main_basesoc_mux_source_payload_hit;
-assign main_basesoc_subsampler_sink_valid = main_basesoc_trigger_source_source_valid;
-assign main_basesoc_trigger_source_source_ready = main_basesoc_subsampler_sink_ready;
-assign main_basesoc_subsampler_sink_first = main_basesoc_trigger_source_source_first;
-assign main_basesoc_subsampler_sink_last = main_basesoc_trigger_source_source_last;
-assign main_basesoc_subsampler_sink_payload_data = main_basesoc_trigger_source_source_payload_data;
-assign main_basesoc_subsampler_sink_payload_hit = main_basesoc_trigger_source_source_payload_hit;
-assign main_basesoc_storage_sink_sink_valid = main_basesoc_subsampler_source_valid;
-assign main_basesoc_subsampler_source_ready = main_basesoc_storage_sink_sink_ready;
-assign main_basesoc_storage_sink_sink_first = main_basesoc_subsampler_source_first;
-assign main_basesoc_storage_sink_sink_last = main_basesoc_subsampler_source_last;
-assign main_basesoc_storage_sink_sink_payload_data = main_basesoc_subsampler_source_payload_data;
-assign main_basesoc_storage_sink_sink_payload_hit = main_basesoc_subsampler_source_payload_hit;
-always @(*) begin
-    main_basesoc_uartbone_phy_tx_data_rs232phytx1_next_value2 <= 8'd0;
-    main_basesoc_uartbone_phy_tx_sink_ready <= 1'd0;
-    main_basesoc_uartbone_phy_tx_data_rs232phytx1_next_value_ce2 <= 1'd0;
-    main_basesoc_uartbone_phy_tx_enable <= 1'd0;
+    main_uartbone_phy_tx_data_rs232phytx1_next_value2 <= 8'd0;
+    main_uartbone_phy_tx_data_rs232phytx1_next_value_ce2 <= 1'd0;
+    main_uartbone_phy_tx_sink_ready <= 1'd0;
     builder_basesoc_rs232phytx1_next_state <= 1'd0;
-    main_basesoc_uartbone_phy_tx_count_rs232phytx1_next_value0 <= 4'd0;
-    main_basesoc_uartbone_phy_tx_count_rs232phytx1_next_value_ce0 <= 1'd0;
-    main_basesoc_serial_debug_tx_rs232phytx1_next_value1 <= 1'd0;
-    main_basesoc_serial_debug_tx_rs232phytx1_next_value_ce1 <= 1'd0;
+    main_uartbone_phy_tx_count_rs232phytx1_next_value0 <= 4'd0;
+    main_uartbone_phy_tx_count_rs232phytx1_next_value_ce0 <= 1'd0;
+    main_uartbone_phy_tx_enable <= 1'd0;
+    main_serial_debug_tx_rs232phytx1_next_value1 <= 1'd0;
+    main_serial_debug_tx_rs232phytx1_next_value_ce1 <= 1'd0;
     builder_basesoc_rs232phytx1_next_state <= builder_basesoc_rs232phytx1_state;
     case (builder_basesoc_rs232phytx1_state)
         1'd1: begin
-            main_basesoc_uartbone_phy_tx_enable <= 1'd1;
-            if (main_basesoc_uartbone_phy_tx_tick) begin
-                main_basesoc_serial_debug_tx_rs232phytx1_next_value1 <= main_basesoc_uartbone_phy_tx_data;
-                main_basesoc_serial_debug_tx_rs232phytx1_next_value_ce1 <= 1'd1;
-                main_basesoc_uartbone_phy_tx_count_rs232phytx1_next_value0 <= (main_basesoc_uartbone_phy_tx_count + 1'd1);
-                main_basesoc_uartbone_phy_tx_count_rs232phytx1_next_value_ce0 <= 1'd1;
-                main_basesoc_uartbone_phy_tx_data_rs232phytx1_next_value2 <= {1'd1, main_basesoc_uartbone_phy_tx_data[7:1]};
-                main_basesoc_uartbone_phy_tx_data_rs232phytx1_next_value_ce2 <= 1'd1;
-                if ((main_basesoc_uartbone_phy_tx_count == 4'd9)) begin
-                    main_basesoc_uartbone_phy_tx_sink_ready <= 1'd1;
+            main_uartbone_phy_tx_enable <= 1'd1;
+            if (main_uartbone_phy_tx_tick) begin
+                main_serial_debug_tx_rs232phytx1_next_value1 <= main_uartbone_phy_tx_data;
+                main_serial_debug_tx_rs232phytx1_next_value_ce1 <= 1'd1;
+                main_uartbone_phy_tx_count_rs232phytx1_next_value0 <= (main_uartbone_phy_tx_count + 1'd1);
+                main_uartbone_phy_tx_count_rs232phytx1_next_value_ce0 <= 1'd1;
+                main_uartbone_phy_tx_data_rs232phytx1_next_value2 <= {1'd1, main_uartbone_phy_tx_data[7:1]};
+                main_uartbone_phy_tx_data_rs232phytx1_next_value_ce2 <= 1'd1;
+                if ((main_uartbone_phy_tx_count == 4'd9)) begin
+                    main_uartbone_phy_tx_sink_ready <= 1'd1;
                     builder_basesoc_rs232phytx1_next_state <= 1'd0;
                 end
             end
         end
         default: begin
-            main_basesoc_uartbone_phy_tx_count_rs232phytx1_next_value0 <= 1'd0;
-            main_basesoc_uartbone_phy_tx_count_rs232phytx1_next_value_ce0 <= 1'd1;
-            main_basesoc_serial_debug_tx_rs232phytx1_next_value1 <= 1'd1;
-            main_basesoc_serial_debug_tx_rs232phytx1_next_value_ce1 <= 1'd1;
-            if (main_basesoc_uartbone_phy_tx_sink_valid) begin
-                main_basesoc_serial_debug_tx_rs232phytx1_next_value1 <= 1'd0;
-                main_basesoc_serial_debug_tx_rs232phytx1_next_value_ce1 <= 1'd1;
-                main_basesoc_uartbone_phy_tx_data_rs232phytx1_next_value2 <= main_basesoc_uartbone_phy_tx_sink_payload_data;
-                main_basesoc_uartbone_phy_tx_data_rs232phytx1_next_value_ce2 <= 1'd1;
+            main_uartbone_phy_tx_count_rs232phytx1_next_value0 <= 1'd0;
+            main_uartbone_phy_tx_count_rs232phytx1_next_value_ce0 <= 1'd1;
+            main_serial_debug_tx_rs232phytx1_next_value1 <= 1'd1;
+            main_serial_debug_tx_rs232phytx1_next_value_ce1 <= 1'd1;
+            if (main_uartbone_phy_tx_sink_valid) begin
+                main_serial_debug_tx_rs232phytx1_next_value1 <= 1'd0;
+                main_serial_debug_tx_rs232phytx1_next_value_ce1 <= 1'd1;
+                main_uartbone_phy_tx_data_rs232phytx1_next_value2 <= main_uartbone_phy_tx_sink_payload_data;
+                main_uartbone_phy_tx_data_rs232phytx1_next_value_ce2 <= 1'd1;
                 builder_basesoc_rs232phytx1_next_state <= 1'd1;
             end
         end
     endcase
 end
 always @(*) begin
-    main_basesoc_uartbone_phy_rx_data_rs232phyrx1_next_value1 <= 8'd0;
-    main_basesoc_uartbone_phy_rx_data_rs232phyrx1_next_value_ce1 <= 1'd0;
-    main_basesoc_uartbone_phy_rx_source_valid <= 1'd0;
-    main_basesoc_uartbone_phy_rx_source_payload_data <= 8'd0;
-    main_basesoc_uartbone_phy_rx_enable <= 1'd0;
+    main_uartbone_phy_rx_data_rs232phyrx1_next_value_ce1 <= 1'd0;
+    main_uartbone_phy_rx_source_valid <= 1'd0;
     builder_basesoc_rs232phyrx1_next_state <= 1'd0;
-    main_basesoc_uartbone_phy_rx_count_rs232phyrx1_next_value0 <= 4'd0;
-    main_basesoc_uartbone_phy_rx_count_rs232phyrx1_next_value_ce0 <= 1'd0;
+    main_uartbone_phy_rx_count_rs232phyrx1_next_value0 <= 4'd0;
+    main_uartbone_phy_rx_source_payload_data <= 8'd0;
+    main_uartbone_phy_rx_count_rs232phyrx1_next_value_ce0 <= 1'd0;
+    main_uartbone_phy_rx_enable <= 1'd0;
+    main_uartbone_phy_rx_data_rs232phyrx1_next_value1 <= 8'd0;
     builder_basesoc_rs232phyrx1_next_state <= builder_basesoc_rs232phyrx1_state;
     case (builder_basesoc_rs232phyrx1_state)
         1'd1: begin
-            main_basesoc_uartbone_phy_rx_enable <= 1'd1;
-            if (main_basesoc_uartbone_phy_rx_tick) begin
-                main_basesoc_uartbone_phy_rx_count_rs232phyrx1_next_value0 <= (main_basesoc_uartbone_phy_rx_count + 1'd1);
-                main_basesoc_uartbone_phy_rx_count_rs232phyrx1_next_value_ce0 <= 1'd1;
-                main_basesoc_uartbone_phy_rx_data_rs232phyrx1_next_value1 <= {main_basesoc_uartbone_phy_rx_rx, main_basesoc_uartbone_phy_rx_data[7:1]};
-                main_basesoc_uartbone_phy_rx_data_rs232phyrx1_next_value_ce1 <= 1'd1;
-                if ((main_basesoc_uartbone_phy_rx_count == 4'd9)) begin
-                    main_basesoc_uartbone_phy_rx_source_valid <= (main_basesoc_uartbone_phy_rx_rx == 1'd1);
-                    main_basesoc_uartbone_phy_rx_source_payload_data <= main_basesoc_uartbone_phy_rx_data;
+            main_uartbone_phy_rx_enable <= 1'd1;
+            if (main_uartbone_phy_rx_tick) begin
+                main_uartbone_phy_rx_count_rs232phyrx1_next_value0 <= (main_uartbone_phy_rx_count + 1'd1);
+                main_uartbone_phy_rx_count_rs232phyrx1_next_value_ce0 <= 1'd1;
+                main_uartbone_phy_rx_data_rs232phyrx1_next_value1 <= {main_uartbone_phy_rx_rx, main_uartbone_phy_rx_data[7:1]};
+                main_uartbone_phy_rx_data_rs232phyrx1_next_value_ce1 <= 1'd1;
+                if ((main_uartbone_phy_rx_count == 4'd9)) begin
+                    main_uartbone_phy_rx_source_valid <= (main_uartbone_phy_rx_rx == 1'd1);
+                    main_uartbone_phy_rx_source_payload_data <= main_uartbone_phy_rx_data;
                     builder_basesoc_rs232phyrx1_next_state <= 1'd0;
                 end
             end
         end
         default: begin
-            main_basesoc_uartbone_phy_rx_count_rs232phyrx1_next_value0 <= 1'd0;
-            main_basesoc_uartbone_phy_rx_count_rs232phyrx1_next_value_ce0 <= 1'd1;
-            if (((main_basesoc_uartbone_phy_rx_rx == 1'd0) & (main_basesoc_uartbone_phy_rx_rx_d == 1'd1))) begin
+            main_uartbone_phy_rx_count_rs232phyrx1_next_value0 <= 1'd0;
+            main_uartbone_phy_rx_count_rs232phyrx1_next_value_ce0 <= 1'd1;
+            if (((main_uartbone_phy_rx_rx == 1'd0) & (main_uartbone_phy_rx_rx_d == 1'd1))) begin
                 builder_basesoc_rs232phyrx1_next_state <= 1'd1;
             end
         end
     endcase
 end
-assign main_basesoc_uartbone_wait = (~main_basesoc_uartbone_is_ongoing);
-assign main_basesoc_uartbone_reset = main_basesoc_uartbone_done;
-assign main_basesoc_uartbone_wishbone_adr = main_basesoc_uartbone_address;
-assign main_basesoc_uartbone_wishbone_dat_w = main_basesoc_uartbone_data;
-assign main_basesoc_uartbone_wishbone_sel = 4'd15;
+assign main_uartbone_wait = (~main_uartbone_is_ongoing);
+assign main_uartbone_reset = main_uartbone_done;
+assign main_uartbone_wishbone_adr = main_uartbone_address;
+assign main_uartbone_wishbone_dat_w = main_uartbone_data;
+assign main_uartbone_wishbone_sel = 4'd15;
 always @(*) begin
-    main_basesoc_uartbone_phy_tx_sink_payload_data <= 8'd0;
-    case (main_basesoc_uartbone_data_bytes_count)
+    main_uartbone_phy_tx_sink_payload_data <= 8'd0;
+    case (main_uartbone_data_bytes_count)
         1'd0: begin
-            main_basesoc_uartbone_phy_tx_sink_payload_data <= main_basesoc_uartbone_data[31:24];
+            main_uartbone_phy_tx_sink_payload_data <= main_uartbone_data[31:24];
         end
         1'd1: begin
-            main_basesoc_uartbone_phy_tx_sink_payload_data <= main_basesoc_uartbone_data[31:16];
+            main_uartbone_phy_tx_sink_payload_data <= main_uartbone_data[31:16];
         end
         2'd2: begin
-            main_basesoc_uartbone_phy_tx_sink_payload_data <= main_basesoc_uartbone_data[31:8];
+            main_uartbone_phy_tx_sink_payload_data <= main_uartbone_data[31:8];
         end
         2'd3: begin
-            main_basesoc_uartbone_phy_tx_sink_payload_data <= main_basesoc_uartbone_data[31:0];
+            main_uartbone_phy_tx_sink_payload_data <= main_uartbone_data[31:0];
         end
     endcase
 end
-assign main_basesoc_uartbone_phy_tx_sink_last = ((main_basesoc_uartbone_data_bytes_count == 2'd3) & (main_basesoc_uartbone_words_count == (main_basesoc_uartbone_length - 1'd1)));
+assign main_uartbone_phy_tx_sink_last = ((main_uartbone_data_bytes_count == 2'd3) & (main_uartbone_words_count == (main_uartbone_length - 1'd1)));
 always @(*) begin
-    main_basesoc_uartbone_cmd_uartbone_next_value3 <= 8'd0;
-    main_basesoc_uartbone_phy_rx_source_ready <= 1'd0;
-    main_basesoc_uartbone_cmd_uartbone_next_value_ce3 <= 1'd0;
-    main_basesoc_uartbone_wishbone_cyc <= 1'd0;
-    main_basesoc_uartbone_length_uartbone_next_value4 <= 8'd0;
-    main_basesoc_uartbone_length_uartbone_next_value_ce4 <= 1'd0;
-    main_basesoc_uartbone_address_uartbone_next_value5 <= 32'd0;
-    main_basesoc_uartbone_address_uartbone_next_value_ce5 <= 1'd0;
-    main_basesoc_uartbone_wishbone_stb <= 1'd0;
-    main_basesoc_uartbone_incr_uartbone_next_value6 <= 1'd0;
-    main_basesoc_uartbone_incr_uartbone_next_value_ce6 <= 1'd0;
-    main_basesoc_uartbone_phy_tx_sink_valid <= 1'd0;
-    main_basesoc_uartbone_data_uartbone_next_value7 <= 32'd0;
-    main_basesoc_uartbone_wishbone_we <= 1'd0;
-    main_basesoc_uartbone_data_uartbone_next_value_ce7 <= 1'd0;
-    main_basesoc_uartbone_is_ongoing <= 1'd0;
+    main_uartbone_wishbone_cyc <= 1'd0;
+    main_uartbone_wishbone_stb <= 1'd0;
+    main_uartbone_data_uartbone_next_value7 <= 32'd0;
+    main_uartbone_data_uartbone_next_value_ce7 <= 1'd0;
+    main_uartbone_wishbone_we <= 1'd0;
+    main_uartbone_phy_rx_source_ready <= 1'd0;
     builder_basesoc_uartbone_next_state <= 3'd0;
-    main_basesoc_uartbone_data_bytes_count_uartbone_next_value0 <= 2'd0;
-    main_basesoc_uartbone_data_bytes_count_uartbone_next_value_ce0 <= 1'd0;
-    main_basesoc_uartbone_addr_bytes_count_uartbone_next_value1 <= 2'd0;
-    main_basesoc_uartbone_addr_bytes_count_uartbone_next_value_ce1 <= 1'd0;
-    main_basesoc_uartbone_words_count_uartbone_next_value2 <= 8'd0;
-    main_basesoc_uartbone_words_count_uartbone_next_value_ce2 <= 1'd0;
+    main_uartbone_data_bytes_count_uartbone_next_value0 <= 2'd0;
+    main_uartbone_data_bytes_count_uartbone_next_value_ce0 <= 1'd0;
+    main_uartbone_addr_bytes_count_uartbone_next_value1 <= 2'd0;
+    main_uartbone_addr_bytes_count_uartbone_next_value_ce1 <= 1'd0;
+    main_uartbone_words_count_uartbone_next_value2 <= 8'd0;
+    main_uartbone_words_count_uartbone_next_value_ce2 <= 1'd0;
+    main_uartbone_cmd_uartbone_next_value3 <= 8'd0;
+    main_uartbone_cmd_uartbone_next_value_ce3 <= 1'd0;
+    main_uartbone_length_uartbone_next_value4 <= 8'd0;
+    main_uartbone_phy_tx_sink_valid <= 1'd0;
+    main_uartbone_length_uartbone_next_value_ce4 <= 1'd0;
+    main_uartbone_address_uartbone_next_value5 <= 32'd0;
+    main_uartbone_address_uartbone_next_value_ce5 <= 1'd0;
+    main_uartbone_is_ongoing <= 1'd0;
+    main_uartbone_incr_uartbone_next_value6 <= 1'd0;
+    main_uartbone_incr_uartbone_next_value_ce6 <= 1'd0;
     builder_basesoc_uartbone_next_state <= builder_basesoc_uartbone_state;
     case (builder_basesoc_uartbone_state)
         1'd1: begin
-            main_basesoc_uartbone_phy_rx_source_ready <= 1'd1;
-            if (main_basesoc_uartbone_phy_rx_source_valid) begin
-                main_basesoc_uartbone_length_uartbone_next_value4 <= main_basesoc_uartbone_phy_rx_source_payload_data;
-                main_basesoc_uartbone_length_uartbone_next_value_ce4 <= 1'd1;
+            main_uartbone_phy_rx_source_ready <= 1'd1;
+            if (main_uartbone_phy_rx_source_valid) begin
+                main_uartbone_length_uartbone_next_value4 <= main_uartbone_phy_rx_source_payload_data;
+                main_uartbone_length_uartbone_next_value_ce4 <= 1'd1;
                 builder_basesoc_uartbone_next_state <= 2'd2;
             end
         end
         2'd2: begin
-            main_basesoc_uartbone_phy_rx_source_ready <= 1'd1;
-            if (main_basesoc_uartbone_phy_rx_source_valid) begin
-                main_basesoc_uartbone_address_uartbone_next_value5 <= {main_basesoc_uartbone_address, main_basesoc_uartbone_phy_rx_source_payload_data};
-                main_basesoc_uartbone_address_uartbone_next_value_ce5 <= 1'd1;
-                main_basesoc_uartbone_addr_bytes_count_uartbone_next_value1 <= (main_basesoc_uartbone_addr_bytes_count + 1'd1);
-                main_basesoc_uartbone_addr_bytes_count_uartbone_next_value_ce1 <= 1'd1;
-                if ((main_basesoc_uartbone_addr_bytes_count == 2'd3)) begin
-                    if (((main_basesoc_uartbone_cmd == 1'd1) | (main_basesoc_uartbone_cmd == 2'd3))) begin
-                        main_basesoc_uartbone_incr_uartbone_next_value6 <= (main_basesoc_uartbone_cmd == 1'd1);
-                        main_basesoc_uartbone_incr_uartbone_next_value_ce6 <= 1'd1;
+            main_uartbone_phy_rx_source_ready <= 1'd1;
+            if (main_uartbone_phy_rx_source_valid) begin
+                main_uartbone_address_uartbone_next_value5 <= {main_uartbone_address, main_uartbone_phy_rx_source_payload_data};
+                main_uartbone_address_uartbone_next_value_ce5 <= 1'd1;
+                main_uartbone_addr_bytes_count_uartbone_next_value1 <= (main_uartbone_addr_bytes_count + 1'd1);
+                main_uartbone_addr_bytes_count_uartbone_next_value_ce1 <= 1'd1;
+                if ((main_uartbone_addr_bytes_count == 2'd3)) begin
+                    if (((main_uartbone_cmd == 1'd1) | (main_uartbone_cmd == 2'd3))) begin
+                        main_uartbone_incr_uartbone_next_value6 <= (main_uartbone_cmd == 1'd1);
+                        main_uartbone_incr_uartbone_next_value_ce6 <= 1'd1;
                         builder_basesoc_uartbone_next_state <= 2'd3;
                     end else begin
-                        if (((main_basesoc_uartbone_cmd == 2'd2) | (main_basesoc_uartbone_cmd == 3'd4))) begin
-                            main_basesoc_uartbone_incr_uartbone_next_value6 <= (main_basesoc_uartbone_cmd == 2'd2);
-                            main_basesoc_uartbone_incr_uartbone_next_value_ce6 <= 1'd1;
+                        if (((main_uartbone_cmd == 2'd2) | (main_uartbone_cmd == 3'd4))) begin
+                            main_uartbone_incr_uartbone_next_value6 <= (main_uartbone_cmd == 2'd2);
+                            main_uartbone_incr_uartbone_next_value_ce6 <= 1'd1;
                             builder_basesoc_uartbone_next_state <= 3'd5;
                         end else begin
                             builder_basesoc_uartbone_next_state <= 1'd0;
@@ -4775,28 +4167,28 @@ always @(*) begin
             end
         end
         2'd3: begin
-            main_basesoc_uartbone_phy_rx_source_ready <= 1'd1;
-            if (main_basesoc_uartbone_phy_rx_source_valid) begin
-                main_basesoc_uartbone_data_uartbone_next_value7 <= {main_basesoc_uartbone_data, main_basesoc_uartbone_phy_rx_source_payload_data};
-                main_basesoc_uartbone_data_uartbone_next_value_ce7 <= 1'd1;
-                main_basesoc_uartbone_data_bytes_count_uartbone_next_value0 <= (main_basesoc_uartbone_data_bytes_count + 1'd1);
-                main_basesoc_uartbone_data_bytes_count_uartbone_next_value_ce0 <= 1'd1;
-                if ((main_basesoc_uartbone_data_bytes_count == 2'd3)) begin
+            main_uartbone_phy_rx_source_ready <= 1'd1;
+            if (main_uartbone_phy_rx_source_valid) begin
+                main_uartbone_data_uartbone_next_value7 <= {main_uartbone_data, main_uartbone_phy_rx_source_payload_data};
+                main_uartbone_data_uartbone_next_value_ce7 <= 1'd1;
+                main_uartbone_data_bytes_count_uartbone_next_value0 <= (main_uartbone_data_bytes_count + 1'd1);
+                main_uartbone_data_bytes_count_uartbone_next_value_ce0 <= 1'd1;
+                if ((main_uartbone_data_bytes_count == 2'd3)) begin
                     builder_basesoc_uartbone_next_state <= 3'd4;
                 end
             end
         end
         3'd4: begin
-            main_basesoc_uartbone_phy_rx_source_ready <= 1'd0;
-            main_basesoc_uartbone_wishbone_stb <= 1'd1;
-            main_basesoc_uartbone_wishbone_we <= 1'd1;
-            main_basesoc_uartbone_wishbone_cyc <= 1'd1;
-            if (main_basesoc_uartbone_wishbone_ack) begin
-                main_basesoc_uartbone_words_count_uartbone_next_value2 <= (main_basesoc_uartbone_words_count + 1'd1);
-                main_basesoc_uartbone_words_count_uartbone_next_value_ce2 <= 1'd1;
-                main_basesoc_uartbone_address_uartbone_next_value5 <= (main_basesoc_uartbone_address + main_basesoc_uartbone_incr);
-                main_basesoc_uartbone_address_uartbone_next_value_ce5 <= 1'd1;
-                if ((main_basesoc_uartbone_words_count == (main_basesoc_uartbone_length - 1'd1))) begin
+            main_uartbone_phy_rx_source_ready <= 1'd0;
+            main_uartbone_wishbone_stb <= 1'd1;
+            main_uartbone_wishbone_we <= 1'd1;
+            main_uartbone_wishbone_cyc <= 1'd1;
+            if (main_uartbone_wishbone_ack) begin
+                main_uartbone_words_count_uartbone_next_value2 <= (main_uartbone_words_count + 1'd1);
+                main_uartbone_words_count_uartbone_next_value_ce2 <= 1'd1;
+                main_uartbone_address_uartbone_next_value5 <= (main_uartbone_address + main_uartbone_incr);
+                main_uartbone_address_uartbone_next_value_ce5 <= 1'd1;
+                if ((main_uartbone_words_count == (main_uartbone_length - 1'd1))) begin
                     builder_basesoc_uartbone_next_state <= 1'd0;
                 end else begin
                     builder_basesoc_uartbone_next_state <= 2'd3;
@@ -4804,28 +4196,28 @@ always @(*) begin
             end
         end
         3'd5: begin
-            main_basesoc_uartbone_phy_rx_source_ready <= 1'd0;
-            main_basesoc_uartbone_wishbone_stb <= 1'd1;
-            main_basesoc_uartbone_wishbone_we <= 1'd0;
-            main_basesoc_uartbone_wishbone_cyc <= 1'd1;
-            if (main_basesoc_uartbone_wishbone_ack) begin
-                main_basesoc_uartbone_data_uartbone_next_value7 <= main_basesoc_uartbone_wishbone_dat_r;
-                main_basesoc_uartbone_data_uartbone_next_value_ce7 <= 1'd1;
+            main_uartbone_phy_rx_source_ready <= 1'd0;
+            main_uartbone_wishbone_stb <= 1'd1;
+            main_uartbone_wishbone_we <= 1'd0;
+            main_uartbone_wishbone_cyc <= 1'd1;
+            if (main_uartbone_wishbone_ack) begin
+                main_uartbone_data_uartbone_next_value7 <= main_uartbone_wishbone_dat_r;
+                main_uartbone_data_uartbone_next_value_ce7 <= 1'd1;
                 builder_basesoc_uartbone_next_state <= 3'd6;
             end
         end
         3'd6: begin
-            main_basesoc_uartbone_phy_rx_source_ready <= 1'd0;
-            main_basesoc_uartbone_phy_tx_sink_valid <= 1'd1;
-            if (main_basesoc_uartbone_phy_tx_sink_ready) begin
-                main_basesoc_uartbone_data_bytes_count_uartbone_next_value0 <= (main_basesoc_uartbone_data_bytes_count + 1'd1);
-                main_basesoc_uartbone_data_bytes_count_uartbone_next_value_ce0 <= 1'd1;
-                if ((main_basesoc_uartbone_data_bytes_count == 2'd3)) begin
-                    main_basesoc_uartbone_words_count_uartbone_next_value2 <= (main_basesoc_uartbone_words_count + 1'd1);
-                    main_basesoc_uartbone_words_count_uartbone_next_value_ce2 <= 1'd1;
-                    main_basesoc_uartbone_address_uartbone_next_value5 <= (main_basesoc_uartbone_address + main_basesoc_uartbone_incr);
-                    main_basesoc_uartbone_address_uartbone_next_value_ce5 <= 1'd1;
-                    if ((main_basesoc_uartbone_words_count == (main_basesoc_uartbone_length - 1'd1))) begin
+            main_uartbone_phy_rx_source_ready <= 1'd0;
+            main_uartbone_phy_tx_sink_valid <= 1'd1;
+            if (main_uartbone_phy_tx_sink_ready) begin
+                main_uartbone_data_bytes_count_uartbone_next_value0 <= (main_uartbone_data_bytes_count + 1'd1);
+                main_uartbone_data_bytes_count_uartbone_next_value_ce0 <= 1'd1;
+                if ((main_uartbone_data_bytes_count == 2'd3)) begin
+                    main_uartbone_words_count_uartbone_next_value2 <= (main_uartbone_words_count + 1'd1);
+                    main_uartbone_words_count_uartbone_next_value_ce2 <= 1'd1;
+                    main_uartbone_address_uartbone_next_value5 <= (main_uartbone_address + main_uartbone_incr);
+                    main_uartbone_address_uartbone_next_value_ce5 <= 1'd1;
+                    if ((main_uartbone_words_count == (main_uartbone_length - 1'd1))) begin
                         builder_basesoc_uartbone_next_state <= 1'd0;
                     end else begin
                         builder_basesoc_uartbone_next_state <= 3'd5;
@@ -4834,33 +4226,33 @@ always @(*) begin
             end
         end
         default: begin
-            main_basesoc_uartbone_is_ongoing <= 1'd1;
-            main_basesoc_uartbone_phy_rx_source_ready <= 1'd1;
-            main_basesoc_uartbone_data_bytes_count_uartbone_next_value0 <= 1'd0;
-            main_basesoc_uartbone_data_bytes_count_uartbone_next_value_ce0 <= 1'd1;
-            main_basesoc_uartbone_addr_bytes_count_uartbone_next_value1 <= 1'd0;
-            main_basesoc_uartbone_addr_bytes_count_uartbone_next_value_ce1 <= 1'd1;
-            main_basesoc_uartbone_words_count_uartbone_next_value2 <= 1'd0;
-            main_basesoc_uartbone_words_count_uartbone_next_value_ce2 <= 1'd1;
-            if (main_basesoc_uartbone_phy_rx_source_valid) begin
-                main_basesoc_uartbone_cmd_uartbone_next_value3 <= main_basesoc_uartbone_phy_rx_source_payload_data;
-                main_basesoc_uartbone_cmd_uartbone_next_value_ce3 <= 1'd1;
+            main_uartbone_is_ongoing <= 1'd1;
+            main_uartbone_phy_rx_source_ready <= 1'd1;
+            main_uartbone_data_bytes_count_uartbone_next_value0 <= 1'd0;
+            main_uartbone_data_bytes_count_uartbone_next_value_ce0 <= 1'd1;
+            main_uartbone_addr_bytes_count_uartbone_next_value1 <= 1'd0;
+            main_uartbone_addr_bytes_count_uartbone_next_value_ce1 <= 1'd1;
+            main_uartbone_words_count_uartbone_next_value2 <= 1'd0;
+            main_uartbone_words_count_uartbone_next_value_ce2 <= 1'd1;
+            if (main_uartbone_phy_rx_source_valid) begin
+                main_uartbone_cmd_uartbone_next_value3 <= main_uartbone_phy_rx_source_payload_data;
+                main_uartbone_cmd_uartbone_next_value_ce3 <= 1'd1;
                 builder_basesoc_uartbone_next_state <= 1'd1;
             end
         end
     endcase
 end
-assign main_basesoc_uartbone_done = (main_basesoc_uartbone_count == 1'd0);
+assign main_uartbone_done = (main_uartbone_count == 1'd0);
 always @(*) begin
     builder_basesoc_wishbone2csr_next_state <= 2'd0;
     builder_basesoc_dat_w_wishbone2csr_next_value0 <= 32'd0;
     builder_basesoc_dat_w_wishbone2csr_next_value_ce0 <= 1'd0;
-    builder_basesoc_wishbone_dat_r <= 32'd0;
     builder_basesoc_adr_wishbone2csr_next_value1 <= 14'd0;
     builder_basesoc_adr_wishbone2csr_next_value_ce1 <= 1'd0;
     builder_basesoc_we_wishbone2csr_next_value2 <= 1'd0;
-    builder_basesoc_wishbone_ack <= 1'd0;
+    builder_basesoc_wishbone_dat_r <= 32'd0;
     builder_basesoc_we_wishbone2csr_next_value_ce2 <= 1'd0;
+    builder_basesoc_wishbone_ack <= 1'd0;
     builder_basesoc_wishbone2csr_next_state <= builder_basesoc_wishbone2csr_state;
     case (builder_basesoc_wishbone2csr_state)
         1'd1: begin
@@ -4889,363 +4281,198 @@ always @(*) begin
     endcase
 end
 assign builder_csr_bankarray_csrbank0_sel = (builder_csr_bankarray_interface0_bank_bus_adr[13:9] == 1'd0);
-assign builder_csr_bankarray_csrbank0_mux_value0_r = builder_csr_bankarray_interface0_bank_bus_dat_w[0];
+assign builder_csr_bankarray_csrbank0_reset0_r = builder_csr_bankarray_interface0_bank_bus_dat_w[1:0];
 always @(*) begin
-    builder_csr_bankarray_csrbank0_mux_value0_we <= 1'd0;
-    builder_csr_bankarray_csrbank0_mux_value0_re <= 1'd0;
+    builder_csr_bankarray_csrbank0_reset0_we <= 1'd0;
+    builder_csr_bankarray_csrbank0_reset0_re <= 1'd0;
     if ((builder_csr_bankarray_csrbank0_sel & (builder_csr_bankarray_interface0_bank_bus_adr[8:0] == 1'd0))) begin
-        builder_csr_bankarray_csrbank0_mux_value0_re <= builder_csr_bankarray_interface0_bank_bus_we;
-        builder_csr_bankarray_csrbank0_mux_value0_we <= (~builder_csr_bankarray_interface0_bank_bus_we);
+        builder_csr_bankarray_csrbank0_reset0_re <= builder_csr_bankarray_interface0_bank_bus_we;
+        builder_csr_bankarray_csrbank0_reset0_we <= (~builder_csr_bankarray_interface0_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank0_trigger_enable0_r = builder_csr_bankarray_interface0_bank_bus_dat_w[0];
+assign builder_csr_bankarray_csrbank0_scratch0_r = builder_csr_bankarray_interface0_bank_bus_dat_w[31:0];
 always @(*) begin
-    builder_csr_bankarray_csrbank0_trigger_enable0_we <= 1'd0;
-    builder_csr_bankarray_csrbank0_trigger_enable0_re <= 1'd0;
+    builder_csr_bankarray_csrbank0_scratch0_re <= 1'd0;
+    builder_csr_bankarray_csrbank0_scratch0_we <= 1'd0;
     if ((builder_csr_bankarray_csrbank0_sel & (builder_csr_bankarray_interface0_bank_bus_adr[8:0] == 1'd1))) begin
-        builder_csr_bankarray_csrbank0_trigger_enable0_re <= builder_csr_bankarray_interface0_bank_bus_we;
-        builder_csr_bankarray_csrbank0_trigger_enable0_we <= (~builder_csr_bankarray_interface0_bank_bus_we);
+        builder_csr_bankarray_csrbank0_scratch0_re <= builder_csr_bankarray_interface0_bank_bus_we;
+        builder_csr_bankarray_csrbank0_scratch0_we <= (~builder_csr_bankarray_interface0_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank0_trigger_done_r = builder_csr_bankarray_interface0_bank_bus_dat_w[0];
+assign builder_csr_bankarray_csrbank0_bus_errors_r = builder_csr_bankarray_interface0_bank_bus_dat_w[31:0];
 always @(*) begin
-    builder_csr_bankarray_csrbank0_trigger_done_re <= 1'd0;
-    builder_csr_bankarray_csrbank0_trigger_done_we <= 1'd0;
+    builder_csr_bankarray_csrbank0_bus_errors_re <= 1'd0;
+    builder_csr_bankarray_csrbank0_bus_errors_we <= 1'd0;
     if ((builder_csr_bankarray_csrbank0_sel & (builder_csr_bankarray_interface0_bank_bus_adr[8:0] == 2'd2))) begin
-        builder_csr_bankarray_csrbank0_trigger_done_re <= builder_csr_bankarray_interface0_bank_bus_we;
-        builder_csr_bankarray_csrbank0_trigger_done_we <= (~builder_csr_bankarray_interface0_bank_bus_we);
+        builder_csr_bankarray_csrbank0_bus_errors_re <= builder_csr_bankarray_interface0_bank_bus_we;
+        builder_csr_bankarray_csrbank0_bus_errors_we <= (~builder_csr_bankarray_interface0_bank_bus_we);
     end
 end
-assign main_basesoc_trigger_mem_write_r = builder_csr_bankarray_interface0_bank_bus_dat_w[0];
+assign builder_csr_bankarray_csrbank1_sel = (builder_csr_bankarray_interface1_bank_bus_adr[13:9] == 1'd1);
+assign builder_csr_bankarray_csrbank1_ev_status_r = builder_csr_bankarray_interface1_bank_bus_dat_w[3:0];
 always @(*) begin
-    main_basesoc_trigger_mem_write_we <= 1'd0;
-    main_basesoc_trigger_mem_write_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank0_sel & (builder_csr_bankarray_interface0_bank_bus_adr[8:0] == 2'd3))) begin
-        main_basesoc_trigger_mem_write_re <= builder_csr_bankarray_interface0_bank_bus_we;
-        main_basesoc_trigger_mem_write_we <= (~builder_csr_bankarray_interface0_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank0_trigger_mem_mask1_r = builder_csr_bankarray_interface0_bank_bus_dat_w[14:0];
-always @(*) begin
-    builder_csr_bankarray_csrbank0_trigger_mem_mask1_we <= 1'd0;
-    builder_csr_bankarray_csrbank0_trigger_mem_mask1_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank0_sel & (builder_csr_bankarray_interface0_bank_bus_adr[8:0] == 3'd4))) begin
-        builder_csr_bankarray_csrbank0_trigger_mem_mask1_re <= builder_csr_bankarray_interface0_bank_bus_we;
-        builder_csr_bankarray_csrbank0_trigger_mem_mask1_we <= (~builder_csr_bankarray_interface0_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank0_trigger_mem_mask0_r = builder_csr_bankarray_interface0_bank_bus_dat_w[31:0];
-always @(*) begin
-    builder_csr_bankarray_csrbank0_trigger_mem_mask0_we <= 1'd0;
-    builder_csr_bankarray_csrbank0_trigger_mem_mask0_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank0_sel & (builder_csr_bankarray_interface0_bank_bus_adr[8:0] == 3'd5))) begin
-        builder_csr_bankarray_csrbank0_trigger_mem_mask0_re <= builder_csr_bankarray_interface0_bank_bus_we;
-        builder_csr_bankarray_csrbank0_trigger_mem_mask0_we <= (~builder_csr_bankarray_interface0_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank0_trigger_mem_value1_r = builder_csr_bankarray_interface0_bank_bus_dat_w[14:0];
-always @(*) begin
-    builder_csr_bankarray_csrbank0_trigger_mem_value1_re <= 1'd0;
-    builder_csr_bankarray_csrbank0_trigger_mem_value1_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank0_sel & (builder_csr_bankarray_interface0_bank_bus_adr[8:0] == 3'd6))) begin
-        builder_csr_bankarray_csrbank0_trigger_mem_value1_re <= builder_csr_bankarray_interface0_bank_bus_we;
-        builder_csr_bankarray_csrbank0_trigger_mem_value1_we <= (~builder_csr_bankarray_interface0_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank0_trigger_mem_value0_r = builder_csr_bankarray_interface0_bank_bus_dat_w[31:0];
-always @(*) begin
-    builder_csr_bankarray_csrbank0_trigger_mem_value0_we <= 1'd0;
-    builder_csr_bankarray_csrbank0_trigger_mem_value0_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank0_sel & (builder_csr_bankarray_interface0_bank_bus_adr[8:0] == 3'd7))) begin
-        builder_csr_bankarray_csrbank0_trigger_mem_value0_re <= builder_csr_bankarray_interface0_bank_bus_we;
-        builder_csr_bankarray_csrbank0_trigger_mem_value0_we <= (~builder_csr_bankarray_interface0_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank0_trigger_mem_full_r = builder_csr_bankarray_interface0_bank_bus_dat_w[0];
-always @(*) begin
-    builder_csr_bankarray_csrbank0_trigger_mem_full_re <= 1'd0;
-    builder_csr_bankarray_csrbank0_trigger_mem_full_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank0_sel & (builder_csr_bankarray_interface0_bank_bus_adr[8:0] == 4'd8))) begin
-        builder_csr_bankarray_csrbank0_trigger_mem_full_re <= builder_csr_bankarray_interface0_bank_bus_we;
-        builder_csr_bankarray_csrbank0_trigger_mem_full_we <= (~builder_csr_bankarray_interface0_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank0_subsampler_value0_r = builder_csr_bankarray_interface0_bank_bus_dat_w[15:0];
-always @(*) begin
-    builder_csr_bankarray_csrbank0_subsampler_value0_re <= 1'd0;
-    builder_csr_bankarray_csrbank0_subsampler_value0_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank0_sel & (builder_csr_bankarray_interface0_bank_bus_adr[8:0] == 4'd9))) begin
-        builder_csr_bankarray_csrbank0_subsampler_value0_re <= builder_csr_bankarray_interface0_bank_bus_we;
-        builder_csr_bankarray_csrbank0_subsampler_value0_we <= (~builder_csr_bankarray_interface0_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank0_storage_enable0_r = builder_csr_bankarray_interface0_bank_bus_dat_w[0];
-always @(*) begin
-    builder_csr_bankarray_csrbank0_storage_enable0_we <= 1'd0;
-    builder_csr_bankarray_csrbank0_storage_enable0_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank0_sel & (builder_csr_bankarray_interface0_bank_bus_adr[8:0] == 4'd10))) begin
-        builder_csr_bankarray_csrbank0_storage_enable0_re <= builder_csr_bankarray_interface0_bank_bus_we;
-        builder_csr_bankarray_csrbank0_storage_enable0_we <= (~builder_csr_bankarray_interface0_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank0_storage_done_r = builder_csr_bankarray_interface0_bank_bus_dat_w[0];
-always @(*) begin
-    builder_csr_bankarray_csrbank0_storage_done_re <= 1'd0;
-    builder_csr_bankarray_csrbank0_storage_done_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank0_sel & (builder_csr_bankarray_interface0_bank_bus_adr[8:0] == 4'd11))) begin
-        builder_csr_bankarray_csrbank0_storage_done_re <= builder_csr_bankarray_interface0_bank_bus_we;
-        builder_csr_bankarray_csrbank0_storage_done_we <= (~builder_csr_bankarray_interface0_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank0_storage_length0_r = builder_csr_bankarray_interface0_bank_bus_dat_w[10:0];
-always @(*) begin
-    builder_csr_bankarray_csrbank0_storage_length0_re <= 1'd0;
-    builder_csr_bankarray_csrbank0_storage_length0_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank0_sel & (builder_csr_bankarray_interface0_bank_bus_adr[8:0] == 4'd12))) begin
-        builder_csr_bankarray_csrbank0_storage_length0_re <= builder_csr_bankarray_interface0_bank_bus_we;
-        builder_csr_bankarray_csrbank0_storage_length0_we <= (~builder_csr_bankarray_interface0_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank0_storage_offset0_r = builder_csr_bankarray_interface0_bank_bus_dat_w[10:0];
-always @(*) begin
-    builder_csr_bankarray_csrbank0_storage_offset0_we <= 1'd0;
-    builder_csr_bankarray_csrbank0_storage_offset0_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank0_sel & (builder_csr_bankarray_interface0_bank_bus_adr[8:0] == 4'd13))) begin
-        builder_csr_bankarray_csrbank0_storage_offset0_re <= builder_csr_bankarray_interface0_bank_bus_we;
-        builder_csr_bankarray_csrbank0_storage_offset0_we <= (~builder_csr_bankarray_interface0_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank0_storage_mem_level_r = builder_csr_bankarray_interface0_bank_bus_dat_w[10:0];
-always @(*) begin
-    builder_csr_bankarray_csrbank0_storage_mem_level_re <= 1'd0;
-    builder_csr_bankarray_csrbank0_storage_mem_level_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank0_sel & (builder_csr_bankarray_interface0_bank_bus_adr[8:0] == 4'd14))) begin
-        builder_csr_bankarray_csrbank0_storage_mem_level_re <= builder_csr_bankarray_interface0_bank_bus_we;
-        builder_csr_bankarray_csrbank0_storage_mem_level_we <= (~builder_csr_bankarray_interface0_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank0_storage_mem_data_r = builder_csr_bankarray_interface0_bank_bus_dat_w[31:0];
-always @(*) begin
-    builder_csr_bankarray_csrbank0_storage_mem_data_re <= 1'd0;
-    builder_csr_bankarray_csrbank0_storage_mem_data_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank0_sel & (builder_csr_bankarray_interface0_bank_bus_adr[8:0] == 4'd15))) begin
-        builder_csr_bankarray_csrbank0_storage_mem_data_re <= builder_csr_bankarray_interface0_bank_bus_we;
-        builder_csr_bankarray_csrbank0_storage_mem_data_we <= (~builder_csr_bankarray_interface0_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank0_mux_value0_w = main_basesoc_mux_value_storage;
-assign builder_csr_bankarray_csrbank0_trigger_enable0_w = main_basesoc_trigger_enable_storage;
-assign builder_csr_bankarray_csrbank0_trigger_done_w = main_basesoc_trigger_done_status;
-assign main_basesoc_trigger_done_we = builder_csr_bankarray_csrbank0_trigger_done_we;
-assign builder_csr_bankarray_csrbank0_trigger_mem_mask1_w = main_basesoc_trigger_mem_mask_storage[46:32];
-assign builder_csr_bankarray_csrbank0_trigger_mem_mask0_w = main_basesoc_trigger_mem_mask_storage[31:0];
-assign builder_csr_bankarray_csrbank0_trigger_mem_value1_w = main_basesoc_trigger_mem_value_storage[46:32];
-assign builder_csr_bankarray_csrbank0_trigger_mem_value0_w = main_basesoc_trigger_mem_value_storage[31:0];
-assign builder_csr_bankarray_csrbank0_trigger_mem_full_w = main_basesoc_trigger_mem_full_status;
-assign main_basesoc_trigger_mem_full_we = builder_csr_bankarray_csrbank0_trigger_mem_full_we;
-assign builder_csr_bankarray_csrbank0_subsampler_value0_w = main_basesoc_subsampler_value_storage[15:0];
-assign builder_csr_bankarray_csrbank0_storage_enable0_w = main_basesoc_storage_enable_storage;
-assign builder_csr_bankarray_csrbank0_storage_done_w = main_basesoc_storage_done_status;
-assign main_basesoc_storage_done_we = builder_csr_bankarray_csrbank0_storage_done_we;
-assign builder_csr_bankarray_csrbank0_storage_length0_w = main_basesoc_storage_length_storage[10:0];
-assign builder_csr_bankarray_csrbank0_storage_offset0_w = main_basesoc_storage_offset_storage[10:0];
-assign builder_csr_bankarray_csrbank0_storage_mem_level_w = main_basesoc_storage_mem_level_status[10:0];
-assign main_basesoc_storage_mem_level_we = builder_csr_bankarray_csrbank0_storage_mem_level_we;
-assign builder_csr_bankarray_csrbank0_storage_mem_data_w = main_basesoc_storage_mem_data_status[31:0];
-assign main_basesoc_storage_mem_data_we = builder_csr_bankarray_csrbank0_storage_mem_data_we;
-assign builder_csr_bankarray_csrbank1_sel = (builder_csr_bankarray_interface1_bank_bus_adr[13:9] == 2'd2);
-assign builder_csr_bankarray_csrbank1_reset0_r = builder_csr_bankarray_interface1_bank_bus_dat_w[1:0];
-always @(*) begin
-    builder_csr_bankarray_csrbank1_reset0_re <= 1'd0;
-    builder_csr_bankarray_csrbank1_reset0_we <= 1'd0;
+    builder_csr_bankarray_csrbank1_ev_status_re <= 1'd0;
+    builder_csr_bankarray_csrbank1_ev_status_we <= 1'd0;
     if ((builder_csr_bankarray_csrbank1_sel & (builder_csr_bankarray_interface1_bank_bus_adr[8:0] == 1'd0))) begin
-        builder_csr_bankarray_csrbank1_reset0_re <= builder_csr_bankarray_interface1_bank_bus_we;
-        builder_csr_bankarray_csrbank1_reset0_we <= (~builder_csr_bankarray_interface1_bank_bus_we);
+        builder_csr_bankarray_csrbank1_ev_status_re <= builder_csr_bankarray_interface1_bank_bus_we;
+        builder_csr_bankarray_csrbank1_ev_status_we <= (~builder_csr_bankarray_interface1_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank1_scratch0_r = builder_csr_bankarray_interface1_bank_bus_dat_w[31:0];
+assign builder_csr_bankarray_csrbank1_ev_pending_r = builder_csr_bankarray_interface1_bank_bus_dat_w[3:0];
 always @(*) begin
-    builder_csr_bankarray_csrbank1_scratch0_we <= 1'd0;
-    builder_csr_bankarray_csrbank1_scratch0_re <= 1'd0;
+    builder_csr_bankarray_csrbank1_ev_pending_re <= 1'd0;
+    builder_csr_bankarray_csrbank1_ev_pending_we <= 1'd0;
     if ((builder_csr_bankarray_csrbank1_sel & (builder_csr_bankarray_interface1_bank_bus_adr[8:0] == 1'd1))) begin
-        builder_csr_bankarray_csrbank1_scratch0_re <= builder_csr_bankarray_interface1_bank_bus_we;
-        builder_csr_bankarray_csrbank1_scratch0_we <= (~builder_csr_bankarray_interface1_bank_bus_we);
+        builder_csr_bankarray_csrbank1_ev_pending_re <= builder_csr_bankarray_interface1_bank_bus_we;
+        builder_csr_bankarray_csrbank1_ev_pending_we <= (~builder_csr_bankarray_interface1_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank1_bus_errors_r = builder_csr_bankarray_interface1_bank_bus_dat_w[31:0];
+assign builder_csr_bankarray_csrbank1_ev_enable0_r = builder_csr_bankarray_interface1_bank_bus_dat_w[3:0];
 always @(*) begin
-    builder_csr_bankarray_csrbank1_bus_errors_re <= 1'd0;
-    builder_csr_bankarray_csrbank1_bus_errors_we <= 1'd0;
+    builder_csr_bankarray_csrbank1_ev_enable0_we <= 1'd0;
+    builder_csr_bankarray_csrbank1_ev_enable0_re <= 1'd0;
     if ((builder_csr_bankarray_csrbank1_sel & (builder_csr_bankarray_interface1_bank_bus_adr[8:0] == 2'd2))) begin
-        builder_csr_bankarray_csrbank1_bus_errors_re <= builder_csr_bankarray_interface1_bank_bus_we;
-        builder_csr_bankarray_csrbank1_bus_errors_we <= (~builder_csr_bankarray_interface1_bank_bus_we);
+        builder_csr_bankarray_csrbank1_ev_enable0_re <= builder_csr_bankarray_interface1_bank_bus_we;
+        builder_csr_bankarray_csrbank1_ev_enable0_we <= (~builder_csr_bankarray_interface1_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank2_sel = (builder_csr_bankarray_interface2_bank_bus_adr[13:9] == 2'd3);
-assign builder_csr_bankarray_csrbank2_ev_status_r = builder_csr_bankarray_interface2_bank_bus_dat_w[3:0];
+assign builder_csr_bankarray_csrbank1_rx_ctl0_r = builder_csr_bankarray_interface1_bank_bus_dat_w[1:0];
 always @(*) begin
-    builder_csr_bankarray_csrbank2_ev_status_we <= 1'd0;
-    builder_csr_bankarray_csrbank2_ev_status_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank2_sel & (builder_csr_bankarray_interface2_bank_bus_adr[8:0] == 1'd0))) begin
-        builder_csr_bankarray_csrbank2_ev_status_re <= builder_csr_bankarray_interface2_bank_bus_we;
-        builder_csr_bankarray_csrbank2_ev_status_we <= (~builder_csr_bankarray_interface2_bank_bus_we);
+    builder_csr_bankarray_csrbank1_rx_ctl0_re <= 1'd0;
+    builder_csr_bankarray_csrbank1_rx_ctl0_we <= 1'd0;
+    if ((builder_csr_bankarray_csrbank1_sel & (builder_csr_bankarray_interface1_bank_bus_adr[8:0] == 2'd3))) begin
+        builder_csr_bankarray_csrbank1_rx_ctl0_re <= builder_csr_bankarray_interface1_bank_bus_we;
+        builder_csr_bankarray_csrbank1_rx_ctl0_we <= (~builder_csr_bankarray_interface1_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank2_ev_pending_r = builder_csr_bankarray_interface2_bank_bus_dat_w[3:0];
+assign builder_csr_bankarray_csrbank1_rx_stat_r = builder_csr_bankarray_interface1_bank_bus_dat_w[31:0];
 always @(*) begin
-    builder_csr_bankarray_csrbank2_ev_pending_re <= 1'd0;
-    builder_csr_bankarray_csrbank2_ev_pending_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank2_sel & (builder_csr_bankarray_interface2_bank_bus_adr[8:0] == 1'd1))) begin
-        builder_csr_bankarray_csrbank2_ev_pending_re <= builder_csr_bankarray_interface2_bank_bus_we;
-        builder_csr_bankarray_csrbank2_ev_pending_we <= (~builder_csr_bankarray_interface2_bank_bus_we);
+    builder_csr_bankarray_csrbank1_rx_stat_we <= 1'd0;
+    builder_csr_bankarray_csrbank1_rx_stat_re <= 1'd0;
+    if ((builder_csr_bankarray_csrbank1_sel & (builder_csr_bankarray_interface1_bank_bus_adr[8:0] == 3'd4))) begin
+        builder_csr_bankarray_csrbank1_rx_stat_re <= builder_csr_bankarray_interface1_bank_bus_we;
+        builder_csr_bankarray_csrbank1_rx_stat_we <= (~builder_csr_bankarray_interface1_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank2_ev_enable0_r = builder_csr_bankarray_interface2_bank_bus_dat_w[3:0];
+assign builder_csr_bankarray_csrbank1_rx_conf_r = builder_csr_bankarray_interface1_bank_bus_dat_w[31:0];
 always @(*) begin
-    builder_csr_bankarray_csrbank2_ev_enable0_we <= 1'd0;
-    builder_csr_bankarray_csrbank2_ev_enable0_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank2_sel & (builder_csr_bankarray_interface2_bank_bus_adr[8:0] == 2'd2))) begin
-        builder_csr_bankarray_csrbank2_ev_enable0_re <= builder_csr_bankarray_interface2_bank_bus_we;
-        builder_csr_bankarray_csrbank2_ev_enable0_we <= (~builder_csr_bankarray_interface2_bank_bus_we);
+    builder_csr_bankarray_csrbank1_rx_conf_we <= 1'd0;
+    builder_csr_bankarray_csrbank1_rx_conf_re <= 1'd0;
+    if ((builder_csr_bankarray_csrbank1_sel & (builder_csr_bankarray_interface1_bank_bus_adr[8:0] == 3'd5))) begin
+        builder_csr_bankarray_csrbank1_rx_conf_re <= builder_csr_bankarray_interface1_bank_bus_we;
+        builder_csr_bankarray_csrbank1_rx_conf_we <= (~builder_csr_bankarray_interface1_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank2_rx_ctl0_r = builder_csr_bankarray_interface2_bank_bus_dat_w[1:0];
+assign builder_csr_bankarray_csrbank1_tx_ctl0_r = builder_csr_bankarray_interface1_bank_bus_dat_w[1:0];
 always @(*) begin
-    builder_csr_bankarray_csrbank2_rx_ctl0_we <= 1'd0;
-    builder_csr_bankarray_csrbank2_rx_ctl0_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank2_sel & (builder_csr_bankarray_interface2_bank_bus_adr[8:0] == 2'd3))) begin
-        builder_csr_bankarray_csrbank2_rx_ctl0_re <= builder_csr_bankarray_interface2_bank_bus_we;
-        builder_csr_bankarray_csrbank2_rx_ctl0_we <= (~builder_csr_bankarray_interface2_bank_bus_we);
+    builder_csr_bankarray_csrbank1_tx_ctl0_re <= 1'd0;
+    builder_csr_bankarray_csrbank1_tx_ctl0_we <= 1'd0;
+    if ((builder_csr_bankarray_csrbank1_sel & (builder_csr_bankarray_interface1_bank_bus_adr[8:0] == 3'd6))) begin
+        builder_csr_bankarray_csrbank1_tx_ctl0_re <= builder_csr_bankarray_interface1_bank_bus_we;
+        builder_csr_bankarray_csrbank1_tx_ctl0_we <= (~builder_csr_bankarray_interface1_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank2_rx_stat_r = builder_csr_bankarray_interface2_bank_bus_dat_w[31:0];
+assign builder_csr_bankarray_csrbank1_tx_stat_r = builder_csr_bankarray_interface1_bank_bus_dat_w[24:0];
 always @(*) begin
-    builder_csr_bankarray_csrbank2_rx_stat_re <= 1'd0;
-    builder_csr_bankarray_csrbank2_rx_stat_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank2_sel & (builder_csr_bankarray_interface2_bank_bus_adr[8:0] == 3'd4))) begin
-        builder_csr_bankarray_csrbank2_rx_stat_re <= builder_csr_bankarray_interface2_bank_bus_we;
-        builder_csr_bankarray_csrbank2_rx_stat_we <= (~builder_csr_bankarray_interface2_bank_bus_we);
+    builder_csr_bankarray_csrbank1_tx_stat_re <= 1'd0;
+    builder_csr_bankarray_csrbank1_tx_stat_we <= 1'd0;
+    if ((builder_csr_bankarray_csrbank1_sel & (builder_csr_bankarray_interface1_bank_bus_adr[8:0] == 3'd7))) begin
+        builder_csr_bankarray_csrbank1_tx_stat_re <= builder_csr_bankarray_interface1_bank_bus_we;
+        builder_csr_bankarray_csrbank1_tx_stat_we <= (~builder_csr_bankarray_interface1_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank2_rx_conf_r = builder_csr_bankarray_interface2_bank_bus_dat_w[31:0];
+assign builder_csr_bankarray_csrbank1_tx_conf_r = builder_csr_bankarray_interface1_bank_bus_dat_w[31:0];
 always @(*) begin
-    builder_csr_bankarray_csrbank2_rx_conf_we <= 1'd0;
-    builder_csr_bankarray_csrbank2_rx_conf_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank2_sel & (builder_csr_bankarray_interface2_bank_bus_adr[8:0] == 3'd5))) begin
-        builder_csr_bankarray_csrbank2_rx_conf_re <= builder_csr_bankarray_interface2_bank_bus_we;
-        builder_csr_bankarray_csrbank2_rx_conf_we <= (~builder_csr_bankarray_interface2_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank2_tx_ctl0_r = builder_csr_bankarray_interface2_bank_bus_dat_w[1:0];
-always @(*) begin
-    builder_csr_bankarray_csrbank2_tx_ctl0_we <= 1'd0;
-    builder_csr_bankarray_csrbank2_tx_ctl0_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank2_sel & (builder_csr_bankarray_interface2_bank_bus_adr[8:0] == 3'd6))) begin
-        builder_csr_bankarray_csrbank2_tx_ctl0_re <= builder_csr_bankarray_interface2_bank_bus_we;
-        builder_csr_bankarray_csrbank2_tx_ctl0_we <= (~builder_csr_bankarray_interface2_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank2_tx_stat_r = builder_csr_bankarray_interface2_bank_bus_dat_w[24:0];
-always @(*) begin
-    builder_csr_bankarray_csrbank2_tx_stat_re <= 1'd0;
-    builder_csr_bankarray_csrbank2_tx_stat_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank2_sel & (builder_csr_bankarray_interface2_bank_bus_adr[8:0] == 3'd7))) begin
-        builder_csr_bankarray_csrbank2_tx_stat_re <= builder_csr_bankarray_interface2_bank_bus_we;
-        builder_csr_bankarray_csrbank2_tx_stat_we <= (~builder_csr_bankarray_interface2_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank2_tx_conf_r = builder_csr_bankarray_interface2_bank_bus_dat_w[31:0];
-always @(*) begin
-    builder_csr_bankarray_csrbank2_tx_conf_re <= 1'd0;
-    builder_csr_bankarray_csrbank2_tx_conf_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank2_sel & (builder_csr_bankarray_interface2_bank_bus_adr[8:0] == 4'd8))) begin
-        builder_csr_bankarray_csrbank2_tx_conf_re <= builder_csr_bankarray_interface2_bank_bus_we;
-        builder_csr_bankarray_csrbank2_tx_conf_we <= (~builder_csr_bankarray_interface2_bank_bus_we);
+    builder_csr_bankarray_csrbank1_tx_conf_we <= 1'd0;
+    builder_csr_bankarray_csrbank1_tx_conf_re <= 1'd0;
+    if ((builder_csr_bankarray_csrbank1_sel & (builder_csr_bankarray_interface1_bank_bus_adr[8:0] == 4'd8))) begin
+        builder_csr_bankarray_csrbank1_tx_conf_re <= builder_csr_bankarray_interface1_bank_bus_we;
+        builder_csr_bankarray_csrbank1_tx_conf_we <= (~builder_csr_bankarray_interface1_bank_bus_we);
     end
 end
 always @(*) begin
-    main_basesoc_status_status <= 4'd0;
-    main_basesoc_status_status[0] <= main_basesoc_rx_ready0;
-    main_basesoc_status_status[1] <= main_basesoc_rx_error0;
-    main_basesoc_status_status[2] <= main_basesoc_tx_ready0;
-    main_basesoc_status_status[3] <= main_basesoc_tx_error0;
+    main_status_status <= 4'd0;
+    main_status_status[0] <= main_rx_ready0;
+    main_status_status[1] <= main_rx_error0;
+    main_status_status[2] <= main_tx_ready0;
+    main_status_status[3] <= main_tx_error0;
 end
-assign builder_csr_bankarray_csrbank2_ev_status_w = main_basesoc_status_status[3:0];
-assign main_basesoc_status_we = builder_csr_bankarray_csrbank2_ev_status_we;
+assign builder_csr_bankarray_csrbank1_ev_status_w = main_status_status[3:0];
+assign main_status_we = builder_csr_bankarray_csrbank1_ev_status_we;
 always @(*) begin
-    main_basesoc_pending_status <= 4'd0;
-    main_basesoc_pending_status[0] <= main_basesoc_rx_ready1;
-    main_basesoc_pending_status[1] <= main_basesoc_rx_error1;
-    main_basesoc_pending_status[2] <= main_basesoc_tx_ready1;
-    main_basesoc_pending_status[3] <= main_basesoc_tx_error1;
+    main_pending_status <= 4'd0;
+    main_pending_status[0] <= main_rx_ready1;
+    main_pending_status[1] <= main_rx_error1;
+    main_pending_status[2] <= main_tx_ready1;
+    main_pending_status[3] <= main_tx_error1;
 end
-assign builder_csr_bankarray_csrbank2_ev_pending_w = main_basesoc_pending_status[3:0];
-assign main_basesoc_pending_we = builder_csr_bankarray_csrbank2_ev_pending_we;
-assign main_basesoc_rx_ready2 = main_basesoc_enable_storage[0];
-assign main_basesoc_rx_error2 = main_basesoc_enable_storage[1];
-assign main_basesoc_tx_ready2 = main_basesoc_enable_storage[2];
-assign main_basesoc_tx_error2 = main_basesoc_enable_storage[3];
-assign builder_csr_bankarray_csrbank2_ev_enable0_w = main_basesoc_enable_storage[3:0];
-assign main_basesoc_csrfield_enable0 = main_basesoc_rx_ctl_storage[0];
+assign builder_csr_bankarray_csrbank1_ev_pending_w = main_pending_status[3:0];
+assign main_pending_we = builder_csr_bankarray_csrbank1_ev_pending_we;
+assign main_rx_ready2 = main_enable_storage[0];
+assign main_rx_error2 = main_enable_storage[1];
+assign main_tx_ready2 = main_enable_storage[2];
+assign main_tx_error2 = main_enable_storage[3];
+assign builder_csr_bankarray_csrbank1_ev_enable0_w = main_enable_storage[3:0];
+assign main_csrfield_enable0 = main_rx_ctl_storage[0];
 always @(*) begin
-    main_basesoc_csrfield_reset0 <= 1'd0;
-    if (main_basesoc_rx_ctl_re) begin
-        main_basesoc_csrfield_reset0 <= main_basesoc_rx_ctl_storage[1];
+    main_csrfield_reset0 <= 1'd0;
+    if (main_rx_ctl_re) begin
+        main_csrfield_reset0 <= main_rx_ctl_storage[1];
     end
 end
-assign builder_csr_bankarray_csrbank2_rx_ctl0_w = main_basesoc_rx_ctl_storage[1:0];
+assign builder_csr_bankarray_csrbank1_rx_ctl0_w = main_rx_ctl_storage[1:0];
 always @(*) begin
-    main_basesoc_rx_stat_status <= 32'd0;
-    main_basesoc_rx_stat_status[0] <= main_basesoc_csrfield_overflow0;
-    main_basesoc_rx_stat_status[1] <= main_basesoc_csrfield_underflow0;
-    main_basesoc_rx_stat_status[2] <= main_basesoc_csrfield_dataready;
-    main_basesoc_rx_stat_status[3] <= main_basesoc_csrfield_empty0;
-    main_basesoc_rx_stat_status[12:4] <= main_basesoc_csrfield_wrcount0;
-    main_basesoc_rx_stat_status[21:13] <= main_basesoc_csrfield_rdcount0;
-    main_basesoc_rx_stat_status[30:22] <= main_basesoc_csrfield_fifo_depth;
-    main_basesoc_rx_stat_status[31] <= main_basesoc_csrfield_concatenate_channels0;
+    main_rx_stat_status <= 32'd0;
+    main_rx_stat_status[0] <= main_csrfield_overflow0;
+    main_rx_stat_status[1] <= main_csrfield_underflow0;
+    main_rx_stat_status[2] <= main_csrfield_dataready;
+    main_rx_stat_status[3] <= main_csrfield_empty0;
+    main_rx_stat_status[12:4] <= main_csrfield_wrcount0;
+    main_rx_stat_status[21:13] <= main_csrfield_rdcount0;
+    main_rx_stat_status[30:22] <= main_csrfield_fifo_depth;
+    main_rx_stat_status[31] <= main_csrfield_concatenate_channels0;
 end
-assign builder_csr_bankarray_csrbank2_rx_stat_w = main_basesoc_rx_stat_status[31:0];
-assign main_basesoc_rx_stat_we = builder_csr_bankarray_csrbank2_rx_stat_we;
+assign builder_csr_bankarray_csrbank1_rx_stat_w = main_rx_stat_status[31:0];
+assign main_rx_stat_we = builder_csr_bankarray_csrbank1_rx_stat_we;
 always @(*) begin
-    main_basesoc_rx_conf_status <= 32'd12288097;
-    main_basesoc_rx_conf_status[1:0] <= main_basesoc_csrfield_format0;
-    main_basesoc_rx_conf_status[7:2] <= main_basesoc_csrfield_sample_width0;
-    main_basesoc_rx_conf_status[31:8] <= main_basesoc_csrfield_lrck_freq0;
+    main_rx_conf_status <= 32'd12288097;
+    main_rx_conf_status[1:0] <= main_csrfield_format0;
+    main_rx_conf_status[7:2] <= main_csrfield_sample_width0;
+    main_rx_conf_status[31:8] <= main_csrfield_lrck_freq0;
 end
-assign builder_csr_bankarray_csrbank2_rx_conf_w = main_basesoc_rx_conf_status[31:0];
-assign main_basesoc_rx_conf_we = builder_csr_bankarray_csrbank2_rx_conf_we;
-assign main_basesoc_csrfield_enable1 = main_basesoc_tx_ctl_storage[0];
+assign builder_csr_bankarray_csrbank1_rx_conf_w = main_rx_conf_status[31:0];
+assign main_rx_conf_we = builder_csr_bankarray_csrbank1_rx_conf_we;
+assign main_csrfield_enable1 = main_tx_ctl_storage[0];
 always @(*) begin
-    main_basesoc_csrfield_reset1 <= 1'd0;
-    if (main_basesoc_tx_ctl_re) begin
-        main_basesoc_csrfield_reset1 <= main_basesoc_tx_ctl_storage[1];
+    main_csrfield_reset1 <= 1'd0;
+    if (main_tx_ctl_re) begin
+        main_csrfield_reset1 <= main_tx_ctl_storage[1];
     end
 end
-assign builder_csr_bankarray_csrbank2_tx_ctl0_w = main_basesoc_tx_ctl_storage[1:0];
+assign builder_csr_bankarray_csrbank1_tx_ctl0_w = main_tx_ctl_storage[1:0];
 always @(*) begin
-    main_basesoc_tx_stat_status <= 25'd0;
-    main_basesoc_tx_stat_status[0] <= main_basesoc_csrfield_overflow1;
-    main_basesoc_tx_stat_status[1] <= main_basesoc_csrfield_underflow1;
-    main_basesoc_tx_stat_status[2] <= main_basesoc_csrfield_free;
-    main_basesoc_tx_stat_status[3] <= main_basesoc_csrfield_almostfull;
-    main_basesoc_tx_stat_status[4] <= main_basesoc_csrfield_full;
-    main_basesoc_tx_stat_status[5] <= main_basesoc_csrfield_empty1;
-    main_basesoc_tx_stat_status[14:6] <= main_basesoc_csrfield_wrcount1;
-    main_basesoc_tx_stat_status[23:15] <= main_basesoc_csrfield_rdcount1;
-    main_basesoc_tx_stat_status[24] <= main_basesoc_csrfield_concatenate_channels1;
+    main_tx_stat_status <= 25'd0;
+    main_tx_stat_status[0] <= main_csrfield_overflow1;
+    main_tx_stat_status[1] <= main_csrfield_underflow1;
+    main_tx_stat_status[2] <= main_csrfield_free;
+    main_tx_stat_status[3] <= main_csrfield_almostfull;
+    main_tx_stat_status[4] <= main_csrfield_full;
+    main_tx_stat_status[5] <= main_csrfield_empty1;
+    main_tx_stat_status[14:6] <= main_csrfield_wrcount1;
+    main_tx_stat_status[23:15] <= main_csrfield_rdcount1;
+    main_tx_stat_status[24] <= main_csrfield_concatenate_channels1;
 end
-assign builder_csr_bankarray_csrbank2_tx_stat_w = main_basesoc_tx_stat_status[24:0];
-assign main_basesoc_tx_stat_we = builder_csr_bankarray_csrbank2_tx_stat_we;
+assign builder_csr_bankarray_csrbank1_tx_stat_w = main_tx_stat_status[24:0];
+assign main_tx_stat_we = builder_csr_bankarray_csrbank1_tx_stat_we;
 always @(*) begin
-    main_basesoc_tx_conf_status <= 32'd12288097;
-    main_basesoc_tx_conf_status[1:0] <= main_basesoc_csrfield_format1;
-    main_basesoc_tx_conf_status[7:2] <= main_basesoc_csrfield_sample_width1;
-    main_basesoc_tx_conf_status[31:8] <= main_basesoc_csrfield_lrck_freq1;
+    main_tx_conf_status <= 32'd12288097;
+    main_tx_conf_status[1:0] <= main_csrfield_format1;
+    main_tx_conf_status[7:2] <= main_csrfield_sample_width1;
+    main_tx_conf_status[31:8] <= main_csrfield_lrck_freq1;
 end
-assign builder_csr_bankarray_csrbank2_tx_conf_w = main_basesoc_tx_conf_status[31:0];
-assign main_basesoc_tx_conf_we = builder_csr_bankarray_csrbank2_tx_conf_we;
-assign builder_csr_bankarray_sel = (builder_csr_bankarray_sram_bus_adr[13:9] == 3'd4);
+assign builder_csr_bankarray_csrbank1_tx_conf_w = main_tx_conf_status[31:0];
+assign main_tx_conf_we = builder_csr_bankarray_csrbank1_tx_conf_we;
+assign builder_csr_bankarray_sel = (builder_csr_bankarray_sram_bus_adr[13:9] == 2'd2);
 always @(*) begin
     builder_csr_bankarray_sram_bus_dat_r <= 32'd0;
     if (builder_csr_bankarray_sel_r) begin
@@ -5253,283 +4480,283 @@ always @(*) begin
     end
 end
 assign builder_csr_bankarray_adr = builder_csr_bankarray_sram_bus_adr[5:0];
-assign builder_csr_bankarray_csrbank3_sel = (builder_csr_bankarray_interface3_bank_bus_adr[13:9] == 3'd5);
-assign builder_csr_bankarray_csrbank3_out0_r = builder_csr_bankarray_interface3_bank_bus_dat_w[0];
+assign builder_csr_bankarray_csrbank2_sel = (builder_csr_bankarray_interface2_bank_bus_adr[13:9] == 2'd3);
+assign builder_csr_bankarray_csrbank2_out0_r = builder_csr_bankarray_interface2_bank_bus_dat_w[0];
 always @(*) begin
-    builder_csr_bankarray_csrbank3_out0_re <= 1'd0;
-    builder_csr_bankarray_csrbank3_out0_we <= 1'd0;
+    builder_csr_bankarray_csrbank2_out0_re <= 1'd0;
+    builder_csr_bankarray_csrbank2_out0_we <= 1'd0;
+    if ((builder_csr_bankarray_csrbank2_sel & (builder_csr_bankarray_interface2_bank_bus_adr[8:0] == 1'd0))) begin
+        builder_csr_bankarray_csrbank2_out0_re <= builder_csr_bankarray_interface2_bank_bus_we;
+        builder_csr_bankarray_csrbank2_out0_we <= (~builder_csr_bankarray_interface2_bank_bus_we);
+    end
+end
+assign builder_csr_bankarray_csrbank2_out0_w = main_storage;
+assign builder_csr_bankarray_csrbank3_sel = (builder_csr_bankarray_interface3_bank_bus_adr[13:9] == 3'd4);
+assign builder_csr_bankarray_csrbank3_dfii_control0_r = builder_csr_bankarray_interface3_bank_bus_dat_w[3:0];
+always @(*) begin
+    builder_csr_bankarray_csrbank3_dfii_control0_we <= 1'd0;
+    builder_csr_bankarray_csrbank3_dfii_control0_re <= 1'd0;
     if ((builder_csr_bankarray_csrbank3_sel & (builder_csr_bankarray_interface3_bank_bus_adr[8:0] == 1'd0))) begin
-        builder_csr_bankarray_csrbank3_out0_re <= builder_csr_bankarray_interface3_bank_bus_we;
-        builder_csr_bankarray_csrbank3_out0_we <= (~builder_csr_bankarray_interface3_bank_bus_we);
+        builder_csr_bankarray_csrbank3_dfii_control0_re <= builder_csr_bankarray_interface3_bank_bus_we;
+        builder_csr_bankarray_csrbank3_dfii_control0_we <= (~builder_csr_bankarray_interface3_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank3_out0_w = main_storage;
-assign builder_csr_bankarray_csrbank4_sel = (builder_csr_bankarray_interface4_bank_bus_adr[13:9] == 3'd6);
-assign builder_csr_bankarray_csrbank4_dfii_control0_r = builder_csr_bankarray_interface4_bank_bus_dat_w[3:0];
+assign builder_csr_bankarray_csrbank3_dfii_pi0_command0_r = builder_csr_bankarray_interface3_bank_bus_dat_w[5:0];
 always @(*) begin
-    builder_csr_bankarray_csrbank4_dfii_control0_re <= 1'd0;
-    builder_csr_bankarray_csrbank4_dfii_control0_we <= 1'd0;
+    builder_csr_bankarray_csrbank3_dfii_pi0_command0_we <= 1'd0;
+    builder_csr_bankarray_csrbank3_dfii_pi0_command0_re <= 1'd0;
+    if ((builder_csr_bankarray_csrbank3_sel & (builder_csr_bankarray_interface3_bank_bus_adr[8:0] == 1'd1))) begin
+        builder_csr_bankarray_csrbank3_dfii_pi0_command0_re <= builder_csr_bankarray_interface3_bank_bus_we;
+        builder_csr_bankarray_csrbank3_dfii_pi0_command0_we <= (~builder_csr_bankarray_interface3_bank_bus_we);
+    end
+end
+assign main_sdram_command_issue_r = builder_csr_bankarray_interface3_bank_bus_dat_w[0];
+always @(*) begin
+    main_sdram_command_issue_re <= 1'd0;
+    main_sdram_command_issue_we <= 1'd0;
+    if ((builder_csr_bankarray_csrbank3_sel & (builder_csr_bankarray_interface3_bank_bus_adr[8:0] == 2'd2))) begin
+        main_sdram_command_issue_re <= builder_csr_bankarray_interface3_bank_bus_we;
+        main_sdram_command_issue_we <= (~builder_csr_bankarray_interface3_bank_bus_we);
+    end
+end
+assign builder_csr_bankarray_csrbank3_dfii_pi0_address0_r = builder_csr_bankarray_interface3_bank_bus_dat_w[12:0];
+always @(*) begin
+    builder_csr_bankarray_csrbank3_dfii_pi0_address0_re <= 1'd0;
+    builder_csr_bankarray_csrbank3_dfii_pi0_address0_we <= 1'd0;
+    if ((builder_csr_bankarray_csrbank3_sel & (builder_csr_bankarray_interface3_bank_bus_adr[8:0] == 2'd3))) begin
+        builder_csr_bankarray_csrbank3_dfii_pi0_address0_re <= builder_csr_bankarray_interface3_bank_bus_we;
+        builder_csr_bankarray_csrbank3_dfii_pi0_address0_we <= (~builder_csr_bankarray_interface3_bank_bus_we);
+    end
+end
+assign builder_csr_bankarray_csrbank3_dfii_pi0_baddress0_r = builder_csr_bankarray_interface3_bank_bus_dat_w[1:0];
+always @(*) begin
+    builder_csr_bankarray_csrbank3_dfii_pi0_baddress0_we <= 1'd0;
+    builder_csr_bankarray_csrbank3_dfii_pi0_baddress0_re <= 1'd0;
+    if ((builder_csr_bankarray_csrbank3_sel & (builder_csr_bankarray_interface3_bank_bus_adr[8:0] == 3'd4))) begin
+        builder_csr_bankarray_csrbank3_dfii_pi0_baddress0_re <= builder_csr_bankarray_interface3_bank_bus_we;
+        builder_csr_bankarray_csrbank3_dfii_pi0_baddress0_we <= (~builder_csr_bankarray_interface3_bank_bus_we);
+    end
+end
+assign builder_csr_bankarray_csrbank3_dfii_pi0_wrdata0_r = builder_csr_bankarray_interface3_bank_bus_dat_w[15:0];
+always @(*) begin
+    builder_csr_bankarray_csrbank3_dfii_pi0_wrdata0_re <= 1'd0;
+    builder_csr_bankarray_csrbank3_dfii_pi0_wrdata0_we <= 1'd0;
+    if ((builder_csr_bankarray_csrbank3_sel & (builder_csr_bankarray_interface3_bank_bus_adr[8:0] == 3'd5))) begin
+        builder_csr_bankarray_csrbank3_dfii_pi0_wrdata0_re <= builder_csr_bankarray_interface3_bank_bus_we;
+        builder_csr_bankarray_csrbank3_dfii_pi0_wrdata0_we <= (~builder_csr_bankarray_interface3_bank_bus_we);
+    end
+end
+assign builder_csr_bankarray_csrbank3_dfii_pi0_rddata_r = builder_csr_bankarray_interface3_bank_bus_dat_w[15:0];
+always @(*) begin
+    builder_csr_bankarray_csrbank3_dfii_pi0_rddata_re <= 1'd0;
+    builder_csr_bankarray_csrbank3_dfii_pi0_rddata_we <= 1'd0;
+    if ((builder_csr_bankarray_csrbank3_sel & (builder_csr_bankarray_interface3_bank_bus_adr[8:0] == 3'd6))) begin
+        builder_csr_bankarray_csrbank3_dfii_pi0_rddata_re <= builder_csr_bankarray_interface3_bank_bus_we;
+        builder_csr_bankarray_csrbank3_dfii_pi0_rddata_we <= (~builder_csr_bankarray_interface3_bank_bus_we);
+    end
+end
+assign main_sdram_sel = main_sdram_storage[0];
+assign main_sdram_cke1 = main_sdram_storage[1];
+assign main_sdram_odt = main_sdram_storage[2];
+assign main_sdram_reset_n = main_sdram_storage[3];
+assign builder_csr_bankarray_csrbank3_dfii_control0_w = main_sdram_storage[3:0];
+assign main_sdram_csrfield_cs = main_sdram_command_storage[0];
+assign main_sdram_csrfield_we = main_sdram_command_storage[1];
+assign main_sdram_csrfield_cas = main_sdram_command_storage[2];
+assign main_sdram_csrfield_ras = main_sdram_command_storage[3];
+assign main_sdram_csrfield_wren = main_sdram_command_storage[4];
+assign main_sdram_csrfield_rden = main_sdram_command_storage[5];
+assign builder_csr_bankarray_csrbank3_dfii_pi0_command0_w = main_sdram_command_storage[5:0];
+assign builder_csr_bankarray_csrbank3_dfii_pi0_address0_w = main_sdram_address_storage[12:0];
+assign builder_csr_bankarray_csrbank3_dfii_pi0_baddress0_w = main_sdram_baddress_storage[1:0];
+assign builder_csr_bankarray_csrbank3_dfii_pi0_wrdata0_w = main_sdram_wrdata_storage[15:0];
+assign builder_csr_bankarray_csrbank3_dfii_pi0_rddata_w = main_sdram_rddata_status[15:0];
+assign main_sdram_rddata_we = builder_csr_bankarray_csrbank3_dfii_pi0_rddata_we;
+assign builder_csr_bankarray_csrbank4_sel = (builder_csr_bankarray_interface4_bank_bus_adr[13:9] == 3'd5);
+assign builder_csr_bankarray_csrbank4_load0_r = builder_csr_bankarray_interface4_bank_bus_dat_w[31:0];
+always @(*) begin
+    builder_csr_bankarray_csrbank4_load0_we <= 1'd0;
+    builder_csr_bankarray_csrbank4_load0_re <= 1'd0;
     if ((builder_csr_bankarray_csrbank4_sel & (builder_csr_bankarray_interface4_bank_bus_adr[8:0] == 1'd0))) begin
-        builder_csr_bankarray_csrbank4_dfii_control0_re <= builder_csr_bankarray_interface4_bank_bus_we;
-        builder_csr_bankarray_csrbank4_dfii_control0_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
+        builder_csr_bankarray_csrbank4_load0_re <= builder_csr_bankarray_interface4_bank_bus_we;
+        builder_csr_bankarray_csrbank4_load0_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank4_dfii_pi0_command0_r = builder_csr_bankarray_interface4_bank_bus_dat_w[5:0];
+assign builder_csr_bankarray_csrbank4_reload0_r = builder_csr_bankarray_interface4_bank_bus_dat_w[31:0];
 always @(*) begin
-    builder_csr_bankarray_csrbank4_dfii_pi0_command0_we <= 1'd0;
-    builder_csr_bankarray_csrbank4_dfii_pi0_command0_re <= 1'd0;
+    builder_csr_bankarray_csrbank4_reload0_re <= 1'd0;
+    builder_csr_bankarray_csrbank4_reload0_we <= 1'd0;
     if ((builder_csr_bankarray_csrbank4_sel & (builder_csr_bankarray_interface4_bank_bus_adr[8:0] == 1'd1))) begin
-        builder_csr_bankarray_csrbank4_dfii_pi0_command0_re <= builder_csr_bankarray_interface4_bank_bus_we;
-        builder_csr_bankarray_csrbank4_dfii_pi0_command0_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
+        builder_csr_bankarray_csrbank4_reload0_re <= builder_csr_bankarray_interface4_bank_bus_we;
+        builder_csr_bankarray_csrbank4_reload0_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
     end
 end
-assign main_basesoc_sdram_command_issue_r = builder_csr_bankarray_interface4_bank_bus_dat_w[0];
+assign builder_csr_bankarray_csrbank4_en0_r = builder_csr_bankarray_interface4_bank_bus_dat_w[0];
 always @(*) begin
-    main_basesoc_sdram_command_issue_re <= 1'd0;
-    main_basesoc_sdram_command_issue_we <= 1'd0;
+    builder_csr_bankarray_csrbank4_en0_re <= 1'd0;
+    builder_csr_bankarray_csrbank4_en0_we <= 1'd0;
     if ((builder_csr_bankarray_csrbank4_sel & (builder_csr_bankarray_interface4_bank_bus_adr[8:0] == 2'd2))) begin
-        main_basesoc_sdram_command_issue_re <= builder_csr_bankarray_interface4_bank_bus_we;
-        main_basesoc_sdram_command_issue_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
+        builder_csr_bankarray_csrbank4_en0_re <= builder_csr_bankarray_interface4_bank_bus_we;
+        builder_csr_bankarray_csrbank4_en0_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank4_dfii_pi0_address0_r = builder_csr_bankarray_interface4_bank_bus_dat_w[12:0];
+assign builder_csr_bankarray_csrbank4_update_value0_r = builder_csr_bankarray_interface4_bank_bus_dat_w[0];
 always @(*) begin
-    builder_csr_bankarray_csrbank4_dfii_pi0_address0_re <= 1'd0;
-    builder_csr_bankarray_csrbank4_dfii_pi0_address0_we <= 1'd0;
+    builder_csr_bankarray_csrbank4_update_value0_we <= 1'd0;
+    builder_csr_bankarray_csrbank4_update_value0_re <= 1'd0;
     if ((builder_csr_bankarray_csrbank4_sel & (builder_csr_bankarray_interface4_bank_bus_adr[8:0] == 2'd3))) begin
-        builder_csr_bankarray_csrbank4_dfii_pi0_address0_re <= builder_csr_bankarray_interface4_bank_bus_we;
-        builder_csr_bankarray_csrbank4_dfii_pi0_address0_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
+        builder_csr_bankarray_csrbank4_update_value0_re <= builder_csr_bankarray_interface4_bank_bus_we;
+        builder_csr_bankarray_csrbank4_update_value0_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank4_dfii_pi0_baddress0_r = builder_csr_bankarray_interface4_bank_bus_dat_w[1:0];
+assign builder_csr_bankarray_csrbank4_value_r = builder_csr_bankarray_interface4_bank_bus_dat_w[31:0];
 always @(*) begin
-    builder_csr_bankarray_csrbank4_dfii_pi0_baddress0_re <= 1'd0;
-    builder_csr_bankarray_csrbank4_dfii_pi0_baddress0_we <= 1'd0;
+    builder_csr_bankarray_csrbank4_value_re <= 1'd0;
+    builder_csr_bankarray_csrbank4_value_we <= 1'd0;
     if ((builder_csr_bankarray_csrbank4_sel & (builder_csr_bankarray_interface4_bank_bus_adr[8:0] == 3'd4))) begin
-        builder_csr_bankarray_csrbank4_dfii_pi0_baddress0_re <= builder_csr_bankarray_interface4_bank_bus_we;
-        builder_csr_bankarray_csrbank4_dfii_pi0_baddress0_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
+        builder_csr_bankarray_csrbank4_value_re <= builder_csr_bankarray_interface4_bank_bus_we;
+        builder_csr_bankarray_csrbank4_value_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank4_dfii_pi0_wrdata0_r = builder_csr_bankarray_interface4_bank_bus_dat_w[15:0];
+assign builder_csr_bankarray_csrbank4_ev_status_r = builder_csr_bankarray_interface4_bank_bus_dat_w[0];
 always @(*) begin
-    builder_csr_bankarray_csrbank4_dfii_pi0_wrdata0_we <= 1'd0;
-    builder_csr_bankarray_csrbank4_dfii_pi0_wrdata0_re <= 1'd0;
+    builder_csr_bankarray_csrbank4_ev_status_re <= 1'd0;
+    builder_csr_bankarray_csrbank4_ev_status_we <= 1'd0;
     if ((builder_csr_bankarray_csrbank4_sel & (builder_csr_bankarray_interface4_bank_bus_adr[8:0] == 3'd5))) begin
-        builder_csr_bankarray_csrbank4_dfii_pi0_wrdata0_re <= builder_csr_bankarray_interface4_bank_bus_we;
-        builder_csr_bankarray_csrbank4_dfii_pi0_wrdata0_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
+        builder_csr_bankarray_csrbank4_ev_status_re <= builder_csr_bankarray_interface4_bank_bus_we;
+        builder_csr_bankarray_csrbank4_ev_status_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank4_dfii_pi0_rddata_r = builder_csr_bankarray_interface4_bank_bus_dat_w[15:0];
+assign builder_csr_bankarray_csrbank4_ev_pending_r = builder_csr_bankarray_interface4_bank_bus_dat_w[0];
 always @(*) begin
-    builder_csr_bankarray_csrbank4_dfii_pi0_rddata_re <= 1'd0;
-    builder_csr_bankarray_csrbank4_dfii_pi0_rddata_we <= 1'd0;
+    builder_csr_bankarray_csrbank4_ev_pending_we <= 1'd0;
+    builder_csr_bankarray_csrbank4_ev_pending_re <= 1'd0;
     if ((builder_csr_bankarray_csrbank4_sel & (builder_csr_bankarray_interface4_bank_bus_adr[8:0] == 3'd6))) begin
-        builder_csr_bankarray_csrbank4_dfii_pi0_rddata_re <= builder_csr_bankarray_interface4_bank_bus_we;
-        builder_csr_bankarray_csrbank4_dfii_pi0_rddata_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
+        builder_csr_bankarray_csrbank4_ev_pending_re <= builder_csr_bankarray_interface4_bank_bus_we;
+        builder_csr_bankarray_csrbank4_ev_pending_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
     end
 end
-assign main_basesoc_sdram_sel = main_basesoc_sdram_storage[0];
-assign main_basesoc_sdram_cke = main_basesoc_sdram_storage[1];
-assign main_basesoc_sdram_odt = main_basesoc_sdram_storage[2];
-assign main_basesoc_sdram_reset_n = main_basesoc_sdram_storage[3];
-assign builder_csr_bankarray_csrbank4_dfii_control0_w = main_basesoc_sdram_storage[3:0];
-assign main_basesoc_sdram_csrfield_cs = main_basesoc_sdram_command_storage[0];
-assign main_basesoc_sdram_csrfield_we = main_basesoc_sdram_command_storage[1];
-assign main_basesoc_sdram_csrfield_cas = main_basesoc_sdram_command_storage[2];
-assign main_basesoc_sdram_csrfield_ras = main_basesoc_sdram_command_storage[3];
-assign main_basesoc_sdram_csrfield_wren = main_basesoc_sdram_command_storage[4];
-assign main_basesoc_sdram_csrfield_rden = main_basesoc_sdram_command_storage[5];
-assign builder_csr_bankarray_csrbank4_dfii_pi0_command0_w = main_basesoc_sdram_command_storage[5:0];
-assign builder_csr_bankarray_csrbank4_dfii_pi0_address0_w = main_basesoc_sdram_address_storage[12:0];
-assign builder_csr_bankarray_csrbank4_dfii_pi0_baddress0_w = main_basesoc_sdram_baddress_storage[1:0];
-assign builder_csr_bankarray_csrbank4_dfii_pi0_wrdata0_w = main_basesoc_sdram_wrdata_storage[15:0];
-assign builder_csr_bankarray_csrbank4_dfii_pi0_rddata_w = main_basesoc_sdram_rddata_status[15:0];
-assign main_basesoc_sdram_rddata_we = builder_csr_bankarray_csrbank4_dfii_pi0_rddata_we;
-assign builder_csr_bankarray_csrbank5_sel = (builder_csr_bankarray_interface5_bank_bus_adr[13:9] == 3'd7);
-assign builder_csr_bankarray_csrbank5_load0_r = builder_csr_bankarray_interface5_bank_bus_dat_w[31:0];
+assign builder_csr_bankarray_csrbank4_ev_enable0_r = builder_csr_bankarray_interface4_bank_bus_dat_w[0];
 always @(*) begin
-    builder_csr_bankarray_csrbank5_load0_re <= 1'd0;
-    builder_csr_bankarray_csrbank5_load0_we <= 1'd0;
+    builder_csr_bankarray_csrbank4_ev_enable0_re <= 1'd0;
+    builder_csr_bankarray_csrbank4_ev_enable0_we <= 1'd0;
+    if ((builder_csr_bankarray_csrbank4_sel & (builder_csr_bankarray_interface4_bank_bus_adr[8:0] == 3'd7))) begin
+        builder_csr_bankarray_csrbank4_ev_enable0_re <= builder_csr_bankarray_interface4_bank_bus_we;
+        builder_csr_bankarray_csrbank4_ev_enable0_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
+    end
+end
+assign builder_csr_bankarray_csrbank4_load0_w = main_basesoc_timer_load_storage[31:0];
+assign builder_csr_bankarray_csrbank4_reload0_w = main_basesoc_timer_reload_storage[31:0];
+assign builder_csr_bankarray_csrbank4_en0_w = main_basesoc_timer_en_storage;
+assign builder_csr_bankarray_csrbank4_update_value0_w = main_basesoc_timer_update_value_storage;
+assign builder_csr_bankarray_csrbank4_value_w = main_basesoc_timer_value_status[31:0];
+assign main_basesoc_timer_value_we = builder_csr_bankarray_csrbank4_value_we;
+assign main_basesoc_timer_status_status = main_basesoc_timer_zero0;
+assign builder_csr_bankarray_csrbank4_ev_status_w = main_basesoc_timer_status_status;
+assign main_basesoc_timer_status_we = builder_csr_bankarray_csrbank4_ev_status_we;
+assign main_basesoc_timer_pending_status = main_basesoc_timer_zero1;
+assign builder_csr_bankarray_csrbank4_ev_pending_w = main_basesoc_timer_pending_status;
+assign main_basesoc_timer_pending_we = builder_csr_bankarray_csrbank4_ev_pending_we;
+assign main_basesoc_timer_zero2 = main_basesoc_timer_enable_storage;
+assign builder_csr_bankarray_csrbank4_ev_enable0_w = main_basesoc_timer_enable_storage;
+assign builder_csr_bankarray_csrbank5_sel = (builder_csr_bankarray_interface5_bank_bus_adr[13:9] == 3'd6);
+assign main_basesoc_uart_rxtx_r = builder_csr_bankarray_interface5_bank_bus_dat_w[7:0];
+always @(*) begin
+    main_basesoc_uart_rxtx_we <= 1'd0;
+    main_basesoc_uart_rxtx_re <= 1'd0;
     if ((builder_csr_bankarray_csrbank5_sel & (builder_csr_bankarray_interface5_bank_bus_adr[8:0] == 1'd0))) begin
-        builder_csr_bankarray_csrbank5_load0_re <= builder_csr_bankarray_interface5_bank_bus_we;
-        builder_csr_bankarray_csrbank5_load0_we <= (~builder_csr_bankarray_interface5_bank_bus_we);
+        main_basesoc_uart_rxtx_re <= builder_csr_bankarray_interface5_bank_bus_we;
+        main_basesoc_uart_rxtx_we <= (~builder_csr_bankarray_interface5_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank5_reload0_r = builder_csr_bankarray_interface5_bank_bus_dat_w[31:0];
+assign builder_csr_bankarray_csrbank5_txfull_r = builder_csr_bankarray_interface5_bank_bus_dat_w[0];
 always @(*) begin
-    builder_csr_bankarray_csrbank5_reload0_we <= 1'd0;
-    builder_csr_bankarray_csrbank5_reload0_re <= 1'd0;
+    builder_csr_bankarray_csrbank5_txfull_re <= 1'd0;
+    builder_csr_bankarray_csrbank5_txfull_we <= 1'd0;
     if ((builder_csr_bankarray_csrbank5_sel & (builder_csr_bankarray_interface5_bank_bus_adr[8:0] == 1'd1))) begin
-        builder_csr_bankarray_csrbank5_reload0_re <= builder_csr_bankarray_interface5_bank_bus_we;
-        builder_csr_bankarray_csrbank5_reload0_we <= (~builder_csr_bankarray_interface5_bank_bus_we);
+        builder_csr_bankarray_csrbank5_txfull_re <= builder_csr_bankarray_interface5_bank_bus_we;
+        builder_csr_bankarray_csrbank5_txfull_we <= (~builder_csr_bankarray_interface5_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank5_en0_r = builder_csr_bankarray_interface5_bank_bus_dat_w[0];
+assign builder_csr_bankarray_csrbank5_rxempty_r = builder_csr_bankarray_interface5_bank_bus_dat_w[0];
 always @(*) begin
-    builder_csr_bankarray_csrbank5_en0_re <= 1'd0;
-    builder_csr_bankarray_csrbank5_en0_we <= 1'd0;
+    builder_csr_bankarray_csrbank5_rxempty_we <= 1'd0;
+    builder_csr_bankarray_csrbank5_rxempty_re <= 1'd0;
     if ((builder_csr_bankarray_csrbank5_sel & (builder_csr_bankarray_interface5_bank_bus_adr[8:0] == 2'd2))) begin
-        builder_csr_bankarray_csrbank5_en0_re <= builder_csr_bankarray_interface5_bank_bus_we;
-        builder_csr_bankarray_csrbank5_en0_we <= (~builder_csr_bankarray_interface5_bank_bus_we);
+        builder_csr_bankarray_csrbank5_rxempty_re <= builder_csr_bankarray_interface5_bank_bus_we;
+        builder_csr_bankarray_csrbank5_rxempty_we <= (~builder_csr_bankarray_interface5_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank5_update_value0_r = builder_csr_bankarray_interface5_bank_bus_dat_w[0];
+assign builder_csr_bankarray_csrbank5_ev_status_r = builder_csr_bankarray_interface5_bank_bus_dat_w[1:0];
 always @(*) begin
-    builder_csr_bankarray_csrbank5_update_value0_we <= 1'd0;
-    builder_csr_bankarray_csrbank5_update_value0_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank5_sel & (builder_csr_bankarray_interface5_bank_bus_adr[8:0] == 2'd3))) begin
-        builder_csr_bankarray_csrbank5_update_value0_re <= builder_csr_bankarray_interface5_bank_bus_we;
-        builder_csr_bankarray_csrbank5_update_value0_we <= (~builder_csr_bankarray_interface5_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank5_value_r = builder_csr_bankarray_interface5_bank_bus_dat_w[31:0];
-always @(*) begin
-    builder_csr_bankarray_csrbank5_value_we <= 1'd0;
-    builder_csr_bankarray_csrbank5_value_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank5_sel & (builder_csr_bankarray_interface5_bank_bus_adr[8:0] == 3'd4))) begin
-        builder_csr_bankarray_csrbank5_value_re <= builder_csr_bankarray_interface5_bank_bus_we;
-        builder_csr_bankarray_csrbank5_value_we <= (~builder_csr_bankarray_interface5_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank5_ev_status_r = builder_csr_bankarray_interface5_bank_bus_dat_w[0];
-always @(*) begin
-    builder_csr_bankarray_csrbank5_ev_status_re <= 1'd0;
     builder_csr_bankarray_csrbank5_ev_status_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank5_sel & (builder_csr_bankarray_interface5_bank_bus_adr[8:0] == 3'd5))) begin
+    builder_csr_bankarray_csrbank5_ev_status_re <= 1'd0;
+    if ((builder_csr_bankarray_csrbank5_sel & (builder_csr_bankarray_interface5_bank_bus_adr[8:0] == 2'd3))) begin
         builder_csr_bankarray_csrbank5_ev_status_re <= builder_csr_bankarray_interface5_bank_bus_we;
         builder_csr_bankarray_csrbank5_ev_status_we <= (~builder_csr_bankarray_interface5_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank5_ev_pending_r = builder_csr_bankarray_interface5_bank_bus_dat_w[0];
+assign builder_csr_bankarray_csrbank5_ev_pending_r = builder_csr_bankarray_interface5_bank_bus_dat_w[1:0];
 always @(*) begin
     builder_csr_bankarray_csrbank5_ev_pending_re <= 1'd0;
     builder_csr_bankarray_csrbank5_ev_pending_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank5_sel & (builder_csr_bankarray_interface5_bank_bus_adr[8:0] == 3'd6))) begin
+    if ((builder_csr_bankarray_csrbank5_sel & (builder_csr_bankarray_interface5_bank_bus_adr[8:0] == 3'd4))) begin
         builder_csr_bankarray_csrbank5_ev_pending_re <= builder_csr_bankarray_interface5_bank_bus_we;
         builder_csr_bankarray_csrbank5_ev_pending_we <= (~builder_csr_bankarray_interface5_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank5_ev_enable0_r = builder_csr_bankarray_interface5_bank_bus_dat_w[0];
+assign builder_csr_bankarray_csrbank5_ev_enable0_r = builder_csr_bankarray_interface5_bank_bus_dat_w[1:0];
 always @(*) begin
-    builder_csr_bankarray_csrbank5_ev_enable0_we <= 1'd0;
     builder_csr_bankarray_csrbank5_ev_enable0_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank5_sel & (builder_csr_bankarray_interface5_bank_bus_adr[8:0] == 3'd7))) begin
+    builder_csr_bankarray_csrbank5_ev_enable0_we <= 1'd0;
+    if ((builder_csr_bankarray_csrbank5_sel & (builder_csr_bankarray_interface5_bank_bus_adr[8:0] == 3'd5))) begin
         builder_csr_bankarray_csrbank5_ev_enable0_re <= builder_csr_bankarray_interface5_bank_bus_we;
         builder_csr_bankarray_csrbank5_ev_enable0_we <= (~builder_csr_bankarray_interface5_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank5_load0_w = main_basesoc_basesoc_timer_load_storage[31:0];
-assign builder_csr_bankarray_csrbank5_reload0_w = main_basesoc_basesoc_timer_reload_storage[31:0];
-assign builder_csr_bankarray_csrbank5_en0_w = main_basesoc_basesoc_timer_en_storage;
-assign builder_csr_bankarray_csrbank5_update_value0_w = main_basesoc_basesoc_timer_update_value_storage;
-assign builder_csr_bankarray_csrbank5_value_w = main_basesoc_basesoc_timer_value_status[31:0];
-assign main_basesoc_basesoc_timer_value_we = builder_csr_bankarray_csrbank5_value_we;
-assign main_basesoc_basesoc_timer_status_status = main_basesoc_basesoc_timer_zero0;
-assign builder_csr_bankarray_csrbank5_ev_status_w = main_basesoc_basesoc_timer_status_status;
-assign main_basesoc_basesoc_timer_status_we = builder_csr_bankarray_csrbank5_ev_status_we;
-assign main_basesoc_basesoc_timer_pending_status = main_basesoc_basesoc_timer_zero1;
-assign builder_csr_bankarray_csrbank5_ev_pending_w = main_basesoc_basesoc_timer_pending_status;
-assign main_basesoc_basesoc_timer_pending_we = builder_csr_bankarray_csrbank5_ev_pending_we;
-assign main_basesoc_basesoc_timer_zero2 = main_basesoc_basesoc_timer_enable_storage;
-assign builder_csr_bankarray_csrbank5_ev_enable0_w = main_basesoc_basesoc_timer_enable_storage;
-assign builder_csr_bankarray_csrbank6_sel = (builder_csr_bankarray_interface6_bank_bus_adr[13:9] == 4'd8);
-assign main_basesoc_basesoc_uart_rxtx_r = builder_csr_bankarray_interface6_bank_bus_dat_w[7:0];
+assign builder_csr_bankarray_csrbank5_txempty_r = builder_csr_bankarray_interface5_bank_bus_dat_w[0];
 always @(*) begin
-    main_basesoc_basesoc_uart_rxtx_we <= 1'd0;
-    main_basesoc_basesoc_uart_rxtx_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank6_sel & (builder_csr_bankarray_interface6_bank_bus_adr[8:0] == 1'd0))) begin
-        main_basesoc_basesoc_uart_rxtx_re <= builder_csr_bankarray_interface6_bank_bus_we;
-        main_basesoc_basesoc_uart_rxtx_we <= (~builder_csr_bankarray_interface6_bank_bus_we);
+    builder_csr_bankarray_csrbank5_txempty_we <= 1'd0;
+    builder_csr_bankarray_csrbank5_txempty_re <= 1'd0;
+    if ((builder_csr_bankarray_csrbank5_sel & (builder_csr_bankarray_interface5_bank_bus_adr[8:0] == 3'd6))) begin
+        builder_csr_bankarray_csrbank5_txempty_re <= builder_csr_bankarray_interface5_bank_bus_we;
+        builder_csr_bankarray_csrbank5_txempty_we <= (~builder_csr_bankarray_interface5_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank6_txfull_r = builder_csr_bankarray_interface6_bank_bus_dat_w[0];
+assign builder_csr_bankarray_csrbank5_rxfull_r = builder_csr_bankarray_interface5_bank_bus_dat_w[0];
 always @(*) begin
-    builder_csr_bankarray_csrbank6_txfull_re <= 1'd0;
-    builder_csr_bankarray_csrbank6_txfull_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank6_sel & (builder_csr_bankarray_interface6_bank_bus_adr[8:0] == 1'd1))) begin
-        builder_csr_bankarray_csrbank6_txfull_re <= builder_csr_bankarray_interface6_bank_bus_we;
-        builder_csr_bankarray_csrbank6_txfull_we <= (~builder_csr_bankarray_interface6_bank_bus_we);
+    builder_csr_bankarray_csrbank5_rxfull_re <= 1'd0;
+    builder_csr_bankarray_csrbank5_rxfull_we <= 1'd0;
+    if ((builder_csr_bankarray_csrbank5_sel & (builder_csr_bankarray_interface5_bank_bus_adr[8:0] == 3'd7))) begin
+        builder_csr_bankarray_csrbank5_rxfull_re <= builder_csr_bankarray_interface5_bank_bus_we;
+        builder_csr_bankarray_csrbank5_rxfull_we <= (~builder_csr_bankarray_interface5_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank6_rxempty_r = builder_csr_bankarray_interface6_bank_bus_dat_w[0];
+assign builder_csr_bankarray_csrbank5_txfull_w = main_basesoc_uart_txfull_status;
+assign main_basesoc_uart_txfull_we = builder_csr_bankarray_csrbank5_txfull_we;
+assign builder_csr_bankarray_csrbank5_rxempty_w = main_basesoc_uart_rxempty_status;
+assign main_basesoc_uart_rxempty_we = builder_csr_bankarray_csrbank5_rxempty_we;
 always @(*) begin
-    builder_csr_bankarray_csrbank6_rxempty_re <= 1'd0;
-    builder_csr_bankarray_csrbank6_rxempty_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank6_sel & (builder_csr_bankarray_interface6_bank_bus_adr[8:0] == 2'd2))) begin
-        builder_csr_bankarray_csrbank6_rxempty_re <= builder_csr_bankarray_interface6_bank_bus_we;
-        builder_csr_bankarray_csrbank6_rxempty_we <= (~builder_csr_bankarray_interface6_bank_bus_we);
-    end
+    main_basesoc_uart_status_status <= 2'd0;
+    main_basesoc_uart_status_status[0] <= main_basesoc_uart_tx0;
+    main_basesoc_uart_status_status[1] <= main_basesoc_uart_rx0;
 end
-assign builder_csr_bankarray_csrbank6_ev_status_r = builder_csr_bankarray_interface6_bank_bus_dat_w[1:0];
+assign builder_csr_bankarray_csrbank5_ev_status_w = main_basesoc_uart_status_status[1:0];
+assign main_basesoc_uart_status_we = builder_csr_bankarray_csrbank5_ev_status_we;
 always @(*) begin
-    builder_csr_bankarray_csrbank6_ev_status_we <= 1'd0;
-    builder_csr_bankarray_csrbank6_ev_status_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank6_sel & (builder_csr_bankarray_interface6_bank_bus_adr[8:0] == 2'd3))) begin
-        builder_csr_bankarray_csrbank6_ev_status_re <= builder_csr_bankarray_interface6_bank_bus_we;
-        builder_csr_bankarray_csrbank6_ev_status_we <= (~builder_csr_bankarray_interface6_bank_bus_we);
-    end
+    main_basesoc_uart_pending_status <= 2'd0;
+    main_basesoc_uart_pending_status[0] <= main_basesoc_uart_tx1;
+    main_basesoc_uart_pending_status[1] <= main_basesoc_uart_rx1;
 end
-assign builder_csr_bankarray_csrbank6_ev_pending_r = builder_csr_bankarray_interface6_bank_bus_dat_w[1:0];
-always @(*) begin
-    builder_csr_bankarray_csrbank6_ev_pending_we <= 1'd0;
-    builder_csr_bankarray_csrbank6_ev_pending_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank6_sel & (builder_csr_bankarray_interface6_bank_bus_adr[8:0] == 3'd4))) begin
-        builder_csr_bankarray_csrbank6_ev_pending_re <= builder_csr_bankarray_interface6_bank_bus_we;
-        builder_csr_bankarray_csrbank6_ev_pending_we <= (~builder_csr_bankarray_interface6_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank6_ev_enable0_r = builder_csr_bankarray_interface6_bank_bus_dat_w[1:0];
-always @(*) begin
-    builder_csr_bankarray_csrbank6_ev_enable0_re <= 1'd0;
-    builder_csr_bankarray_csrbank6_ev_enable0_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank6_sel & (builder_csr_bankarray_interface6_bank_bus_adr[8:0] == 3'd5))) begin
-        builder_csr_bankarray_csrbank6_ev_enable0_re <= builder_csr_bankarray_interface6_bank_bus_we;
-        builder_csr_bankarray_csrbank6_ev_enable0_we <= (~builder_csr_bankarray_interface6_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank6_txempty_r = builder_csr_bankarray_interface6_bank_bus_dat_w[0];
-always @(*) begin
-    builder_csr_bankarray_csrbank6_txempty_we <= 1'd0;
-    builder_csr_bankarray_csrbank6_txempty_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank6_sel & (builder_csr_bankarray_interface6_bank_bus_adr[8:0] == 3'd6))) begin
-        builder_csr_bankarray_csrbank6_txempty_re <= builder_csr_bankarray_interface6_bank_bus_we;
-        builder_csr_bankarray_csrbank6_txempty_we <= (~builder_csr_bankarray_interface6_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank6_rxfull_r = builder_csr_bankarray_interface6_bank_bus_dat_w[0];
-always @(*) begin
-    builder_csr_bankarray_csrbank6_rxfull_we <= 1'd0;
-    builder_csr_bankarray_csrbank6_rxfull_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank6_sel & (builder_csr_bankarray_interface6_bank_bus_adr[8:0] == 3'd7))) begin
-        builder_csr_bankarray_csrbank6_rxfull_re <= builder_csr_bankarray_interface6_bank_bus_we;
-        builder_csr_bankarray_csrbank6_rxfull_we <= (~builder_csr_bankarray_interface6_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank6_txfull_w = main_basesoc_basesoc_uart_txfull_status;
-assign main_basesoc_basesoc_uart_txfull_we = builder_csr_bankarray_csrbank6_txfull_we;
-assign builder_csr_bankarray_csrbank6_rxempty_w = main_basesoc_basesoc_uart_rxempty_status;
-assign main_basesoc_basesoc_uart_rxempty_we = builder_csr_bankarray_csrbank6_rxempty_we;
-always @(*) begin
-    main_basesoc_basesoc_uart_status_status <= 2'd0;
-    main_basesoc_basesoc_uart_status_status[0] <= main_basesoc_basesoc_uart_tx0;
-    main_basesoc_basesoc_uart_status_status[1] <= main_basesoc_basesoc_uart_rx0;
-end
-assign builder_csr_bankarray_csrbank6_ev_status_w = main_basesoc_basesoc_uart_status_status[1:0];
-assign main_basesoc_basesoc_uart_status_we = builder_csr_bankarray_csrbank6_ev_status_we;
-always @(*) begin
-    main_basesoc_basesoc_uart_pending_status <= 2'd0;
-    main_basesoc_basesoc_uart_pending_status[0] <= main_basesoc_basesoc_uart_tx1;
-    main_basesoc_basesoc_uart_pending_status[1] <= main_basesoc_basesoc_uart_rx1;
-end
-assign builder_csr_bankarray_csrbank6_ev_pending_w = main_basesoc_basesoc_uart_pending_status[1:0];
-assign main_basesoc_basesoc_uart_pending_we = builder_csr_bankarray_csrbank6_ev_pending_we;
-assign main_basesoc_basesoc_uart_tx2 = main_basesoc_basesoc_uart_enable_storage[0];
-assign main_basesoc_basesoc_uart_rx2 = main_basesoc_basesoc_uart_enable_storage[1];
-assign builder_csr_bankarray_csrbank6_ev_enable0_w = main_basesoc_basesoc_uart_enable_storage[1:0];
-assign builder_csr_bankarray_csrbank6_txempty_w = main_basesoc_basesoc_uart_txempty_status;
-assign main_basesoc_basesoc_uart_txempty_we = builder_csr_bankarray_csrbank6_txempty_we;
-assign builder_csr_bankarray_csrbank6_rxfull_w = main_basesoc_basesoc_uart_rxfull_status;
-assign main_basesoc_basesoc_uart_rxfull_we = builder_csr_bankarray_csrbank6_rxfull_we;
+assign builder_csr_bankarray_csrbank5_ev_pending_w = main_basesoc_uart_pending_status[1:0];
+assign main_basesoc_uart_pending_we = builder_csr_bankarray_csrbank5_ev_pending_we;
+assign main_basesoc_uart_tx2 = main_basesoc_uart_enable_storage[0];
+assign main_basesoc_uart_rx2 = main_basesoc_uart_enable_storage[1];
+assign builder_csr_bankarray_csrbank5_ev_enable0_w = main_basesoc_uart_enable_storage[1:0];
+assign builder_csr_bankarray_csrbank5_txempty_w = main_basesoc_uart_txempty_status;
+assign main_basesoc_uart_txempty_we = builder_csr_bankarray_csrbank5_txempty_we;
+assign builder_csr_bankarray_csrbank5_rxfull_w = main_basesoc_uart_rxfull_status;
+assign main_basesoc_uart_rxfull_we = builder_csr_bankarray_csrbank5_rxfull_we;
 assign builder_csr_interconnect_adr = builder_basesoc_adr;
 assign builder_csr_interconnect_we = builder_basesoc_we;
 assign builder_csr_interconnect_dat_w = builder_basesoc_dat_w;
@@ -5540,7 +4767,6 @@ assign builder_csr_bankarray_interface2_bank_bus_adr = builder_csr_interconnect_
 assign builder_csr_bankarray_interface3_bank_bus_adr = builder_csr_interconnect_adr;
 assign builder_csr_bankarray_interface4_bank_bus_adr = builder_csr_interconnect_adr;
 assign builder_csr_bankarray_interface5_bank_bus_adr = builder_csr_interconnect_adr;
-assign builder_csr_bankarray_interface6_bank_bus_adr = builder_csr_interconnect_adr;
 assign builder_csr_bankarray_sram_bus_adr = builder_csr_interconnect_adr;
 assign builder_csr_bankarray_interface0_bank_bus_we = builder_csr_interconnect_we;
 assign builder_csr_bankarray_interface1_bank_bus_we = builder_csr_interconnect_we;
@@ -5548,7 +4774,6 @@ assign builder_csr_bankarray_interface2_bank_bus_we = builder_csr_interconnect_w
 assign builder_csr_bankarray_interface3_bank_bus_we = builder_csr_interconnect_we;
 assign builder_csr_bankarray_interface4_bank_bus_we = builder_csr_interconnect_we;
 assign builder_csr_bankarray_interface5_bank_bus_we = builder_csr_interconnect_we;
-assign builder_csr_bankarray_interface6_bank_bus_we = builder_csr_interconnect_we;
 assign builder_csr_bankarray_sram_bus_we = builder_csr_interconnect_we;
 assign builder_csr_bankarray_interface0_bank_bus_dat_w = builder_csr_interconnect_dat_w;
 assign builder_csr_bankarray_interface1_bank_bus_dat_w = builder_csr_interconnect_dat_w;
@@ -5556,20 +4781,19 @@ assign builder_csr_bankarray_interface2_bank_bus_dat_w = builder_csr_interconnec
 assign builder_csr_bankarray_interface3_bank_bus_dat_w = builder_csr_interconnect_dat_w;
 assign builder_csr_bankarray_interface4_bank_bus_dat_w = builder_csr_interconnect_dat_w;
 assign builder_csr_bankarray_interface5_bank_bus_dat_w = builder_csr_interconnect_dat_w;
-assign builder_csr_bankarray_interface6_bank_bus_dat_w = builder_csr_interconnect_dat_w;
 assign builder_csr_bankarray_sram_bus_dat_w = builder_csr_interconnect_dat_w;
-assign builder_csr_interconnect_dat_r = (((((((builder_csr_bankarray_interface0_bank_bus_dat_r | builder_csr_bankarray_interface1_bank_bus_dat_r) | builder_csr_bankarray_interface2_bank_bus_dat_r) | builder_csr_bankarray_interface3_bank_bus_dat_r) | builder_csr_bankarray_interface4_bank_bus_dat_r) | builder_csr_bankarray_interface5_bank_bus_dat_r) | builder_csr_bankarray_interface6_bank_bus_dat_r) | builder_csr_bankarray_sram_bus_dat_r);
+assign builder_csr_interconnect_dat_r = ((((((builder_csr_bankarray_interface0_bank_bus_dat_r | builder_csr_bankarray_interface1_bank_bus_dat_r) | builder_csr_bankarray_interface2_bank_bus_dat_r) | builder_csr_bankarray_interface3_bank_bus_dat_r) | builder_csr_bankarray_interface4_bank_bus_dat_r) | builder_csr_bankarray_interface5_bank_bus_dat_r) | builder_csr_bankarray_sram_bus_dat_r);
 always @(*) begin
     builder_rhs_array_muxed0 <= 32'd0;
     case (builder_grant)
         1'd0: begin
-            builder_rhs_array_muxed0 <= main_basesoc_basesoc_ibus_ibus_adr;
+            builder_rhs_array_muxed0 <= main_basesoc_ibus_ibus_adr;
         end
         1'd1: begin
-            builder_rhs_array_muxed0 <= main_basesoc_basesoc_dbus_dbus_adr;
+            builder_rhs_array_muxed0 <= main_basesoc_dbus_dbus_adr;
         end
         default: begin
-            builder_rhs_array_muxed0 <= main_basesoc_uartbone_wishbone_adr;
+            builder_rhs_array_muxed0 <= main_uartbone_wishbone_adr;
         end
     endcase
 end
@@ -5577,13 +4801,13 @@ always @(*) begin
     builder_rhs_array_muxed1 <= 32'd0;
     case (builder_grant)
         1'd0: begin
-            builder_rhs_array_muxed1 <= main_basesoc_basesoc_ibus_ibus_dat_w;
+            builder_rhs_array_muxed1 <= main_basesoc_ibus_ibus_dat_w;
         end
         1'd1: begin
-            builder_rhs_array_muxed1 <= main_basesoc_basesoc_dbus_dbus_dat_w;
+            builder_rhs_array_muxed1 <= main_basesoc_dbus_dbus_dat_w;
         end
         default: begin
-            builder_rhs_array_muxed1 <= main_basesoc_uartbone_wishbone_dat_w;
+            builder_rhs_array_muxed1 <= main_uartbone_wishbone_dat_w;
         end
     endcase
 end
@@ -5591,13 +4815,13 @@ always @(*) begin
     builder_rhs_array_muxed2 <= 4'd0;
     case (builder_grant)
         1'd0: begin
-            builder_rhs_array_muxed2 <= main_basesoc_basesoc_ibus_ibus_sel;
+            builder_rhs_array_muxed2 <= main_basesoc_ibus_ibus_sel;
         end
         1'd1: begin
-            builder_rhs_array_muxed2 <= main_basesoc_basesoc_dbus_dbus_sel;
+            builder_rhs_array_muxed2 <= main_basesoc_dbus_dbus_sel;
         end
         default: begin
-            builder_rhs_array_muxed2 <= main_basesoc_uartbone_wishbone_sel;
+            builder_rhs_array_muxed2 <= main_uartbone_wishbone_sel;
         end
     endcase
 end
@@ -5605,13 +4829,13 @@ always @(*) begin
     builder_rhs_array_muxed3 <= 1'd0;
     case (builder_grant)
         1'd0: begin
-            builder_rhs_array_muxed3 <= main_basesoc_basesoc_ibus_ibus_cyc;
+            builder_rhs_array_muxed3 <= main_basesoc_ibus_ibus_cyc;
         end
         1'd1: begin
-            builder_rhs_array_muxed3 <= main_basesoc_basesoc_dbus_dbus_cyc;
+            builder_rhs_array_muxed3 <= main_basesoc_dbus_dbus_cyc;
         end
         default: begin
-            builder_rhs_array_muxed3 <= main_basesoc_uartbone_wishbone_cyc;
+            builder_rhs_array_muxed3 <= main_uartbone_wishbone_cyc;
         end
     endcase
 end
@@ -5619,13 +4843,13 @@ always @(*) begin
     builder_rhs_array_muxed4 <= 1'd0;
     case (builder_grant)
         1'd0: begin
-            builder_rhs_array_muxed4 <= main_basesoc_basesoc_ibus_ibus_stb;
+            builder_rhs_array_muxed4 <= main_basesoc_ibus_ibus_stb;
         end
         1'd1: begin
-            builder_rhs_array_muxed4 <= main_basesoc_basesoc_dbus_dbus_stb;
+            builder_rhs_array_muxed4 <= main_basesoc_dbus_dbus_stb;
         end
         default: begin
-            builder_rhs_array_muxed4 <= main_basesoc_uartbone_wishbone_stb;
+            builder_rhs_array_muxed4 <= main_uartbone_wishbone_stb;
         end
     endcase
 end
@@ -5633,13 +4857,13 @@ always @(*) begin
     builder_rhs_array_muxed5 <= 1'd0;
     case (builder_grant)
         1'd0: begin
-            builder_rhs_array_muxed5 <= main_basesoc_basesoc_ibus_ibus_we;
+            builder_rhs_array_muxed5 <= main_basesoc_ibus_ibus_we;
         end
         1'd1: begin
-            builder_rhs_array_muxed5 <= main_basesoc_basesoc_dbus_dbus_we;
+            builder_rhs_array_muxed5 <= main_basesoc_dbus_dbus_we;
         end
         default: begin
-            builder_rhs_array_muxed5 <= main_basesoc_uartbone_wishbone_we;
+            builder_rhs_array_muxed5 <= main_uartbone_wishbone_we;
         end
     endcase
 end
@@ -5647,13 +4871,13 @@ always @(*) begin
     builder_rhs_array_muxed6 <= 3'd0;
     case (builder_grant)
         1'd0: begin
-            builder_rhs_array_muxed6 <= main_basesoc_basesoc_ibus_ibus_cti;
+            builder_rhs_array_muxed6 <= main_basesoc_ibus_ibus_cti;
         end
         1'd1: begin
-            builder_rhs_array_muxed6 <= main_basesoc_basesoc_dbus_dbus_cti;
+            builder_rhs_array_muxed6 <= main_basesoc_dbus_dbus_cti;
         end
         default: begin
-            builder_rhs_array_muxed6 <= main_basesoc_uartbone_wishbone_cti;
+            builder_rhs_array_muxed6 <= main_uartbone_wishbone_cti;
         end
     endcase
 end
@@ -5661,319 +4885,319 @@ always @(*) begin
     builder_rhs_array_muxed7 <= 2'd0;
     case (builder_grant)
         1'd0: begin
-            builder_rhs_array_muxed7 <= main_basesoc_basesoc_ibus_ibus_bte;
+            builder_rhs_array_muxed7 <= main_basesoc_ibus_ibus_bte;
         end
         1'd1: begin
-            builder_rhs_array_muxed7 <= main_basesoc_basesoc_dbus_dbus_bte;
+            builder_rhs_array_muxed7 <= main_basesoc_dbus_dbus_bte;
         end
         default: begin
-            builder_rhs_array_muxed7 <= main_basesoc_uartbone_wishbone_bte;
+            builder_rhs_array_muxed7 <= main_uartbone_wishbone_bte;
         end
     endcase
 end
 always @(*) begin
     builder_rhs_array_muxed8 <= 1'd0;
-    case (main_basesoc_sdram_choose_cmd_grant)
+    case (main_sdram_choose_cmd_grant)
         1'd0: begin
-            builder_rhs_array_muxed8 <= main_basesoc_sdram_choose_cmd_valids[0];
+            builder_rhs_array_muxed8 <= main_sdram_choose_cmd_valids[0];
         end
         1'd1: begin
-            builder_rhs_array_muxed8 <= main_basesoc_sdram_choose_cmd_valids[1];
+            builder_rhs_array_muxed8 <= main_sdram_choose_cmd_valids[1];
         end
         2'd2: begin
-            builder_rhs_array_muxed8 <= main_basesoc_sdram_choose_cmd_valids[2];
+            builder_rhs_array_muxed8 <= main_sdram_choose_cmd_valids[2];
         end
         default: begin
-            builder_rhs_array_muxed8 <= main_basesoc_sdram_choose_cmd_valids[3];
+            builder_rhs_array_muxed8 <= main_sdram_choose_cmd_valids[3];
         end
     endcase
 end
 always @(*) begin
     builder_rhs_array_muxed9 <= 13'd0;
-    case (main_basesoc_sdram_choose_cmd_grant)
+    case (main_sdram_choose_cmd_grant)
         1'd0: begin
-            builder_rhs_array_muxed9 <= main_basesoc_sdram_bankmachine0_cmd_payload_a;
+            builder_rhs_array_muxed9 <= main_sdram_bankmachine0_cmd_payload_a;
         end
         1'd1: begin
-            builder_rhs_array_muxed9 <= main_basesoc_sdram_bankmachine1_cmd_payload_a;
+            builder_rhs_array_muxed9 <= main_sdram_bankmachine1_cmd_payload_a;
         end
         2'd2: begin
-            builder_rhs_array_muxed9 <= main_basesoc_sdram_bankmachine2_cmd_payload_a;
+            builder_rhs_array_muxed9 <= main_sdram_bankmachine2_cmd_payload_a;
         end
         default: begin
-            builder_rhs_array_muxed9 <= main_basesoc_sdram_bankmachine3_cmd_payload_a;
+            builder_rhs_array_muxed9 <= main_sdram_bankmachine3_cmd_payload_a;
         end
     endcase
 end
 always @(*) begin
     builder_rhs_array_muxed10 <= 2'd0;
-    case (main_basesoc_sdram_choose_cmd_grant)
+    case (main_sdram_choose_cmd_grant)
         1'd0: begin
-            builder_rhs_array_muxed10 <= main_basesoc_sdram_bankmachine0_cmd_payload_ba;
+            builder_rhs_array_muxed10 <= main_sdram_bankmachine0_cmd_payload_ba;
         end
         1'd1: begin
-            builder_rhs_array_muxed10 <= main_basesoc_sdram_bankmachine1_cmd_payload_ba;
+            builder_rhs_array_muxed10 <= main_sdram_bankmachine1_cmd_payload_ba;
         end
         2'd2: begin
-            builder_rhs_array_muxed10 <= main_basesoc_sdram_bankmachine2_cmd_payload_ba;
+            builder_rhs_array_muxed10 <= main_sdram_bankmachine2_cmd_payload_ba;
         end
         default: begin
-            builder_rhs_array_muxed10 <= main_basesoc_sdram_bankmachine3_cmd_payload_ba;
+            builder_rhs_array_muxed10 <= main_sdram_bankmachine3_cmd_payload_ba;
         end
     endcase
 end
 always @(*) begin
     builder_rhs_array_muxed11 <= 1'd0;
-    case (main_basesoc_sdram_choose_cmd_grant)
+    case (main_sdram_choose_cmd_grant)
         1'd0: begin
-            builder_rhs_array_muxed11 <= main_basesoc_sdram_bankmachine0_cmd_payload_is_read;
+            builder_rhs_array_muxed11 <= main_sdram_bankmachine0_cmd_payload_is_read;
         end
         1'd1: begin
-            builder_rhs_array_muxed11 <= main_basesoc_sdram_bankmachine1_cmd_payload_is_read;
+            builder_rhs_array_muxed11 <= main_sdram_bankmachine1_cmd_payload_is_read;
         end
         2'd2: begin
-            builder_rhs_array_muxed11 <= main_basesoc_sdram_bankmachine2_cmd_payload_is_read;
+            builder_rhs_array_muxed11 <= main_sdram_bankmachine2_cmd_payload_is_read;
         end
         default: begin
-            builder_rhs_array_muxed11 <= main_basesoc_sdram_bankmachine3_cmd_payload_is_read;
+            builder_rhs_array_muxed11 <= main_sdram_bankmachine3_cmd_payload_is_read;
         end
     endcase
 end
 always @(*) begin
     builder_rhs_array_muxed12 <= 1'd0;
-    case (main_basesoc_sdram_choose_cmd_grant)
+    case (main_sdram_choose_cmd_grant)
         1'd0: begin
-            builder_rhs_array_muxed12 <= main_basesoc_sdram_bankmachine0_cmd_payload_is_write;
+            builder_rhs_array_muxed12 <= main_sdram_bankmachine0_cmd_payload_is_write;
         end
         1'd1: begin
-            builder_rhs_array_muxed12 <= main_basesoc_sdram_bankmachine1_cmd_payload_is_write;
+            builder_rhs_array_muxed12 <= main_sdram_bankmachine1_cmd_payload_is_write;
         end
         2'd2: begin
-            builder_rhs_array_muxed12 <= main_basesoc_sdram_bankmachine2_cmd_payload_is_write;
+            builder_rhs_array_muxed12 <= main_sdram_bankmachine2_cmd_payload_is_write;
         end
         default: begin
-            builder_rhs_array_muxed12 <= main_basesoc_sdram_bankmachine3_cmd_payload_is_write;
+            builder_rhs_array_muxed12 <= main_sdram_bankmachine3_cmd_payload_is_write;
         end
     endcase
 end
 always @(*) begin
     builder_rhs_array_muxed13 <= 1'd0;
-    case (main_basesoc_sdram_choose_cmd_grant)
+    case (main_sdram_choose_cmd_grant)
         1'd0: begin
-            builder_rhs_array_muxed13 <= main_basesoc_sdram_bankmachine0_cmd_payload_is_cmd;
+            builder_rhs_array_muxed13 <= main_sdram_bankmachine0_cmd_payload_is_cmd;
         end
         1'd1: begin
-            builder_rhs_array_muxed13 <= main_basesoc_sdram_bankmachine1_cmd_payload_is_cmd;
+            builder_rhs_array_muxed13 <= main_sdram_bankmachine1_cmd_payload_is_cmd;
         end
         2'd2: begin
-            builder_rhs_array_muxed13 <= main_basesoc_sdram_bankmachine2_cmd_payload_is_cmd;
+            builder_rhs_array_muxed13 <= main_sdram_bankmachine2_cmd_payload_is_cmd;
         end
         default: begin
-            builder_rhs_array_muxed13 <= main_basesoc_sdram_bankmachine3_cmd_payload_is_cmd;
+            builder_rhs_array_muxed13 <= main_sdram_bankmachine3_cmd_payload_is_cmd;
         end
     endcase
 end
 always @(*) begin
     builder_t_array_muxed0 <= 1'd0;
-    case (main_basesoc_sdram_choose_cmd_grant)
+    case (main_sdram_choose_cmd_grant)
         1'd0: begin
-            builder_t_array_muxed0 <= main_basesoc_sdram_bankmachine0_cmd_payload_cas;
+            builder_t_array_muxed0 <= main_sdram_bankmachine0_cmd_payload_cas;
         end
         1'd1: begin
-            builder_t_array_muxed0 <= main_basesoc_sdram_bankmachine1_cmd_payload_cas;
+            builder_t_array_muxed0 <= main_sdram_bankmachine1_cmd_payload_cas;
         end
         2'd2: begin
-            builder_t_array_muxed0 <= main_basesoc_sdram_bankmachine2_cmd_payload_cas;
+            builder_t_array_muxed0 <= main_sdram_bankmachine2_cmd_payload_cas;
         end
         default: begin
-            builder_t_array_muxed0 <= main_basesoc_sdram_bankmachine3_cmd_payload_cas;
+            builder_t_array_muxed0 <= main_sdram_bankmachine3_cmd_payload_cas;
         end
     endcase
 end
 always @(*) begin
     builder_t_array_muxed1 <= 1'd0;
-    case (main_basesoc_sdram_choose_cmd_grant)
+    case (main_sdram_choose_cmd_grant)
         1'd0: begin
-            builder_t_array_muxed1 <= main_basesoc_sdram_bankmachine0_cmd_payload_ras;
+            builder_t_array_muxed1 <= main_sdram_bankmachine0_cmd_payload_ras;
         end
         1'd1: begin
-            builder_t_array_muxed1 <= main_basesoc_sdram_bankmachine1_cmd_payload_ras;
+            builder_t_array_muxed1 <= main_sdram_bankmachine1_cmd_payload_ras;
         end
         2'd2: begin
-            builder_t_array_muxed1 <= main_basesoc_sdram_bankmachine2_cmd_payload_ras;
+            builder_t_array_muxed1 <= main_sdram_bankmachine2_cmd_payload_ras;
         end
         default: begin
-            builder_t_array_muxed1 <= main_basesoc_sdram_bankmachine3_cmd_payload_ras;
+            builder_t_array_muxed1 <= main_sdram_bankmachine3_cmd_payload_ras;
         end
     endcase
 end
 always @(*) begin
     builder_t_array_muxed2 <= 1'd0;
-    case (main_basesoc_sdram_choose_cmd_grant)
+    case (main_sdram_choose_cmd_grant)
         1'd0: begin
-            builder_t_array_muxed2 <= main_basesoc_sdram_bankmachine0_cmd_payload_we;
+            builder_t_array_muxed2 <= main_sdram_bankmachine0_cmd_payload_we;
         end
         1'd1: begin
-            builder_t_array_muxed2 <= main_basesoc_sdram_bankmachine1_cmd_payload_we;
+            builder_t_array_muxed2 <= main_sdram_bankmachine1_cmd_payload_we;
         end
         2'd2: begin
-            builder_t_array_muxed2 <= main_basesoc_sdram_bankmachine2_cmd_payload_we;
+            builder_t_array_muxed2 <= main_sdram_bankmachine2_cmd_payload_we;
         end
         default: begin
-            builder_t_array_muxed2 <= main_basesoc_sdram_bankmachine3_cmd_payload_we;
+            builder_t_array_muxed2 <= main_sdram_bankmachine3_cmd_payload_we;
         end
     endcase
 end
 always @(*) begin
     builder_rhs_array_muxed14 <= 1'd0;
-    case (main_basesoc_sdram_choose_req_grant)
+    case (main_sdram_choose_req_grant)
         1'd0: begin
-            builder_rhs_array_muxed14 <= main_basesoc_sdram_choose_req_valids[0];
+            builder_rhs_array_muxed14 <= main_sdram_choose_req_valids[0];
         end
         1'd1: begin
-            builder_rhs_array_muxed14 <= main_basesoc_sdram_choose_req_valids[1];
+            builder_rhs_array_muxed14 <= main_sdram_choose_req_valids[1];
         end
         2'd2: begin
-            builder_rhs_array_muxed14 <= main_basesoc_sdram_choose_req_valids[2];
+            builder_rhs_array_muxed14 <= main_sdram_choose_req_valids[2];
         end
         default: begin
-            builder_rhs_array_muxed14 <= main_basesoc_sdram_choose_req_valids[3];
+            builder_rhs_array_muxed14 <= main_sdram_choose_req_valids[3];
         end
     endcase
 end
 always @(*) begin
     builder_rhs_array_muxed15 <= 13'd0;
-    case (main_basesoc_sdram_choose_req_grant)
+    case (main_sdram_choose_req_grant)
         1'd0: begin
-            builder_rhs_array_muxed15 <= main_basesoc_sdram_bankmachine0_cmd_payload_a;
+            builder_rhs_array_muxed15 <= main_sdram_bankmachine0_cmd_payload_a;
         end
         1'd1: begin
-            builder_rhs_array_muxed15 <= main_basesoc_sdram_bankmachine1_cmd_payload_a;
+            builder_rhs_array_muxed15 <= main_sdram_bankmachine1_cmd_payload_a;
         end
         2'd2: begin
-            builder_rhs_array_muxed15 <= main_basesoc_sdram_bankmachine2_cmd_payload_a;
+            builder_rhs_array_muxed15 <= main_sdram_bankmachine2_cmd_payload_a;
         end
         default: begin
-            builder_rhs_array_muxed15 <= main_basesoc_sdram_bankmachine3_cmd_payload_a;
+            builder_rhs_array_muxed15 <= main_sdram_bankmachine3_cmd_payload_a;
         end
     endcase
 end
 always @(*) begin
     builder_rhs_array_muxed16 <= 2'd0;
-    case (main_basesoc_sdram_choose_req_grant)
+    case (main_sdram_choose_req_grant)
         1'd0: begin
-            builder_rhs_array_muxed16 <= main_basesoc_sdram_bankmachine0_cmd_payload_ba;
+            builder_rhs_array_muxed16 <= main_sdram_bankmachine0_cmd_payload_ba;
         end
         1'd1: begin
-            builder_rhs_array_muxed16 <= main_basesoc_sdram_bankmachine1_cmd_payload_ba;
+            builder_rhs_array_muxed16 <= main_sdram_bankmachine1_cmd_payload_ba;
         end
         2'd2: begin
-            builder_rhs_array_muxed16 <= main_basesoc_sdram_bankmachine2_cmd_payload_ba;
+            builder_rhs_array_muxed16 <= main_sdram_bankmachine2_cmd_payload_ba;
         end
         default: begin
-            builder_rhs_array_muxed16 <= main_basesoc_sdram_bankmachine3_cmd_payload_ba;
+            builder_rhs_array_muxed16 <= main_sdram_bankmachine3_cmd_payload_ba;
         end
     endcase
 end
 always @(*) begin
     builder_rhs_array_muxed17 <= 1'd0;
-    case (main_basesoc_sdram_choose_req_grant)
+    case (main_sdram_choose_req_grant)
         1'd0: begin
-            builder_rhs_array_muxed17 <= main_basesoc_sdram_bankmachine0_cmd_payload_is_read;
+            builder_rhs_array_muxed17 <= main_sdram_bankmachine0_cmd_payload_is_read;
         end
         1'd1: begin
-            builder_rhs_array_muxed17 <= main_basesoc_sdram_bankmachine1_cmd_payload_is_read;
+            builder_rhs_array_muxed17 <= main_sdram_bankmachine1_cmd_payload_is_read;
         end
         2'd2: begin
-            builder_rhs_array_muxed17 <= main_basesoc_sdram_bankmachine2_cmd_payload_is_read;
+            builder_rhs_array_muxed17 <= main_sdram_bankmachine2_cmd_payload_is_read;
         end
         default: begin
-            builder_rhs_array_muxed17 <= main_basesoc_sdram_bankmachine3_cmd_payload_is_read;
+            builder_rhs_array_muxed17 <= main_sdram_bankmachine3_cmd_payload_is_read;
         end
     endcase
 end
 always @(*) begin
     builder_rhs_array_muxed18 <= 1'd0;
-    case (main_basesoc_sdram_choose_req_grant)
+    case (main_sdram_choose_req_grant)
         1'd0: begin
-            builder_rhs_array_muxed18 <= main_basesoc_sdram_bankmachine0_cmd_payload_is_write;
+            builder_rhs_array_muxed18 <= main_sdram_bankmachine0_cmd_payload_is_write;
         end
         1'd1: begin
-            builder_rhs_array_muxed18 <= main_basesoc_sdram_bankmachine1_cmd_payload_is_write;
+            builder_rhs_array_muxed18 <= main_sdram_bankmachine1_cmd_payload_is_write;
         end
         2'd2: begin
-            builder_rhs_array_muxed18 <= main_basesoc_sdram_bankmachine2_cmd_payload_is_write;
+            builder_rhs_array_muxed18 <= main_sdram_bankmachine2_cmd_payload_is_write;
         end
         default: begin
-            builder_rhs_array_muxed18 <= main_basesoc_sdram_bankmachine3_cmd_payload_is_write;
+            builder_rhs_array_muxed18 <= main_sdram_bankmachine3_cmd_payload_is_write;
         end
     endcase
 end
 always @(*) begin
     builder_rhs_array_muxed19 <= 1'd0;
-    case (main_basesoc_sdram_choose_req_grant)
+    case (main_sdram_choose_req_grant)
         1'd0: begin
-            builder_rhs_array_muxed19 <= main_basesoc_sdram_bankmachine0_cmd_payload_is_cmd;
+            builder_rhs_array_muxed19 <= main_sdram_bankmachine0_cmd_payload_is_cmd;
         end
         1'd1: begin
-            builder_rhs_array_muxed19 <= main_basesoc_sdram_bankmachine1_cmd_payload_is_cmd;
+            builder_rhs_array_muxed19 <= main_sdram_bankmachine1_cmd_payload_is_cmd;
         end
         2'd2: begin
-            builder_rhs_array_muxed19 <= main_basesoc_sdram_bankmachine2_cmd_payload_is_cmd;
+            builder_rhs_array_muxed19 <= main_sdram_bankmachine2_cmd_payload_is_cmd;
         end
         default: begin
-            builder_rhs_array_muxed19 <= main_basesoc_sdram_bankmachine3_cmd_payload_is_cmd;
+            builder_rhs_array_muxed19 <= main_sdram_bankmachine3_cmd_payload_is_cmd;
         end
     endcase
 end
 always @(*) begin
     builder_t_array_muxed3 <= 1'd0;
-    case (main_basesoc_sdram_choose_req_grant)
+    case (main_sdram_choose_req_grant)
         1'd0: begin
-            builder_t_array_muxed3 <= main_basesoc_sdram_bankmachine0_cmd_payload_cas;
+            builder_t_array_muxed3 <= main_sdram_bankmachine0_cmd_payload_cas;
         end
         1'd1: begin
-            builder_t_array_muxed3 <= main_basesoc_sdram_bankmachine1_cmd_payload_cas;
+            builder_t_array_muxed3 <= main_sdram_bankmachine1_cmd_payload_cas;
         end
         2'd2: begin
-            builder_t_array_muxed3 <= main_basesoc_sdram_bankmachine2_cmd_payload_cas;
+            builder_t_array_muxed3 <= main_sdram_bankmachine2_cmd_payload_cas;
         end
         default: begin
-            builder_t_array_muxed3 <= main_basesoc_sdram_bankmachine3_cmd_payload_cas;
+            builder_t_array_muxed3 <= main_sdram_bankmachine3_cmd_payload_cas;
         end
     endcase
 end
 always @(*) begin
     builder_t_array_muxed4 <= 1'd0;
-    case (main_basesoc_sdram_choose_req_grant)
+    case (main_sdram_choose_req_grant)
         1'd0: begin
-            builder_t_array_muxed4 <= main_basesoc_sdram_bankmachine0_cmd_payload_ras;
+            builder_t_array_muxed4 <= main_sdram_bankmachine0_cmd_payload_ras;
         end
         1'd1: begin
-            builder_t_array_muxed4 <= main_basesoc_sdram_bankmachine1_cmd_payload_ras;
+            builder_t_array_muxed4 <= main_sdram_bankmachine1_cmd_payload_ras;
         end
         2'd2: begin
-            builder_t_array_muxed4 <= main_basesoc_sdram_bankmachine2_cmd_payload_ras;
+            builder_t_array_muxed4 <= main_sdram_bankmachine2_cmd_payload_ras;
         end
         default: begin
-            builder_t_array_muxed4 <= main_basesoc_sdram_bankmachine3_cmd_payload_ras;
+            builder_t_array_muxed4 <= main_sdram_bankmachine3_cmd_payload_ras;
         end
     endcase
 end
 always @(*) begin
     builder_t_array_muxed5 <= 1'd0;
-    case (main_basesoc_sdram_choose_req_grant)
+    case (main_sdram_choose_req_grant)
         1'd0: begin
-            builder_t_array_muxed5 <= main_basesoc_sdram_bankmachine0_cmd_payload_we;
+            builder_t_array_muxed5 <= main_sdram_bankmachine0_cmd_payload_we;
         end
         1'd1: begin
-            builder_t_array_muxed5 <= main_basesoc_sdram_bankmachine1_cmd_payload_we;
+            builder_t_array_muxed5 <= main_sdram_bankmachine1_cmd_payload_we;
         end
         2'd2: begin
-            builder_t_array_muxed5 <= main_basesoc_sdram_bankmachine2_cmd_payload_we;
+            builder_t_array_muxed5 <= main_sdram_bankmachine2_cmd_payload_we;
         end
         default: begin
-            builder_t_array_muxed5 <= main_basesoc_sdram_bankmachine3_cmd_payload_we;
+            builder_t_array_muxed5 <= main_sdram_bankmachine3_cmd_payload_we;
         end
     endcase
 end
@@ -5981,7 +5205,7 @@ always @(*) begin
     builder_rhs_array_muxed20 <= 22'd0;
     case (builder_basesoc_roundrobin0_grant)
         default: begin
-            builder_rhs_array_muxed20 <= {main_basesoc_port_cmd_payload_addr[23:11], main_basesoc_port_cmd_payload_addr[8:0]};
+            builder_rhs_array_muxed20 <= {main_port_cmd_payload_addr[23:11], main_port_cmd_payload_addr[8:0]};
         end
     endcase
 end
@@ -5989,7 +5213,7 @@ always @(*) begin
     builder_rhs_array_muxed21 <= 1'd0;
     case (builder_basesoc_roundrobin0_grant)
         default: begin
-            builder_rhs_array_muxed21 <= main_basesoc_port_cmd_payload_we;
+            builder_rhs_array_muxed21 <= main_port_cmd_payload_we;
         end
     endcase
 end
@@ -5997,7 +5221,7 @@ always @(*) begin
     builder_rhs_array_muxed22 <= 1'd0;
     case (builder_basesoc_roundrobin0_grant)
         default: begin
-            builder_rhs_array_muxed22 <= (((main_basesoc_port_cmd_payload_addr[10:9] == 1'd0) & (~(((builder_basesoc_locked0 | (main_basesoc_sdram_interface_bank1_lock & (builder_basesoc_roundrobin1_grant == 1'd0))) | (main_basesoc_sdram_interface_bank2_lock & (builder_basesoc_roundrobin2_grant == 1'd0))) | (main_basesoc_sdram_interface_bank3_lock & (builder_basesoc_roundrobin3_grant == 1'd0))))) & main_basesoc_port_cmd_valid);
+            builder_rhs_array_muxed22 <= (((main_port_cmd_payload_addr[10:9] == 1'd0) & (~(((builder_basesoc_locked0 | (main_sdram_interface_bank1_lock & (builder_basesoc_roundrobin1_grant == 1'd0))) | (main_sdram_interface_bank2_lock & (builder_basesoc_roundrobin2_grant == 1'd0))) | (main_sdram_interface_bank3_lock & (builder_basesoc_roundrobin3_grant == 1'd0))))) & main_port_cmd_valid);
         end
     endcase
 end
@@ -6005,7 +5229,7 @@ always @(*) begin
     builder_rhs_array_muxed23 <= 22'd0;
     case (builder_basesoc_roundrobin1_grant)
         default: begin
-            builder_rhs_array_muxed23 <= {main_basesoc_port_cmd_payload_addr[23:11], main_basesoc_port_cmd_payload_addr[8:0]};
+            builder_rhs_array_muxed23 <= {main_port_cmd_payload_addr[23:11], main_port_cmd_payload_addr[8:0]};
         end
     endcase
 end
@@ -6013,7 +5237,7 @@ always @(*) begin
     builder_rhs_array_muxed24 <= 1'd0;
     case (builder_basesoc_roundrobin1_grant)
         default: begin
-            builder_rhs_array_muxed24 <= main_basesoc_port_cmd_payload_we;
+            builder_rhs_array_muxed24 <= main_port_cmd_payload_we;
         end
     endcase
 end
@@ -6021,7 +5245,7 @@ always @(*) begin
     builder_rhs_array_muxed25 <= 1'd0;
     case (builder_basesoc_roundrobin1_grant)
         default: begin
-            builder_rhs_array_muxed25 <= (((main_basesoc_port_cmd_payload_addr[10:9] == 1'd1) & (~(((builder_basesoc_locked1 | (main_basesoc_sdram_interface_bank0_lock & (builder_basesoc_roundrobin0_grant == 1'd0))) | (main_basesoc_sdram_interface_bank2_lock & (builder_basesoc_roundrobin2_grant == 1'd0))) | (main_basesoc_sdram_interface_bank3_lock & (builder_basesoc_roundrobin3_grant == 1'd0))))) & main_basesoc_port_cmd_valid);
+            builder_rhs_array_muxed25 <= (((main_port_cmd_payload_addr[10:9] == 1'd1) & (~(((builder_basesoc_locked1 | (main_sdram_interface_bank0_lock & (builder_basesoc_roundrobin0_grant == 1'd0))) | (main_sdram_interface_bank2_lock & (builder_basesoc_roundrobin2_grant == 1'd0))) | (main_sdram_interface_bank3_lock & (builder_basesoc_roundrobin3_grant == 1'd0))))) & main_port_cmd_valid);
         end
     endcase
 end
@@ -6029,7 +5253,7 @@ always @(*) begin
     builder_rhs_array_muxed26 <= 22'd0;
     case (builder_basesoc_roundrobin2_grant)
         default: begin
-            builder_rhs_array_muxed26 <= {main_basesoc_port_cmd_payload_addr[23:11], main_basesoc_port_cmd_payload_addr[8:0]};
+            builder_rhs_array_muxed26 <= {main_port_cmd_payload_addr[23:11], main_port_cmd_payload_addr[8:0]};
         end
     endcase
 end
@@ -6037,7 +5261,7 @@ always @(*) begin
     builder_rhs_array_muxed27 <= 1'd0;
     case (builder_basesoc_roundrobin2_grant)
         default: begin
-            builder_rhs_array_muxed27 <= main_basesoc_port_cmd_payload_we;
+            builder_rhs_array_muxed27 <= main_port_cmd_payload_we;
         end
     endcase
 end
@@ -6045,7 +5269,7 @@ always @(*) begin
     builder_rhs_array_muxed28 <= 1'd0;
     case (builder_basesoc_roundrobin2_grant)
         default: begin
-            builder_rhs_array_muxed28 <= (((main_basesoc_port_cmd_payload_addr[10:9] == 2'd2) & (~(((builder_basesoc_locked2 | (main_basesoc_sdram_interface_bank0_lock & (builder_basesoc_roundrobin0_grant == 1'd0))) | (main_basesoc_sdram_interface_bank1_lock & (builder_basesoc_roundrobin1_grant == 1'd0))) | (main_basesoc_sdram_interface_bank3_lock & (builder_basesoc_roundrobin3_grant == 1'd0))))) & main_basesoc_port_cmd_valid);
+            builder_rhs_array_muxed28 <= (((main_port_cmd_payload_addr[10:9] == 2'd2) & (~(((builder_basesoc_locked2 | (main_sdram_interface_bank0_lock & (builder_basesoc_roundrobin0_grant == 1'd0))) | (main_sdram_interface_bank1_lock & (builder_basesoc_roundrobin1_grant == 1'd0))) | (main_sdram_interface_bank3_lock & (builder_basesoc_roundrobin3_grant == 1'd0))))) & main_port_cmd_valid);
         end
     endcase
 end
@@ -6053,7 +5277,7 @@ always @(*) begin
     builder_rhs_array_muxed29 <= 22'd0;
     case (builder_basesoc_roundrobin3_grant)
         default: begin
-            builder_rhs_array_muxed29 <= {main_basesoc_port_cmd_payload_addr[23:11], main_basesoc_port_cmd_payload_addr[8:0]};
+            builder_rhs_array_muxed29 <= {main_port_cmd_payload_addr[23:11], main_port_cmd_payload_addr[8:0]};
         end
     endcase
 end
@@ -6061,7 +5285,7 @@ always @(*) begin
     builder_rhs_array_muxed30 <= 1'd0;
     case (builder_basesoc_roundrobin3_grant)
         default: begin
-            builder_rhs_array_muxed30 <= main_basesoc_port_cmd_payload_we;
+            builder_rhs_array_muxed30 <= main_port_cmd_payload_we;
         end
     endcase
 end
@@ -6069,130 +5293,130 @@ always @(*) begin
     builder_rhs_array_muxed31 <= 1'd0;
     case (builder_basesoc_roundrobin3_grant)
         default: begin
-            builder_rhs_array_muxed31 <= (((main_basesoc_port_cmd_payload_addr[10:9] == 2'd3) & (~(((builder_basesoc_locked3 | (main_basesoc_sdram_interface_bank0_lock & (builder_basesoc_roundrobin0_grant == 1'd0))) | (main_basesoc_sdram_interface_bank1_lock & (builder_basesoc_roundrobin1_grant == 1'd0))) | (main_basesoc_sdram_interface_bank2_lock & (builder_basesoc_roundrobin2_grant == 1'd0))))) & main_basesoc_port_cmd_valid);
+            builder_rhs_array_muxed31 <= (((main_port_cmd_payload_addr[10:9] == 2'd3) & (~(((builder_basesoc_locked3 | (main_sdram_interface_bank0_lock & (builder_basesoc_roundrobin0_grant == 1'd0))) | (main_sdram_interface_bank1_lock & (builder_basesoc_roundrobin1_grant == 1'd0))) | (main_sdram_interface_bank2_lock & (builder_basesoc_roundrobin2_grant == 1'd0))))) & main_port_cmd_valid);
         end
     endcase
 end
 always @(*) begin
     builder_array_muxed0 <= 2'd0;
-    case (main_basesoc_sdram_steerer_sel)
+    case (main_sdram_steerer_sel)
         1'd0: begin
-            builder_array_muxed0 <= main_basesoc_sdram_nop_ba[1:0];
+            builder_array_muxed0 <= main_sdram_nop_ba[1:0];
         end
         1'd1: begin
-            builder_array_muxed0 <= main_basesoc_sdram_choose_req_cmd_payload_ba[1:0];
+            builder_array_muxed0 <= main_sdram_choose_req_cmd_payload_ba[1:0];
         end
         2'd2: begin
-            builder_array_muxed0 <= main_basesoc_sdram_choose_req_cmd_payload_ba[1:0];
+            builder_array_muxed0 <= main_sdram_choose_req_cmd_payload_ba[1:0];
         end
         default: begin
-            builder_array_muxed0 <= main_basesoc_sdram_cmd_payload_ba[1:0];
+            builder_array_muxed0 <= main_sdram_cmd_payload_ba[1:0];
         end
     endcase
 end
 always @(*) begin
     builder_array_muxed1 <= 13'd0;
-    case (main_basesoc_sdram_steerer_sel)
+    case (main_sdram_steerer_sel)
         1'd0: begin
-            builder_array_muxed1 <= main_basesoc_sdram_nop_a;
+            builder_array_muxed1 <= main_sdram_nop_a;
         end
         1'd1: begin
-            builder_array_muxed1 <= main_basesoc_sdram_choose_req_cmd_payload_a;
+            builder_array_muxed1 <= main_sdram_choose_req_cmd_payload_a;
         end
         2'd2: begin
-            builder_array_muxed1 <= main_basesoc_sdram_choose_req_cmd_payload_a;
+            builder_array_muxed1 <= main_sdram_choose_req_cmd_payload_a;
         end
         default: begin
-            builder_array_muxed1 <= main_basesoc_sdram_cmd_payload_a;
+            builder_array_muxed1 <= main_sdram_cmd_payload_a;
         end
     endcase
 end
 always @(*) begin
     builder_array_muxed2 <= 1'd0;
-    case (main_basesoc_sdram_steerer_sel)
+    case (main_sdram_steerer_sel)
         1'd0: begin
             builder_array_muxed2 <= 1'd0;
         end
         1'd1: begin
-            builder_array_muxed2 <= ((main_basesoc_sdram_choose_req_cmd_valid & main_basesoc_sdram_choose_req_cmd_ready) & main_basesoc_sdram_choose_req_cmd_payload_cas);
+            builder_array_muxed2 <= ((main_sdram_choose_req_cmd_valid & main_sdram_choose_req_cmd_ready) & main_sdram_choose_req_cmd_payload_cas);
         end
         2'd2: begin
-            builder_array_muxed2 <= ((main_basesoc_sdram_choose_req_cmd_valid & main_basesoc_sdram_choose_req_cmd_ready) & main_basesoc_sdram_choose_req_cmd_payload_cas);
+            builder_array_muxed2 <= ((main_sdram_choose_req_cmd_valid & main_sdram_choose_req_cmd_ready) & main_sdram_choose_req_cmd_payload_cas);
         end
         default: begin
-            builder_array_muxed2 <= ((main_basesoc_sdram_cmd_valid & main_basesoc_sdram_cmd_ready) & main_basesoc_sdram_cmd_payload_cas);
+            builder_array_muxed2 <= ((main_sdram_cmd_valid & main_sdram_cmd_ready) & main_sdram_cmd_payload_cas);
         end
     endcase
 end
 always @(*) begin
     builder_array_muxed3 <= 1'd0;
-    case (main_basesoc_sdram_steerer_sel)
+    case (main_sdram_steerer_sel)
         1'd0: begin
             builder_array_muxed3 <= 1'd0;
         end
         1'd1: begin
-            builder_array_muxed3 <= ((main_basesoc_sdram_choose_req_cmd_valid & main_basesoc_sdram_choose_req_cmd_ready) & main_basesoc_sdram_choose_req_cmd_payload_ras);
+            builder_array_muxed3 <= ((main_sdram_choose_req_cmd_valid & main_sdram_choose_req_cmd_ready) & main_sdram_choose_req_cmd_payload_ras);
         end
         2'd2: begin
-            builder_array_muxed3 <= ((main_basesoc_sdram_choose_req_cmd_valid & main_basesoc_sdram_choose_req_cmd_ready) & main_basesoc_sdram_choose_req_cmd_payload_ras);
+            builder_array_muxed3 <= ((main_sdram_choose_req_cmd_valid & main_sdram_choose_req_cmd_ready) & main_sdram_choose_req_cmd_payload_ras);
         end
         default: begin
-            builder_array_muxed3 <= ((main_basesoc_sdram_cmd_valid & main_basesoc_sdram_cmd_ready) & main_basesoc_sdram_cmd_payload_ras);
+            builder_array_muxed3 <= ((main_sdram_cmd_valid & main_sdram_cmd_ready) & main_sdram_cmd_payload_ras);
         end
     endcase
 end
 always @(*) begin
     builder_array_muxed4 <= 1'd0;
-    case (main_basesoc_sdram_steerer_sel)
+    case (main_sdram_steerer_sel)
         1'd0: begin
             builder_array_muxed4 <= 1'd0;
         end
         1'd1: begin
-            builder_array_muxed4 <= ((main_basesoc_sdram_choose_req_cmd_valid & main_basesoc_sdram_choose_req_cmd_ready) & main_basesoc_sdram_choose_req_cmd_payload_we);
+            builder_array_muxed4 <= ((main_sdram_choose_req_cmd_valid & main_sdram_choose_req_cmd_ready) & main_sdram_choose_req_cmd_payload_we);
         end
         2'd2: begin
-            builder_array_muxed4 <= ((main_basesoc_sdram_choose_req_cmd_valid & main_basesoc_sdram_choose_req_cmd_ready) & main_basesoc_sdram_choose_req_cmd_payload_we);
+            builder_array_muxed4 <= ((main_sdram_choose_req_cmd_valid & main_sdram_choose_req_cmd_ready) & main_sdram_choose_req_cmd_payload_we);
         end
         default: begin
-            builder_array_muxed4 <= ((main_basesoc_sdram_cmd_valid & main_basesoc_sdram_cmd_ready) & main_basesoc_sdram_cmd_payload_we);
+            builder_array_muxed4 <= ((main_sdram_cmd_valid & main_sdram_cmd_ready) & main_sdram_cmd_payload_we);
         end
     endcase
 end
 always @(*) begin
     builder_array_muxed5 <= 1'd0;
-    case (main_basesoc_sdram_steerer_sel)
+    case (main_sdram_steerer_sel)
         1'd0: begin
             builder_array_muxed5 <= 1'd0;
         end
         1'd1: begin
-            builder_array_muxed5 <= ((main_basesoc_sdram_choose_req_cmd_valid & main_basesoc_sdram_choose_req_cmd_ready) & main_basesoc_sdram_choose_req_cmd_payload_is_read);
+            builder_array_muxed5 <= ((main_sdram_choose_req_cmd_valid & main_sdram_choose_req_cmd_ready) & main_sdram_choose_req_cmd_payload_is_read);
         end
         2'd2: begin
-            builder_array_muxed5 <= ((main_basesoc_sdram_choose_req_cmd_valid & main_basesoc_sdram_choose_req_cmd_ready) & main_basesoc_sdram_choose_req_cmd_payload_is_read);
+            builder_array_muxed5 <= ((main_sdram_choose_req_cmd_valid & main_sdram_choose_req_cmd_ready) & main_sdram_choose_req_cmd_payload_is_read);
         end
         default: begin
-            builder_array_muxed5 <= ((main_basesoc_sdram_cmd_valid & main_basesoc_sdram_cmd_ready) & main_basesoc_sdram_cmd_payload_is_read);
+            builder_array_muxed5 <= ((main_sdram_cmd_valid & main_sdram_cmd_ready) & main_sdram_cmd_payload_is_read);
         end
     endcase
 end
 always @(*) begin
     builder_array_muxed6 <= 1'd0;
-    case (main_basesoc_sdram_steerer_sel)
+    case (main_sdram_steerer_sel)
         1'd0: begin
             builder_array_muxed6 <= 1'd0;
         end
         1'd1: begin
-            builder_array_muxed6 <= ((main_basesoc_sdram_choose_req_cmd_valid & main_basesoc_sdram_choose_req_cmd_ready) & main_basesoc_sdram_choose_req_cmd_payload_is_write);
+            builder_array_muxed6 <= ((main_sdram_choose_req_cmd_valid & main_sdram_choose_req_cmd_ready) & main_sdram_choose_req_cmd_payload_is_write);
         end
         2'd2: begin
-            builder_array_muxed6 <= ((main_basesoc_sdram_choose_req_cmd_valid & main_basesoc_sdram_choose_req_cmd_ready) & main_basesoc_sdram_choose_req_cmd_payload_is_write);
+            builder_array_muxed6 <= ((main_sdram_choose_req_cmd_valid & main_sdram_choose_req_cmd_ready) & main_sdram_choose_req_cmd_payload_is_write);
         end
         default: begin
-            builder_array_muxed6 <= ((main_basesoc_sdram_cmd_valid & main_basesoc_sdram_cmd_ready) & main_basesoc_sdram_cmd_payload_is_write);
+            builder_array_muxed6 <= ((main_sdram_cmd_valid & main_sdram_cmd_ready) & main_sdram_cmd_payload_is_write);
         end
     endcase
 end
-assign main_basesoc_basesoc_rx_rx = builder_impl_multiregimpl0_regs1;
+assign main_basesoc_rx_rx = builder_impl_multiregimpl0_regs1;
 assign sdrio_clk = sys_clk;
 assign sdrio_clk_1 = sys_clk;
 assign sdrio_clk_2 = sys_clk;
@@ -6209,115 +5433,15 @@ assign sdrio_clk_12 = sys_clk;
 assign sdrio_clk_13 = sys_clk;
 assign sdrio_clk_14 = sys_clk;
 assign sdrio_clk_15 = sys_clk;
-assign main_basesoc_rx_pin = builder_impl_multiregimpl1_regs1;
-assign main_basesoc_sync_pin = builder_impl_multiregimpl2_regs1;
-assign main_basesoc_clk_pin = builder_impl_multiregimpl3_regs1;
-assign main_basesoc_mux_value = builder_impl_multiregimpl4_regs1;
-assign main_basesoc_trigger_enable = builder_impl_multiregimpl5_regs1;
-assign main_basesoc_trigger_done_status = builder_impl_multiregimpl6_regs1;
-assign main_basesoc_trigger_mem_produce_rdomain = builder_impl_multiregimpl7_regs1;
-assign main_basesoc_trigger_mem_consume_wdomain = builder_impl_multiregimpl8_regs1;
-assign main_basesoc_subsampler_value = builder_impl_multiregimpl9_regs1;
-assign main_basesoc_storage_enable = builder_impl_multiregimpl10_regs1;
-assign main_basesoc_storage_length = builder_impl_multiregimpl11_regs1;
-assign main_basesoc_storage_offset = builder_impl_multiregimpl12_regs1;
-assign main_basesoc_storage_done_status = builder_impl_multiregimpl13_regs1;
-assign main_basesoc_storage_mem_level_status = builder_impl_multiregimpl14_regs1;
-assign main_basesoc_storage_cdc_produce_rdomain = builder_impl_multiregimpl15_regs1;
-assign main_basesoc_storage_cdc_consume_wdomain = builder_impl_multiregimpl16_regs1;
-assign main_basesoc_uartbone_phy_rx_rx = builder_impl_multiregimpl17_regs1;
+assign main_rx_pin = builder_impl_multiregimpl1_regs1;
+assign main_sync_pin = builder_impl_multiregimpl2_regs1;
+assign main_clk_pin = builder_impl_multiregimpl3_regs1;
+assign main_uartbone_phy_rx_rx = builder_impl_multiregimpl4_regs1;
 
 
 //------------------------------------------------------------------------------
 // Synchronous Logic
 //------------------------------------------------------------------------------
-
-always @(posedge scope_clk) begin
-    main_basesoc_trigger_enable_d <= main_basesoc_trigger_enable;
-    main_basesoc_trigger_mem_graycounter1_q_binary <= main_basesoc_trigger_mem_graycounter1_q_next_binary;
-    main_basesoc_trigger_mem_graycounter1_q <= main_basesoc_trigger_mem_graycounter1_q_next;
-    if (main_basesoc_trigger_wait) begin
-        if ((~main_basesoc_trigger_done1)) begin
-            main_basesoc_trigger_count <= (main_basesoc_trigger_count - 1'd1);
-        end
-    end else begin
-        main_basesoc_trigger_count <= 6'd32;
-    end
-    if (main_basesoc_subsampler_source_ready) begin
-        if (main_basesoc_subsampler_done) begin
-            main_basesoc_subsampler_counter <= 1'd0;
-        end else begin
-            if (main_basesoc_subsampler_sink_valid) begin
-                main_basesoc_subsampler_counter <= (main_basesoc_subsampler_counter + 1'd1);
-            end
-        end
-    end
-    main_basesoc_storage_enable_d <= main_basesoc_storage_enable;
-    if (main_basesoc_storage_mem_syncfifo_re) begin
-        main_basesoc_storage_mem_readable <= 1'd1;
-    end else begin
-        if (main_basesoc_storage_mem_re) begin
-            main_basesoc_storage_mem_readable <= 1'd0;
-        end
-    end
-    if (((main_basesoc_storage_mem_syncfifo_we & main_basesoc_storage_mem_syncfifo_writable) & (~main_basesoc_storage_mem_replace))) begin
-        main_basesoc_storage_mem_produce <= (main_basesoc_storage_mem_produce + 1'd1);
-    end
-    if (main_basesoc_storage_mem_do_read) begin
-        main_basesoc_storage_mem_consume <= (main_basesoc_storage_mem_consume + 1'd1);
-    end
-    if (((main_basesoc_storage_mem_syncfifo_we & main_basesoc_storage_mem_syncfifo_writable) & (~main_basesoc_storage_mem_replace))) begin
-        if ((~main_basesoc_storage_mem_do_read)) begin
-            main_basesoc_storage_mem_level0 <= (main_basesoc_storage_mem_level0 + 1'd1);
-        end
-    end else begin
-        if (main_basesoc_storage_mem_do_read) begin
-            main_basesoc_storage_mem_level0 <= (main_basesoc_storage_mem_level0 - 1'd1);
-        end
-    end
-    main_basesoc_storage_cdc_graycounter0_q_binary <= main_basesoc_storage_cdc_graycounter0_q_next_binary;
-    main_basesoc_storage_cdc_graycounter0_q <= main_basesoc_storage_cdc_graycounter0_q_next;
-    if (main_basesoc_storage_wait) begin
-        if ((~main_basesoc_storage_done1)) begin
-            main_basesoc_storage_count <= (main_basesoc_storage_count - 1'd1);
-        end
-    end else begin
-        main_basesoc_storage_count <= 11'd1024;
-    end
-    builder_basesoc_litescopeanalyzer_state <= builder_basesoc_litescopeanalyzer_next_state;
-    if (scope_rst) begin
-        main_basesoc_trigger_enable_d <= 1'd0;
-        main_basesoc_trigger_mem_graycounter1_q <= 5'd0;
-        main_basesoc_trigger_mem_graycounter1_q_binary <= 5'd0;
-        main_basesoc_trigger_count <= 6'd32;
-        main_basesoc_subsampler_counter <= 16'd0;
-        main_basesoc_storage_enable_d <= 1'd0;
-        main_basesoc_storage_mem_readable <= 1'd0;
-        main_basesoc_storage_mem_level0 <= 11'd0;
-        main_basesoc_storage_mem_produce <= 10'd0;
-        main_basesoc_storage_mem_consume <= 10'd0;
-        main_basesoc_storage_cdc_graycounter0_q <= 3'd0;
-        main_basesoc_storage_cdc_graycounter0_q_binary <= 3'd0;
-        main_basesoc_storage_count <= 11'd1024;
-        builder_basesoc_litescopeanalyzer_state <= 2'd0;
-    end
-    builder_impl_multiregimpl4_regs0 <= main_basesoc_mux_value_storage;
-    builder_impl_multiregimpl4_regs1 <= builder_impl_multiregimpl4_regs0;
-    builder_impl_multiregimpl5_regs0 <= main_basesoc_trigger_enable_storage;
-    builder_impl_multiregimpl5_regs1 <= builder_impl_multiregimpl5_regs0;
-    builder_impl_multiregimpl7_regs0 <= main_basesoc_trigger_mem_graycounter0_q;
-    builder_impl_multiregimpl7_regs1 <= builder_impl_multiregimpl7_regs0;
-    builder_impl_multiregimpl9_regs0 <= main_basesoc_subsampler_value_storage;
-    builder_impl_multiregimpl9_regs1 <= builder_impl_multiregimpl9_regs0;
-    builder_impl_multiregimpl10_regs0 <= main_basesoc_storage_enable_storage;
-    builder_impl_multiregimpl10_regs1 <= builder_impl_multiregimpl10_regs0;
-    builder_impl_multiregimpl11_regs0 <= main_basesoc_storage_length_storage;
-    builder_impl_multiregimpl11_regs1 <= builder_impl_multiregimpl11_regs0;
-    builder_impl_multiregimpl12_regs0 <= main_basesoc_storage_offset_storage;
-    builder_impl_multiregimpl12_regs1 <= builder_impl_multiregimpl12_regs0;
-    builder_impl_multiregimpl16_regs0 <= main_basesoc_storage_cdc_graycounter1_q;
-    builder_impl_multiregimpl16_regs1 <= builder_impl_multiregimpl16_regs0;
-end
 
 always @(posedge sdrio_clk) begin
     builder_impl_inferedsdrtristate0_oe <= main_dfi_p0_wrdata_en;
@@ -6382,806 +5506,806 @@ always @(posedge sys_clk) begin
     end else begin
         builder_count <= 20'd1000000;
     end
-    if ((main_basesoc_basesoc_bus_errors != 32'd4294967295)) begin
-        if (main_basesoc_basesoc_bus_error) begin
-            main_basesoc_basesoc_bus_errors <= (main_basesoc_basesoc_bus_errors + 1'd1);
+    if ((main_basesoc_bus_errors != 32'd4294967295)) begin
+        if (main_basesoc_bus_error) begin
+            main_basesoc_bus_errors <= (main_basesoc_bus_errors + 1'd1);
         end
     end
-    if (builder_csr_bankarray_csrbank1_reset0_re) begin
-        main_basesoc_basesoc_reset_storage[1:0] <= builder_csr_bankarray_csrbank1_reset0_r;
+    if (builder_csr_bankarray_csrbank0_reset0_re) begin
+        main_basesoc_reset_storage[1:0] <= builder_csr_bankarray_csrbank0_reset0_r;
     end
-    main_basesoc_basesoc_reset_re <= builder_csr_bankarray_csrbank1_reset0_re;
-    if (builder_csr_bankarray_csrbank1_scratch0_re) begin
-        main_basesoc_basesoc_scratch_storage[31:0] <= builder_csr_bankarray_csrbank1_scratch0_r;
+    main_basesoc_reset_re <= builder_csr_bankarray_csrbank0_reset0_re;
+    if (builder_csr_bankarray_csrbank0_scratch0_re) begin
+        main_basesoc_scratch_storage[31:0] <= builder_csr_bankarray_csrbank0_scratch0_r;
     end
-    main_basesoc_basesoc_scratch_re <= builder_csr_bankarray_csrbank1_scratch0_re;
-    main_basesoc_basesoc_bus_errors_re <= builder_csr_bankarray_csrbank1_bus_errors_re;
-    main_basesoc_basesoc_vexriscv_debug_bus_dat_r <= main_basesoc_basesoc_vexriscv_o_rsp_data;
-    main_basesoc_basesoc_vexriscv_debug_reset <= (main_basesoc_basesoc_vexriscv_reset_debug_logic | sys_rst);
-    if (((((main_basesoc_basesoc_vexriscv_debug_bus_stb & main_basesoc_basesoc_vexriscv_debug_bus_cyc) & (~main_basesoc_basesoc_vexriscv_transfer_in_progress)) & (~main_basesoc_basesoc_vexriscv_transfer_complete)) & (~main_basesoc_basesoc_vexriscv_transfer_wait_for_ack))) begin
-        main_basesoc_basesoc_vexriscv_i_cmd_payload_data <= main_basesoc_basesoc_vexriscv_debug_bus_dat_w;
-        main_basesoc_basesoc_vexriscv_i_cmd_payload_address <= ((main_basesoc_basesoc_vexriscv_debug_bus_adr[5:0] <<< 2'd2) | 1'd0);
-        main_basesoc_basesoc_vexriscv_i_cmd_payload_wr <= main_basesoc_basesoc_vexriscv_debug_bus_we;
-        main_basesoc_basesoc_vexriscv_i_cmd_valid <= 1'd1;
-        main_basesoc_basesoc_vexriscv_transfer_in_progress <= 1'd1;
-        main_basesoc_basesoc_vexriscv_transfer_complete <= 1'd0;
-        main_basesoc_basesoc_vexriscv_debug_bus_ack <= 1'd0;
+    main_basesoc_scratch_re <= builder_csr_bankarray_csrbank0_scratch0_re;
+    main_basesoc_bus_errors_re <= builder_csr_bankarray_csrbank0_bus_errors_re;
+    main_basesoc_vexriscv_debug_bus_dat_r <= main_basesoc_vexriscv_o_rsp_data;
+    main_basesoc_vexriscv_debug_reset <= (main_basesoc_vexriscv_reset_debug_logic | sys_rst);
+    if (((((main_basesoc_vexriscv_debug_bus_stb & main_basesoc_vexriscv_debug_bus_cyc) & (~main_basesoc_vexriscv_transfer_in_progress)) & (~main_basesoc_vexriscv_transfer_complete)) & (~main_basesoc_vexriscv_transfer_wait_for_ack))) begin
+        main_basesoc_vexriscv_i_cmd_payload_data <= main_basesoc_vexriscv_debug_bus_dat_w;
+        main_basesoc_vexriscv_i_cmd_payload_address <= ((main_basesoc_vexriscv_debug_bus_adr[5:0] <<< 2'd2) | 1'd0);
+        main_basesoc_vexriscv_i_cmd_payload_wr <= main_basesoc_vexriscv_debug_bus_we;
+        main_basesoc_vexriscv_i_cmd_valid <= 1'd1;
+        main_basesoc_vexriscv_transfer_in_progress <= 1'd1;
+        main_basesoc_vexriscv_transfer_complete <= 1'd0;
+        main_basesoc_vexriscv_debug_bus_ack <= 1'd0;
     end else begin
-        if (main_basesoc_basesoc_vexriscv_transfer_in_progress) begin
-            if (main_basesoc_basesoc_vexriscv_o_cmd_ready) begin
-                main_basesoc_basesoc_vexriscv_i_cmd_valid <= 1'd0;
-                main_basesoc_basesoc_vexriscv_i_cmd_payload_wr <= 1'd0;
-                main_basesoc_basesoc_vexriscv_transfer_complete <= 1'd1;
-                main_basesoc_basesoc_vexriscv_transfer_in_progress <= 1'd0;
+        if (main_basesoc_vexriscv_transfer_in_progress) begin
+            if (main_basesoc_vexriscv_o_cmd_ready) begin
+                main_basesoc_vexriscv_i_cmd_valid <= 1'd0;
+                main_basesoc_vexriscv_i_cmd_payload_wr <= 1'd0;
+                main_basesoc_vexriscv_transfer_complete <= 1'd1;
+                main_basesoc_vexriscv_transfer_in_progress <= 1'd0;
             end
         end else begin
-            if (main_basesoc_basesoc_vexriscv_transfer_complete) begin
-                main_basesoc_basesoc_vexriscv_transfer_complete <= 1'd0;
-                main_basesoc_basesoc_vexriscv_debug_bus_ack <= 1'd1;
-                main_basesoc_basesoc_vexriscv_transfer_wait_for_ack <= 1'd1;
+            if (main_basesoc_vexriscv_transfer_complete) begin
+                main_basesoc_vexriscv_transfer_complete <= 1'd0;
+                main_basesoc_vexriscv_debug_bus_ack <= 1'd1;
+                main_basesoc_vexriscv_transfer_wait_for_ack <= 1'd1;
             end else begin
-                if ((main_basesoc_basesoc_vexriscv_transfer_wait_for_ack & (~(main_basesoc_basesoc_vexriscv_debug_bus_stb & main_basesoc_basesoc_vexriscv_debug_bus_cyc)))) begin
-                    main_basesoc_basesoc_vexriscv_transfer_wait_for_ack <= 1'd0;
-                    main_basesoc_basesoc_vexriscv_debug_bus_ack <= 1'd0;
+                if ((main_basesoc_vexriscv_transfer_wait_for_ack & (~(main_basesoc_vexriscv_debug_bus_stb & main_basesoc_vexriscv_debug_bus_cyc)))) begin
+                    main_basesoc_vexriscv_transfer_wait_for_ack <= 1'd0;
+                    main_basesoc_vexriscv_debug_bus_ack <= 1'd0;
                 end
             end
         end
     end
-    if (main_basesoc_basesoc_vexriscv_o_resetOut) begin
-        if ((main_basesoc_basesoc_ibus_ibus_cyc & main_basesoc_basesoc_ibus_ibus_stb)) begin
-            main_basesoc_basesoc_vexriscv_ibus_err <= 1'd1;
+    if (main_basesoc_vexriscv_o_resetOut) begin
+        if ((main_basesoc_ibus_ibus_cyc & main_basesoc_ibus_ibus_stb)) begin
+            main_basesoc_vexriscv_ibus_err <= 1'd1;
         end else begin
-            main_basesoc_basesoc_vexriscv_ibus_err <= 1'd0;
+            main_basesoc_vexriscv_ibus_err <= 1'd0;
         end
-        if ((main_basesoc_basesoc_dbus_dbus_cyc & main_basesoc_basesoc_dbus_dbus_stb)) begin
-            main_basesoc_basesoc_vexriscv_dbus_err <= 1'd1;
+        if ((main_basesoc_dbus_dbus_cyc & main_basesoc_dbus_dbus_stb)) begin
+            main_basesoc_vexriscv_dbus_err <= 1'd1;
         end else begin
-            main_basesoc_basesoc_vexriscv_dbus_err <= 1'd0;
+            main_basesoc_vexriscv_dbus_err <= 1'd0;
         end
-        main_basesoc_basesoc_vexriscv_reset_debug_logic <= 1'd1;
+        main_basesoc_vexriscv_reset_debug_logic <= 1'd1;
     end else begin
-        main_basesoc_basesoc_vexriscv_reset_debug_logic <= 1'd0;
+        main_basesoc_vexriscv_reset_debug_logic <= 1'd0;
     end
-    main_basesoc_basesoc_basesoc_ram_bus_ack <= 1'd0;
-    if (((main_basesoc_basesoc_basesoc_ram_bus_cyc & main_basesoc_basesoc_basesoc_ram_bus_stb) & ((~main_basesoc_basesoc_basesoc_ram_bus_ack) | main_basesoc_basesoc_basesoc_adr_burst))) begin
-        main_basesoc_basesoc_basesoc_ram_bus_ack <= 1'd1;
+    main_basesoc_basesoc_ram_bus_ack <= 1'd0;
+    if (((main_basesoc_basesoc_ram_bus_cyc & main_basesoc_basesoc_ram_bus_stb) & ((~main_basesoc_basesoc_ram_bus_ack) | main_basesoc_basesoc_adr_burst))) begin
+        main_basesoc_basesoc_ram_bus_ack <= 1'd1;
     end
-    main_basesoc_basesoc_ram_bus_ram_bus_ack <= 1'd0;
-    if (((main_basesoc_basesoc_ram_bus_ram_bus_cyc & main_basesoc_basesoc_ram_bus_ram_bus_stb) & ((~main_basesoc_basesoc_ram_bus_ram_bus_ack) | main_basesoc_basesoc_ram_adr_burst))) begin
-        main_basesoc_basesoc_ram_bus_ram_bus_ack <= 1'd1;
+    main_basesoc_ram_bus_ram_bus_ack <= 1'd0;
+    if (((main_basesoc_ram_bus_ram_bus_cyc & main_basesoc_ram_bus_ram_bus_stb) & ((~main_basesoc_ram_bus_ram_bus_ack) | main_basesoc_ram_adr_burst))) begin
+        main_basesoc_ram_bus_ram_bus_ack <= 1'd1;
     end
-    {main_basesoc_basesoc_tx_tick, main_basesoc_basesoc_tx_phase} <= 23'd4712192;
-    if (main_basesoc_basesoc_tx_enable) begin
-        {main_basesoc_basesoc_tx_tick, main_basesoc_basesoc_tx_phase} <= (main_basesoc_basesoc_tx_phase + 23'd4712192);
+    {main_basesoc_tx_tick, main_basesoc_tx_phase} <= 23'd4712192;
+    if (main_basesoc_tx_enable) begin
+        {main_basesoc_tx_tick, main_basesoc_tx_phase} <= (main_basesoc_tx_phase + 23'd4712192);
     end
     builder_basesoc_rs232phytx0_state <= builder_basesoc_rs232phytx0_next_state;
-    if (main_basesoc_basesoc_tx_count_rs232phytx0_next_value_ce0) begin
-        main_basesoc_basesoc_tx_count <= main_basesoc_basesoc_tx_count_rs232phytx0_next_value0;
+    if (main_basesoc_tx_count_rs232phytx0_next_value_ce0) begin
+        main_basesoc_tx_count <= main_basesoc_tx_count_rs232phytx0_next_value0;
     end
-    if (main_basesoc_basesoc_serial_tx_rs232phytx0_next_value_ce1) begin
-        serial_tx <= main_basesoc_basesoc_serial_tx_rs232phytx0_next_value1;
+    if (main_basesoc_serial_tx_rs232phytx0_next_value_ce1) begin
+        serial_tx <= main_basesoc_serial_tx_rs232phytx0_next_value1;
     end
-    if (main_basesoc_basesoc_tx_data_rs232phytx0_next_value_ce2) begin
-        main_basesoc_basesoc_tx_data <= main_basesoc_basesoc_tx_data_rs232phytx0_next_value2;
+    if (main_basesoc_tx_data_rs232phytx0_next_value_ce2) begin
+        main_basesoc_tx_data <= main_basesoc_tx_data_rs232phytx0_next_value2;
     end
-    main_basesoc_basesoc_rx_rx_d <= main_basesoc_basesoc_rx_rx;
-    {main_basesoc_basesoc_rx_tick, main_basesoc_basesoc_rx_phase} <= 32'd2147483648;
-    if (main_basesoc_basesoc_rx_enable) begin
-        {main_basesoc_basesoc_rx_tick, main_basesoc_basesoc_rx_phase} <= (main_basesoc_basesoc_rx_phase + 23'd4712192);
+    main_basesoc_rx_rx_d <= main_basesoc_rx_rx;
+    {main_basesoc_rx_tick, main_basesoc_rx_phase} <= 32'd2147483648;
+    if (main_basesoc_rx_enable) begin
+        {main_basesoc_rx_tick, main_basesoc_rx_phase} <= (main_basesoc_rx_phase + 23'd4712192);
     end
     builder_basesoc_rs232phyrx0_state <= builder_basesoc_rs232phyrx0_next_state;
-    if (main_basesoc_basesoc_rx_count_rs232phyrx0_next_value_ce0) begin
-        main_basesoc_basesoc_rx_count <= main_basesoc_basesoc_rx_count_rs232phyrx0_next_value0;
+    if (main_basesoc_rx_count_rs232phyrx0_next_value_ce0) begin
+        main_basesoc_rx_count <= main_basesoc_rx_count_rs232phyrx0_next_value0;
     end
-    if (main_basesoc_basesoc_rx_data_rs232phyrx0_next_value_ce1) begin
-        main_basesoc_basesoc_rx_data <= main_basesoc_basesoc_rx_data_rs232phyrx0_next_value1;
+    if (main_basesoc_rx_data_rs232phyrx0_next_value_ce1) begin
+        main_basesoc_rx_data <= main_basesoc_rx_data_rs232phyrx0_next_value1;
     end
-    if (main_basesoc_basesoc_uart_tx_clear) begin
-        main_basesoc_basesoc_uart_tx_pending <= 1'd0;
+    if (main_basesoc_uart_tx_clear) begin
+        main_basesoc_uart_tx_pending <= 1'd0;
     end
-    main_basesoc_basesoc_uart_tx_trigger_d <= main_basesoc_basesoc_uart_tx_trigger;
-    if ((main_basesoc_basesoc_uart_tx_trigger & (~main_basesoc_basesoc_uart_tx_trigger_d))) begin
-        main_basesoc_basesoc_uart_tx_pending <= 1'd1;
+    main_basesoc_uart_tx_trigger_d <= main_basesoc_uart_tx_trigger;
+    if ((main_basesoc_uart_tx_trigger & (~main_basesoc_uart_tx_trigger_d))) begin
+        main_basesoc_uart_tx_pending <= 1'd1;
     end
-    if (main_basesoc_basesoc_uart_rx_clear) begin
-        main_basesoc_basesoc_uart_rx_pending <= 1'd0;
+    if (main_basesoc_uart_rx_clear) begin
+        main_basesoc_uart_rx_pending <= 1'd0;
     end
-    main_basesoc_basesoc_uart_rx_trigger_d <= main_basesoc_basesoc_uart_rx_trigger;
-    if ((main_basesoc_basesoc_uart_rx_trigger & (~main_basesoc_basesoc_uart_rx_trigger_d))) begin
-        main_basesoc_basesoc_uart_rx_pending <= 1'd1;
+    main_basesoc_uart_rx_trigger_d <= main_basesoc_uart_rx_trigger;
+    if ((main_basesoc_uart_rx_trigger & (~main_basesoc_uart_rx_trigger_d))) begin
+        main_basesoc_uart_rx_pending <= 1'd1;
     end
-    if (main_basesoc_basesoc_uart_tx_fifo_syncfifo_re) begin
-        main_basesoc_basesoc_uart_tx_fifo_readable <= 1'd1;
+    if (main_basesoc_uart_tx_fifo_syncfifo_re) begin
+        main_basesoc_uart_tx_fifo_readable <= 1'd1;
     end else begin
-        if (main_basesoc_basesoc_uart_tx_fifo_re) begin
-            main_basesoc_basesoc_uart_tx_fifo_readable <= 1'd0;
+        if (main_basesoc_uart_tx_fifo_re) begin
+            main_basesoc_uart_tx_fifo_readable <= 1'd0;
         end
     end
-    if (((main_basesoc_basesoc_uart_tx_fifo_syncfifo_we & main_basesoc_basesoc_uart_tx_fifo_syncfifo_writable) & (~main_basesoc_basesoc_uart_tx_fifo_replace))) begin
-        main_basesoc_basesoc_uart_tx_fifo_produce <= (main_basesoc_basesoc_uart_tx_fifo_produce + 1'd1);
+    if (((main_basesoc_uart_tx_fifo_syncfifo_we & main_basesoc_uart_tx_fifo_syncfifo_writable) & (~main_basesoc_uart_tx_fifo_replace))) begin
+        main_basesoc_uart_tx_fifo_produce <= (main_basesoc_uart_tx_fifo_produce + 1'd1);
     end
-    if (main_basesoc_basesoc_uart_tx_fifo_do_read) begin
-        main_basesoc_basesoc_uart_tx_fifo_consume <= (main_basesoc_basesoc_uart_tx_fifo_consume + 1'd1);
+    if (main_basesoc_uart_tx_fifo_do_read) begin
+        main_basesoc_uart_tx_fifo_consume <= (main_basesoc_uart_tx_fifo_consume + 1'd1);
     end
-    if (((main_basesoc_basesoc_uart_tx_fifo_syncfifo_we & main_basesoc_basesoc_uart_tx_fifo_syncfifo_writable) & (~main_basesoc_basesoc_uart_tx_fifo_replace))) begin
-        if ((~main_basesoc_basesoc_uart_tx_fifo_do_read)) begin
-            main_basesoc_basesoc_uart_tx_fifo_level0 <= (main_basesoc_basesoc_uart_tx_fifo_level0 + 1'd1);
-        end
-    end else begin
-        if (main_basesoc_basesoc_uart_tx_fifo_do_read) begin
-            main_basesoc_basesoc_uart_tx_fifo_level0 <= (main_basesoc_basesoc_uart_tx_fifo_level0 - 1'd1);
-        end
-    end
-    if (main_basesoc_basesoc_uart_rx_fifo_syncfifo_re) begin
-        main_basesoc_basesoc_uart_rx_fifo_readable <= 1'd1;
-    end else begin
-        if (main_basesoc_basesoc_uart_rx_fifo_re) begin
-            main_basesoc_basesoc_uart_rx_fifo_readable <= 1'd0;
-        end
-    end
-    if (((main_basesoc_basesoc_uart_rx_fifo_syncfifo_we & main_basesoc_basesoc_uart_rx_fifo_syncfifo_writable) & (~main_basesoc_basesoc_uart_rx_fifo_replace))) begin
-        main_basesoc_basesoc_uart_rx_fifo_produce <= (main_basesoc_basesoc_uart_rx_fifo_produce + 1'd1);
-    end
-    if (main_basesoc_basesoc_uart_rx_fifo_do_read) begin
-        main_basesoc_basesoc_uart_rx_fifo_consume <= (main_basesoc_basesoc_uart_rx_fifo_consume + 1'd1);
-    end
-    if (((main_basesoc_basesoc_uart_rx_fifo_syncfifo_we & main_basesoc_basesoc_uart_rx_fifo_syncfifo_writable) & (~main_basesoc_basesoc_uart_rx_fifo_replace))) begin
-        if ((~main_basesoc_basesoc_uart_rx_fifo_do_read)) begin
-            main_basesoc_basesoc_uart_rx_fifo_level0 <= (main_basesoc_basesoc_uart_rx_fifo_level0 + 1'd1);
+    if (((main_basesoc_uart_tx_fifo_syncfifo_we & main_basesoc_uart_tx_fifo_syncfifo_writable) & (~main_basesoc_uart_tx_fifo_replace))) begin
+        if ((~main_basesoc_uart_tx_fifo_do_read)) begin
+            main_basesoc_uart_tx_fifo_level0 <= (main_basesoc_uart_tx_fifo_level0 + 1'd1);
         end
     end else begin
-        if (main_basesoc_basesoc_uart_rx_fifo_do_read) begin
-            main_basesoc_basesoc_uart_rx_fifo_level0 <= (main_basesoc_basesoc_uart_rx_fifo_level0 - 1'd1);
+        if (main_basesoc_uart_tx_fifo_do_read) begin
+            main_basesoc_uart_tx_fifo_level0 <= (main_basesoc_uart_tx_fifo_level0 - 1'd1);
         end
     end
-    if (main_basesoc_basesoc_timer_en_storage) begin
-        if ((main_basesoc_basesoc_timer_value == 1'd0)) begin
-            main_basesoc_basesoc_timer_value <= main_basesoc_basesoc_timer_reload_storage;
+    if (main_basesoc_uart_rx_fifo_syncfifo_re) begin
+        main_basesoc_uart_rx_fifo_readable <= 1'd1;
+    end else begin
+        if (main_basesoc_uart_rx_fifo_re) begin
+            main_basesoc_uart_rx_fifo_readable <= 1'd0;
+        end
+    end
+    if (((main_basesoc_uart_rx_fifo_syncfifo_we & main_basesoc_uart_rx_fifo_syncfifo_writable) & (~main_basesoc_uart_rx_fifo_replace))) begin
+        main_basesoc_uart_rx_fifo_produce <= (main_basesoc_uart_rx_fifo_produce + 1'd1);
+    end
+    if (main_basesoc_uart_rx_fifo_do_read) begin
+        main_basesoc_uart_rx_fifo_consume <= (main_basesoc_uart_rx_fifo_consume + 1'd1);
+    end
+    if (((main_basesoc_uart_rx_fifo_syncfifo_we & main_basesoc_uart_rx_fifo_syncfifo_writable) & (~main_basesoc_uart_rx_fifo_replace))) begin
+        if ((~main_basesoc_uart_rx_fifo_do_read)) begin
+            main_basesoc_uart_rx_fifo_level0 <= (main_basesoc_uart_rx_fifo_level0 + 1'd1);
+        end
+    end else begin
+        if (main_basesoc_uart_rx_fifo_do_read) begin
+            main_basesoc_uart_rx_fifo_level0 <= (main_basesoc_uart_rx_fifo_level0 - 1'd1);
+        end
+    end
+    if (main_basesoc_timer_en_storage) begin
+        if ((main_basesoc_timer_value == 1'd0)) begin
+            main_basesoc_timer_value <= main_basesoc_timer_reload_storage;
         end else begin
-            main_basesoc_basesoc_timer_value <= (main_basesoc_basesoc_timer_value - 1'd1);
+            main_basesoc_timer_value <= (main_basesoc_timer_value - 1'd1);
         end
     end else begin
-        main_basesoc_basesoc_timer_value <= main_basesoc_basesoc_timer_load_storage;
+        main_basesoc_timer_value <= main_basesoc_timer_load_storage;
     end
-    if (main_basesoc_basesoc_timer_update_value_re) begin
-        main_basesoc_basesoc_timer_value_status <= main_basesoc_basesoc_timer_value;
+    if (main_basesoc_timer_update_value_re) begin
+        main_basesoc_timer_value_status <= main_basesoc_timer_value;
     end
-    if (main_basesoc_basesoc_timer_zero_clear) begin
-        main_basesoc_basesoc_timer_zero_pending <= 1'd0;
+    if (main_basesoc_timer_zero_clear) begin
+        main_basesoc_timer_zero_pending <= 1'd0;
     end
-    main_basesoc_basesoc_timer_zero_trigger_d <= main_basesoc_basesoc_timer_zero_trigger;
-    if ((main_basesoc_basesoc_timer_zero_trigger & (~main_basesoc_basesoc_timer_zero_trigger_d))) begin
-        main_basesoc_basesoc_timer_zero_pending <= 1'd1;
+    main_basesoc_timer_zero_trigger_d <= main_basesoc_timer_zero_trigger;
+    if ((main_basesoc_timer_zero_trigger & (~main_basesoc_timer_zero_trigger_d))) begin
+        main_basesoc_timer_zero_pending <= 1'd1;
     end
     main_rddata_en <= {main_rddata_en, main_dfi_p0_rddata_en};
     main_dfi_p0_rddata_valid <= main_rddata_en[3];
-    if (main_basesoc_sdram_csr_dfi_p0_rddata_valid) begin
-        main_basesoc_sdram_rddata_status <= main_basesoc_sdram_csr_dfi_p0_rddata;
+    if (main_sdram_csr_dfi_p0_rddata_valid) begin
+        main_sdram_rddata_status <= main_sdram_csr_dfi_p0_rddata;
     end
-    if ((main_basesoc_sdram_timer_wait & (~main_basesoc_sdram_timer_done0))) begin
-        main_basesoc_sdram_timer_count1 <= (main_basesoc_sdram_timer_count1 - 1'd1);
+    if ((main_sdram_timer_wait & (~main_sdram_timer_done0))) begin
+        main_sdram_timer_count1 <= (main_sdram_timer_count1 - 1'd1);
     end else begin
-        main_basesoc_sdram_timer_count1 <= 10'd820;
+        main_sdram_timer_count1 <= 10'd820;
     end
-    main_basesoc_sdram_postponer_req_o <= 1'd0;
-    if (main_basesoc_sdram_postponer_req_i) begin
-        main_basesoc_sdram_postponer_count <= (main_basesoc_sdram_postponer_count - 1'd1);
-        if ((main_basesoc_sdram_postponer_count == 1'd0)) begin
-            main_basesoc_sdram_postponer_count <= 1'd0;
-            main_basesoc_sdram_postponer_req_o <= 1'd1;
+    main_sdram_postponer_req_o <= 1'd0;
+    if (main_sdram_postponer_req_i) begin
+        main_sdram_postponer_count <= (main_sdram_postponer_count - 1'd1);
+        if ((main_sdram_postponer_count == 1'd0)) begin
+            main_sdram_postponer_count <= 1'd0;
+            main_sdram_postponer_req_o <= 1'd1;
         end
     end
-    if (main_basesoc_sdram_sequencer_start0) begin
-        main_basesoc_sdram_sequencer_count <= 1'd0;
+    if (main_sdram_sequencer_start0) begin
+        main_sdram_sequencer_count <= 1'd0;
     end else begin
-        if (main_basesoc_sdram_sequencer_done1) begin
-            if ((main_basesoc_sdram_sequencer_count != 1'd0)) begin
-                main_basesoc_sdram_sequencer_count <= (main_basesoc_sdram_sequencer_count - 1'd1);
+        if (main_sdram_sequencer_done1) begin
+            if ((main_sdram_sequencer_count != 1'd0)) begin
+                main_sdram_sequencer_count <= (main_sdram_sequencer_count - 1'd1);
             end
         end
     end
-    main_basesoc_sdram_cmd_payload_a <= 1'd0;
-    main_basesoc_sdram_cmd_payload_ba <= 1'd0;
-    main_basesoc_sdram_cmd_payload_cas <= 1'd0;
-    main_basesoc_sdram_cmd_payload_ras <= 1'd0;
-    main_basesoc_sdram_cmd_payload_we <= 1'd0;
-    main_basesoc_sdram_sequencer_done1 <= 1'd0;
-    if ((main_basesoc_sdram_sequencer_start1 & (main_basesoc_sdram_sequencer_counter == 1'd0))) begin
-        main_basesoc_sdram_cmd_payload_a <= 11'd1024;
-        main_basesoc_sdram_cmd_payload_ba <= 1'd0;
-        main_basesoc_sdram_cmd_payload_cas <= 1'd0;
-        main_basesoc_sdram_cmd_payload_ras <= 1'd1;
-        main_basesoc_sdram_cmd_payload_we <= 1'd1;
+    main_sdram_cmd_payload_a <= 1'd0;
+    main_sdram_cmd_payload_ba <= 1'd0;
+    main_sdram_cmd_payload_cas <= 1'd0;
+    main_sdram_cmd_payload_ras <= 1'd0;
+    main_sdram_cmd_payload_we <= 1'd0;
+    main_sdram_sequencer_done1 <= 1'd0;
+    if ((main_sdram_sequencer_start1 & (main_sdram_sequencer_counter == 1'd0))) begin
+        main_sdram_cmd_payload_a <= 11'd1024;
+        main_sdram_cmd_payload_ba <= 1'd0;
+        main_sdram_cmd_payload_cas <= 1'd0;
+        main_sdram_cmd_payload_ras <= 1'd1;
+        main_sdram_cmd_payload_we <= 1'd1;
     end
-    if ((main_basesoc_sdram_sequencer_counter == 2'd2)) begin
-        main_basesoc_sdram_cmd_payload_a <= 11'd1024;
-        main_basesoc_sdram_cmd_payload_ba <= 1'd0;
-        main_basesoc_sdram_cmd_payload_cas <= 1'd1;
-        main_basesoc_sdram_cmd_payload_ras <= 1'd1;
-        main_basesoc_sdram_cmd_payload_we <= 1'd0;
+    if ((main_sdram_sequencer_counter == 2'd2)) begin
+        main_sdram_cmd_payload_a <= 11'd1024;
+        main_sdram_cmd_payload_ba <= 1'd0;
+        main_sdram_cmd_payload_cas <= 1'd1;
+        main_sdram_cmd_payload_ras <= 1'd1;
+        main_sdram_cmd_payload_we <= 1'd0;
     end
-    if ((main_basesoc_sdram_sequencer_counter == 4'd9)) begin
-        main_basesoc_sdram_cmd_payload_a <= 1'd0;
-        main_basesoc_sdram_cmd_payload_ba <= 1'd0;
-        main_basesoc_sdram_cmd_payload_cas <= 1'd0;
-        main_basesoc_sdram_cmd_payload_ras <= 1'd0;
-        main_basesoc_sdram_cmd_payload_we <= 1'd0;
-        main_basesoc_sdram_sequencer_done1 <= 1'd1;
+    if ((main_sdram_sequencer_counter == 4'd9)) begin
+        main_sdram_cmd_payload_a <= 1'd0;
+        main_sdram_cmd_payload_ba <= 1'd0;
+        main_sdram_cmd_payload_cas <= 1'd0;
+        main_sdram_cmd_payload_ras <= 1'd0;
+        main_sdram_cmd_payload_we <= 1'd0;
+        main_sdram_sequencer_done1 <= 1'd1;
     end
-    if ((main_basesoc_sdram_sequencer_counter == 4'd9)) begin
-        main_basesoc_sdram_sequencer_counter <= 1'd0;
+    if ((main_sdram_sequencer_counter == 4'd9)) begin
+        main_sdram_sequencer_counter <= 1'd0;
     end else begin
-        if ((main_basesoc_sdram_sequencer_counter != 1'd0)) begin
-            main_basesoc_sdram_sequencer_counter <= (main_basesoc_sdram_sequencer_counter + 1'd1);
+        if ((main_sdram_sequencer_counter != 1'd0)) begin
+            main_sdram_sequencer_counter <= (main_sdram_sequencer_counter + 1'd1);
         end else begin
-            if (main_basesoc_sdram_sequencer_start1) begin
-                main_basesoc_sdram_sequencer_counter <= 1'd1;
+            if (main_sdram_sequencer_start1) begin
+                main_sdram_sequencer_counter <= 1'd1;
             end
         end
     end
     builder_basesoc_refresher_state <= builder_basesoc_refresher_next_state;
-    if (main_basesoc_sdram_bankmachine0_row_close) begin
-        main_basesoc_sdram_bankmachine0_row_opened <= 1'd0;
+    if (main_sdram_bankmachine0_row_close) begin
+        main_sdram_bankmachine0_row_opened <= 1'd0;
     end else begin
-        if (main_basesoc_sdram_bankmachine0_row_open) begin
-            main_basesoc_sdram_bankmachine0_row_opened <= 1'd1;
-            main_basesoc_sdram_bankmachine0_row <= main_basesoc_sdram_bankmachine0_source_source_payload_addr[21:9];
+        if (main_sdram_bankmachine0_row_open) begin
+            main_sdram_bankmachine0_row_opened <= 1'd1;
+            main_sdram_bankmachine0_row <= main_sdram_bankmachine0_source_source_payload_addr[21:9];
         end
     end
-    if (((main_basesoc_sdram_bankmachine0_syncfifo0_we & main_basesoc_sdram_bankmachine0_syncfifo0_writable) & (~main_basesoc_sdram_bankmachine0_replace))) begin
-        main_basesoc_sdram_bankmachine0_produce <= (main_basesoc_sdram_bankmachine0_produce + 1'd1);
+    if (((main_sdram_bankmachine0_syncfifo0_we & main_sdram_bankmachine0_syncfifo0_writable) & (~main_sdram_bankmachine0_replace))) begin
+        main_sdram_bankmachine0_produce <= (main_sdram_bankmachine0_produce + 1'd1);
     end
-    if (main_basesoc_sdram_bankmachine0_do_read) begin
-        main_basesoc_sdram_bankmachine0_consume <= (main_basesoc_sdram_bankmachine0_consume + 1'd1);
+    if (main_sdram_bankmachine0_do_read) begin
+        main_sdram_bankmachine0_consume <= (main_sdram_bankmachine0_consume + 1'd1);
     end
-    if (((main_basesoc_sdram_bankmachine0_syncfifo0_we & main_basesoc_sdram_bankmachine0_syncfifo0_writable) & (~main_basesoc_sdram_bankmachine0_replace))) begin
-        if ((~main_basesoc_sdram_bankmachine0_do_read)) begin
-            main_basesoc_sdram_bankmachine0_level <= (main_basesoc_sdram_bankmachine0_level + 1'd1);
+    if (((main_sdram_bankmachine0_syncfifo0_we & main_sdram_bankmachine0_syncfifo0_writable) & (~main_sdram_bankmachine0_replace))) begin
+        if ((~main_sdram_bankmachine0_do_read)) begin
+            main_sdram_bankmachine0_level <= (main_sdram_bankmachine0_level + 1'd1);
         end
     end else begin
-        if (main_basesoc_sdram_bankmachine0_do_read) begin
-            main_basesoc_sdram_bankmachine0_level <= (main_basesoc_sdram_bankmachine0_level - 1'd1);
+        if (main_sdram_bankmachine0_do_read) begin
+            main_sdram_bankmachine0_level <= (main_sdram_bankmachine0_level - 1'd1);
         end
     end
-    if (((~main_basesoc_sdram_bankmachine0_pipe_valid_source_valid) | main_basesoc_sdram_bankmachine0_pipe_valid_source_ready)) begin
-        main_basesoc_sdram_bankmachine0_pipe_valid_source_valid <= main_basesoc_sdram_bankmachine0_pipe_valid_sink_valid;
-        main_basesoc_sdram_bankmachine0_pipe_valid_source_first <= main_basesoc_sdram_bankmachine0_pipe_valid_sink_first;
-        main_basesoc_sdram_bankmachine0_pipe_valid_source_last <= main_basesoc_sdram_bankmachine0_pipe_valid_sink_last;
-        main_basesoc_sdram_bankmachine0_pipe_valid_source_payload_we <= main_basesoc_sdram_bankmachine0_pipe_valid_sink_payload_we;
-        main_basesoc_sdram_bankmachine0_pipe_valid_source_payload_addr <= main_basesoc_sdram_bankmachine0_pipe_valid_sink_payload_addr;
+    if (((~main_sdram_bankmachine0_pipe_valid_source_valid) | main_sdram_bankmachine0_pipe_valid_source_ready)) begin
+        main_sdram_bankmachine0_pipe_valid_source_valid <= main_sdram_bankmachine0_pipe_valid_sink_valid;
+        main_sdram_bankmachine0_pipe_valid_source_first <= main_sdram_bankmachine0_pipe_valid_sink_first;
+        main_sdram_bankmachine0_pipe_valid_source_last <= main_sdram_bankmachine0_pipe_valid_sink_last;
+        main_sdram_bankmachine0_pipe_valid_source_payload_we <= main_sdram_bankmachine0_pipe_valid_sink_payload_we;
+        main_sdram_bankmachine0_pipe_valid_source_payload_addr <= main_sdram_bankmachine0_pipe_valid_sink_payload_addr;
     end
-    if (main_basesoc_sdram_bankmachine0_twtpcon_valid) begin
-        main_basesoc_sdram_bankmachine0_twtpcon_count <= 3'd5;
+    if (main_sdram_bankmachine0_twtpcon_valid) begin
+        main_sdram_bankmachine0_twtpcon_count <= 3'd5;
         if (1'd0) begin
-            main_basesoc_sdram_bankmachine0_twtpcon_ready <= 1'd1;
+            main_sdram_bankmachine0_twtpcon_ready <= 1'd1;
         end else begin
-            main_basesoc_sdram_bankmachine0_twtpcon_ready <= 1'd0;
+            main_sdram_bankmachine0_twtpcon_ready <= 1'd0;
         end
     end else begin
-        if ((~main_basesoc_sdram_bankmachine0_twtpcon_ready)) begin
-            main_basesoc_sdram_bankmachine0_twtpcon_count <= (main_basesoc_sdram_bankmachine0_twtpcon_count - 1'd1);
-            if ((main_basesoc_sdram_bankmachine0_twtpcon_count == 1'd1)) begin
-                main_basesoc_sdram_bankmachine0_twtpcon_ready <= 1'd1;
+        if ((~main_sdram_bankmachine0_twtpcon_ready)) begin
+            main_sdram_bankmachine0_twtpcon_count <= (main_sdram_bankmachine0_twtpcon_count - 1'd1);
+            if ((main_sdram_bankmachine0_twtpcon_count == 1'd1)) begin
+                main_sdram_bankmachine0_twtpcon_ready <= 1'd1;
             end
         end
     end
-    if (main_basesoc_sdram_bankmachine0_trccon_valid) begin
-        main_basesoc_sdram_bankmachine0_trccon_count <= 3'd5;
+    if (main_sdram_bankmachine0_trccon_valid) begin
+        main_sdram_bankmachine0_trccon_count <= 3'd5;
         if (1'd0) begin
-            main_basesoc_sdram_bankmachine0_trccon_ready <= 1'd1;
+            main_sdram_bankmachine0_trccon_ready <= 1'd1;
         end else begin
-            main_basesoc_sdram_bankmachine0_trccon_ready <= 1'd0;
+            main_sdram_bankmachine0_trccon_ready <= 1'd0;
         end
     end else begin
-        if ((~main_basesoc_sdram_bankmachine0_trccon_ready)) begin
-            main_basesoc_sdram_bankmachine0_trccon_count <= (main_basesoc_sdram_bankmachine0_trccon_count - 1'd1);
-            if ((main_basesoc_sdram_bankmachine0_trccon_count == 1'd1)) begin
-                main_basesoc_sdram_bankmachine0_trccon_ready <= 1'd1;
+        if ((~main_sdram_bankmachine0_trccon_ready)) begin
+            main_sdram_bankmachine0_trccon_count <= (main_sdram_bankmachine0_trccon_count - 1'd1);
+            if ((main_sdram_bankmachine0_trccon_count == 1'd1)) begin
+                main_sdram_bankmachine0_trccon_ready <= 1'd1;
             end
         end
     end
-    if (main_basesoc_sdram_bankmachine0_trascon_valid) begin
-        main_basesoc_sdram_bankmachine0_trascon_count <= 3'd4;
+    if (main_sdram_bankmachine0_trascon_valid) begin
+        main_sdram_bankmachine0_trascon_count <= 3'd4;
         if (1'd0) begin
-            main_basesoc_sdram_bankmachine0_trascon_ready <= 1'd1;
+            main_sdram_bankmachine0_trascon_ready <= 1'd1;
         end else begin
-            main_basesoc_sdram_bankmachine0_trascon_ready <= 1'd0;
+            main_sdram_bankmachine0_trascon_ready <= 1'd0;
         end
     end else begin
-        if ((~main_basesoc_sdram_bankmachine0_trascon_ready)) begin
-            main_basesoc_sdram_bankmachine0_trascon_count <= (main_basesoc_sdram_bankmachine0_trascon_count - 1'd1);
-            if ((main_basesoc_sdram_bankmachine0_trascon_count == 1'd1)) begin
-                main_basesoc_sdram_bankmachine0_trascon_ready <= 1'd1;
+        if ((~main_sdram_bankmachine0_trascon_ready)) begin
+            main_sdram_bankmachine0_trascon_count <= (main_sdram_bankmachine0_trascon_count - 1'd1);
+            if ((main_sdram_bankmachine0_trascon_count == 1'd1)) begin
+                main_sdram_bankmachine0_trascon_ready <= 1'd1;
             end
         end
     end
     builder_basesoc_bankmachine0_state <= builder_basesoc_bankmachine0_next_state;
-    if (main_basesoc_sdram_bankmachine1_row_close) begin
-        main_basesoc_sdram_bankmachine1_row_opened <= 1'd0;
+    if (main_sdram_bankmachine1_row_close) begin
+        main_sdram_bankmachine1_row_opened <= 1'd0;
     end else begin
-        if (main_basesoc_sdram_bankmachine1_row_open) begin
-            main_basesoc_sdram_bankmachine1_row_opened <= 1'd1;
-            main_basesoc_sdram_bankmachine1_row <= main_basesoc_sdram_bankmachine1_source_source_payload_addr[21:9];
+        if (main_sdram_bankmachine1_row_open) begin
+            main_sdram_bankmachine1_row_opened <= 1'd1;
+            main_sdram_bankmachine1_row <= main_sdram_bankmachine1_source_source_payload_addr[21:9];
         end
     end
-    if (((main_basesoc_sdram_bankmachine1_syncfifo1_we & main_basesoc_sdram_bankmachine1_syncfifo1_writable) & (~main_basesoc_sdram_bankmachine1_replace))) begin
-        main_basesoc_sdram_bankmachine1_produce <= (main_basesoc_sdram_bankmachine1_produce + 1'd1);
+    if (((main_sdram_bankmachine1_syncfifo1_we & main_sdram_bankmachine1_syncfifo1_writable) & (~main_sdram_bankmachine1_replace))) begin
+        main_sdram_bankmachine1_produce <= (main_sdram_bankmachine1_produce + 1'd1);
     end
-    if (main_basesoc_sdram_bankmachine1_do_read) begin
-        main_basesoc_sdram_bankmachine1_consume <= (main_basesoc_sdram_bankmachine1_consume + 1'd1);
+    if (main_sdram_bankmachine1_do_read) begin
+        main_sdram_bankmachine1_consume <= (main_sdram_bankmachine1_consume + 1'd1);
     end
-    if (((main_basesoc_sdram_bankmachine1_syncfifo1_we & main_basesoc_sdram_bankmachine1_syncfifo1_writable) & (~main_basesoc_sdram_bankmachine1_replace))) begin
-        if ((~main_basesoc_sdram_bankmachine1_do_read)) begin
-            main_basesoc_sdram_bankmachine1_level <= (main_basesoc_sdram_bankmachine1_level + 1'd1);
+    if (((main_sdram_bankmachine1_syncfifo1_we & main_sdram_bankmachine1_syncfifo1_writable) & (~main_sdram_bankmachine1_replace))) begin
+        if ((~main_sdram_bankmachine1_do_read)) begin
+            main_sdram_bankmachine1_level <= (main_sdram_bankmachine1_level + 1'd1);
         end
     end else begin
-        if (main_basesoc_sdram_bankmachine1_do_read) begin
-            main_basesoc_sdram_bankmachine1_level <= (main_basesoc_sdram_bankmachine1_level - 1'd1);
+        if (main_sdram_bankmachine1_do_read) begin
+            main_sdram_bankmachine1_level <= (main_sdram_bankmachine1_level - 1'd1);
         end
     end
-    if (((~main_basesoc_sdram_bankmachine1_pipe_valid_source_valid) | main_basesoc_sdram_bankmachine1_pipe_valid_source_ready)) begin
-        main_basesoc_sdram_bankmachine1_pipe_valid_source_valid <= main_basesoc_sdram_bankmachine1_pipe_valid_sink_valid;
-        main_basesoc_sdram_bankmachine1_pipe_valid_source_first <= main_basesoc_sdram_bankmachine1_pipe_valid_sink_first;
-        main_basesoc_sdram_bankmachine1_pipe_valid_source_last <= main_basesoc_sdram_bankmachine1_pipe_valid_sink_last;
-        main_basesoc_sdram_bankmachine1_pipe_valid_source_payload_we <= main_basesoc_sdram_bankmachine1_pipe_valid_sink_payload_we;
-        main_basesoc_sdram_bankmachine1_pipe_valid_source_payload_addr <= main_basesoc_sdram_bankmachine1_pipe_valid_sink_payload_addr;
+    if (((~main_sdram_bankmachine1_pipe_valid_source_valid) | main_sdram_bankmachine1_pipe_valid_source_ready)) begin
+        main_sdram_bankmachine1_pipe_valid_source_valid <= main_sdram_bankmachine1_pipe_valid_sink_valid;
+        main_sdram_bankmachine1_pipe_valid_source_first <= main_sdram_bankmachine1_pipe_valid_sink_first;
+        main_sdram_bankmachine1_pipe_valid_source_last <= main_sdram_bankmachine1_pipe_valid_sink_last;
+        main_sdram_bankmachine1_pipe_valid_source_payload_we <= main_sdram_bankmachine1_pipe_valid_sink_payload_we;
+        main_sdram_bankmachine1_pipe_valid_source_payload_addr <= main_sdram_bankmachine1_pipe_valid_sink_payload_addr;
     end
-    if (main_basesoc_sdram_bankmachine1_twtpcon_valid) begin
-        main_basesoc_sdram_bankmachine1_twtpcon_count <= 3'd5;
+    if (main_sdram_bankmachine1_twtpcon_valid) begin
+        main_sdram_bankmachine1_twtpcon_count <= 3'd5;
         if (1'd0) begin
-            main_basesoc_sdram_bankmachine1_twtpcon_ready <= 1'd1;
+            main_sdram_bankmachine1_twtpcon_ready <= 1'd1;
         end else begin
-            main_basesoc_sdram_bankmachine1_twtpcon_ready <= 1'd0;
+            main_sdram_bankmachine1_twtpcon_ready <= 1'd0;
         end
     end else begin
-        if ((~main_basesoc_sdram_bankmachine1_twtpcon_ready)) begin
-            main_basesoc_sdram_bankmachine1_twtpcon_count <= (main_basesoc_sdram_bankmachine1_twtpcon_count - 1'd1);
-            if ((main_basesoc_sdram_bankmachine1_twtpcon_count == 1'd1)) begin
-                main_basesoc_sdram_bankmachine1_twtpcon_ready <= 1'd1;
+        if ((~main_sdram_bankmachine1_twtpcon_ready)) begin
+            main_sdram_bankmachine1_twtpcon_count <= (main_sdram_bankmachine1_twtpcon_count - 1'd1);
+            if ((main_sdram_bankmachine1_twtpcon_count == 1'd1)) begin
+                main_sdram_bankmachine1_twtpcon_ready <= 1'd1;
             end
         end
     end
-    if (main_basesoc_sdram_bankmachine1_trccon_valid) begin
-        main_basesoc_sdram_bankmachine1_trccon_count <= 3'd5;
+    if (main_sdram_bankmachine1_trccon_valid) begin
+        main_sdram_bankmachine1_trccon_count <= 3'd5;
         if (1'd0) begin
-            main_basesoc_sdram_bankmachine1_trccon_ready <= 1'd1;
+            main_sdram_bankmachine1_trccon_ready <= 1'd1;
         end else begin
-            main_basesoc_sdram_bankmachine1_trccon_ready <= 1'd0;
+            main_sdram_bankmachine1_trccon_ready <= 1'd0;
         end
     end else begin
-        if ((~main_basesoc_sdram_bankmachine1_trccon_ready)) begin
-            main_basesoc_sdram_bankmachine1_trccon_count <= (main_basesoc_sdram_bankmachine1_trccon_count - 1'd1);
-            if ((main_basesoc_sdram_bankmachine1_trccon_count == 1'd1)) begin
-                main_basesoc_sdram_bankmachine1_trccon_ready <= 1'd1;
+        if ((~main_sdram_bankmachine1_trccon_ready)) begin
+            main_sdram_bankmachine1_trccon_count <= (main_sdram_bankmachine1_trccon_count - 1'd1);
+            if ((main_sdram_bankmachine1_trccon_count == 1'd1)) begin
+                main_sdram_bankmachine1_trccon_ready <= 1'd1;
             end
         end
     end
-    if (main_basesoc_sdram_bankmachine1_trascon_valid) begin
-        main_basesoc_sdram_bankmachine1_trascon_count <= 3'd4;
+    if (main_sdram_bankmachine1_trascon_valid) begin
+        main_sdram_bankmachine1_trascon_count <= 3'd4;
         if (1'd0) begin
-            main_basesoc_sdram_bankmachine1_trascon_ready <= 1'd1;
+            main_sdram_bankmachine1_trascon_ready <= 1'd1;
         end else begin
-            main_basesoc_sdram_bankmachine1_trascon_ready <= 1'd0;
+            main_sdram_bankmachine1_trascon_ready <= 1'd0;
         end
     end else begin
-        if ((~main_basesoc_sdram_bankmachine1_trascon_ready)) begin
-            main_basesoc_sdram_bankmachine1_trascon_count <= (main_basesoc_sdram_bankmachine1_trascon_count - 1'd1);
-            if ((main_basesoc_sdram_bankmachine1_trascon_count == 1'd1)) begin
-                main_basesoc_sdram_bankmachine1_trascon_ready <= 1'd1;
+        if ((~main_sdram_bankmachine1_trascon_ready)) begin
+            main_sdram_bankmachine1_trascon_count <= (main_sdram_bankmachine1_trascon_count - 1'd1);
+            if ((main_sdram_bankmachine1_trascon_count == 1'd1)) begin
+                main_sdram_bankmachine1_trascon_ready <= 1'd1;
             end
         end
     end
     builder_basesoc_bankmachine1_state <= builder_basesoc_bankmachine1_next_state;
-    if (main_basesoc_sdram_bankmachine2_row_close) begin
-        main_basesoc_sdram_bankmachine2_row_opened <= 1'd0;
+    if (main_sdram_bankmachine2_row_close) begin
+        main_sdram_bankmachine2_row_opened <= 1'd0;
     end else begin
-        if (main_basesoc_sdram_bankmachine2_row_open) begin
-            main_basesoc_sdram_bankmachine2_row_opened <= 1'd1;
-            main_basesoc_sdram_bankmachine2_row <= main_basesoc_sdram_bankmachine2_source_source_payload_addr[21:9];
+        if (main_sdram_bankmachine2_row_open) begin
+            main_sdram_bankmachine2_row_opened <= 1'd1;
+            main_sdram_bankmachine2_row <= main_sdram_bankmachine2_source_source_payload_addr[21:9];
         end
     end
-    if (((main_basesoc_sdram_bankmachine2_syncfifo2_we & main_basesoc_sdram_bankmachine2_syncfifo2_writable) & (~main_basesoc_sdram_bankmachine2_replace))) begin
-        main_basesoc_sdram_bankmachine2_produce <= (main_basesoc_sdram_bankmachine2_produce + 1'd1);
+    if (((main_sdram_bankmachine2_syncfifo2_we & main_sdram_bankmachine2_syncfifo2_writable) & (~main_sdram_bankmachine2_replace))) begin
+        main_sdram_bankmachine2_produce <= (main_sdram_bankmachine2_produce + 1'd1);
     end
-    if (main_basesoc_sdram_bankmachine2_do_read) begin
-        main_basesoc_sdram_bankmachine2_consume <= (main_basesoc_sdram_bankmachine2_consume + 1'd1);
+    if (main_sdram_bankmachine2_do_read) begin
+        main_sdram_bankmachine2_consume <= (main_sdram_bankmachine2_consume + 1'd1);
     end
-    if (((main_basesoc_sdram_bankmachine2_syncfifo2_we & main_basesoc_sdram_bankmachine2_syncfifo2_writable) & (~main_basesoc_sdram_bankmachine2_replace))) begin
-        if ((~main_basesoc_sdram_bankmachine2_do_read)) begin
-            main_basesoc_sdram_bankmachine2_level <= (main_basesoc_sdram_bankmachine2_level + 1'd1);
+    if (((main_sdram_bankmachine2_syncfifo2_we & main_sdram_bankmachine2_syncfifo2_writable) & (~main_sdram_bankmachine2_replace))) begin
+        if ((~main_sdram_bankmachine2_do_read)) begin
+            main_sdram_bankmachine2_level <= (main_sdram_bankmachine2_level + 1'd1);
         end
     end else begin
-        if (main_basesoc_sdram_bankmachine2_do_read) begin
-            main_basesoc_sdram_bankmachine2_level <= (main_basesoc_sdram_bankmachine2_level - 1'd1);
+        if (main_sdram_bankmachine2_do_read) begin
+            main_sdram_bankmachine2_level <= (main_sdram_bankmachine2_level - 1'd1);
         end
     end
-    if (((~main_basesoc_sdram_bankmachine2_pipe_valid_source_valid) | main_basesoc_sdram_bankmachine2_pipe_valid_source_ready)) begin
-        main_basesoc_sdram_bankmachine2_pipe_valid_source_valid <= main_basesoc_sdram_bankmachine2_pipe_valid_sink_valid;
-        main_basesoc_sdram_bankmachine2_pipe_valid_source_first <= main_basesoc_sdram_bankmachine2_pipe_valid_sink_first;
-        main_basesoc_sdram_bankmachine2_pipe_valid_source_last <= main_basesoc_sdram_bankmachine2_pipe_valid_sink_last;
-        main_basesoc_sdram_bankmachine2_pipe_valid_source_payload_we <= main_basesoc_sdram_bankmachine2_pipe_valid_sink_payload_we;
-        main_basesoc_sdram_bankmachine2_pipe_valid_source_payload_addr <= main_basesoc_sdram_bankmachine2_pipe_valid_sink_payload_addr;
+    if (((~main_sdram_bankmachine2_pipe_valid_source_valid) | main_sdram_bankmachine2_pipe_valid_source_ready)) begin
+        main_sdram_bankmachine2_pipe_valid_source_valid <= main_sdram_bankmachine2_pipe_valid_sink_valid;
+        main_sdram_bankmachine2_pipe_valid_source_first <= main_sdram_bankmachine2_pipe_valid_sink_first;
+        main_sdram_bankmachine2_pipe_valid_source_last <= main_sdram_bankmachine2_pipe_valid_sink_last;
+        main_sdram_bankmachine2_pipe_valid_source_payload_we <= main_sdram_bankmachine2_pipe_valid_sink_payload_we;
+        main_sdram_bankmachine2_pipe_valid_source_payload_addr <= main_sdram_bankmachine2_pipe_valid_sink_payload_addr;
     end
-    if (main_basesoc_sdram_bankmachine2_twtpcon_valid) begin
-        main_basesoc_sdram_bankmachine2_twtpcon_count <= 3'd5;
+    if (main_sdram_bankmachine2_twtpcon_valid) begin
+        main_sdram_bankmachine2_twtpcon_count <= 3'd5;
         if (1'd0) begin
-            main_basesoc_sdram_bankmachine2_twtpcon_ready <= 1'd1;
+            main_sdram_bankmachine2_twtpcon_ready <= 1'd1;
         end else begin
-            main_basesoc_sdram_bankmachine2_twtpcon_ready <= 1'd0;
+            main_sdram_bankmachine2_twtpcon_ready <= 1'd0;
         end
     end else begin
-        if ((~main_basesoc_sdram_bankmachine2_twtpcon_ready)) begin
-            main_basesoc_sdram_bankmachine2_twtpcon_count <= (main_basesoc_sdram_bankmachine2_twtpcon_count - 1'd1);
-            if ((main_basesoc_sdram_bankmachine2_twtpcon_count == 1'd1)) begin
-                main_basesoc_sdram_bankmachine2_twtpcon_ready <= 1'd1;
+        if ((~main_sdram_bankmachine2_twtpcon_ready)) begin
+            main_sdram_bankmachine2_twtpcon_count <= (main_sdram_bankmachine2_twtpcon_count - 1'd1);
+            if ((main_sdram_bankmachine2_twtpcon_count == 1'd1)) begin
+                main_sdram_bankmachine2_twtpcon_ready <= 1'd1;
             end
         end
     end
-    if (main_basesoc_sdram_bankmachine2_trccon_valid) begin
-        main_basesoc_sdram_bankmachine2_trccon_count <= 3'd5;
+    if (main_sdram_bankmachine2_trccon_valid) begin
+        main_sdram_bankmachine2_trccon_count <= 3'd5;
         if (1'd0) begin
-            main_basesoc_sdram_bankmachine2_trccon_ready <= 1'd1;
+            main_sdram_bankmachine2_trccon_ready <= 1'd1;
         end else begin
-            main_basesoc_sdram_bankmachine2_trccon_ready <= 1'd0;
+            main_sdram_bankmachine2_trccon_ready <= 1'd0;
         end
     end else begin
-        if ((~main_basesoc_sdram_bankmachine2_trccon_ready)) begin
-            main_basesoc_sdram_bankmachine2_trccon_count <= (main_basesoc_sdram_bankmachine2_trccon_count - 1'd1);
-            if ((main_basesoc_sdram_bankmachine2_trccon_count == 1'd1)) begin
-                main_basesoc_sdram_bankmachine2_trccon_ready <= 1'd1;
+        if ((~main_sdram_bankmachine2_trccon_ready)) begin
+            main_sdram_bankmachine2_trccon_count <= (main_sdram_bankmachine2_trccon_count - 1'd1);
+            if ((main_sdram_bankmachine2_trccon_count == 1'd1)) begin
+                main_sdram_bankmachine2_trccon_ready <= 1'd1;
             end
         end
     end
-    if (main_basesoc_sdram_bankmachine2_trascon_valid) begin
-        main_basesoc_sdram_bankmachine2_trascon_count <= 3'd4;
+    if (main_sdram_bankmachine2_trascon_valid) begin
+        main_sdram_bankmachine2_trascon_count <= 3'd4;
         if (1'd0) begin
-            main_basesoc_sdram_bankmachine2_trascon_ready <= 1'd1;
+            main_sdram_bankmachine2_trascon_ready <= 1'd1;
         end else begin
-            main_basesoc_sdram_bankmachine2_trascon_ready <= 1'd0;
+            main_sdram_bankmachine2_trascon_ready <= 1'd0;
         end
     end else begin
-        if ((~main_basesoc_sdram_bankmachine2_trascon_ready)) begin
-            main_basesoc_sdram_bankmachine2_trascon_count <= (main_basesoc_sdram_bankmachine2_trascon_count - 1'd1);
-            if ((main_basesoc_sdram_bankmachine2_trascon_count == 1'd1)) begin
-                main_basesoc_sdram_bankmachine2_trascon_ready <= 1'd1;
+        if ((~main_sdram_bankmachine2_trascon_ready)) begin
+            main_sdram_bankmachine2_trascon_count <= (main_sdram_bankmachine2_trascon_count - 1'd1);
+            if ((main_sdram_bankmachine2_trascon_count == 1'd1)) begin
+                main_sdram_bankmachine2_trascon_ready <= 1'd1;
             end
         end
     end
     builder_basesoc_bankmachine2_state <= builder_basesoc_bankmachine2_next_state;
-    if (main_basesoc_sdram_bankmachine3_row_close) begin
-        main_basesoc_sdram_bankmachine3_row_opened <= 1'd0;
+    if (main_sdram_bankmachine3_row_close) begin
+        main_sdram_bankmachine3_row_opened <= 1'd0;
     end else begin
-        if (main_basesoc_sdram_bankmachine3_row_open) begin
-            main_basesoc_sdram_bankmachine3_row_opened <= 1'd1;
-            main_basesoc_sdram_bankmachine3_row <= main_basesoc_sdram_bankmachine3_source_source_payload_addr[21:9];
+        if (main_sdram_bankmachine3_row_open) begin
+            main_sdram_bankmachine3_row_opened <= 1'd1;
+            main_sdram_bankmachine3_row <= main_sdram_bankmachine3_source_source_payload_addr[21:9];
         end
     end
-    if (((main_basesoc_sdram_bankmachine3_syncfifo3_we & main_basesoc_sdram_bankmachine3_syncfifo3_writable) & (~main_basesoc_sdram_bankmachine3_replace))) begin
-        main_basesoc_sdram_bankmachine3_produce <= (main_basesoc_sdram_bankmachine3_produce + 1'd1);
+    if (((main_sdram_bankmachine3_syncfifo3_we & main_sdram_bankmachine3_syncfifo3_writable) & (~main_sdram_bankmachine3_replace))) begin
+        main_sdram_bankmachine3_produce <= (main_sdram_bankmachine3_produce + 1'd1);
     end
-    if (main_basesoc_sdram_bankmachine3_do_read) begin
-        main_basesoc_sdram_bankmachine3_consume <= (main_basesoc_sdram_bankmachine3_consume + 1'd1);
+    if (main_sdram_bankmachine3_do_read) begin
+        main_sdram_bankmachine3_consume <= (main_sdram_bankmachine3_consume + 1'd1);
     end
-    if (((main_basesoc_sdram_bankmachine3_syncfifo3_we & main_basesoc_sdram_bankmachine3_syncfifo3_writable) & (~main_basesoc_sdram_bankmachine3_replace))) begin
-        if ((~main_basesoc_sdram_bankmachine3_do_read)) begin
-            main_basesoc_sdram_bankmachine3_level <= (main_basesoc_sdram_bankmachine3_level + 1'd1);
+    if (((main_sdram_bankmachine3_syncfifo3_we & main_sdram_bankmachine3_syncfifo3_writable) & (~main_sdram_bankmachine3_replace))) begin
+        if ((~main_sdram_bankmachine3_do_read)) begin
+            main_sdram_bankmachine3_level <= (main_sdram_bankmachine3_level + 1'd1);
         end
     end else begin
-        if (main_basesoc_sdram_bankmachine3_do_read) begin
-            main_basesoc_sdram_bankmachine3_level <= (main_basesoc_sdram_bankmachine3_level - 1'd1);
+        if (main_sdram_bankmachine3_do_read) begin
+            main_sdram_bankmachine3_level <= (main_sdram_bankmachine3_level - 1'd1);
         end
     end
-    if (((~main_basesoc_sdram_bankmachine3_pipe_valid_source_valid) | main_basesoc_sdram_bankmachine3_pipe_valid_source_ready)) begin
-        main_basesoc_sdram_bankmachine3_pipe_valid_source_valid <= main_basesoc_sdram_bankmachine3_pipe_valid_sink_valid;
-        main_basesoc_sdram_bankmachine3_pipe_valid_source_first <= main_basesoc_sdram_bankmachine3_pipe_valid_sink_first;
-        main_basesoc_sdram_bankmachine3_pipe_valid_source_last <= main_basesoc_sdram_bankmachine3_pipe_valid_sink_last;
-        main_basesoc_sdram_bankmachine3_pipe_valid_source_payload_we <= main_basesoc_sdram_bankmachine3_pipe_valid_sink_payload_we;
-        main_basesoc_sdram_bankmachine3_pipe_valid_source_payload_addr <= main_basesoc_sdram_bankmachine3_pipe_valid_sink_payload_addr;
+    if (((~main_sdram_bankmachine3_pipe_valid_source_valid) | main_sdram_bankmachine3_pipe_valid_source_ready)) begin
+        main_sdram_bankmachine3_pipe_valid_source_valid <= main_sdram_bankmachine3_pipe_valid_sink_valid;
+        main_sdram_bankmachine3_pipe_valid_source_first <= main_sdram_bankmachine3_pipe_valid_sink_first;
+        main_sdram_bankmachine3_pipe_valid_source_last <= main_sdram_bankmachine3_pipe_valid_sink_last;
+        main_sdram_bankmachine3_pipe_valid_source_payload_we <= main_sdram_bankmachine3_pipe_valid_sink_payload_we;
+        main_sdram_bankmachine3_pipe_valid_source_payload_addr <= main_sdram_bankmachine3_pipe_valid_sink_payload_addr;
     end
-    if (main_basesoc_sdram_bankmachine3_twtpcon_valid) begin
-        main_basesoc_sdram_bankmachine3_twtpcon_count <= 3'd5;
+    if (main_sdram_bankmachine3_twtpcon_valid) begin
+        main_sdram_bankmachine3_twtpcon_count <= 3'd5;
         if (1'd0) begin
-            main_basesoc_sdram_bankmachine3_twtpcon_ready <= 1'd1;
+            main_sdram_bankmachine3_twtpcon_ready <= 1'd1;
         end else begin
-            main_basesoc_sdram_bankmachine3_twtpcon_ready <= 1'd0;
+            main_sdram_bankmachine3_twtpcon_ready <= 1'd0;
         end
     end else begin
-        if ((~main_basesoc_sdram_bankmachine3_twtpcon_ready)) begin
-            main_basesoc_sdram_bankmachine3_twtpcon_count <= (main_basesoc_sdram_bankmachine3_twtpcon_count - 1'd1);
-            if ((main_basesoc_sdram_bankmachine3_twtpcon_count == 1'd1)) begin
-                main_basesoc_sdram_bankmachine3_twtpcon_ready <= 1'd1;
+        if ((~main_sdram_bankmachine3_twtpcon_ready)) begin
+            main_sdram_bankmachine3_twtpcon_count <= (main_sdram_bankmachine3_twtpcon_count - 1'd1);
+            if ((main_sdram_bankmachine3_twtpcon_count == 1'd1)) begin
+                main_sdram_bankmachine3_twtpcon_ready <= 1'd1;
             end
         end
     end
-    if (main_basesoc_sdram_bankmachine3_trccon_valid) begin
-        main_basesoc_sdram_bankmachine3_trccon_count <= 3'd5;
+    if (main_sdram_bankmachine3_trccon_valid) begin
+        main_sdram_bankmachine3_trccon_count <= 3'd5;
         if (1'd0) begin
-            main_basesoc_sdram_bankmachine3_trccon_ready <= 1'd1;
+            main_sdram_bankmachine3_trccon_ready <= 1'd1;
         end else begin
-            main_basesoc_sdram_bankmachine3_trccon_ready <= 1'd0;
+            main_sdram_bankmachine3_trccon_ready <= 1'd0;
         end
     end else begin
-        if ((~main_basesoc_sdram_bankmachine3_trccon_ready)) begin
-            main_basesoc_sdram_bankmachine3_trccon_count <= (main_basesoc_sdram_bankmachine3_trccon_count - 1'd1);
-            if ((main_basesoc_sdram_bankmachine3_trccon_count == 1'd1)) begin
-                main_basesoc_sdram_bankmachine3_trccon_ready <= 1'd1;
+        if ((~main_sdram_bankmachine3_trccon_ready)) begin
+            main_sdram_bankmachine3_trccon_count <= (main_sdram_bankmachine3_trccon_count - 1'd1);
+            if ((main_sdram_bankmachine3_trccon_count == 1'd1)) begin
+                main_sdram_bankmachine3_trccon_ready <= 1'd1;
             end
         end
     end
-    if (main_basesoc_sdram_bankmachine3_trascon_valid) begin
-        main_basesoc_sdram_bankmachine3_trascon_count <= 3'd4;
+    if (main_sdram_bankmachine3_trascon_valid) begin
+        main_sdram_bankmachine3_trascon_count <= 3'd4;
         if (1'd0) begin
-            main_basesoc_sdram_bankmachine3_trascon_ready <= 1'd1;
+            main_sdram_bankmachine3_trascon_ready <= 1'd1;
         end else begin
-            main_basesoc_sdram_bankmachine3_trascon_ready <= 1'd0;
+            main_sdram_bankmachine3_trascon_ready <= 1'd0;
         end
     end else begin
-        if ((~main_basesoc_sdram_bankmachine3_trascon_ready)) begin
-            main_basesoc_sdram_bankmachine3_trascon_count <= (main_basesoc_sdram_bankmachine3_trascon_count - 1'd1);
-            if ((main_basesoc_sdram_bankmachine3_trascon_count == 1'd1)) begin
-                main_basesoc_sdram_bankmachine3_trascon_ready <= 1'd1;
+        if ((~main_sdram_bankmachine3_trascon_ready)) begin
+            main_sdram_bankmachine3_trascon_count <= (main_sdram_bankmachine3_trascon_count - 1'd1);
+            if ((main_sdram_bankmachine3_trascon_count == 1'd1)) begin
+                main_sdram_bankmachine3_trascon_ready <= 1'd1;
             end
         end
     end
     builder_basesoc_bankmachine3_state <= builder_basesoc_bankmachine3_next_state;
-    if ((~main_basesoc_sdram_en0)) begin
-        main_basesoc_sdram_time0 <= 5'd31;
+    if ((~main_sdram_en0)) begin
+        main_sdram_time0 <= 5'd31;
     end else begin
-        if ((~main_basesoc_sdram_max_time0)) begin
-            main_basesoc_sdram_time0 <= (main_basesoc_sdram_time0 - 1'd1);
+        if ((~main_sdram_max_time0)) begin
+            main_sdram_time0 <= (main_sdram_time0 - 1'd1);
         end
     end
-    if ((~main_basesoc_sdram_en1)) begin
-        main_basesoc_sdram_time1 <= 4'd15;
+    if ((~main_sdram_en1)) begin
+        main_sdram_time1 <= 4'd15;
     end else begin
-        if ((~main_basesoc_sdram_max_time1)) begin
-            main_basesoc_sdram_time1 <= (main_basesoc_sdram_time1 - 1'd1);
+        if ((~main_sdram_max_time1)) begin
+            main_sdram_time1 <= (main_sdram_time1 - 1'd1);
         end
     end
-    if (main_basesoc_sdram_choose_cmd_ce) begin
-        case (main_basesoc_sdram_choose_cmd_grant)
+    if (main_sdram_choose_cmd_ce) begin
+        case (main_sdram_choose_cmd_grant)
             1'd0: begin
-                if (main_basesoc_sdram_choose_cmd_request[1]) begin
-                    main_basesoc_sdram_choose_cmd_grant <= 1'd1;
+                if (main_sdram_choose_cmd_request[1]) begin
+                    main_sdram_choose_cmd_grant <= 1'd1;
                 end else begin
-                    if (main_basesoc_sdram_choose_cmd_request[2]) begin
-                        main_basesoc_sdram_choose_cmd_grant <= 2'd2;
+                    if (main_sdram_choose_cmd_request[2]) begin
+                        main_sdram_choose_cmd_grant <= 2'd2;
                     end else begin
-                        if (main_basesoc_sdram_choose_cmd_request[3]) begin
-                            main_basesoc_sdram_choose_cmd_grant <= 2'd3;
+                        if (main_sdram_choose_cmd_request[3]) begin
+                            main_sdram_choose_cmd_grant <= 2'd3;
                         end
                     end
                 end
             end
             1'd1: begin
-                if (main_basesoc_sdram_choose_cmd_request[2]) begin
-                    main_basesoc_sdram_choose_cmd_grant <= 2'd2;
+                if (main_sdram_choose_cmd_request[2]) begin
+                    main_sdram_choose_cmd_grant <= 2'd2;
                 end else begin
-                    if (main_basesoc_sdram_choose_cmd_request[3]) begin
-                        main_basesoc_sdram_choose_cmd_grant <= 2'd3;
+                    if (main_sdram_choose_cmd_request[3]) begin
+                        main_sdram_choose_cmd_grant <= 2'd3;
                     end else begin
-                        if (main_basesoc_sdram_choose_cmd_request[0]) begin
-                            main_basesoc_sdram_choose_cmd_grant <= 1'd0;
+                        if (main_sdram_choose_cmd_request[0]) begin
+                            main_sdram_choose_cmd_grant <= 1'd0;
                         end
                     end
                 end
             end
             2'd2: begin
-                if (main_basesoc_sdram_choose_cmd_request[3]) begin
-                    main_basesoc_sdram_choose_cmd_grant <= 2'd3;
+                if (main_sdram_choose_cmd_request[3]) begin
+                    main_sdram_choose_cmd_grant <= 2'd3;
                 end else begin
-                    if (main_basesoc_sdram_choose_cmd_request[0]) begin
-                        main_basesoc_sdram_choose_cmd_grant <= 1'd0;
+                    if (main_sdram_choose_cmd_request[0]) begin
+                        main_sdram_choose_cmd_grant <= 1'd0;
                     end else begin
-                        if (main_basesoc_sdram_choose_cmd_request[1]) begin
-                            main_basesoc_sdram_choose_cmd_grant <= 1'd1;
+                        if (main_sdram_choose_cmd_request[1]) begin
+                            main_sdram_choose_cmd_grant <= 1'd1;
                         end
                     end
                 end
             end
             2'd3: begin
-                if (main_basesoc_sdram_choose_cmd_request[0]) begin
-                    main_basesoc_sdram_choose_cmd_grant <= 1'd0;
+                if (main_sdram_choose_cmd_request[0]) begin
+                    main_sdram_choose_cmd_grant <= 1'd0;
                 end else begin
-                    if (main_basesoc_sdram_choose_cmd_request[1]) begin
-                        main_basesoc_sdram_choose_cmd_grant <= 1'd1;
+                    if (main_sdram_choose_cmd_request[1]) begin
+                        main_sdram_choose_cmd_grant <= 1'd1;
                     end else begin
-                        if (main_basesoc_sdram_choose_cmd_request[2]) begin
-                            main_basesoc_sdram_choose_cmd_grant <= 2'd2;
+                        if (main_sdram_choose_cmd_request[2]) begin
+                            main_sdram_choose_cmd_grant <= 2'd2;
                         end
                     end
                 end
             end
         endcase
     end
-    if (main_basesoc_sdram_choose_req_ce) begin
-        case (main_basesoc_sdram_choose_req_grant)
+    if (main_sdram_choose_req_ce) begin
+        case (main_sdram_choose_req_grant)
             1'd0: begin
-                if (main_basesoc_sdram_choose_req_request[1]) begin
-                    main_basesoc_sdram_choose_req_grant <= 1'd1;
+                if (main_sdram_choose_req_request[1]) begin
+                    main_sdram_choose_req_grant <= 1'd1;
                 end else begin
-                    if (main_basesoc_sdram_choose_req_request[2]) begin
-                        main_basesoc_sdram_choose_req_grant <= 2'd2;
+                    if (main_sdram_choose_req_request[2]) begin
+                        main_sdram_choose_req_grant <= 2'd2;
                     end else begin
-                        if (main_basesoc_sdram_choose_req_request[3]) begin
-                            main_basesoc_sdram_choose_req_grant <= 2'd3;
+                        if (main_sdram_choose_req_request[3]) begin
+                            main_sdram_choose_req_grant <= 2'd3;
                         end
                     end
                 end
             end
             1'd1: begin
-                if (main_basesoc_sdram_choose_req_request[2]) begin
-                    main_basesoc_sdram_choose_req_grant <= 2'd2;
+                if (main_sdram_choose_req_request[2]) begin
+                    main_sdram_choose_req_grant <= 2'd2;
                 end else begin
-                    if (main_basesoc_sdram_choose_req_request[3]) begin
-                        main_basesoc_sdram_choose_req_grant <= 2'd3;
+                    if (main_sdram_choose_req_request[3]) begin
+                        main_sdram_choose_req_grant <= 2'd3;
                     end else begin
-                        if (main_basesoc_sdram_choose_req_request[0]) begin
-                            main_basesoc_sdram_choose_req_grant <= 1'd0;
+                        if (main_sdram_choose_req_request[0]) begin
+                            main_sdram_choose_req_grant <= 1'd0;
                         end
                     end
                 end
             end
             2'd2: begin
-                if (main_basesoc_sdram_choose_req_request[3]) begin
-                    main_basesoc_sdram_choose_req_grant <= 2'd3;
+                if (main_sdram_choose_req_request[3]) begin
+                    main_sdram_choose_req_grant <= 2'd3;
                 end else begin
-                    if (main_basesoc_sdram_choose_req_request[0]) begin
-                        main_basesoc_sdram_choose_req_grant <= 1'd0;
+                    if (main_sdram_choose_req_request[0]) begin
+                        main_sdram_choose_req_grant <= 1'd0;
                     end else begin
-                        if (main_basesoc_sdram_choose_req_request[1]) begin
-                            main_basesoc_sdram_choose_req_grant <= 1'd1;
+                        if (main_sdram_choose_req_request[1]) begin
+                            main_sdram_choose_req_grant <= 1'd1;
                         end
                     end
                 end
             end
             2'd3: begin
-                if (main_basesoc_sdram_choose_req_request[0]) begin
-                    main_basesoc_sdram_choose_req_grant <= 1'd0;
+                if (main_sdram_choose_req_request[0]) begin
+                    main_sdram_choose_req_grant <= 1'd0;
                 end else begin
-                    if (main_basesoc_sdram_choose_req_request[1]) begin
-                        main_basesoc_sdram_choose_req_grant <= 1'd1;
+                    if (main_sdram_choose_req_request[1]) begin
+                        main_sdram_choose_req_grant <= 1'd1;
                     end else begin
-                        if (main_basesoc_sdram_choose_req_request[2]) begin
-                            main_basesoc_sdram_choose_req_grant <= 2'd2;
+                        if (main_sdram_choose_req_request[2]) begin
+                            main_sdram_choose_req_grant <= 2'd2;
                         end
                     end
                 end
             end
         endcase
     end
-    main_basesoc_sdram_dfi_p0_cs_n <= 1'd0;
-    main_basesoc_sdram_dfi_p0_bank <= builder_array_muxed0;
-    main_basesoc_sdram_dfi_p0_address <= builder_array_muxed1;
-    main_basesoc_sdram_dfi_p0_cas_n <= (~builder_array_muxed2);
-    main_basesoc_sdram_dfi_p0_ras_n <= (~builder_array_muxed3);
-    main_basesoc_sdram_dfi_p0_we_n <= (~builder_array_muxed4);
-    main_basesoc_sdram_dfi_p0_rddata_en <= builder_array_muxed5;
-    main_basesoc_sdram_dfi_p0_wrdata_en <= builder_array_muxed6;
-    if (main_basesoc_sdram_trrdcon_valid) begin
-        main_basesoc_sdram_trrdcon_count <= 1'd1;
+    main_sdram_dfi_p0_cs_n <= 1'd0;
+    main_sdram_dfi_p0_bank <= builder_array_muxed0;
+    main_sdram_dfi_p0_address <= builder_array_muxed1;
+    main_sdram_dfi_p0_cas_n <= (~builder_array_muxed2);
+    main_sdram_dfi_p0_ras_n <= (~builder_array_muxed3);
+    main_sdram_dfi_p0_we_n <= (~builder_array_muxed4);
+    main_sdram_dfi_p0_rddata_en <= builder_array_muxed5;
+    main_sdram_dfi_p0_wrdata_en <= builder_array_muxed6;
+    if (main_sdram_trrdcon_valid) begin
+        main_sdram_trrdcon_count <= 1'd1;
         if (1'd0) begin
-            main_basesoc_sdram_trrdcon_ready <= 1'd1;
+            main_sdram_trrdcon_ready <= 1'd1;
         end else begin
-            main_basesoc_sdram_trrdcon_ready <= 1'd0;
+            main_sdram_trrdcon_ready <= 1'd0;
         end
     end else begin
-        if ((~main_basesoc_sdram_trrdcon_ready)) begin
-            main_basesoc_sdram_trrdcon_count <= (main_basesoc_sdram_trrdcon_count - 1'd1);
-            if ((main_basesoc_sdram_trrdcon_count == 1'd1)) begin
-                main_basesoc_sdram_trrdcon_ready <= 1'd1;
+        if ((~main_sdram_trrdcon_ready)) begin
+            main_sdram_trrdcon_count <= (main_sdram_trrdcon_count - 1'd1);
+            if ((main_sdram_trrdcon_count == 1'd1)) begin
+                main_sdram_trrdcon_ready <= 1'd1;
             end
         end
     end
-    if (main_basesoc_sdram_tccdcon_valid) begin
-        main_basesoc_sdram_tccdcon_count <= 1'd0;
+    if (main_sdram_tccdcon_valid) begin
+        main_sdram_tccdcon_count <= 1'd0;
         if (1'd1) begin
-            main_basesoc_sdram_tccdcon_ready <= 1'd1;
+            main_sdram_tccdcon_ready <= 1'd1;
         end else begin
-            main_basesoc_sdram_tccdcon_ready <= 1'd0;
+            main_sdram_tccdcon_ready <= 1'd0;
         end
     end else begin
-        if ((~main_basesoc_sdram_tccdcon_ready)) begin
-            main_basesoc_sdram_tccdcon_count <= (main_basesoc_sdram_tccdcon_count - 1'd1);
-            if ((main_basesoc_sdram_tccdcon_count == 1'd1)) begin
-                main_basesoc_sdram_tccdcon_ready <= 1'd1;
+        if ((~main_sdram_tccdcon_ready)) begin
+            main_sdram_tccdcon_count <= (main_sdram_tccdcon_count - 1'd1);
+            if ((main_sdram_tccdcon_count == 1'd1)) begin
+                main_sdram_tccdcon_ready <= 1'd1;
             end
         end
     end
-    if (main_basesoc_sdram_twtrcon_valid) begin
-        main_basesoc_sdram_twtrcon_count <= 3'd5;
+    if (main_sdram_twtrcon_valid) begin
+        main_sdram_twtrcon_count <= 3'd5;
         if (1'd0) begin
-            main_basesoc_sdram_twtrcon_ready <= 1'd1;
+            main_sdram_twtrcon_ready <= 1'd1;
         end else begin
-            main_basesoc_sdram_twtrcon_ready <= 1'd0;
+            main_sdram_twtrcon_ready <= 1'd0;
         end
     end else begin
-        if ((~main_basesoc_sdram_twtrcon_ready)) begin
-            main_basesoc_sdram_twtrcon_count <= (main_basesoc_sdram_twtrcon_count - 1'd1);
-            if ((main_basesoc_sdram_twtrcon_count == 1'd1)) begin
-                main_basesoc_sdram_twtrcon_ready <= 1'd1;
+        if ((~main_sdram_twtrcon_ready)) begin
+            main_sdram_twtrcon_count <= (main_sdram_twtrcon_count - 1'd1);
+            if ((main_sdram_twtrcon_count == 1'd1)) begin
+                main_sdram_twtrcon_ready <= 1'd1;
             end
         end
     end
     builder_basesoc_multiplexer_state <= builder_basesoc_multiplexer_next_state;
-    builder_basesoc_new_master_wdata_ready <= ((((1'd0 | ((builder_basesoc_roundrobin0_grant == 1'd0) & main_basesoc_sdram_interface_bank0_wdata_ready)) | ((builder_basesoc_roundrobin1_grant == 1'd0) & main_basesoc_sdram_interface_bank1_wdata_ready)) | ((builder_basesoc_roundrobin2_grant == 1'd0) & main_basesoc_sdram_interface_bank2_wdata_ready)) | ((builder_basesoc_roundrobin3_grant == 1'd0) & main_basesoc_sdram_interface_bank3_wdata_ready));
-    builder_basesoc_new_master_rdata_valid0 <= ((((1'd0 | ((builder_basesoc_roundrobin0_grant == 1'd0) & main_basesoc_sdram_interface_bank0_rdata_valid)) | ((builder_basesoc_roundrobin1_grant == 1'd0) & main_basesoc_sdram_interface_bank1_rdata_valid)) | ((builder_basesoc_roundrobin2_grant == 1'd0) & main_basesoc_sdram_interface_bank2_rdata_valid)) | ((builder_basesoc_roundrobin3_grant == 1'd0) & main_basesoc_sdram_interface_bank3_rdata_valid));
+    builder_basesoc_new_master_wdata_ready <= ((((1'd0 | ((builder_basesoc_roundrobin0_grant == 1'd0) & main_sdram_interface_bank0_wdata_ready)) | ((builder_basesoc_roundrobin1_grant == 1'd0) & main_sdram_interface_bank1_wdata_ready)) | ((builder_basesoc_roundrobin2_grant == 1'd0) & main_sdram_interface_bank2_wdata_ready)) | ((builder_basesoc_roundrobin3_grant == 1'd0) & main_sdram_interface_bank3_wdata_ready));
+    builder_basesoc_new_master_rdata_valid0 <= ((((1'd0 | ((builder_basesoc_roundrobin0_grant == 1'd0) & main_sdram_interface_bank0_rdata_valid)) | ((builder_basesoc_roundrobin1_grant == 1'd0) & main_sdram_interface_bank1_rdata_valid)) | ((builder_basesoc_roundrobin2_grant == 1'd0) & main_sdram_interface_bank2_rdata_valid)) | ((builder_basesoc_roundrobin3_grant == 1'd0) & main_sdram_interface_bank3_rdata_valid));
     builder_basesoc_new_master_rdata_valid1 <= builder_basesoc_new_master_rdata_valid0;
     builder_basesoc_new_master_rdata_valid2 <= builder_basesoc_new_master_rdata_valid1;
     builder_basesoc_new_master_rdata_valid3 <= builder_basesoc_new_master_rdata_valid2;
     builder_basesoc_new_master_rdata_valid4 <= builder_basesoc_new_master_rdata_valid3;
-    main_basesoc_adr_offset_r <= main_basesoc_wb_sdram_adr[1:0];
+    main_adr_offset_r <= main_wb_sdram_adr[1:0];
     builder_basesoc_fullmemorywe_state <= builder_basesoc_fullmemorywe_next_state;
     builder_basesoc_litedramnativeportconverter_state <= builder_basesoc_litedramnativeportconverter_next_state;
-    if (main_basesoc_wishbone_bridge_count_litedramnativeportconverter_next_value_ce) begin
-        main_basesoc_wishbone_bridge_count <= main_basesoc_wishbone_bridge_count_litedramnativeportconverter_next_value;
+    if (main_wishbone_bridge_count_litedramnativeportconverter_next_value_ce) begin
+        main_wishbone_bridge_count <= main_wishbone_bridge_count_litedramnativeportconverter_next_value;
     end
-    if ((main_basesoc_wishbone_bridge_wdata_converter_converter_source_valid & main_basesoc_wishbone_bridge_wdata_converter_converter_source_ready)) begin
-        if (main_basesoc_wishbone_bridge_wdata_converter_converter_last) begin
-            main_basesoc_wishbone_bridge_wdata_converter_converter_mux <= 1'd0;
+    if ((main_wishbone_bridge_wdata_converter_converter_source_valid & main_wishbone_bridge_wdata_converter_converter_source_ready)) begin
+        if (main_wishbone_bridge_wdata_converter_converter_last) begin
+            main_wishbone_bridge_wdata_converter_converter_mux <= 1'd0;
         end else begin
-            main_basesoc_wishbone_bridge_wdata_converter_converter_mux <= (main_basesoc_wishbone_bridge_wdata_converter_converter_mux + 1'd1);
+            main_wishbone_bridge_wdata_converter_converter_mux <= (main_wishbone_bridge_wdata_converter_converter_mux + 1'd1);
         end
     end
-    if (main_basesoc_wishbone_bridge_rdata_converter_converter_source_ready) begin
-        main_basesoc_wishbone_bridge_rdata_converter_converter_strobe_all <= 1'd0;
+    if (main_wishbone_bridge_rdata_converter_converter_source_ready) begin
+        main_wishbone_bridge_rdata_converter_converter_strobe_all <= 1'd0;
     end
-    if (main_basesoc_wishbone_bridge_rdata_converter_converter_load_part) begin
-        if (((main_basesoc_wishbone_bridge_rdata_converter_converter_demux == 3'd7) | main_basesoc_wishbone_bridge_rdata_converter_converter_sink_last)) begin
-            main_basesoc_wishbone_bridge_rdata_converter_converter_demux <= 1'd0;
-            main_basesoc_wishbone_bridge_rdata_converter_converter_strobe_all <= 1'd1;
+    if (main_wishbone_bridge_rdata_converter_converter_load_part) begin
+        if (((main_wishbone_bridge_rdata_converter_converter_demux == 3'd7) | main_wishbone_bridge_rdata_converter_converter_sink_last)) begin
+            main_wishbone_bridge_rdata_converter_converter_demux <= 1'd0;
+            main_wishbone_bridge_rdata_converter_converter_strobe_all <= 1'd1;
         end else begin
-            main_basesoc_wishbone_bridge_rdata_converter_converter_demux <= (main_basesoc_wishbone_bridge_rdata_converter_converter_demux + 1'd1);
+            main_wishbone_bridge_rdata_converter_converter_demux <= (main_wishbone_bridge_rdata_converter_converter_demux + 1'd1);
         end
     end
-    if ((main_basesoc_wishbone_bridge_rdata_converter_converter_source_valid & main_basesoc_wishbone_bridge_rdata_converter_converter_source_ready)) begin
-        if ((main_basesoc_wishbone_bridge_rdata_converter_converter_sink_valid & main_basesoc_wishbone_bridge_rdata_converter_converter_sink_ready)) begin
-            main_basesoc_wishbone_bridge_rdata_converter_converter_source_first <= main_basesoc_wishbone_bridge_rdata_converter_converter_sink_first;
-            main_basesoc_wishbone_bridge_rdata_converter_converter_source_last <= main_basesoc_wishbone_bridge_rdata_converter_converter_sink_last;
+    if ((main_wishbone_bridge_rdata_converter_converter_source_valid & main_wishbone_bridge_rdata_converter_converter_source_ready)) begin
+        if ((main_wishbone_bridge_rdata_converter_converter_sink_valid & main_wishbone_bridge_rdata_converter_converter_sink_ready)) begin
+            main_wishbone_bridge_rdata_converter_converter_source_first <= main_wishbone_bridge_rdata_converter_converter_sink_first;
+            main_wishbone_bridge_rdata_converter_converter_source_last <= main_wishbone_bridge_rdata_converter_converter_sink_last;
         end else begin
-            main_basesoc_wishbone_bridge_rdata_converter_converter_source_first <= 1'd0;
-            main_basesoc_wishbone_bridge_rdata_converter_converter_source_last <= 1'd0;
+            main_wishbone_bridge_rdata_converter_converter_source_first <= 1'd0;
+            main_wishbone_bridge_rdata_converter_converter_source_last <= 1'd0;
         end
     end else begin
-        if ((main_basesoc_wishbone_bridge_rdata_converter_converter_sink_valid & main_basesoc_wishbone_bridge_rdata_converter_converter_sink_ready)) begin
-            main_basesoc_wishbone_bridge_rdata_converter_converter_source_first <= (main_basesoc_wishbone_bridge_rdata_converter_converter_sink_first | main_basesoc_wishbone_bridge_rdata_converter_converter_source_first);
-            main_basesoc_wishbone_bridge_rdata_converter_converter_source_last <= (main_basesoc_wishbone_bridge_rdata_converter_converter_sink_last | main_basesoc_wishbone_bridge_rdata_converter_converter_source_last);
+        if ((main_wishbone_bridge_rdata_converter_converter_sink_valid & main_wishbone_bridge_rdata_converter_converter_sink_ready)) begin
+            main_wishbone_bridge_rdata_converter_converter_source_first <= (main_wishbone_bridge_rdata_converter_converter_sink_first | main_wishbone_bridge_rdata_converter_converter_source_first);
+            main_wishbone_bridge_rdata_converter_converter_source_last <= (main_wishbone_bridge_rdata_converter_converter_sink_last | main_wishbone_bridge_rdata_converter_converter_source_last);
         end
     end
-    if (main_basesoc_wishbone_bridge_rdata_converter_converter_load_part) begin
-        case (main_basesoc_wishbone_bridge_rdata_converter_converter_demux)
+    if (main_wishbone_bridge_rdata_converter_converter_load_part) begin
+        case (main_wishbone_bridge_rdata_converter_converter_demux)
             1'd0: begin
-                main_basesoc_wishbone_bridge_rdata_converter_converter_source_payload_data[15:0] <= main_basesoc_wishbone_bridge_rdata_converter_converter_sink_payload_data;
+                main_wishbone_bridge_rdata_converter_converter_source_payload_data[15:0] <= main_wishbone_bridge_rdata_converter_converter_sink_payload_data;
             end
             1'd1: begin
-                main_basesoc_wishbone_bridge_rdata_converter_converter_source_payload_data[31:16] <= main_basesoc_wishbone_bridge_rdata_converter_converter_sink_payload_data;
+                main_wishbone_bridge_rdata_converter_converter_source_payload_data[31:16] <= main_wishbone_bridge_rdata_converter_converter_sink_payload_data;
             end
             2'd2: begin
-                main_basesoc_wishbone_bridge_rdata_converter_converter_source_payload_data[47:32] <= main_basesoc_wishbone_bridge_rdata_converter_converter_sink_payload_data;
+                main_wishbone_bridge_rdata_converter_converter_source_payload_data[47:32] <= main_wishbone_bridge_rdata_converter_converter_sink_payload_data;
             end
             2'd3: begin
-                main_basesoc_wishbone_bridge_rdata_converter_converter_source_payload_data[63:48] <= main_basesoc_wishbone_bridge_rdata_converter_converter_sink_payload_data;
+                main_wishbone_bridge_rdata_converter_converter_source_payload_data[63:48] <= main_wishbone_bridge_rdata_converter_converter_sink_payload_data;
             end
             3'd4: begin
-                main_basesoc_wishbone_bridge_rdata_converter_converter_source_payload_data[79:64] <= main_basesoc_wishbone_bridge_rdata_converter_converter_sink_payload_data;
+                main_wishbone_bridge_rdata_converter_converter_source_payload_data[79:64] <= main_wishbone_bridge_rdata_converter_converter_sink_payload_data;
             end
             3'd5: begin
-                main_basesoc_wishbone_bridge_rdata_converter_converter_source_payload_data[95:80] <= main_basesoc_wishbone_bridge_rdata_converter_converter_sink_payload_data;
+                main_wishbone_bridge_rdata_converter_converter_source_payload_data[95:80] <= main_wishbone_bridge_rdata_converter_converter_sink_payload_data;
             end
             3'd6: begin
-                main_basesoc_wishbone_bridge_rdata_converter_converter_source_payload_data[111:96] <= main_basesoc_wishbone_bridge_rdata_converter_converter_sink_payload_data;
+                main_wishbone_bridge_rdata_converter_converter_source_payload_data[111:96] <= main_wishbone_bridge_rdata_converter_converter_sink_payload_data;
             end
             3'd7: begin
-                main_basesoc_wishbone_bridge_rdata_converter_converter_source_payload_data[127:112] <= main_basesoc_wishbone_bridge_rdata_converter_converter_sink_payload_data;
+                main_wishbone_bridge_rdata_converter_converter_source_payload_data[127:112] <= main_wishbone_bridge_rdata_converter_converter_sink_payload_data;
             end
         endcase
     end
-    if (main_basesoc_wishbone_bridge_rdata_converter_converter_load_part) begin
-        main_basesoc_wishbone_bridge_rdata_converter_converter_source_payload_valid_token_count <= (main_basesoc_wishbone_bridge_rdata_converter_converter_demux + 1'd1);
+    if (main_wishbone_bridge_rdata_converter_converter_load_part) begin
+        main_wishbone_bridge_rdata_converter_converter_source_payload_valid_token_count <= (main_wishbone_bridge_rdata_converter_converter_demux + 1'd1);
     end
     builder_basesoc_fsm_state <= builder_basesoc_fsm_next_state;
-    if (main_basesoc_wishbone_bridge_aborted_fsm_next_value_ce) begin
-        main_basesoc_wishbone_bridge_aborted <= main_basesoc_wishbone_bridge_aborted_fsm_next_value;
+    if (main_wishbone_bridge_aborted_fsm_next_value_ce) begin
+        main_wishbone_bridge_aborted <= main_wishbone_bridge_aborted_fsm_next_value;
     end
     if (main_done) begin
         main_chaser <= {main_chaser, (~main_chaser)};
@@ -7196,272 +6320,261 @@ always @(posedge sys_clk) begin
     end else begin
         main_count <= 26'd52500000;
     end
-    main_basesoc_clk_d <= main_basesoc_clk_pin;
-    if (main_basesoc_csrfield_reset0) begin
-        main_basesoc_rx_rst_cnt <= 3'd5;
-        main_basesoc_rx_reset <= 1'd1;
+    main_clk_d <= main_clk_pin;
+    if (main_csrfield_reset0) begin
+        main_rx_rst_cnt <= 3'd5;
+        main_rx_reset <= 1'd1;
     end else begin
-        if ((main_basesoc_rx_rst_cnt == 1'd0)) begin
-            main_basesoc_rx_reset <= 1'd0;
+        if ((main_rx_rst_cnt == 1'd0)) begin
+            main_rx_reset <= 1'd0;
         end else begin
-            main_basesoc_rx_rst_cnt <= (main_basesoc_rx_rst_cnt - 1'd1);
-            main_basesoc_rx_reset <= 1'd1;
+            main_rx_rst_cnt <= (main_rx_rst_cnt - 1'd1);
+            main_rx_reset <= 1'd1;
         end
     end
-    main_basesoc_bus_read_d <= main_basesoc_bus_read;
-    if ((main_basesoc_bus_read & (~main_basesoc_bus_read_d))) begin
-        main_basesoc_rd_ack_pipe <= 1'd1;
-        if ((~main_basesoc_rx_fifo_rx_fifo_empty)) begin
-            main_basesoc_bus_dat_r <= main_basesoc_rx_fifo_rx_fifo_rd_d;
-            main_basesoc_rx_fifo_rx_fifo_rden <= (~main_basesoc_rx_reset);
+    main_bus_read_d <= main_bus_read;
+    if ((main_bus_read & (~main_bus_read_d))) begin
+        main_rd_ack_pipe <= 1'd1;
+        if ((~main_rx_fifo_rx_fifo_empty)) begin
+            main_bus_dat_r <= main_rx_fifo_rx_fifo_rd_d;
+            main_rx_fifo_rx_fifo_rden <= (~main_rx_reset);
         end else begin
-            main_basesoc_bus_dat_r <= 32'd3735928559;
-            main_basesoc_rx_fifo_rx_fifo_rden <= 1'd0;
+            main_bus_dat_r <= 32'd3735928559;
+            main_rx_fifo_rx_fifo_rden <= 1'd0;
         end
     end else begin
-        main_basesoc_rx_fifo_rx_fifo_rden <= 1'd0;
-        main_basesoc_rd_ack_pipe <= 1'd0;
+        main_rx_fifo_rx_fifo_rden <= 1'd0;
+        main_rd_ack_pipe <= 1'd0;
     end
-    main_basesoc_rd_ack <= main_basesoc_rd_ack_pipe;
-    if (main_basesoc_csrfield_reset1) begin
-        main_basesoc_tx_rst_cnt <= 3'd5;
-        main_basesoc_tx_reset <= 1'd1;
+    main_rd_ack <= main_rd_ack_pipe;
+    if (main_csrfield_reset1) begin
+        main_tx_rst_cnt <= 3'd5;
+        main_tx_reset <= 1'd1;
     end else begin
-        if ((main_basesoc_tx_rst_cnt == 1'd0)) begin
-            main_basesoc_tx_reset <= 1'd0;
+        if ((main_tx_rst_cnt == 1'd0)) begin
+            main_tx_reset <= 1'd0;
         end else begin
-            main_basesoc_tx_rst_cnt <= (main_basesoc_tx_rst_cnt - 1'd1);
-            main_basesoc_tx_reset <= 1'd1;
+            main_tx_rst_cnt <= (main_tx_rst_cnt - 1'd1);
+            main_tx_reset <= 1'd1;
         end
     end
-    if ((((main_basesoc_bus_cyc & main_basesoc_bus_stb) & main_basesoc_bus_we) & (~main_basesoc_bus_ack))) begin
-        if ((~main_basesoc_tx_fifo_tx_fifo_full)) begin
-            main_basesoc_tx_fifo_tx_fifo_wr_d <= main_basesoc_bus_dat_w;
-            main_basesoc_tx_fifo_tx_fifo_wren <= (~main_basesoc_tx_reset);
-            main_basesoc_wr_ack <= 1'd1;
+    if ((((main_bus_cyc & main_bus_stb) & main_bus_we) & (~main_bus_ack))) begin
+        if ((~main_tx_fifo_tx_fifo_full)) begin
+            main_tx_fifo_tx_fifo_wr_d <= main_bus_dat_w;
+            main_tx_fifo_tx_fifo_wren <= (~main_tx_reset);
+            main_wr_ack <= 1'd1;
         end else begin
-            main_basesoc_tx_fifo_tx_fifo_wren <= 1'd0;
-            main_basesoc_wr_ack <= 1'd0;
+            main_tx_fifo_tx_fifo_wren <= 1'd0;
+            main_wr_ack <= 1'd0;
         end
     end else begin
-        main_basesoc_tx_fifo_tx_fifo_wren <= 1'd0;
-        main_basesoc_wr_ack <= 1'd0;
+        main_tx_fifo_tx_fifo_wren <= 1'd0;
+        main_wr_ack <= 1'd0;
     end
-    if (main_basesoc_rx_ready_clear) begin
-        main_basesoc_rx_ready_pending <= 1'd0;
+    if (main_rx_ready_clear) begin
+        main_rx_ready_pending <= 1'd0;
     end
-    if (main_basesoc_rx_ready_trigger) begin
-        main_basesoc_rx_ready_pending <= 1'd1;
+    if (main_rx_ready_trigger) begin
+        main_rx_ready_pending <= 1'd1;
     end
-    if (main_basesoc_rx_error_clear) begin
-        main_basesoc_rx_error_pending <= 1'd0;
+    if (main_rx_error_clear) begin
+        main_rx_error_pending <= 1'd0;
     end
-    if (main_basesoc_rx_error_trigger) begin
-        main_basesoc_rx_error_pending <= 1'd1;
+    if (main_rx_error_trigger) begin
+        main_rx_error_pending <= 1'd1;
     end
-    if (main_basesoc_tx_ready_clear) begin
-        main_basesoc_tx_ready_pending <= 1'd0;
+    if (main_tx_ready_clear) begin
+        main_tx_ready_pending <= 1'd0;
     end
-    if (main_basesoc_tx_ready_trigger) begin
-        main_basesoc_tx_ready_pending <= 1'd1;
+    if (main_tx_ready_trigger) begin
+        main_tx_ready_pending <= 1'd1;
     end
-    if (main_basesoc_tx_error_clear) begin
-        main_basesoc_tx_error_pending <= 1'd0;
+    if (main_tx_error_clear) begin
+        main_tx_error_pending <= 1'd0;
     end
-    if (main_basesoc_tx_error_trigger) begin
-        main_basesoc_tx_error_pending <= 1'd1;
+    if (main_tx_error_trigger) begin
+        main_tx_error_pending <= 1'd1;
     end
-    if (main_basesoc_rx_fifo_rx_fifo_reset) begin
-        main_basesoc_rx_fifo_rx_fifo_rdcount <= 1'd0;
-        main_basesoc_rx_fifo_rx_fifo_wrcount <= 1'd0;
+    if (main_rx_fifo_rx_fifo_reset) begin
+        main_rx_fifo_rx_fifo_rdcount <= 1'd0;
+        main_rx_fifo_rx_fifo_wrcount <= 1'd0;
     end
-    if ((main_basesoc_rx_fifo_sink_ready & main_basesoc_rx_fifo_sink_valid)) begin
-        if ((main_basesoc_rx_fifo_rx_fifo_wrcount == 9'd511)) begin
-            main_basesoc_rx_fifo_rx_fifo_wrcount <= 1'd0;
+    if ((main_rx_fifo_sink_ready & main_rx_fifo_sink_valid)) begin
+        if ((main_rx_fifo_rx_fifo_wrcount == 9'd511)) begin
+            main_rx_fifo_rx_fifo_wrcount <= 1'd0;
         end else begin
-            main_basesoc_rx_fifo_rx_fifo_wrcount <= (main_basesoc_rx_fifo_rx_fifo_wrcount + 1'd1);
+            main_rx_fifo_rx_fifo_wrcount <= (main_rx_fifo_rx_fifo_wrcount + 1'd1);
         end
     end
-    if ((main_basesoc_rx_fifo_source_ready & main_basesoc_rx_fifo_source_valid)) begin
-        if ((main_basesoc_rx_fifo_rx_fifo_rdcount == 9'd511)) begin
-            main_basesoc_rx_fifo_rx_fifo_rdcount <= 1'd0;
+    if ((main_rx_fifo_source_ready & main_rx_fifo_source_valid)) begin
+        if ((main_rx_fifo_rx_fifo_rdcount == 9'd511)) begin
+            main_rx_fifo_rx_fifo_rdcount <= 1'd0;
         end else begin
-            main_basesoc_rx_fifo_rx_fifo_rdcount <= (main_basesoc_rx_fifo_rx_fifo_rdcount + 1'd1);
+            main_rx_fifo_rx_fifo_rdcount <= (main_rx_fifo_rx_fifo_rdcount + 1'd1);
         end
     end
-    if ((main_basesoc_rx_fifo_level0 <= 4'd8)) begin
-        main_basesoc_rx_fifo_rx_fifo_almostempty <= 1'd1;
+    if ((main_rx_fifo_level0 <= 4'd8)) begin
+        main_rx_fifo_rx_fifo_almostempty <= 1'd1;
     end else begin
-        main_basesoc_rx_fifo_rx_fifo_almostempty <= 1'd0;
+        main_rx_fifo_rx_fifo_almostempty <= 1'd0;
     end
-    if ((main_basesoc_rx_fifo_level0 >= 9'd256)) begin
-        main_basesoc_rx_fifo_rx_fifo_almostfull <= 1'd1;
+    if ((main_rx_fifo_level0 >= 9'd256)) begin
+        main_rx_fifo_rx_fifo_almostfull <= 1'd1;
     end else begin
-        main_basesoc_rx_fifo_rx_fifo_almostfull <= 1'd0;
+        main_rx_fifo_rx_fifo_almostfull <= 1'd0;
     end
-    if (((main_basesoc_rx_fifo_syncfifo_we & main_basesoc_rx_fifo_syncfifo_writable) & (~main_basesoc_rx_fifo_replace))) begin
-        main_basesoc_rx_fifo_produce <= (main_basesoc_rx_fifo_produce + 1'd1);
+    if (((main_rx_fifo_syncfifo_we & main_rx_fifo_syncfifo_writable) & (~main_rx_fifo_replace))) begin
+        main_rx_fifo_produce <= (main_rx_fifo_produce + 1'd1);
     end
-    if (main_basesoc_rx_fifo_do_read) begin
-        main_basesoc_rx_fifo_consume <= (main_basesoc_rx_fifo_consume + 1'd1);
+    if (main_rx_fifo_do_read) begin
+        main_rx_fifo_consume <= (main_rx_fifo_consume + 1'd1);
     end
-    if (((main_basesoc_rx_fifo_syncfifo_we & main_basesoc_rx_fifo_syncfifo_writable) & (~main_basesoc_rx_fifo_replace))) begin
-        if ((~main_basesoc_rx_fifo_do_read)) begin
-            main_basesoc_rx_fifo_level1 <= (main_basesoc_rx_fifo_level1 + 1'd1);
+    if (((main_rx_fifo_syncfifo_we & main_rx_fifo_syncfifo_writable) & (~main_rx_fifo_replace))) begin
+        if ((~main_rx_fifo_do_read)) begin
+            main_rx_fifo_level1 <= (main_rx_fifo_level1 + 1'd1);
         end
     end else begin
-        if (main_basesoc_rx_fifo_do_read) begin
-            main_basesoc_rx_fifo_level1 <= (main_basesoc_rx_fifo_level1 - 1'd1);
+        if (main_rx_fifo_do_read) begin
+            main_rx_fifo_level1 <= (main_rx_fifo_level1 - 1'd1);
         end
     end
-    if (main_basesoc_rx_fifo_reset) begin
-        main_basesoc_rx_fifo_level1 <= 10'd0;
-        main_basesoc_rx_fifo_produce <= 9'd0;
-        main_basesoc_rx_fifo_consume <= 9'd0;
+    if (main_rx_fifo_reset) begin
+        main_rx_fifo_level1 <= 10'd0;
+        main_rx_fifo_produce <= 9'd0;
+        main_rx_fifo_consume <= 9'd0;
     end
-    builder_basesoc_s7i2s_state <= builder_basesoc_s7i2s_next_state;
-    if (main_basesoc_rx_fsm_s7i2s_next_value_ce0) begin
-        main_basesoc_rx_fsm <= main_basesoc_rx_fsm_s7i2s_next_value0;
+    builder_basesoc_fsm0_state <= builder_basesoc_fsm0_next_state;
+    if (main_rx_fsm_fsm0_next_value_ce0) begin
+        main_rx_fsm <= main_rx_fsm_fsm0_next_value0;
     end
-    if (main_basesoc_rx_fifo_rx_fifo_wr_d_s7i2s_next_value_ce1) begin
-        main_basesoc_rx_fifo_rx_fifo_wr_d <= main_basesoc_rx_fifo_rx_fifo_wr_d_s7i2s_next_value1;
+    if (main_rx_fifo_rx_fifo_wr_d_fsm0_next_value_ce1) begin
+        main_rx_fifo_rx_fifo_wr_d <= main_rx_fifo_rx_fifo_wr_d_fsm0_next_value1;
     end
-    if (main_basesoc_rx_delay_cnt_s7i2s_t_next_value_ce) begin
-        main_basesoc_rx_delay_cnt <= main_basesoc_rx_delay_cnt_s7i2s_t_next_value;
+    if (main_rx_delay_cnt_fsm0_t_next_value_ce) begin
+        main_rx_delay_cnt <= main_rx_delay_cnt_fsm0_t_next_value;
     end
-    if (main_basesoc_rx_cnt_s7i2s_f_next_value_ce) begin
-        main_basesoc_rx_cnt <= main_basesoc_rx_cnt_s7i2s_f_next_value;
+    if (main_rx_cnt_fsm0_f_next_value_ce) begin
+        main_rx_cnt <= main_rx_cnt_fsm0_f_next_value;
     end
-    if (main_basesoc_tx_fifo_tx_fifo_reset) begin
-        main_basesoc_tx_fifo_tx_fifo_rdcount <= 1'd0;
-        main_basesoc_tx_fifo_tx_fifo_wrcount <= 1'd0;
+    if (main_tx_fifo_tx_fifo_reset) begin
+        main_tx_fifo_tx_fifo_rdcount <= 1'd0;
+        main_tx_fifo_tx_fifo_wrcount <= 1'd0;
     end
-    if ((main_basesoc_tx_fifo_sink_ready & main_basesoc_tx_fifo_sink_valid)) begin
-        if ((main_basesoc_tx_fifo_tx_fifo_wrcount == 9'd511)) begin
-            main_basesoc_tx_fifo_tx_fifo_wrcount <= 1'd0;
+    if ((main_tx_fifo_sink_ready & main_tx_fifo_sink_valid)) begin
+        if ((main_tx_fifo_tx_fifo_wrcount == 9'd511)) begin
+            main_tx_fifo_tx_fifo_wrcount <= 1'd0;
         end else begin
-            main_basesoc_tx_fifo_tx_fifo_wrcount <= (main_basesoc_tx_fifo_tx_fifo_wrcount + 1'd1);
+            main_tx_fifo_tx_fifo_wrcount <= (main_tx_fifo_tx_fifo_wrcount + 1'd1);
         end
     end
-    if ((main_basesoc_tx_fifo_source_ready & main_basesoc_tx_fifo_source_valid)) begin
-        if ((main_basesoc_tx_fifo_tx_fifo_rdcount == 9'd511)) begin
-            main_basesoc_tx_fifo_tx_fifo_rdcount <= 1'd0;
+    if ((main_tx_fifo_source_ready & main_tx_fifo_source_valid)) begin
+        if ((main_tx_fifo_tx_fifo_rdcount == 9'd511)) begin
+            main_tx_fifo_tx_fifo_rdcount <= 1'd0;
         end else begin
-            main_basesoc_tx_fifo_tx_fifo_rdcount <= (main_basesoc_tx_fifo_tx_fifo_rdcount + 1'd1);
+            main_tx_fifo_tx_fifo_rdcount <= (main_tx_fifo_tx_fifo_rdcount + 1'd1);
         end
     end
-    if ((main_basesoc_tx_fifo_level0 <= 9'd256)) begin
-        main_basesoc_tx_fifo_tx_fifo_almostempty <= 1'd1;
+    if ((main_tx_fifo_level0 <= 9'd256)) begin
+        main_tx_fifo_tx_fifo_almostempty <= 1'd1;
     end else begin
-        main_basesoc_tx_fifo_tx_fifo_almostempty <= 1'd0;
+        main_tx_fifo_tx_fifo_almostempty <= 1'd0;
     end
-    if ((main_basesoc_tx_fifo_level0 >= 9'd504)) begin
-        main_basesoc_tx_fifo_tx_fifo_almostfull <= 1'd1;
+    if ((main_tx_fifo_level0 >= 9'd504)) begin
+        main_tx_fifo_tx_fifo_almostfull <= 1'd1;
     end else begin
-        main_basesoc_tx_fifo_tx_fifo_almostfull <= 1'd0;
+        main_tx_fifo_tx_fifo_almostfull <= 1'd0;
     end
-    if (((main_basesoc_tx_fifo_syncfifo_we & main_basesoc_tx_fifo_syncfifo_writable) & (~main_basesoc_tx_fifo_replace))) begin
-        main_basesoc_tx_fifo_produce <= (main_basesoc_tx_fifo_produce + 1'd1);
+    if (((main_tx_fifo_syncfifo_we & main_tx_fifo_syncfifo_writable) & (~main_tx_fifo_replace))) begin
+        main_tx_fifo_produce <= (main_tx_fifo_produce + 1'd1);
     end
-    if (main_basesoc_tx_fifo_do_read) begin
-        main_basesoc_tx_fifo_consume <= (main_basesoc_tx_fifo_consume + 1'd1);
+    if (main_tx_fifo_do_read) begin
+        main_tx_fifo_consume <= (main_tx_fifo_consume + 1'd1);
     end
-    if (((main_basesoc_tx_fifo_syncfifo_we & main_basesoc_tx_fifo_syncfifo_writable) & (~main_basesoc_tx_fifo_replace))) begin
-        if ((~main_basesoc_tx_fifo_do_read)) begin
-            main_basesoc_tx_fifo_level1 <= (main_basesoc_tx_fifo_level1 + 1'd1);
+    if (((main_tx_fifo_syncfifo_we & main_tx_fifo_syncfifo_writable) & (~main_tx_fifo_replace))) begin
+        if ((~main_tx_fifo_do_read)) begin
+            main_tx_fifo_level1 <= (main_tx_fifo_level1 + 1'd1);
         end
     end else begin
-        if (main_basesoc_tx_fifo_do_read) begin
-            main_basesoc_tx_fifo_level1 <= (main_basesoc_tx_fifo_level1 - 1'd1);
+        if (main_tx_fifo_do_read) begin
+            main_tx_fifo_level1 <= (main_tx_fifo_level1 - 1'd1);
         end
     end
-    if (main_basesoc_tx_fifo_reset) begin
-        main_basesoc_tx_fifo_level1 <= 10'd0;
-        main_basesoc_tx_fifo_produce <= 9'd0;
-        main_basesoc_tx_fifo_consume <= 9'd0;
+    if (main_tx_fifo_reset) begin
+        main_tx_fifo_level1 <= 10'd0;
+        main_tx_fifo_produce <= 9'd0;
+        main_tx_fifo_consume <= 9'd0;
     end
-    main_basesoc_state <= main_basesoc_next_state;
-    if (main_basesoc_tx_cnt_t_next_value_ce0) begin
-        main_basesoc_tx_cnt <= main_basesoc_tx_cnt_t_next_value0;
+    builder_basesoc_fsm1_state <= builder_basesoc_fsm1_next_state;
+    if (main_tx_cnt_fsm1_t_next_value_ce0) begin
+        main_tx_cnt <= main_tx_cnt_fsm1_t_next_value0;
     end
-    if (main_basesoc_tx_buf_t_next_value_ce1) begin
-        main_basesoc_tx_buf <= main_basesoc_tx_buf_t_next_value1;
+    if (main_tx_buf_fsm1_t_next_value_ce1) begin
+        main_tx_buf <= main_tx_buf_fsm1_t_next_value1;
     end
-    if (main_basesoc_tx_pin_f_next_value_ce) begin
-        main_basesoc_tx_pin <= main_basesoc_tx_pin_f_next_value;
+    if (main_tx_pin_fsm1_f_next_value_ce) begin
+        main_tx_pin <= main_tx_pin_fsm1_f_next_value;
     end
-    main_basesoc_trigger_mem_graycounter0_q_binary <= main_basesoc_trigger_mem_graycounter0_q_next_binary;
-    main_basesoc_trigger_mem_graycounter0_q <= main_basesoc_trigger_mem_graycounter0_q_next;
-    main_basesoc_storage_cdc_graycounter1_q_binary <= main_basesoc_storage_cdc_graycounter1_q_next_binary;
-    main_basesoc_storage_cdc_graycounter1_q <= main_basesoc_storage_cdc_graycounter1_q_next;
-    if ((main_basesoc_storage_converter_source_valid & main_basesoc_storage_converter_source_ready)) begin
-        if (main_basesoc_storage_converter_last) begin
-            main_basesoc_storage_converter_mux <= 1'd0;
-        end else begin
-            main_basesoc_storage_converter_mux <= (main_basesoc_storage_converter_mux + 1'd1);
-        end
-    end
-    {main_basesoc_uartbone_phy_tx_tick, main_basesoc_uartbone_phy_tx_phase} <= 23'd4712192;
-    if (main_basesoc_uartbone_phy_tx_enable) begin
-        {main_basesoc_uartbone_phy_tx_tick, main_basesoc_uartbone_phy_tx_phase} <= (main_basesoc_uartbone_phy_tx_phase + 23'd4712192);
+    {main_uartbone_phy_tx_tick, main_uartbone_phy_tx_phase} <= 23'd4712192;
+    if (main_uartbone_phy_tx_enable) begin
+        {main_uartbone_phy_tx_tick, main_uartbone_phy_tx_phase} <= (main_uartbone_phy_tx_phase + 23'd4712192);
     end
     builder_basesoc_rs232phytx1_state <= builder_basesoc_rs232phytx1_next_state;
-    if (main_basesoc_uartbone_phy_tx_count_rs232phytx1_next_value_ce0) begin
-        main_basesoc_uartbone_phy_tx_count <= main_basesoc_uartbone_phy_tx_count_rs232phytx1_next_value0;
+    if (main_uartbone_phy_tx_count_rs232phytx1_next_value_ce0) begin
+        main_uartbone_phy_tx_count <= main_uartbone_phy_tx_count_rs232phytx1_next_value0;
     end
-    if (main_basesoc_serial_debug_tx_rs232phytx1_next_value_ce1) begin
-        serial_debug_tx <= main_basesoc_serial_debug_tx_rs232phytx1_next_value1;
+    if (main_serial_debug_tx_rs232phytx1_next_value_ce1) begin
+        serial_debug_tx <= main_serial_debug_tx_rs232phytx1_next_value1;
     end
-    if (main_basesoc_uartbone_phy_tx_data_rs232phytx1_next_value_ce2) begin
-        main_basesoc_uartbone_phy_tx_data <= main_basesoc_uartbone_phy_tx_data_rs232phytx1_next_value2;
+    if (main_uartbone_phy_tx_data_rs232phytx1_next_value_ce2) begin
+        main_uartbone_phy_tx_data <= main_uartbone_phy_tx_data_rs232phytx1_next_value2;
     end
-    main_basesoc_uartbone_phy_rx_rx_d <= main_basesoc_uartbone_phy_rx_rx;
-    {main_basesoc_uartbone_phy_rx_tick, main_basesoc_uartbone_phy_rx_phase} <= 32'd2147483648;
-    if (main_basesoc_uartbone_phy_rx_enable) begin
-        {main_basesoc_uartbone_phy_rx_tick, main_basesoc_uartbone_phy_rx_phase} <= (main_basesoc_uartbone_phy_rx_phase + 23'd4712192);
+    main_uartbone_phy_rx_rx_d <= main_uartbone_phy_rx_rx;
+    {main_uartbone_phy_rx_tick, main_uartbone_phy_rx_phase} <= 32'd2147483648;
+    if (main_uartbone_phy_rx_enable) begin
+        {main_uartbone_phy_rx_tick, main_uartbone_phy_rx_phase} <= (main_uartbone_phy_rx_phase + 23'd4712192);
     end
     builder_basesoc_rs232phyrx1_state <= builder_basesoc_rs232phyrx1_next_state;
-    if (main_basesoc_uartbone_phy_rx_count_rs232phyrx1_next_value_ce0) begin
-        main_basesoc_uartbone_phy_rx_count <= main_basesoc_uartbone_phy_rx_count_rs232phyrx1_next_value0;
+    if (main_uartbone_phy_rx_count_rs232phyrx1_next_value_ce0) begin
+        main_uartbone_phy_rx_count <= main_uartbone_phy_rx_count_rs232phyrx1_next_value0;
     end
-    if (main_basesoc_uartbone_phy_rx_data_rs232phyrx1_next_value_ce1) begin
-        main_basesoc_uartbone_phy_rx_data <= main_basesoc_uartbone_phy_rx_data_rs232phyrx1_next_value1;
+    if (main_uartbone_phy_rx_data_rs232phyrx1_next_value_ce1) begin
+        main_uartbone_phy_rx_data <= main_uartbone_phy_rx_data_rs232phyrx1_next_value1;
     end
     builder_basesoc_uartbone_state <= builder_basesoc_uartbone_next_state;
-    if (main_basesoc_uartbone_data_bytes_count_uartbone_next_value_ce0) begin
-        main_basesoc_uartbone_data_bytes_count <= main_basesoc_uartbone_data_bytes_count_uartbone_next_value0;
+    if (main_uartbone_data_bytes_count_uartbone_next_value_ce0) begin
+        main_uartbone_data_bytes_count <= main_uartbone_data_bytes_count_uartbone_next_value0;
     end
-    if (main_basesoc_uartbone_addr_bytes_count_uartbone_next_value_ce1) begin
-        main_basesoc_uartbone_addr_bytes_count <= main_basesoc_uartbone_addr_bytes_count_uartbone_next_value1;
+    if (main_uartbone_addr_bytes_count_uartbone_next_value_ce1) begin
+        main_uartbone_addr_bytes_count <= main_uartbone_addr_bytes_count_uartbone_next_value1;
     end
-    if (main_basesoc_uartbone_words_count_uartbone_next_value_ce2) begin
-        main_basesoc_uartbone_words_count <= main_basesoc_uartbone_words_count_uartbone_next_value2;
+    if (main_uartbone_words_count_uartbone_next_value_ce2) begin
+        main_uartbone_words_count <= main_uartbone_words_count_uartbone_next_value2;
     end
-    if (main_basesoc_uartbone_cmd_uartbone_next_value_ce3) begin
-        main_basesoc_uartbone_cmd <= main_basesoc_uartbone_cmd_uartbone_next_value3;
+    if (main_uartbone_cmd_uartbone_next_value_ce3) begin
+        main_uartbone_cmd <= main_uartbone_cmd_uartbone_next_value3;
     end
-    if (main_basesoc_uartbone_length_uartbone_next_value_ce4) begin
-        main_basesoc_uartbone_length <= main_basesoc_uartbone_length_uartbone_next_value4;
+    if (main_uartbone_length_uartbone_next_value_ce4) begin
+        main_uartbone_length <= main_uartbone_length_uartbone_next_value4;
     end
-    if (main_basesoc_uartbone_address_uartbone_next_value_ce5) begin
-        main_basesoc_uartbone_address <= main_basesoc_uartbone_address_uartbone_next_value5;
+    if (main_uartbone_address_uartbone_next_value_ce5) begin
+        main_uartbone_address <= main_uartbone_address_uartbone_next_value5;
     end
-    if (main_basesoc_uartbone_incr_uartbone_next_value_ce6) begin
-        main_basesoc_uartbone_incr <= main_basesoc_uartbone_incr_uartbone_next_value6;
+    if (main_uartbone_incr_uartbone_next_value_ce6) begin
+        main_uartbone_incr <= main_uartbone_incr_uartbone_next_value6;
     end
-    if (main_basesoc_uartbone_data_uartbone_next_value_ce7) begin
-        main_basesoc_uartbone_data <= main_basesoc_uartbone_data_uartbone_next_value7;
+    if (main_uartbone_data_uartbone_next_value_ce7) begin
+        main_uartbone_data <= main_uartbone_data_uartbone_next_value7;
     end
-    if (main_basesoc_uartbone_reset) begin
-        main_basesoc_uartbone_incr <= 1'd0;
+    if (main_uartbone_reset) begin
+        main_uartbone_incr <= 1'd0;
         builder_basesoc_uartbone_state <= 3'd0;
     end
-    if (main_basesoc_uartbone_wait) begin
-        if ((~main_basesoc_uartbone_done)) begin
-            main_basesoc_uartbone_count <= (main_basesoc_uartbone_count - 1'd1);
+    if (main_uartbone_wait) begin
+        if ((~main_uartbone_done)) begin
+            main_uartbone_count <= (main_uartbone_count - 1'd1);
         end
     end else begin
-        main_basesoc_uartbone_count <= 24'd10500000;
+        main_uartbone_count <= 24'd10500000;
     end
     builder_basesoc_wishbone2csr_state <= builder_basesoc_wishbone2csr_next_state;
     if (builder_basesoc_dat_w_wishbone2csr_next_value_ce0) begin
@@ -7477,577 +6590,454 @@ always @(posedge sys_clk) begin
     if (builder_csr_bankarray_csrbank0_sel) begin
         case (builder_csr_bankarray_interface0_bank_bus_adr[8:0])
             1'd0: begin
-                builder_csr_bankarray_interface0_bank_bus_dat_r <= builder_csr_bankarray_csrbank0_mux_value0_w;
+                builder_csr_bankarray_interface0_bank_bus_dat_r <= builder_csr_bankarray_csrbank0_reset0_w;
             end
             1'd1: begin
-                builder_csr_bankarray_interface0_bank_bus_dat_r <= builder_csr_bankarray_csrbank0_trigger_enable0_w;
+                builder_csr_bankarray_interface0_bank_bus_dat_r <= builder_csr_bankarray_csrbank0_scratch0_w;
             end
             2'd2: begin
-                builder_csr_bankarray_interface0_bank_bus_dat_r <= builder_csr_bankarray_csrbank0_trigger_done_w;
-            end
-            2'd3: begin
-                builder_csr_bankarray_interface0_bank_bus_dat_r <= main_basesoc_trigger_mem_write_w;
-            end
-            3'd4: begin
-                builder_csr_bankarray_interface0_bank_bus_dat_r <= builder_csr_bankarray_csrbank0_trigger_mem_mask1_w;
-            end
-            3'd5: begin
-                builder_csr_bankarray_interface0_bank_bus_dat_r <= builder_csr_bankarray_csrbank0_trigger_mem_mask0_w;
-            end
-            3'd6: begin
-                builder_csr_bankarray_interface0_bank_bus_dat_r <= builder_csr_bankarray_csrbank0_trigger_mem_value1_w;
-            end
-            3'd7: begin
-                builder_csr_bankarray_interface0_bank_bus_dat_r <= builder_csr_bankarray_csrbank0_trigger_mem_value0_w;
-            end
-            4'd8: begin
-                builder_csr_bankarray_interface0_bank_bus_dat_r <= builder_csr_bankarray_csrbank0_trigger_mem_full_w;
-            end
-            4'd9: begin
-                builder_csr_bankarray_interface0_bank_bus_dat_r <= builder_csr_bankarray_csrbank0_subsampler_value0_w;
-            end
-            4'd10: begin
-                builder_csr_bankarray_interface0_bank_bus_dat_r <= builder_csr_bankarray_csrbank0_storage_enable0_w;
-            end
-            4'd11: begin
-                builder_csr_bankarray_interface0_bank_bus_dat_r <= builder_csr_bankarray_csrbank0_storage_done_w;
-            end
-            4'd12: begin
-                builder_csr_bankarray_interface0_bank_bus_dat_r <= builder_csr_bankarray_csrbank0_storage_length0_w;
-            end
-            4'd13: begin
-                builder_csr_bankarray_interface0_bank_bus_dat_r <= builder_csr_bankarray_csrbank0_storage_offset0_w;
-            end
-            4'd14: begin
-                builder_csr_bankarray_interface0_bank_bus_dat_r <= builder_csr_bankarray_csrbank0_storage_mem_level_w;
-            end
-            4'd15: begin
-                builder_csr_bankarray_interface0_bank_bus_dat_r <= builder_csr_bankarray_csrbank0_storage_mem_data_w;
+                builder_csr_bankarray_interface0_bank_bus_dat_r <= builder_csr_bankarray_csrbank0_bus_errors_w;
             end
         endcase
     end
-    if (builder_csr_bankarray_csrbank0_mux_value0_re) begin
-        main_basesoc_mux_value_storage <= builder_csr_bankarray_csrbank0_mux_value0_r;
-    end
-    main_basesoc_mux_value_re <= builder_csr_bankarray_csrbank0_mux_value0_re;
-    if (builder_csr_bankarray_csrbank0_trigger_enable0_re) begin
-        main_basesoc_trigger_enable_storage <= builder_csr_bankarray_csrbank0_trigger_enable0_r;
-    end
-    main_basesoc_trigger_enable_re <= builder_csr_bankarray_csrbank0_trigger_enable0_re;
-    main_basesoc_trigger_done_re <= builder_csr_bankarray_csrbank0_trigger_done_re;
-    if (builder_csr_bankarray_csrbank0_trigger_mem_mask1_re) begin
-        main_basesoc_trigger_mem_mask_storage[46:32] <= builder_csr_bankarray_csrbank0_trigger_mem_mask1_r;
-    end
-    if (builder_csr_bankarray_csrbank0_trigger_mem_mask0_re) begin
-        main_basesoc_trigger_mem_mask_storage[31:0] <= builder_csr_bankarray_csrbank0_trigger_mem_mask0_r;
-    end
-    main_basesoc_trigger_mem_mask_re <= builder_csr_bankarray_csrbank0_trigger_mem_mask0_re;
-    if (builder_csr_bankarray_csrbank0_trigger_mem_value1_re) begin
-        main_basesoc_trigger_mem_value_storage[46:32] <= builder_csr_bankarray_csrbank0_trigger_mem_value1_r;
-    end
-    if (builder_csr_bankarray_csrbank0_trigger_mem_value0_re) begin
-        main_basesoc_trigger_mem_value_storage[31:0] <= builder_csr_bankarray_csrbank0_trigger_mem_value0_r;
-    end
-    main_basesoc_trigger_mem_value_re <= builder_csr_bankarray_csrbank0_trigger_mem_value0_re;
-    main_basesoc_trigger_mem_full_re <= builder_csr_bankarray_csrbank0_trigger_mem_full_re;
-    if (builder_csr_bankarray_csrbank0_subsampler_value0_re) begin
-        main_basesoc_subsampler_value_storage[15:0] <= builder_csr_bankarray_csrbank0_subsampler_value0_r;
-    end
-    main_basesoc_subsampler_value_re <= builder_csr_bankarray_csrbank0_subsampler_value0_re;
-    if (builder_csr_bankarray_csrbank0_storage_enable0_re) begin
-        main_basesoc_storage_enable_storage <= builder_csr_bankarray_csrbank0_storage_enable0_r;
-    end
-    main_basesoc_storage_enable_re <= builder_csr_bankarray_csrbank0_storage_enable0_re;
-    main_basesoc_storage_done_re <= builder_csr_bankarray_csrbank0_storage_done_re;
-    if (builder_csr_bankarray_csrbank0_storage_length0_re) begin
-        main_basesoc_storage_length_storage[10:0] <= builder_csr_bankarray_csrbank0_storage_length0_r;
-    end
-    main_basesoc_storage_length_re <= builder_csr_bankarray_csrbank0_storage_length0_re;
-    if (builder_csr_bankarray_csrbank0_storage_offset0_re) begin
-        main_basesoc_storage_offset_storage[10:0] <= builder_csr_bankarray_csrbank0_storage_offset0_r;
-    end
-    main_basesoc_storage_offset_re <= builder_csr_bankarray_csrbank0_storage_offset0_re;
-    main_basesoc_storage_mem_level_re <= builder_csr_bankarray_csrbank0_storage_mem_level_re;
-    main_basesoc_storage_mem_data_re <= builder_csr_bankarray_csrbank0_storage_mem_data_re;
     builder_csr_bankarray_interface1_bank_bus_dat_r <= 1'd0;
     if (builder_csr_bankarray_csrbank1_sel) begin
         case (builder_csr_bankarray_interface1_bank_bus_adr[8:0])
             1'd0: begin
-                builder_csr_bankarray_interface1_bank_bus_dat_r <= builder_csr_bankarray_csrbank1_reset0_w;
+                builder_csr_bankarray_interface1_bank_bus_dat_r <= builder_csr_bankarray_csrbank1_ev_status_w;
             end
             1'd1: begin
-                builder_csr_bankarray_interface1_bank_bus_dat_r <= builder_csr_bankarray_csrbank1_scratch0_w;
+                builder_csr_bankarray_interface1_bank_bus_dat_r <= builder_csr_bankarray_csrbank1_ev_pending_w;
             end
             2'd2: begin
-                builder_csr_bankarray_interface1_bank_bus_dat_r <= builder_csr_bankarray_csrbank1_bus_errors_w;
+                builder_csr_bankarray_interface1_bank_bus_dat_r <= builder_csr_bankarray_csrbank1_ev_enable0_w;
+            end
+            2'd3: begin
+                builder_csr_bankarray_interface1_bank_bus_dat_r <= builder_csr_bankarray_csrbank1_rx_ctl0_w;
+            end
+            3'd4: begin
+                builder_csr_bankarray_interface1_bank_bus_dat_r <= builder_csr_bankarray_csrbank1_rx_stat_w;
+            end
+            3'd5: begin
+                builder_csr_bankarray_interface1_bank_bus_dat_r <= builder_csr_bankarray_csrbank1_rx_conf_w;
+            end
+            3'd6: begin
+                builder_csr_bankarray_interface1_bank_bus_dat_r <= builder_csr_bankarray_csrbank1_tx_ctl0_w;
+            end
+            3'd7: begin
+                builder_csr_bankarray_interface1_bank_bus_dat_r <= builder_csr_bankarray_csrbank1_tx_stat_w;
+            end
+            4'd8: begin
+                builder_csr_bankarray_interface1_bank_bus_dat_r <= builder_csr_bankarray_csrbank1_tx_conf_w;
             end
         endcase
     end
+    main_status_re <= builder_csr_bankarray_csrbank1_ev_status_re;
+    if (builder_csr_bankarray_csrbank1_ev_pending_re) begin
+        main_pending_r[3:0] <= builder_csr_bankarray_csrbank1_ev_pending_r;
+    end
+    main_pending_re <= builder_csr_bankarray_csrbank1_ev_pending_re;
+    if (builder_csr_bankarray_csrbank1_ev_enable0_re) begin
+        main_enable_storage[3:0] <= builder_csr_bankarray_csrbank1_ev_enable0_r;
+    end
+    main_enable_re <= builder_csr_bankarray_csrbank1_ev_enable0_re;
+    if (builder_csr_bankarray_csrbank1_rx_ctl0_re) begin
+        main_rx_ctl_storage[1:0] <= builder_csr_bankarray_csrbank1_rx_ctl0_r;
+    end
+    main_rx_ctl_re <= builder_csr_bankarray_csrbank1_rx_ctl0_re;
+    main_rx_stat_re <= builder_csr_bankarray_csrbank1_rx_stat_re;
+    main_rx_conf_re <= builder_csr_bankarray_csrbank1_rx_conf_re;
+    if (builder_csr_bankarray_csrbank1_tx_ctl0_re) begin
+        main_tx_ctl_storage[1:0] <= builder_csr_bankarray_csrbank1_tx_ctl0_r;
+    end
+    main_tx_ctl_re <= builder_csr_bankarray_csrbank1_tx_ctl0_re;
+    main_tx_stat_re <= builder_csr_bankarray_csrbank1_tx_stat_re;
+    main_tx_conf_re <= builder_csr_bankarray_csrbank1_tx_conf_re;
+    builder_csr_bankarray_sel_r <= builder_csr_bankarray_sel;
     builder_csr_bankarray_interface2_bank_bus_dat_r <= 1'd0;
     if (builder_csr_bankarray_csrbank2_sel) begin
         case (builder_csr_bankarray_interface2_bank_bus_adr[8:0])
             1'd0: begin
-                builder_csr_bankarray_interface2_bank_bus_dat_r <= builder_csr_bankarray_csrbank2_ev_status_w;
-            end
-            1'd1: begin
-                builder_csr_bankarray_interface2_bank_bus_dat_r <= builder_csr_bankarray_csrbank2_ev_pending_w;
-            end
-            2'd2: begin
-                builder_csr_bankarray_interface2_bank_bus_dat_r <= builder_csr_bankarray_csrbank2_ev_enable0_w;
-            end
-            2'd3: begin
-                builder_csr_bankarray_interface2_bank_bus_dat_r <= builder_csr_bankarray_csrbank2_rx_ctl0_w;
-            end
-            3'd4: begin
-                builder_csr_bankarray_interface2_bank_bus_dat_r <= builder_csr_bankarray_csrbank2_rx_stat_w;
-            end
-            3'd5: begin
-                builder_csr_bankarray_interface2_bank_bus_dat_r <= builder_csr_bankarray_csrbank2_rx_conf_w;
-            end
-            3'd6: begin
-                builder_csr_bankarray_interface2_bank_bus_dat_r <= builder_csr_bankarray_csrbank2_tx_ctl0_w;
-            end
-            3'd7: begin
-                builder_csr_bankarray_interface2_bank_bus_dat_r <= builder_csr_bankarray_csrbank2_tx_stat_w;
-            end
-            4'd8: begin
-                builder_csr_bankarray_interface2_bank_bus_dat_r <= builder_csr_bankarray_csrbank2_tx_conf_w;
+                builder_csr_bankarray_interface2_bank_bus_dat_r <= builder_csr_bankarray_csrbank2_out0_w;
             end
         endcase
     end
-    main_basesoc_status_re <= builder_csr_bankarray_csrbank2_ev_status_re;
-    if (builder_csr_bankarray_csrbank2_ev_pending_re) begin
-        main_basesoc_pending_r[3:0] <= builder_csr_bankarray_csrbank2_ev_pending_r;
+    if (builder_csr_bankarray_csrbank2_out0_re) begin
+        main_storage <= builder_csr_bankarray_csrbank2_out0_r;
     end
-    main_basesoc_pending_re <= builder_csr_bankarray_csrbank2_ev_pending_re;
-    if (builder_csr_bankarray_csrbank2_ev_enable0_re) begin
-        main_basesoc_enable_storage[3:0] <= builder_csr_bankarray_csrbank2_ev_enable0_r;
-    end
-    main_basesoc_enable_re <= builder_csr_bankarray_csrbank2_ev_enable0_re;
-    if (builder_csr_bankarray_csrbank2_rx_ctl0_re) begin
-        main_basesoc_rx_ctl_storage[1:0] <= builder_csr_bankarray_csrbank2_rx_ctl0_r;
-    end
-    main_basesoc_rx_ctl_re <= builder_csr_bankarray_csrbank2_rx_ctl0_re;
-    main_basesoc_rx_stat_re <= builder_csr_bankarray_csrbank2_rx_stat_re;
-    main_basesoc_rx_conf_re <= builder_csr_bankarray_csrbank2_rx_conf_re;
-    if (builder_csr_bankarray_csrbank2_tx_ctl0_re) begin
-        main_basesoc_tx_ctl_storage[1:0] <= builder_csr_bankarray_csrbank2_tx_ctl0_r;
-    end
-    main_basesoc_tx_ctl_re <= builder_csr_bankarray_csrbank2_tx_ctl0_re;
-    main_basesoc_tx_stat_re <= builder_csr_bankarray_csrbank2_tx_stat_re;
-    main_basesoc_tx_conf_re <= builder_csr_bankarray_csrbank2_tx_conf_re;
-    builder_csr_bankarray_sel_r <= builder_csr_bankarray_sel;
+    main_re <= builder_csr_bankarray_csrbank2_out0_re;
     builder_csr_bankarray_interface3_bank_bus_dat_r <= 1'd0;
     if (builder_csr_bankarray_csrbank3_sel) begin
         case (builder_csr_bankarray_interface3_bank_bus_adr[8:0])
             1'd0: begin
-                builder_csr_bankarray_interface3_bank_bus_dat_r <= builder_csr_bankarray_csrbank3_out0_w;
+                builder_csr_bankarray_interface3_bank_bus_dat_r <= builder_csr_bankarray_csrbank3_dfii_control0_w;
+            end
+            1'd1: begin
+                builder_csr_bankarray_interface3_bank_bus_dat_r <= builder_csr_bankarray_csrbank3_dfii_pi0_command0_w;
+            end
+            2'd2: begin
+                builder_csr_bankarray_interface3_bank_bus_dat_r <= main_sdram_command_issue_w;
+            end
+            2'd3: begin
+                builder_csr_bankarray_interface3_bank_bus_dat_r <= builder_csr_bankarray_csrbank3_dfii_pi0_address0_w;
+            end
+            3'd4: begin
+                builder_csr_bankarray_interface3_bank_bus_dat_r <= builder_csr_bankarray_csrbank3_dfii_pi0_baddress0_w;
+            end
+            3'd5: begin
+                builder_csr_bankarray_interface3_bank_bus_dat_r <= builder_csr_bankarray_csrbank3_dfii_pi0_wrdata0_w;
+            end
+            3'd6: begin
+                builder_csr_bankarray_interface3_bank_bus_dat_r <= builder_csr_bankarray_csrbank3_dfii_pi0_rddata_w;
             end
         endcase
     end
-    if (builder_csr_bankarray_csrbank3_out0_re) begin
-        main_storage <= builder_csr_bankarray_csrbank3_out0_r;
+    if (builder_csr_bankarray_csrbank3_dfii_control0_re) begin
+        main_sdram_storage[3:0] <= builder_csr_bankarray_csrbank3_dfii_control0_r;
     end
-    main_re <= builder_csr_bankarray_csrbank3_out0_re;
+    main_sdram_re <= builder_csr_bankarray_csrbank3_dfii_control0_re;
+    if (builder_csr_bankarray_csrbank3_dfii_pi0_command0_re) begin
+        main_sdram_command_storage[5:0] <= builder_csr_bankarray_csrbank3_dfii_pi0_command0_r;
+    end
+    main_sdram_command_re <= builder_csr_bankarray_csrbank3_dfii_pi0_command0_re;
+    if (builder_csr_bankarray_csrbank3_dfii_pi0_address0_re) begin
+        main_sdram_address_storage[12:0] <= builder_csr_bankarray_csrbank3_dfii_pi0_address0_r;
+    end
+    main_sdram_address_re <= builder_csr_bankarray_csrbank3_dfii_pi0_address0_re;
+    if (builder_csr_bankarray_csrbank3_dfii_pi0_baddress0_re) begin
+        main_sdram_baddress_storage[1:0] <= builder_csr_bankarray_csrbank3_dfii_pi0_baddress0_r;
+    end
+    main_sdram_baddress_re <= builder_csr_bankarray_csrbank3_dfii_pi0_baddress0_re;
+    if (builder_csr_bankarray_csrbank3_dfii_pi0_wrdata0_re) begin
+        main_sdram_wrdata_storage[15:0] <= builder_csr_bankarray_csrbank3_dfii_pi0_wrdata0_r;
+    end
+    main_sdram_wrdata_re <= builder_csr_bankarray_csrbank3_dfii_pi0_wrdata0_re;
+    main_sdram_rddata_re <= builder_csr_bankarray_csrbank3_dfii_pi0_rddata_re;
     builder_csr_bankarray_interface4_bank_bus_dat_r <= 1'd0;
     if (builder_csr_bankarray_csrbank4_sel) begin
         case (builder_csr_bankarray_interface4_bank_bus_adr[8:0])
             1'd0: begin
-                builder_csr_bankarray_interface4_bank_bus_dat_r <= builder_csr_bankarray_csrbank4_dfii_control0_w;
+                builder_csr_bankarray_interface4_bank_bus_dat_r <= builder_csr_bankarray_csrbank4_load0_w;
             end
             1'd1: begin
-                builder_csr_bankarray_interface4_bank_bus_dat_r <= builder_csr_bankarray_csrbank4_dfii_pi0_command0_w;
+                builder_csr_bankarray_interface4_bank_bus_dat_r <= builder_csr_bankarray_csrbank4_reload0_w;
             end
             2'd2: begin
-                builder_csr_bankarray_interface4_bank_bus_dat_r <= main_basesoc_sdram_command_issue_w;
+                builder_csr_bankarray_interface4_bank_bus_dat_r <= builder_csr_bankarray_csrbank4_en0_w;
             end
             2'd3: begin
-                builder_csr_bankarray_interface4_bank_bus_dat_r <= builder_csr_bankarray_csrbank4_dfii_pi0_address0_w;
+                builder_csr_bankarray_interface4_bank_bus_dat_r <= builder_csr_bankarray_csrbank4_update_value0_w;
             end
             3'd4: begin
-                builder_csr_bankarray_interface4_bank_bus_dat_r <= builder_csr_bankarray_csrbank4_dfii_pi0_baddress0_w;
+                builder_csr_bankarray_interface4_bank_bus_dat_r <= builder_csr_bankarray_csrbank4_value_w;
             end
             3'd5: begin
-                builder_csr_bankarray_interface4_bank_bus_dat_r <= builder_csr_bankarray_csrbank4_dfii_pi0_wrdata0_w;
+                builder_csr_bankarray_interface4_bank_bus_dat_r <= builder_csr_bankarray_csrbank4_ev_status_w;
             end
             3'd6: begin
-                builder_csr_bankarray_interface4_bank_bus_dat_r <= builder_csr_bankarray_csrbank4_dfii_pi0_rddata_w;
+                builder_csr_bankarray_interface4_bank_bus_dat_r <= builder_csr_bankarray_csrbank4_ev_pending_w;
+            end
+            3'd7: begin
+                builder_csr_bankarray_interface4_bank_bus_dat_r <= builder_csr_bankarray_csrbank4_ev_enable0_w;
             end
         endcase
     end
-    if (builder_csr_bankarray_csrbank4_dfii_control0_re) begin
-        main_basesoc_sdram_storage[3:0] <= builder_csr_bankarray_csrbank4_dfii_control0_r;
+    if (builder_csr_bankarray_csrbank4_load0_re) begin
+        main_basesoc_timer_load_storage[31:0] <= builder_csr_bankarray_csrbank4_load0_r;
     end
-    main_basesoc_sdram_re <= builder_csr_bankarray_csrbank4_dfii_control0_re;
-    if (builder_csr_bankarray_csrbank4_dfii_pi0_command0_re) begin
-        main_basesoc_sdram_command_storage[5:0] <= builder_csr_bankarray_csrbank4_dfii_pi0_command0_r;
+    main_basesoc_timer_load_re <= builder_csr_bankarray_csrbank4_load0_re;
+    if (builder_csr_bankarray_csrbank4_reload0_re) begin
+        main_basesoc_timer_reload_storage[31:0] <= builder_csr_bankarray_csrbank4_reload0_r;
     end
-    main_basesoc_sdram_command_re <= builder_csr_bankarray_csrbank4_dfii_pi0_command0_re;
-    if (builder_csr_bankarray_csrbank4_dfii_pi0_address0_re) begin
-        main_basesoc_sdram_address_storage[12:0] <= builder_csr_bankarray_csrbank4_dfii_pi0_address0_r;
+    main_basesoc_timer_reload_re <= builder_csr_bankarray_csrbank4_reload0_re;
+    if (builder_csr_bankarray_csrbank4_en0_re) begin
+        main_basesoc_timer_en_storage <= builder_csr_bankarray_csrbank4_en0_r;
     end
-    main_basesoc_sdram_address_re <= builder_csr_bankarray_csrbank4_dfii_pi0_address0_re;
-    if (builder_csr_bankarray_csrbank4_dfii_pi0_baddress0_re) begin
-        main_basesoc_sdram_baddress_storage[1:0] <= builder_csr_bankarray_csrbank4_dfii_pi0_baddress0_r;
+    main_basesoc_timer_en_re <= builder_csr_bankarray_csrbank4_en0_re;
+    if (builder_csr_bankarray_csrbank4_update_value0_re) begin
+        main_basesoc_timer_update_value_storage <= builder_csr_bankarray_csrbank4_update_value0_r;
     end
-    main_basesoc_sdram_baddress_re <= builder_csr_bankarray_csrbank4_dfii_pi0_baddress0_re;
-    if (builder_csr_bankarray_csrbank4_dfii_pi0_wrdata0_re) begin
-        main_basesoc_sdram_wrdata_storage[15:0] <= builder_csr_bankarray_csrbank4_dfii_pi0_wrdata0_r;
+    main_basesoc_timer_update_value_re <= builder_csr_bankarray_csrbank4_update_value0_re;
+    main_basesoc_timer_value_re <= builder_csr_bankarray_csrbank4_value_re;
+    main_basesoc_timer_status_re <= builder_csr_bankarray_csrbank4_ev_status_re;
+    if (builder_csr_bankarray_csrbank4_ev_pending_re) begin
+        main_basesoc_timer_pending_r <= builder_csr_bankarray_csrbank4_ev_pending_r;
     end
-    main_basesoc_sdram_wrdata_re <= builder_csr_bankarray_csrbank4_dfii_pi0_wrdata0_re;
-    main_basesoc_sdram_rddata_re <= builder_csr_bankarray_csrbank4_dfii_pi0_rddata_re;
+    main_basesoc_timer_pending_re <= builder_csr_bankarray_csrbank4_ev_pending_re;
+    if (builder_csr_bankarray_csrbank4_ev_enable0_re) begin
+        main_basesoc_timer_enable_storage <= builder_csr_bankarray_csrbank4_ev_enable0_r;
+    end
+    main_basesoc_timer_enable_re <= builder_csr_bankarray_csrbank4_ev_enable0_re;
     builder_csr_bankarray_interface5_bank_bus_dat_r <= 1'd0;
     if (builder_csr_bankarray_csrbank5_sel) begin
         case (builder_csr_bankarray_interface5_bank_bus_adr[8:0])
             1'd0: begin
-                builder_csr_bankarray_interface5_bank_bus_dat_r <= builder_csr_bankarray_csrbank5_load0_w;
+                builder_csr_bankarray_interface5_bank_bus_dat_r <= main_basesoc_uart_rxtx_w;
             end
             1'd1: begin
-                builder_csr_bankarray_interface5_bank_bus_dat_r <= builder_csr_bankarray_csrbank5_reload0_w;
+                builder_csr_bankarray_interface5_bank_bus_dat_r <= builder_csr_bankarray_csrbank5_txfull_w;
             end
             2'd2: begin
-                builder_csr_bankarray_interface5_bank_bus_dat_r <= builder_csr_bankarray_csrbank5_en0_w;
+                builder_csr_bankarray_interface5_bank_bus_dat_r <= builder_csr_bankarray_csrbank5_rxempty_w;
             end
             2'd3: begin
-                builder_csr_bankarray_interface5_bank_bus_dat_r <= builder_csr_bankarray_csrbank5_update_value0_w;
-            end
-            3'd4: begin
-                builder_csr_bankarray_interface5_bank_bus_dat_r <= builder_csr_bankarray_csrbank5_value_w;
-            end
-            3'd5: begin
                 builder_csr_bankarray_interface5_bank_bus_dat_r <= builder_csr_bankarray_csrbank5_ev_status_w;
             end
-            3'd6: begin
+            3'd4: begin
                 builder_csr_bankarray_interface5_bank_bus_dat_r <= builder_csr_bankarray_csrbank5_ev_pending_w;
             end
-            3'd7: begin
+            3'd5: begin
                 builder_csr_bankarray_interface5_bank_bus_dat_r <= builder_csr_bankarray_csrbank5_ev_enable0_w;
             end
-        endcase
-    end
-    if (builder_csr_bankarray_csrbank5_load0_re) begin
-        main_basesoc_basesoc_timer_load_storage[31:0] <= builder_csr_bankarray_csrbank5_load0_r;
-    end
-    main_basesoc_basesoc_timer_load_re <= builder_csr_bankarray_csrbank5_load0_re;
-    if (builder_csr_bankarray_csrbank5_reload0_re) begin
-        main_basesoc_basesoc_timer_reload_storage[31:0] <= builder_csr_bankarray_csrbank5_reload0_r;
-    end
-    main_basesoc_basesoc_timer_reload_re <= builder_csr_bankarray_csrbank5_reload0_re;
-    if (builder_csr_bankarray_csrbank5_en0_re) begin
-        main_basesoc_basesoc_timer_en_storage <= builder_csr_bankarray_csrbank5_en0_r;
-    end
-    main_basesoc_basesoc_timer_en_re <= builder_csr_bankarray_csrbank5_en0_re;
-    if (builder_csr_bankarray_csrbank5_update_value0_re) begin
-        main_basesoc_basesoc_timer_update_value_storage <= builder_csr_bankarray_csrbank5_update_value0_r;
-    end
-    main_basesoc_basesoc_timer_update_value_re <= builder_csr_bankarray_csrbank5_update_value0_re;
-    main_basesoc_basesoc_timer_value_re <= builder_csr_bankarray_csrbank5_value_re;
-    main_basesoc_basesoc_timer_status_re <= builder_csr_bankarray_csrbank5_ev_status_re;
-    if (builder_csr_bankarray_csrbank5_ev_pending_re) begin
-        main_basesoc_basesoc_timer_pending_r <= builder_csr_bankarray_csrbank5_ev_pending_r;
-    end
-    main_basesoc_basesoc_timer_pending_re <= builder_csr_bankarray_csrbank5_ev_pending_re;
-    if (builder_csr_bankarray_csrbank5_ev_enable0_re) begin
-        main_basesoc_basesoc_timer_enable_storage <= builder_csr_bankarray_csrbank5_ev_enable0_r;
-    end
-    main_basesoc_basesoc_timer_enable_re <= builder_csr_bankarray_csrbank5_ev_enable0_re;
-    builder_csr_bankarray_interface6_bank_bus_dat_r <= 1'd0;
-    if (builder_csr_bankarray_csrbank6_sel) begin
-        case (builder_csr_bankarray_interface6_bank_bus_adr[8:0])
-            1'd0: begin
-                builder_csr_bankarray_interface6_bank_bus_dat_r <= main_basesoc_basesoc_uart_rxtx_w;
-            end
-            1'd1: begin
-                builder_csr_bankarray_interface6_bank_bus_dat_r <= builder_csr_bankarray_csrbank6_txfull_w;
-            end
-            2'd2: begin
-                builder_csr_bankarray_interface6_bank_bus_dat_r <= builder_csr_bankarray_csrbank6_rxempty_w;
-            end
-            2'd3: begin
-                builder_csr_bankarray_interface6_bank_bus_dat_r <= builder_csr_bankarray_csrbank6_ev_status_w;
-            end
-            3'd4: begin
-                builder_csr_bankarray_interface6_bank_bus_dat_r <= builder_csr_bankarray_csrbank6_ev_pending_w;
-            end
-            3'd5: begin
-                builder_csr_bankarray_interface6_bank_bus_dat_r <= builder_csr_bankarray_csrbank6_ev_enable0_w;
-            end
             3'd6: begin
-                builder_csr_bankarray_interface6_bank_bus_dat_r <= builder_csr_bankarray_csrbank6_txempty_w;
+                builder_csr_bankarray_interface5_bank_bus_dat_r <= builder_csr_bankarray_csrbank5_txempty_w;
             end
             3'd7: begin
-                builder_csr_bankarray_interface6_bank_bus_dat_r <= builder_csr_bankarray_csrbank6_rxfull_w;
+                builder_csr_bankarray_interface5_bank_bus_dat_r <= builder_csr_bankarray_csrbank5_rxfull_w;
             end
         endcase
     end
-    main_basesoc_basesoc_uart_txfull_re <= builder_csr_bankarray_csrbank6_txfull_re;
-    main_basesoc_basesoc_uart_rxempty_re <= builder_csr_bankarray_csrbank6_rxempty_re;
-    main_basesoc_basesoc_uart_status_re <= builder_csr_bankarray_csrbank6_ev_status_re;
-    if (builder_csr_bankarray_csrbank6_ev_pending_re) begin
-        main_basesoc_basesoc_uart_pending_r[1:0] <= builder_csr_bankarray_csrbank6_ev_pending_r;
+    main_basesoc_uart_txfull_re <= builder_csr_bankarray_csrbank5_txfull_re;
+    main_basesoc_uart_rxempty_re <= builder_csr_bankarray_csrbank5_rxempty_re;
+    main_basesoc_uart_status_re <= builder_csr_bankarray_csrbank5_ev_status_re;
+    if (builder_csr_bankarray_csrbank5_ev_pending_re) begin
+        main_basesoc_uart_pending_r[1:0] <= builder_csr_bankarray_csrbank5_ev_pending_r;
     end
-    main_basesoc_basesoc_uart_pending_re <= builder_csr_bankarray_csrbank6_ev_pending_re;
-    if (builder_csr_bankarray_csrbank6_ev_enable0_re) begin
-        main_basesoc_basesoc_uart_enable_storage[1:0] <= builder_csr_bankarray_csrbank6_ev_enable0_r;
+    main_basesoc_uart_pending_re <= builder_csr_bankarray_csrbank5_ev_pending_re;
+    if (builder_csr_bankarray_csrbank5_ev_enable0_re) begin
+        main_basesoc_uart_enable_storage[1:0] <= builder_csr_bankarray_csrbank5_ev_enable0_r;
     end
-    main_basesoc_basesoc_uart_enable_re <= builder_csr_bankarray_csrbank6_ev_enable0_re;
-    main_basesoc_basesoc_uart_txempty_re <= builder_csr_bankarray_csrbank6_txempty_re;
-    main_basesoc_basesoc_uart_rxfull_re <= builder_csr_bankarray_csrbank6_rxfull_re;
+    main_basesoc_uart_enable_re <= builder_csr_bankarray_csrbank5_ev_enable0_re;
+    main_basesoc_uart_txempty_re <= builder_csr_bankarray_csrbank5_txempty_re;
+    main_basesoc_uart_rxfull_re <= builder_csr_bankarray_csrbank5_rxfull_re;
     if (sys_rst) begin
-        main_basesoc_basesoc_reset_storage <= 2'd0;
-        main_basesoc_basesoc_reset_re <= 1'd0;
-        main_basesoc_basesoc_scratch_storage <= 32'd305419896;
-        main_basesoc_basesoc_scratch_re <= 1'd0;
-        main_basesoc_basesoc_bus_errors_re <= 1'd0;
-        main_basesoc_basesoc_bus_errors <= 32'd0;
-        main_basesoc_basesoc_vexriscv_debug_reset <= 1'd0;
-        main_basesoc_basesoc_vexriscv_ibus_err <= 1'd0;
-        main_basesoc_basesoc_vexriscv_dbus_err <= 1'd0;
-        main_basesoc_basesoc_vexriscv_i_cmd_valid <= 1'd0;
-        main_basesoc_basesoc_vexriscv_i_cmd_payload_wr <= 1'd0;
-        main_basesoc_basesoc_vexriscv_i_cmd_payload_address <= 8'd0;
-        main_basesoc_basesoc_vexriscv_i_cmd_payload_data <= 32'd0;
-        main_basesoc_basesoc_vexriscv_reset_debug_logic <= 1'd0;
-        main_basesoc_basesoc_vexriscv_transfer_complete <= 1'd0;
-        main_basesoc_basesoc_vexriscv_transfer_in_progress <= 1'd0;
-        main_basesoc_basesoc_vexriscv_transfer_wait_for_ack <= 1'd0;
-        main_basesoc_basesoc_vexriscv_debug_bus_ack <= 1'd0;
-        main_basesoc_basesoc_basesoc_ram_bus_ack <= 1'd0;
-        main_basesoc_basesoc_ram_bus_ram_bus_ack <= 1'd0;
+        main_basesoc_reset_storage <= 2'd0;
+        main_basesoc_reset_re <= 1'd0;
+        main_basesoc_scratch_storage <= 32'd305419896;
+        main_basesoc_scratch_re <= 1'd0;
+        main_basesoc_bus_errors_re <= 1'd0;
+        main_basesoc_bus_errors <= 32'd0;
+        main_basesoc_vexriscv_debug_reset <= 1'd0;
+        main_basesoc_vexriscv_ibus_err <= 1'd0;
+        main_basesoc_vexriscv_dbus_err <= 1'd0;
+        main_basesoc_vexriscv_i_cmd_valid <= 1'd0;
+        main_basesoc_vexriscv_i_cmd_payload_wr <= 1'd0;
+        main_basesoc_vexriscv_i_cmd_payload_address <= 8'd0;
+        main_basesoc_vexriscv_i_cmd_payload_data <= 32'd0;
+        main_basesoc_vexriscv_reset_debug_logic <= 1'd0;
+        main_basesoc_vexriscv_transfer_complete <= 1'd0;
+        main_basesoc_vexriscv_transfer_in_progress <= 1'd0;
+        main_basesoc_vexriscv_transfer_wait_for_ack <= 1'd0;
+        main_basesoc_vexriscv_debug_bus_ack <= 1'd0;
+        main_basesoc_basesoc_ram_bus_ack <= 1'd0;
+        main_basesoc_ram_bus_ram_bus_ack <= 1'd0;
         serial_tx <= 1'd1;
-        main_basesoc_basesoc_tx_tick <= 1'd0;
-        main_basesoc_basesoc_rx_tick <= 1'd0;
-        main_basesoc_basesoc_rx_rx_d <= 1'd0;
-        main_basesoc_basesoc_uart_txfull_re <= 1'd0;
-        main_basesoc_basesoc_uart_rxempty_re <= 1'd0;
-        main_basesoc_basesoc_uart_tx_pending <= 1'd0;
-        main_basesoc_basesoc_uart_tx_trigger_d <= 1'd0;
-        main_basesoc_basesoc_uart_rx_pending <= 1'd0;
-        main_basesoc_basesoc_uart_rx_trigger_d <= 1'd0;
-        main_basesoc_basesoc_uart_status_re <= 1'd0;
-        main_basesoc_basesoc_uart_pending_re <= 1'd0;
-        main_basesoc_basesoc_uart_pending_r <= 2'd0;
-        main_basesoc_basesoc_uart_enable_storage <= 2'd0;
-        main_basesoc_basesoc_uart_enable_re <= 1'd0;
-        main_basesoc_basesoc_uart_txempty_re <= 1'd0;
-        main_basesoc_basesoc_uart_rxfull_re <= 1'd0;
-        main_basesoc_basesoc_uart_tx_fifo_readable <= 1'd0;
-        main_basesoc_basesoc_uart_tx_fifo_level0 <= 5'd0;
-        main_basesoc_basesoc_uart_tx_fifo_produce <= 4'd0;
-        main_basesoc_basesoc_uart_tx_fifo_consume <= 4'd0;
-        main_basesoc_basesoc_uart_rx_fifo_readable <= 1'd0;
-        main_basesoc_basesoc_uart_rx_fifo_level0 <= 5'd0;
-        main_basesoc_basesoc_uart_rx_fifo_produce <= 4'd0;
-        main_basesoc_basesoc_uart_rx_fifo_consume <= 4'd0;
-        main_basesoc_basesoc_timer_load_storage <= 32'd0;
-        main_basesoc_basesoc_timer_load_re <= 1'd0;
-        main_basesoc_basesoc_timer_reload_storage <= 32'd0;
-        main_basesoc_basesoc_timer_reload_re <= 1'd0;
-        main_basesoc_basesoc_timer_en_storage <= 1'd0;
-        main_basesoc_basesoc_timer_en_re <= 1'd0;
-        main_basesoc_basesoc_timer_update_value_storage <= 1'd0;
-        main_basesoc_basesoc_timer_update_value_re <= 1'd0;
-        main_basesoc_basesoc_timer_value_status <= 32'd0;
-        main_basesoc_basesoc_timer_value_re <= 1'd0;
-        main_basesoc_basesoc_timer_zero_pending <= 1'd0;
-        main_basesoc_basesoc_timer_zero_trigger_d <= 1'd0;
-        main_basesoc_basesoc_timer_status_re <= 1'd0;
-        main_basesoc_basesoc_timer_pending_re <= 1'd0;
-        main_basesoc_basesoc_timer_pending_r <= 1'd0;
-        main_basesoc_basesoc_timer_enable_storage <= 1'd0;
-        main_basesoc_basesoc_timer_enable_re <= 1'd0;
-        main_basesoc_basesoc_timer_value <= 32'd0;
+        main_basesoc_tx_tick <= 1'd0;
+        main_basesoc_rx_tick <= 1'd0;
+        main_basesoc_rx_rx_d <= 1'd0;
+        main_basesoc_uart_txfull_re <= 1'd0;
+        main_basesoc_uart_rxempty_re <= 1'd0;
+        main_basesoc_uart_tx_pending <= 1'd0;
+        main_basesoc_uart_tx_trigger_d <= 1'd0;
+        main_basesoc_uart_rx_pending <= 1'd0;
+        main_basesoc_uart_rx_trigger_d <= 1'd0;
+        main_basesoc_uart_status_re <= 1'd0;
+        main_basesoc_uart_pending_re <= 1'd0;
+        main_basesoc_uart_pending_r <= 2'd0;
+        main_basesoc_uart_enable_storage <= 2'd0;
+        main_basesoc_uart_enable_re <= 1'd0;
+        main_basesoc_uart_txempty_re <= 1'd0;
+        main_basesoc_uart_rxfull_re <= 1'd0;
+        main_basesoc_uart_tx_fifo_readable <= 1'd0;
+        main_basesoc_uart_tx_fifo_level0 <= 5'd0;
+        main_basesoc_uart_tx_fifo_produce <= 4'd0;
+        main_basesoc_uart_tx_fifo_consume <= 4'd0;
+        main_basesoc_uart_rx_fifo_readable <= 1'd0;
+        main_basesoc_uart_rx_fifo_level0 <= 5'd0;
+        main_basesoc_uart_rx_fifo_produce <= 4'd0;
+        main_basesoc_uart_rx_fifo_consume <= 4'd0;
+        main_basesoc_timer_load_storage <= 32'd0;
+        main_basesoc_timer_load_re <= 1'd0;
+        main_basesoc_timer_reload_storage <= 32'd0;
+        main_basesoc_timer_reload_re <= 1'd0;
+        main_basesoc_timer_en_storage <= 1'd0;
+        main_basesoc_timer_en_re <= 1'd0;
+        main_basesoc_timer_update_value_storage <= 1'd0;
+        main_basesoc_timer_update_value_re <= 1'd0;
+        main_basesoc_timer_value_status <= 32'd0;
+        main_basesoc_timer_value_re <= 1'd0;
+        main_basesoc_timer_zero_pending <= 1'd0;
+        main_basesoc_timer_zero_trigger_d <= 1'd0;
+        main_basesoc_timer_status_re <= 1'd0;
+        main_basesoc_timer_pending_re <= 1'd0;
+        main_basesoc_timer_pending_r <= 1'd0;
+        main_basesoc_timer_enable_storage <= 1'd0;
+        main_basesoc_timer_enable_re <= 1'd0;
+        main_basesoc_timer_value <= 32'd0;
         main_dfi_p0_rddata_valid <= 1'd0;
         main_rddata_en <= 4'd0;
-        main_basesoc_sdram_storage <= 4'd1;
-        main_basesoc_sdram_re <= 1'd0;
-        main_basesoc_sdram_command_storage <= 6'd0;
-        main_basesoc_sdram_command_re <= 1'd0;
-        main_basesoc_sdram_address_re <= 1'd0;
-        main_basesoc_sdram_baddress_re <= 1'd0;
-        main_basesoc_sdram_wrdata_re <= 1'd0;
-        main_basesoc_sdram_rddata_status <= 16'd0;
-        main_basesoc_sdram_rddata_re <= 1'd0;
-        main_basesoc_sdram_dfi_p0_address <= 13'd0;
-        main_basesoc_sdram_dfi_p0_bank <= 2'd0;
-        main_basesoc_sdram_dfi_p0_cas_n <= 1'd1;
-        main_basesoc_sdram_dfi_p0_cs_n <= 1'd1;
-        main_basesoc_sdram_dfi_p0_ras_n <= 1'd1;
-        main_basesoc_sdram_dfi_p0_we_n <= 1'd1;
-        main_basesoc_sdram_dfi_p0_wrdata_en <= 1'd0;
-        main_basesoc_sdram_dfi_p0_rddata_en <= 1'd0;
-        main_basesoc_sdram_cmd_payload_a <= 13'd0;
-        main_basesoc_sdram_cmd_payload_ba <= 2'd0;
-        main_basesoc_sdram_cmd_payload_cas <= 1'd0;
-        main_basesoc_sdram_cmd_payload_ras <= 1'd0;
-        main_basesoc_sdram_cmd_payload_we <= 1'd0;
-        main_basesoc_sdram_timer_count1 <= 10'd820;
-        main_basesoc_sdram_postponer_req_o <= 1'd0;
-        main_basesoc_sdram_postponer_count <= 1'd0;
-        main_basesoc_sdram_sequencer_done1 <= 1'd0;
-        main_basesoc_sdram_sequencer_counter <= 4'd0;
-        main_basesoc_sdram_sequencer_count <= 1'd0;
-        main_basesoc_sdram_bankmachine0_level <= 4'd0;
-        main_basesoc_sdram_bankmachine0_produce <= 3'd0;
-        main_basesoc_sdram_bankmachine0_consume <= 3'd0;
-        main_basesoc_sdram_bankmachine0_pipe_valid_source_valid <= 1'd0;
-        main_basesoc_sdram_bankmachine0_pipe_valid_source_payload_we <= 1'd0;
-        main_basesoc_sdram_bankmachine0_pipe_valid_source_payload_addr <= 22'd0;
-        main_basesoc_sdram_bankmachine0_row <= 13'd0;
-        main_basesoc_sdram_bankmachine0_row_opened <= 1'd0;
-        main_basesoc_sdram_bankmachine0_twtpcon_ready <= 1'd0;
-        main_basesoc_sdram_bankmachine0_twtpcon_count <= 3'd0;
-        main_basesoc_sdram_bankmachine0_trccon_ready <= 1'd0;
-        main_basesoc_sdram_bankmachine0_trccon_count <= 3'd0;
-        main_basesoc_sdram_bankmachine0_trascon_ready <= 1'd0;
-        main_basesoc_sdram_bankmachine0_trascon_count <= 3'd0;
-        main_basesoc_sdram_bankmachine1_level <= 4'd0;
-        main_basesoc_sdram_bankmachine1_produce <= 3'd0;
-        main_basesoc_sdram_bankmachine1_consume <= 3'd0;
-        main_basesoc_sdram_bankmachine1_pipe_valid_source_valid <= 1'd0;
-        main_basesoc_sdram_bankmachine1_pipe_valid_source_payload_we <= 1'd0;
-        main_basesoc_sdram_bankmachine1_pipe_valid_source_payload_addr <= 22'd0;
-        main_basesoc_sdram_bankmachine1_row <= 13'd0;
-        main_basesoc_sdram_bankmachine1_row_opened <= 1'd0;
-        main_basesoc_sdram_bankmachine1_twtpcon_ready <= 1'd0;
-        main_basesoc_sdram_bankmachine1_twtpcon_count <= 3'd0;
-        main_basesoc_sdram_bankmachine1_trccon_ready <= 1'd0;
-        main_basesoc_sdram_bankmachine1_trccon_count <= 3'd0;
-        main_basesoc_sdram_bankmachine1_trascon_ready <= 1'd0;
-        main_basesoc_sdram_bankmachine1_trascon_count <= 3'd0;
-        main_basesoc_sdram_bankmachine2_level <= 4'd0;
-        main_basesoc_sdram_bankmachine2_produce <= 3'd0;
-        main_basesoc_sdram_bankmachine2_consume <= 3'd0;
-        main_basesoc_sdram_bankmachine2_pipe_valid_source_valid <= 1'd0;
-        main_basesoc_sdram_bankmachine2_pipe_valid_source_payload_we <= 1'd0;
-        main_basesoc_sdram_bankmachine2_pipe_valid_source_payload_addr <= 22'd0;
-        main_basesoc_sdram_bankmachine2_row <= 13'd0;
-        main_basesoc_sdram_bankmachine2_row_opened <= 1'd0;
-        main_basesoc_sdram_bankmachine2_twtpcon_ready <= 1'd0;
-        main_basesoc_sdram_bankmachine2_twtpcon_count <= 3'd0;
-        main_basesoc_sdram_bankmachine2_trccon_ready <= 1'd0;
-        main_basesoc_sdram_bankmachine2_trccon_count <= 3'd0;
-        main_basesoc_sdram_bankmachine2_trascon_ready <= 1'd0;
-        main_basesoc_sdram_bankmachine2_trascon_count <= 3'd0;
-        main_basesoc_sdram_bankmachine3_level <= 4'd0;
-        main_basesoc_sdram_bankmachine3_produce <= 3'd0;
-        main_basesoc_sdram_bankmachine3_consume <= 3'd0;
-        main_basesoc_sdram_bankmachine3_pipe_valid_source_valid <= 1'd0;
-        main_basesoc_sdram_bankmachine3_pipe_valid_source_payload_we <= 1'd0;
-        main_basesoc_sdram_bankmachine3_pipe_valid_source_payload_addr <= 22'd0;
-        main_basesoc_sdram_bankmachine3_row <= 13'd0;
-        main_basesoc_sdram_bankmachine3_row_opened <= 1'd0;
-        main_basesoc_sdram_bankmachine3_twtpcon_ready <= 1'd0;
-        main_basesoc_sdram_bankmachine3_twtpcon_count <= 3'd0;
-        main_basesoc_sdram_bankmachine3_trccon_ready <= 1'd0;
-        main_basesoc_sdram_bankmachine3_trccon_count <= 3'd0;
-        main_basesoc_sdram_bankmachine3_trascon_ready <= 1'd0;
-        main_basesoc_sdram_bankmachine3_trascon_count <= 3'd0;
-        main_basesoc_sdram_choose_cmd_grant <= 2'd0;
-        main_basesoc_sdram_choose_req_grant <= 2'd0;
-        main_basesoc_sdram_trrdcon_ready <= 1'd0;
-        main_basesoc_sdram_trrdcon_count <= 1'd0;
-        main_basesoc_sdram_tccdcon_ready <= 1'd0;
-        main_basesoc_sdram_tccdcon_count <= 1'd0;
-        main_basesoc_sdram_twtrcon_ready <= 1'd0;
-        main_basesoc_sdram_twtrcon_count <= 3'd0;
-        main_basesoc_sdram_time0 <= 5'd0;
-        main_basesoc_sdram_time1 <= 4'd0;
-        main_basesoc_wishbone_bridge_count <= 3'd0;
-        main_basesoc_wishbone_bridge_wdata_converter_converter_mux <= 3'd0;
-        main_basesoc_wishbone_bridge_rdata_converter_converter_source_payload_data <= 128'd0;
-        main_basesoc_wishbone_bridge_rdata_converter_converter_source_payload_valid_token_count <= 4'd0;
-        main_basesoc_wishbone_bridge_rdata_converter_converter_demux <= 3'd0;
-        main_basesoc_wishbone_bridge_rdata_converter_converter_strobe_all <= 1'd0;
-        main_basesoc_wishbone_bridge_aborted <= 1'd0;
+        main_sdram_storage <= 4'd1;
+        main_sdram_re <= 1'd0;
+        main_sdram_command_storage <= 6'd0;
+        main_sdram_command_re <= 1'd0;
+        main_sdram_address_re <= 1'd0;
+        main_sdram_baddress_re <= 1'd0;
+        main_sdram_wrdata_re <= 1'd0;
+        main_sdram_rddata_status <= 16'd0;
+        main_sdram_rddata_re <= 1'd0;
+        main_sdram_dfi_p0_address <= 13'd0;
+        main_sdram_dfi_p0_bank <= 2'd0;
+        main_sdram_dfi_p0_cas_n <= 1'd1;
+        main_sdram_dfi_p0_cs_n <= 1'd1;
+        main_sdram_dfi_p0_ras_n <= 1'd1;
+        main_sdram_dfi_p0_we_n <= 1'd1;
+        main_sdram_dfi_p0_wrdata_en <= 1'd0;
+        main_sdram_dfi_p0_rddata_en <= 1'd0;
+        main_sdram_cmd_payload_a <= 13'd0;
+        main_sdram_cmd_payload_ba <= 2'd0;
+        main_sdram_cmd_payload_cas <= 1'd0;
+        main_sdram_cmd_payload_ras <= 1'd0;
+        main_sdram_cmd_payload_we <= 1'd0;
+        main_sdram_timer_count1 <= 10'd820;
+        main_sdram_postponer_req_o <= 1'd0;
+        main_sdram_postponer_count <= 1'd0;
+        main_sdram_sequencer_done1 <= 1'd0;
+        main_sdram_sequencer_counter <= 4'd0;
+        main_sdram_sequencer_count <= 1'd0;
+        main_sdram_bankmachine0_level <= 4'd0;
+        main_sdram_bankmachine0_produce <= 3'd0;
+        main_sdram_bankmachine0_consume <= 3'd0;
+        main_sdram_bankmachine0_pipe_valid_source_valid <= 1'd0;
+        main_sdram_bankmachine0_pipe_valid_source_payload_we <= 1'd0;
+        main_sdram_bankmachine0_pipe_valid_source_payload_addr <= 22'd0;
+        main_sdram_bankmachine0_row <= 13'd0;
+        main_sdram_bankmachine0_row_opened <= 1'd0;
+        main_sdram_bankmachine0_twtpcon_ready <= 1'd0;
+        main_sdram_bankmachine0_twtpcon_count <= 3'd0;
+        main_sdram_bankmachine0_trccon_ready <= 1'd0;
+        main_sdram_bankmachine0_trccon_count <= 3'd0;
+        main_sdram_bankmachine0_trascon_ready <= 1'd0;
+        main_sdram_bankmachine0_trascon_count <= 3'd0;
+        main_sdram_bankmachine1_level <= 4'd0;
+        main_sdram_bankmachine1_produce <= 3'd0;
+        main_sdram_bankmachine1_consume <= 3'd0;
+        main_sdram_bankmachine1_pipe_valid_source_valid <= 1'd0;
+        main_sdram_bankmachine1_pipe_valid_source_payload_we <= 1'd0;
+        main_sdram_bankmachine1_pipe_valid_source_payload_addr <= 22'd0;
+        main_sdram_bankmachine1_row <= 13'd0;
+        main_sdram_bankmachine1_row_opened <= 1'd0;
+        main_sdram_bankmachine1_twtpcon_ready <= 1'd0;
+        main_sdram_bankmachine1_twtpcon_count <= 3'd0;
+        main_sdram_bankmachine1_trccon_ready <= 1'd0;
+        main_sdram_bankmachine1_trccon_count <= 3'd0;
+        main_sdram_bankmachine1_trascon_ready <= 1'd0;
+        main_sdram_bankmachine1_trascon_count <= 3'd0;
+        main_sdram_bankmachine2_level <= 4'd0;
+        main_sdram_bankmachine2_produce <= 3'd0;
+        main_sdram_bankmachine2_consume <= 3'd0;
+        main_sdram_bankmachine2_pipe_valid_source_valid <= 1'd0;
+        main_sdram_bankmachine2_pipe_valid_source_payload_we <= 1'd0;
+        main_sdram_bankmachine2_pipe_valid_source_payload_addr <= 22'd0;
+        main_sdram_bankmachine2_row <= 13'd0;
+        main_sdram_bankmachine2_row_opened <= 1'd0;
+        main_sdram_bankmachine2_twtpcon_ready <= 1'd0;
+        main_sdram_bankmachine2_twtpcon_count <= 3'd0;
+        main_sdram_bankmachine2_trccon_ready <= 1'd0;
+        main_sdram_bankmachine2_trccon_count <= 3'd0;
+        main_sdram_bankmachine2_trascon_ready <= 1'd0;
+        main_sdram_bankmachine2_trascon_count <= 3'd0;
+        main_sdram_bankmachine3_level <= 4'd0;
+        main_sdram_bankmachine3_produce <= 3'd0;
+        main_sdram_bankmachine3_consume <= 3'd0;
+        main_sdram_bankmachine3_pipe_valid_source_valid <= 1'd0;
+        main_sdram_bankmachine3_pipe_valid_source_payload_we <= 1'd0;
+        main_sdram_bankmachine3_pipe_valid_source_payload_addr <= 22'd0;
+        main_sdram_bankmachine3_row <= 13'd0;
+        main_sdram_bankmachine3_row_opened <= 1'd0;
+        main_sdram_bankmachine3_twtpcon_ready <= 1'd0;
+        main_sdram_bankmachine3_twtpcon_count <= 3'd0;
+        main_sdram_bankmachine3_trccon_ready <= 1'd0;
+        main_sdram_bankmachine3_trccon_count <= 3'd0;
+        main_sdram_bankmachine3_trascon_ready <= 1'd0;
+        main_sdram_bankmachine3_trascon_count <= 3'd0;
+        main_sdram_choose_cmd_grant <= 2'd0;
+        main_sdram_choose_req_grant <= 2'd0;
+        main_sdram_trrdcon_ready <= 1'd0;
+        main_sdram_trrdcon_count <= 1'd0;
+        main_sdram_tccdcon_ready <= 1'd0;
+        main_sdram_tccdcon_count <= 1'd0;
+        main_sdram_twtrcon_ready <= 1'd0;
+        main_sdram_twtrcon_count <= 3'd0;
+        main_sdram_time0 <= 5'd0;
+        main_sdram_time1 <= 4'd0;
+        main_wishbone_bridge_count <= 3'd0;
+        main_wishbone_bridge_wdata_converter_converter_mux <= 3'd0;
+        main_wishbone_bridge_rdata_converter_converter_source_payload_data <= 128'd0;
+        main_wishbone_bridge_rdata_converter_converter_source_payload_valid_token_count <= 4'd0;
+        main_wishbone_bridge_rdata_converter_converter_demux <= 3'd0;
+        main_wishbone_bridge_rdata_converter_converter_strobe_all <= 1'd0;
+        main_wishbone_bridge_aborted <= 1'd0;
         main_storage <= 1'd0;
         main_re <= 1'd0;
         main_chaser <= 1'd0;
         main_mode <= 1'd0;
         main_count <= 26'd52500000;
-        main_basesoc_tx_pin <= 1'd0;
-        main_basesoc_clk_d <= 1'd0;
-        main_basesoc_rd_ack <= 1'd0;
-        main_basesoc_wr_ack <= 1'd0;
-        main_basesoc_rx_ready_pending <= 1'd0;
-        main_basesoc_rx_error_pending <= 1'd0;
-        main_basesoc_tx_ready_pending <= 1'd0;
-        main_basesoc_tx_error_pending <= 1'd0;
-        main_basesoc_status_re <= 1'd0;
-        main_basesoc_pending_re <= 1'd0;
-        main_basesoc_pending_r <= 4'd0;
-        main_basesoc_enable_storage <= 4'd0;
-        main_basesoc_enable_re <= 1'd0;
-        main_basesoc_rx_ctl_storage <= 2'd0;
-        main_basesoc_rx_ctl_re <= 1'd0;
-        main_basesoc_rx_stat_re <= 1'd0;
-        main_basesoc_rx_conf_re <= 1'd0;
-        main_basesoc_rx_rst_cnt <= 3'd0;
-        main_basesoc_rx_reset <= 1'd0;
-        main_basesoc_rx_fifo_rx_fifo_almostfull <= 1'd0;
-        main_basesoc_rx_fifo_rx_fifo_almostempty <= 1'd0;
-        main_basesoc_rx_fifo_rx_fifo_rdcount <= 13'd0;
-        main_basesoc_rx_fifo_rx_fifo_wrcount <= 13'd0;
-        main_basesoc_rx_fifo_rx_fifo_rden <= 1'd0;
-        main_basesoc_rx_fifo_rx_fifo_wr_d <= 24'd0;
-        main_basesoc_rx_fifo_level1 <= 10'd0;
-        main_basesoc_rx_fifo_produce <= 9'd0;
-        main_basesoc_rx_fifo_consume <= 9'd0;
-        main_basesoc_bus_read_d <= 1'd0;
-        main_basesoc_rd_ack_pipe <= 1'd0;
-        main_basesoc_rx_cnt <= 5'd0;
-        main_basesoc_rx_delay_cnt <= 1'd0;
-        main_basesoc_rx_fsm <= 5'd0;
-        main_basesoc_tx_ctl_storage <= 2'd0;
-        main_basesoc_tx_ctl_re <= 1'd0;
-        main_basesoc_tx_stat_re <= 1'd0;
-        main_basesoc_tx_conf_re <= 1'd0;
-        main_basesoc_tx_rst_cnt <= 3'd0;
-        main_basesoc_tx_reset <= 1'd0;
-        main_basesoc_tx_fifo_tx_fifo_almostfull <= 1'd0;
-        main_basesoc_tx_fifo_tx_fifo_almostempty <= 1'd0;
-        main_basesoc_tx_fifo_tx_fifo_rdcount <= 13'd0;
-        main_basesoc_tx_fifo_tx_fifo_wrcount <= 13'd0;
-        main_basesoc_tx_fifo_tx_fifo_wr_d <= 24'd0;
-        main_basesoc_tx_fifo_tx_fifo_wren <= 1'd0;
-        main_basesoc_tx_fifo_level1 <= 10'd0;
-        main_basesoc_tx_fifo_produce <= 9'd0;
-        main_basesoc_tx_fifo_consume <= 9'd0;
-        main_basesoc_tx_cnt <= 5'd0;
-        main_basesoc_tx_buf <= 25'd0;
-        main_basesoc_state <= 3'd0;
-        main_basesoc_mux_value_storage <= 1'd0;
-        main_basesoc_mux_value_re <= 1'd0;
-        main_basesoc_trigger_enable_storage <= 1'd0;
-        main_basesoc_trigger_enable_re <= 1'd0;
-        main_basesoc_trigger_done_re <= 1'd0;
-        main_basesoc_trigger_mem_mask_storage <= 47'd0;
-        main_basesoc_trigger_mem_mask_re <= 1'd0;
-        main_basesoc_trigger_mem_value_storage <= 47'd0;
-        main_basesoc_trigger_mem_value_re <= 1'd0;
-        main_basesoc_trigger_mem_full_re <= 1'd0;
-        main_basesoc_trigger_mem_graycounter0_q <= 5'd0;
-        main_basesoc_trigger_mem_graycounter0_q_binary <= 5'd0;
-        main_basesoc_subsampler_value_storage <= 16'd0;
-        main_basesoc_subsampler_value_re <= 1'd0;
-        main_basesoc_storage_enable_storage <= 1'd0;
-        main_basesoc_storage_enable_re <= 1'd0;
-        main_basesoc_storage_done_re <= 1'd0;
-        main_basesoc_storage_length_storage <= 11'd0;
-        main_basesoc_storage_length_re <= 1'd0;
-        main_basesoc_storage_offset_storage <= 11'd0;
-        main_basesoc_storage_offset_re <= 1'd0;
-        main_basesoc_storage_mem_level_re <= 1'd0;
-        main_basesoc_storage_mem_data_re <= 1'd0;
-        main_basesoc_storage_cdc_graycounter1_q <= 3'd0;
-        main_basesoc_storage_cdc_graycounter1_q_binary <= 3'd0;
-        main_basesoc_storage_converter_mux <= 1'd0;
+        main_tx_pin <= 1'd0;
+        main_clk_d <= 1'd0;
+        main_rd_ack <= 1'd0;
+        main_wr_ack <= 1'd0;
+        main_rx_ready_pending <= 1'd0;
+        main_rx_error_pending <= 1'd0;
+        main_tx_ready_pending <= 1'd0;
+        main_tx_error_pending <= 1'd0;
+        main_status_re <= 1'd0;
+        main_pending_re <= 1'd0;
+        main_pending_r <= 4'd0;
+        main_enable_storage <= 4'd0;
+        main_enable_re <= 1'd0;
+        main_rx_ctl_storage <= 2'd0;
+        main_rx_ctl_re <= 1'd0;
+        main_rx_stat_re <= 1'd0;
+        main_rx_conf_re <= 1'd0;
+        main_rx_rst_cnt <= 3'd0;
+        main_rx_reset <= 1'd0;
+        main_rx_fifo_rx_fifo_almostfull <= 1'd0;
+        main_rx_fifo_rx_fifo_almostempty <= 1'd0;
+        main_rx_fifo_rx_fifo_rdcount <= 13'd0;
+        main_rx_fifo_rx_fifo_wrcount <= 13'd0;
+        main_rx_fifo_rx_fifo_rden <= 1'd0;
+        main_rx_fifo_rx_fifo_wr_d <= 24'd0;
+        main_rx_fifo_level1 <= 10'd0;
+        main_rx_fifo_produce <= 9'd0;
+        main_rx_fifo_consume <= 9'd0;
+        main_bus_read_d <= 1'd0;
+        main_rd_ack_pipe <= 1'd0;
+        main_rx_cnt <= 5'd0;
+        main_rx_delay_cnt <= 1'd0;
+        main_rx_fsm <= 5'd0;
+        main_tx_ctl_storage <= 2'd0;
+        main_tx_ctl_re <= 1'd0;
+        main_tx_stat_re <= 1'd0;
+        main_tx_conf_re <= 1'd0;
+        main_tx_rst_cnt <= 3'd0;
+        main_tx_reset <= 1'd0;
+        main_tx_fifo_tx_fifo_almostfull <= 1'd0;
+        main_tx_fifo_tx_fifo_almostempty <= 1'd0;
+        main_tx_fifo_tx_fifo_rdcount <= 13'd0;
+        main_tx_fifo_tx_fifo_wrcount <= 13'd0;
+        main_tx_fifo_tx_fifo_wr_d <= 24'd0;
+        main_tx_fifo_tx_fifo_wren <= 1'd0;
+        main_tx_fifo_level1 <= 10'd0;
+        main_tx_fifo_produce <= 9'd0;
+        main_tx_fifo_consume <= 9'd0;
+        main_tx_cnt <= 5'd0;
+        main_tx_buf <= 25'd0;
         serial_debug_tx <= 1'd1;
-        main_basesoc_uartbone_phy_tx_tick <= 1'd0;
-        main_basesoc_uartbone_phy_rx_tick <= 1'd0;
-        main_basesoc_uartbone_phy_rx_rx_d <= 1'd0;
-        main_basesoc_uartbone_incr <= 1'd0;
-        main_basesoc_uartbone_count <= 24'd10500000;
+        main_uartbone_phy_tx_tick <= 1'd0;
+        main_uartbone_phy_rx_tick <= 1'd0;
+        main_uartbone_phy_rx_rx_d <= 1'd0;
+        main_uartbone_incr <= 1'd0;
+        main_uartbone_count <= 24'd10500000;
         builder_basesoc_we <= 1'd0;
         builder_grant <= 2'd0;
         builder_slave_sel_r <= 6'd0;
@@ -8070,7 +7060,8 @@ always @(posedge sys_clk) begin
         builder_basesoc_fullmemorywe_state <= 2'd0;
         builder_basesoc_litedramnativeportconverter_state <= 1'd0;
         builder_basesoc_fsm_state <= 2'd0;
-        builder_basesoc_s7i2s_state <= 3'd0;
+        builder_basesoc_fsm0_state <= 3'd0;
+        builder_basesoc_fsm1_state <= 3'd0;
         builder_basesoc_rs232phytx1_state <= 1'd0;
         builder_basesoc_rs232phyrx1_state <= 1'd0;
         builder_basesoc_uartbone_state <= 3'd0;
@@ -8084,18 +7075,8 @@ always @(posedge sys_clk) begin
     builder_impl_multiregimpl2_regs1 <= builder_impl_multiregimpl2_regs0;
     builder_impl_multiregimpl3_regs0 <= i2s_clk;
     builder_impl_multiregimpl3_regs1 <= builder_impl_multiregimpl3_regs0;
-    builder_impl_multiregimpl6_regs0 <= main_basesoc_trigger_done0;
-    builder_impl_multiregimpl6_regs1 <= builder_impl_multiregimpl6_regs0;
-    builder_impl_multiregimpl8_regs0 <= main_basesoc_trigger_mem_graycounter1_q;
-    builder_impl_multiregimpl8_regs1 <= builder_impl_multiregimpl8_regs0;
-    builder_impl_multiregimpl13_regs0 <= main_basesoc_storage_done0;
-    builder_impl_multiregimpl13_regs1 <= builder_impl_multiregimpl13_regs0;
-    builder_impl_multiregimpl14_regs0 <= main_basesoc_storage_level;
-    builder_impl_multiregimpl14_regs1 <= builder_impl_multiregimpl14_regs0;
-    builder_impl_multiregimpl15_regs0 <= main_basesoc_storage_cdc_graycounter0_q;
-    builder_impl_multiregimpl15_regs1 <= builder_impl_multiregimpl15_regs0;
-    builder_impl_multiregimpl17_regs0 <= serial_debug_rx;
-    builder_impl_multiregimpl17_regs1 <= builder_impl_multiregimpl17_regs0;
+    builder_impl_multiregimpl4_regs0 <= serial_debug_rx;
+    builder_impl_multiregimpl4_regs1 <= builder_impl_multiregimpl4_regs0;
 end
 
 
@@ -8113,9 +7094,9 @@ initial begin
 end
 reg [31:0] rom_dat0;
 always @(posedge sys_clk) begin
-	rom_dat0 <= rom[main_basesoc_basesoc_basesoc_adr];
+	rom_dat0 <= rom[main_basesoc_basesoc_adr];
 end
-assign main_basesoc_basesoc_basesoc_dat_r = rom_dat0;
+assign main_basesoc_basesoc_dat_r = rom_dat0;
 
 
 //------------------------------------------------------------------------------
@@ -8128,17 +7109,17 @@ initial begin
 end
 reg [10:0] sram_adr0;
 always @(posedge sys_clk) begin
-	if (main_basesoc_basesoc_ram_we[0])
-		sram[main_basesoc_basesoc_ram_adr][7:0] <= main_basesoc_basesoc_ram_dat_w[7:0];
-	if (main_basesoc_basesoc_ram_we[1])
-		sram[main_basesoc_basesoc_ram_adr][15:8] <= main_basesoc_basesoc_ram_dat_w[15:8];
-	if (main_basesoc_basesoc_ram_we[2])
-		sram[main_basesoc_basesoc_ram_adr][23:16] <= main_basesoc_basesoc_ram_dat_w[23:16];
-	if (main_basesoc_basesoc_ram_we[3])
-		sram[main_basesoc_basesoc_ram_adr][31:24] <= main_basesoc_basesoc_ram_dat_w[31:24];
-	sram_adr0 <= main_basesoc_basesoc_ram_adr;
+	if (main_basesoc_ram_we[0])
+		sram[main_basesoc_ram_adr][7:0] <= main_basesoc_ram_dat_w[7:0];
+	if (main_basesoc_ram_we[1])
+		sram[main_basesoc_ram_adr][15:8] <= main_basesoc_ram_dat_w[15:8];
+	if (main_basesoc_ram_we[2])
+		sram[main_basesoc_ram_adr][23:16] <= main_basesoc_ram_dat_w[23:16];
+	if (main_basesoc_ram_we[3])
+		sram[main_basesoc_ram_adr][31:24] <= main_basesoc_ram_dat_w[31:24];
+	sram_adr0 <= main_basesoc_ram_adr;
 end
-assign main_basesoc_basesoc_ram_dat_r = sram[sram_adr0];
+assign main_basesoc_ram_dat_r = sram[sram_adr0];
 
 
 //------------------------------------------------------------------------------
@@ -8165,16 +7146,16 @@ reg [9:0] storage[0:15];
 reg [9:0] storage_dat0;
 reg [9:0] storage_dat1;
 always @(posedge sys_clk) begin
-	if (main_basesoc_basesoc_uart_tx_fifo_wrport_we)
-		storage[main_basesoc_basesoc_uart_tx_fifo_wrport_adr] <= main_basesoc_basesoc_uart_tx_fifo_wrport_dat_w;
-	storage_dat0 <= storage[main_basesoc_basesoc_uart_tx_fifo_wrport_adr];
+	if (main_basesoc_uart_tx_fifo_wrport_we)
+		storage[main_basesoc_uart_tx_fifo_wrport_adr] <= main_basesoc_uart_tx_fifo_wrport_dat_w;
+	storage_dat0 <= storage[main_basesoc_uart_tx_fifo_wrport_adr];
 end
 always @(posedge sys_clk) begin
-	if (main_basesoc_basesoc_uart_tx_fifo_rdport_re)
-		storage_dat1 <= storage[main_basesoc_basesoc_uart_tx_fifo_rdport_adr];
+	if (main_basesoc_uart_tx_fifo_rdport_re)
+		storage_dat1 <= storage[main_basesoc_uart_tx_fifo_rdport_adr];
 end
-assign main_basesoc_basesoc_uart_tx_fifo_wrport_dat_r = storage_dat0;
-assign main_basesoc_basesoc_uart_tx_fifo_rdport_dat_r = storage_dat1;
+assign main_basesoc_uart_tx_fifo_wrport_dat_r = storage_dat0;
+assign main_basesoc_uart_tx_fifo_rdport_dat_r = storage_dat1;
 
 
 //------------------------------------------------------------------------------
@@ -8186,16 +7167,16 @@ reg [9:0] storage_1[0:15];
 reg [9:0] storage_1_dat0;
 reg [9:0] storage_1_dat1;
 always @(posedge sys_clk) begin
-	if (main_basesoc_basesoc_uart_rx_fifo_wrport_we)
-		storage_1[main_basesoc_basesoc_uart_rx_fifo_wrport_adr] <= main_basesoc_basesoc_uart_rx_fifo_wrport_dat_w;
-	storage_1_dat0 <= storage_1[main_basesoc_basesoc_uart_rx_fifo_wrport_adr];
+	if (main_basesoc_uart_rx_fifo_wrport_we)
+		storage_1[main_basesoc_uart_rx_fifo_wrport_adr] <= main_basesoc_uart_rx_fifo_wrport_dat_w;
+	storage_1_dat0 <= storage_1[main_basesoc_uart_rx_fifo_wrport_adr];
 end
 always @(posedge sys_clk) begin
-	if (main_basesoc_basesoc_uart_rx_fifo_rdport_re)
-		storage_1_dat1 <= storage_1[main_basesoc_basesoc_uart_rx_fifo_rdport_adr];
+	if (main_basesoc_uart_rx_fifo_rdport_re)
+		storage_1_dat1 <= storage_1[main_basesoc_uart_rx_fifo_rdport_adr];
 end
-assign main_basesoc_basesoc_uart_rx_fifo_wrport_dat_r = storage_1_dat0;
-assign main_basesoc_basesoc_uart_rx_fifo_rdport_dat_r = storage_1_dat1;
+assign main_basesoc_uart_rx_fifo_wrport_dat_r = storage_1_dat0;
+assign main_basesoc_uart_rx_fifo_rdport_dat_r = storage_1_dat1;
 
 
 //------------------------------------------------------------------------------
@@ -8206,14 +7187,14 @@ assign main_basesoc_basesoc_uart_rx_fifo_rdport_dat_r = storage_1_dat1;
 reg [24:0] storage_2[0:7];
 reg [24:0] storage_2_dat0;
 always @(posedge sys_clk) begin
-	if (main_basesoc_sdram_bankmachine0_wrport_we)
-		storage_2[main_basesoc_sdram_bankmachine0_wrport_adr] <= main_basesoc_sdram_bankmachine0_wrport_dat_w;
-	storage_2_dat0 <= storage_2[main_basesoc_sdram_bankmachine0_wrport_adr];
+	if (main_sdram_bankmachine0_wrport_we)
+		storage_2[main_sdram_bankmachine0_wrport_adr] <= main_sdram_bankmachine0_wrport_dat_w;
+	storage_2_dat0 <= storage_2[main_sdram_bankmachine0_wrport_adr];
 end
 always @(posedge sys_clk) begin
 end
-assign main_basesoc_sdram_bankmachine0_wrport_dat_r = storage_2_dat0;
-assign main_basesoc_sdram_bankmachine0_rdport_dat_r = storage_2[main_basesoc_sdram_bankmachine0_rdport_adr];
+assign main_sdram_bankmachine0_wrport_dat_r = storage_2_dat0;
+assign main_sdram_bankmachine0_rdport_dat_r = storage_2[main_sdram_bankmachine0_rdport_adr];
 
 
 //------------------------------------------------------------------------------
@@ -8224,14 +7205,14 @@ assign main_basesoc_sdram_bankmachine0_rdport_dat_r = storage_2[main_basesoc_sdr
 reg [24:0] storage_3[0:7];
 reg [24:0] storage_3_dat0;
 always @(posedge sys_clk) begin
-	if (main_basesoc_sdram_bankmachine1_wrport_we)
-		storage_3[main_basesoc_sdram_bankmachine1_wrport_adr] <= main_basesoc_sdram_bankmachine1_wrport_dat_w;
-	storage_3_dat0 <= storage_3[main_basesoc_sdram_bankmachine1_wrport_adr];
+	if (main_sdram_bankmachine1_wrport_we)
+		storage_3[main_sdram_bankmachine1_wrport_adr] <= main_sdram_bankmachine1_wrport_dat_w;
+	storage_3_dat0 <= storage_3[main_sdram_bankmachine1_wrport_adr];
 end
 always @(posedge sys_clk) begin
 end
-assign main_basesoc_sdram_bankmachine1_wrport_dat_r = storage_3_dat0;
-assign main_basesoc_sdram_bankmachine1_rdport_dat_r = storage_3[main_basesoc_sdram_bankmachine1_rdport_adr];
+assign main_sdram_bankmachine1_wrport_dat_r = storage_3_dat0;
+assign main_sdram_bankmachine1_rdport_dat_r = storage_3[main_sdram_bankmachine1_rdport_adr];
 
 
 //------------------------------------------------------------------------------
@@ -8242,14 +7223,14 @@ assign main_basesoc_sdram_bankmachine1_rdport_dat_r = storage_3[main_basesoc_sdr
 reg [24:0] storage_4[0:7];
 reg [24:0] storage_4_dat0;
 always @(posedge sys_clk) begin
-	if (main_basesoc_sdram_bankmachine2_wrport_we)
-		storage_4[main_basesoc_sdram_bankmachine2_wrport_adr] <= main_basesoc_sdram_bankmachine2_wrport_dat_w;
-	storage_4_dat0 <= storage_4[main_basesoc_sdram_bankmachine2_wrport_adr];
+	if (main_sdram_bankmachine2_wrport_we)
+		storage_4[main_sdram_bankmachine2_wrport_adr] <= main_sdram_bankmachine2_wrport_dat_w;
+	storage_4_dat0 <= storage_4[main_sdram_bankmachine2_wrport_adr];
 end
 always @(posedge sys_clk) begin
 end
-assign main_basesoc_sdram_bankmachine2_wrport_dat_r = storage_4_dat0;
-assign main_basesoc_sdram_bankmachine2_rdport_dat_r = storage_4[main_basesoc_sdram_bankmachine2_rdport_adr];
+assign main_sdram_bankmachine2_wrport_dat_r = storage_4_dat0;
+assign main_sdram_bankmachine2_rdport_dat_r = storage_4[main_sdram_bankmachine2_rdport_adr];
 
 
 //------------------------------------------------------------------------------
@@ -8260,14 +7241,14 @@ assign main_basesoc_sdram_bankmachine2_rdport_dat_r = storage_4[main_basesoc_sdr
 reg [24:0] storage_5[0:7];
 reg [24:0] storage_5_dat0;
 always @(posedge sys_clk) begin
-	if (main_basesoc_sdram_bankmachine3_wrport_we)
-		storage_5[main_basesoc_sdram_bankmachine3_wrport_adr] <= main_basesoc_sdram_bankmachine3_wrport_dat_w;
-	storage_5_dat0 <= storage_5[main_basesoc_sdram_bankmachine3_wrport_adr];
+	if (main_sdram_bankmachine3_wrport_we)
+		storage_5[main_sdram_bankmachine3_wrport_adr] <= main_sdram_bankmachine3_wrport_dat_w;
+	storage_5_dat0 <= storage_5[main_sdram_bankmachine3_wrport_adr];
 end
 always @(posedge sys_clk) begin
 end
-assign main_basesoc_sdram_bankmachine3_wrport_dat_r = storage_5_dat0;
-assign main_basesoc_sdram_bankmachine3_rdport_dat_r = storage_5[main_basesoc_sdram_bankmachine3_rdport_adr];
+assign main_sdram_bankmachine3_wrport_dat_r = storage_5_dat0;
+assign main_sdram_bankmachine3_rdport_dat_r = storage_5[main_sdram_bankmachine3_rdport_adr];
 
 
 //------------------------------------------------------------------------------
@@ -8277,11 +7258,11 @@ assign main_basesoc_sdram_bankmachine3_rdport_dat_r = storage_5[main_basesoc_sdr
 reg [23:0] tag_mem[0:511];
 reg [8:0] tag_mem_adr0;
 always @(posedge sys_clk) begin
-	if (main_basesoc_tag_port_we)
-		tag_mem[main_basesoc_tag_port_adr] <= main_basesoc_tag_port_dat_w;
-	tag_mem_adr0 <= main_basesoc_tag_port_adr;
+	if (main_tag_port_we)
+		tag_mem[main_tag_port_adr] <= main_tag_port_dat_w;
+	tag_mem_adr0 <= main_tag_port_adr;
 end
-assign main_basesoc_tag_port_dat_r = tag_mem[tag_mem_adr0];
+assign main_tag_port_dat_r = tag_mem[tag_mem_adr0];
 
 
 //------------------------------------------------------------------------------
@@ -8292,14 +7273,14 @@ assign main_basesoc_tag_port_dat_r = tag_mem[tag_mem_adr0];
 reg [25:0] storage_6[0:511];
 reg [25:0] storage_6_dat0;
 always @(posedge sys_clk) begin
-	if (main_basesoc_rx_fifo_wrport_we)
-		storage_6[main_basesoc_rx_fifo_wrport_adr] <= main_basesoc_rx_fifo_wrport_dat_w;
-	storage_6_dat0 <= storage_6[main_basesoc_rx_fifo_wrport_adr];
+	if (main_rx_fifo_wrport_we)
+		storage_6[main_rx_fifo_wrport_adr] <= main_rx_fifo_wrport_dat_w;
+	storage_6_dat0 <= storage_6[main_rx_fifo_wrport_adr];
 end
 always @(posedge sys_clk) begin
 end
-assign main_basesoc_rx_fifo_wrport_dat_r = storage_6_dat0;
-assign main_basesoc_rx_fifo_rdport_dat_r = storage_6[main_basesoc_rx_fifo_rdport_adr];
+assign main_rx_fifo_wrport_dat_r = storage_6_dat0;
+assign main_rx_fifo_rdport_dat_r = storage_6[main_rx_fifo_rdport_adr];
 
 
 //------------------------------------------------------------------------------
@@ -8310,75 +7291,14 @@ assign main_basesoc_rx_fifo_rdport_dat_r = storage_6[main_basesoc_rx_fifo_rdport
 reg [25:0] storage_7[0:511];
 reg [25:0] storage_7_dat0;
 always @(posedge sys_clk) begin
-	if (main_basesoc_tx_fifo_wrport_we)
-		storage_7[main_basesoc_tx_fifo_wrport_adr] <= main_basesoc_tx_fifo_wrport_dat_w;
-	storage_7_dat0 <= storage_7[main_basesoc_tx_fifo_wrport_adr];
+	if (main_tx_fifo_wrport_we)
+		storage_7[main_tx_fifo_wrport_adr] <= main_tx_fifo_wrport_dat_w;
+	storage_7_dat0 <= storage_7[main_tx_fifo_wrport_adr];
 end
 always @(posedge sys_clk) begin
 end
-assign main_basesoc_tx_fifo_wrport_dat_r = storage_7_dat0;
-assign main_basesoc_tx_fifo_rdport_dat_r = storage_7[main_basesoc_tx_fifo_rdport_adr];
-
-
-//------------------------------------------------------------------------------
-// Memory storage_8: 16-words x 96-bit
-//------------------------------------------------------------------------------
-// Port 0 | Read: Sync  | Write: Sync | Mode: Read-First  | Write-Granularity: 96 
-// Port 1 | Read: Sync  | Write: ---- | 
-reg [95:0] storage_8[0:15];
-reg [95:0] storage_8_dat0;
-reg [95:0] storage_8_dat1;
-always @(posedge sys_clk) begin
-	if (main_basesoc_trigger_mem_wrport_we)
-		storage_8[main_basesoc_trigger_mem_wrport_adr] <= main_basesoc_trigger_mem_wrport_dat_w;
-	storage_8_dat0 <= storage_8[main_basesoc_trigger_mem_wrport_adr];
-end
-always @(posedge scope_clk) begin
-	storage_8_dat1 <= storage_8[main_basesoc_trigger_mem_rdport_adr];
-end
-assign main_basesoc_trigger_mem_wrport_dat_r = storage_8_dat0;
-assign main_basesoc_trigger_mem_rdport_dat_r = storage_8_dat1;
-
-
-//------------------------------------------------------------------------------
-// Memory storage_9: 1024-words x 49-bit
-//------------------------------------------------------------------------------
-// Port 0 | Read: Sync  | Write: Sync | Mode: Read-First  | Write-Granularity: 49 
-// Port 1 | Read: Sync  | Write: ---- | 
-reg [48:0] storage_9[0:1023];
-reg [48:0] storage_9_dat0;
-reg [48:0] storage_9_dat1;
-always @(posedge scope_clk) begin
-	if (main_basesoc_storage_mem_wrport_we)
-		storage_9[main_basesoc_storage_mem_wrport_adr] <= main_basesoc_storage_mem_wrport_dat_w;
-	storage_9_dat0 <= storage_9[main_basesoc_storage_mem_wrport_adr];
-end
-always @(posedge scope_clk) begin
-	if (main_basesoc_storage_mem_rdport_re)
-		storage_9_dat1 <= storage_9[main_basesoc_storage_mem_rdport_adr];
-end
-assign main_basesoc_storage_mem_wrport_dat_r = storage_9_dat0;
-assign main_basesoc_storage_mem_rdport_dat_r = storage_9_dat1;
-
-
-//------------------------------------------------------------------------------
-// Memory storage_10: 4-words x 49-bit
-//------------------------------------------------------------------------------
-// Port 0 | Read: Sync  | Write: Sync | Mode: Read-First  | Write-Granularity: 49 
-// Port 1 | Read: Sync  | Write: ---- | 
-reg [48:0] storage_10[0:3];
-reg [48:0] storage_10_dat0;
-reg [48:0] storage_10_dat1;
-always @(posedge scope_clk) begin
-	if (main_basesoc_storage_cdc_wrport_we)
-		storage_10[main_basesoc_storage_cdc_wrport_adr] <= main_basesoc_storage_cdc_wrport_dat_w;
-	storage_10_dat0 <= storage_10[main_basesoc_storage_cdc_wrport_adr];
-end
-always @(posedge sys_clk) begin
-	storage_10_dat1 <= storage_10[main_basesoc_storage_cdc_rdport_adr];
-end
-assign main_basesoc_storage_cdc_wrport_dat_r = storage_10_dat0;
-assign main_basesoc_storage_cdc_rdport_dat_r = storage_10_dat1;
+assign main_tx_fifo_wrport_dat_r = storage_7_dat0;
+assign main_tx_fifo_rdport_dat_r = storage_7[main_tx_fifo_rdport_adr];
 
 
 ALTPLL #(
@@ -8399,50 +7319,50 @@ ALTPLL #(
 	.CLKENA(5'd31),
 	.EXTCLKENA(4'd15),
 	.FBIN(1'd1),
-	.INCLK(main_crg_clkin),
+	.INCLK(main_clkin),
 	.PFDENA(1'd1),
 	.PLLENA(1'd1),
 	.CLK(builder_basesoc_clks),
-	.LOCKED(main_crg_locked)
+	.LOCKED(main_locked)
 );
 
 VexRiscv VexRiscv(
 	.clk(sys_clk),
-	.dBusWishbone_ACK(main_basesoc_basesoc_dbus_dbus_ack),
-	.dBusWishbone_DAT_MISO(main_basesoc_basesoc_dbus_dbus_dat_r),
-	.dBusWishbone_ERR((main_basesoc_basesoc_dbus_dbus_err | main_basesoc_basesoc_vexriscv_dbus_err)),
+	.dBusWishbone_ACK(main_basesoc_dbus_dbus_ack),
+	.dBusWishbone_DAT_MISO(main_basesoc_dbus_dbus_dat_r),
+	.dBusWishbone_ERR((main_basesoc_dbus_dbus_err | main_basesoc_vexriscv_dbus_err)),
 	.debugReset(sys_rst),
-	.debug_bus_cmd_payload_address(main_basesoc_basesoc_vexriscv_i_cmd_payload_address),
-	.debug_bus_cmd_payload_data(main_basesoc_basesoc_vexriscv_i_cmd_payload_data),
-	.debug_bus_cmd_payload_wr(main_basesoc_basesoc_vexriscv_i_cmd_payload_wr),
-	.debug_bus_cmd_valid(main_basesoc_basesoc_vexriscv_i_cmd_valid),
-	.externalInterruptArray(main_basesoc_basesoc_interrupt),
-	.externalResetVector(main_basesoc_basesoc_vexriscv),
-	.iBusWishbone_ACK(main_basesoc_basesoc_ibus_ibus_ack),
-	.iBusWishbone_DAT_MISO(main_basesoc_basesoc_ibus_ibus_dat_r),
-	.iBusWishbone_ERR((main_basesoc_basesoc_ibus_ibus_err | main_basesoc_basesoc_vexriscv_ibus_err)),
-	.reset(((sys_rst | main_basesoc_basesoc_reset) | main_basesoc_basesoc_vexriscv_debug_reset)),
+	.debug_bus_cmd_payload_address(main_basesoc_vexriscv_i_cmd_payload_address),
+	.debug_bus_cmd_payload_data(main_basesoc_vexriscv_i_cmd_payload_data),
+	.debug_bus_cmd_payload_wr(main_basesoc_vexriscv_i_cmd_payload_wr),
+	.debug_bus_cmd_valid(main_basesoc_vexriscv_i_cmd_valid),
+	.externalInterruptArray(main_basesoc_interrupt),
+	.externalResetVector(main_basesoc_vexriscv),
+	.iBusWishbone_ACK(main_basesoc_ibus_ibus_ack),
+	.iBusWishbone_DAT_MISO(main_basesoc_ibus_ibus_dat_r),
+	.iBusWishbone_ERR((main_basesoc_ibus_ibus_err | main_basesoc_vexriscv_ibus_err)),
+	.reset(((sys_rst | main_basesoc_reset) | main_basesoc_vexriscv_debug_reset)),
 	.softwareInterrupt(1'd0),
 	.timerInterrupt(1'd0),
-	.dBusWishbone_ADR(main_basesoc_basesoc_dbus_dbus_adr),
-	.dBusWishbone_BTE(main_basesoc_basesoc_dbus_dbus_bte),
-	.dBusWishbone_CTI(main_basesoc_basesoc_dbus_dbus_cti),
-	.dBusWishbone_CYC(main_basesoc_basesoc_dbus_dbus_cyc),
-	.dBusWishbone_DAT_MOSI(main_basesoc_basesoc_dbus_dbus_dat_w),
-	.dBusWishbone_SEL(main_basesoc_basesoc_dbus_dbus_sel),
-	.dBusWishbone_STB(main_basesoc_basesoc_dbus_dbus_stb),
-	.dBusWishbone_WE(main_basesoc_basesoc_dbus_dbus_we),
-	.debug_bus_cmd_ready(main_basesoc_basesoc_vexriscv_o_cmd_ready),
-	.debug_bus_rsp_data(main_basesoc_basesoc_vexriscv_o_rsp_data),
-	.debug_resetOut(main_basesoc_basesoc_vexriscv_o_resetOut),
-	.iBusWishbone_ADR(main_basesoc_basesoc_ibus_ibus_adr),
-	.iBusWishbone_BTE(main_basesoc_basesoc_ibus_ibus_bte),
-	.iBusWishbone_CTI(main_basesoc_basesoc_ibus_ibus_cti),
-	.iBusWishbone_CYC(main_basesoc_basesoc_ibus_ibus_cyc),
-	.iBusWishbone_DAT_MOSI(main_basesoc_basesoc_ibus_ibus_dat_w),
-	.iBusWishbone_SEL(main_basesoc_basesoc_ibus_ibus_sel),
-	.iBusWishbone_STB(main_basesoc_basesoc_ibus_ibus_stb),
-	.iBusWishbone_WE(main_basesoc_basesoc_ibus_ibus_we)
+	.dBusWishbone_ADR(main_basesoc_dbus_dbus_adr),
+	.dBusWishbone_BTE(main_basesoc_dbus_dbus_bte),
+	.dBusWishbone_CTI(main_basesoc_dbus_dbus_cti),
+	.dBusWishbone_CYC(main_basesoc_dbus_dbus_cyc),
+	.dBusWishbone_DAT_MOSI(main_basesoc_dbus_dbus_dat_w),
+	.dBusWishbone_SEL(main_basesoc_dbus_dbus_sel),
+	.dBusWishbone_STB(main_basesoc_dbus_dbus_stb),
+	.dBusWishbone_WE(main_basesoc_dbus_dbus_we),
+	.debug_bus_cmd_ready(main_basesoc_vexriscv_o_cmd_ready),
+	.debug_bus_rsp_data(main_basesoc_vexriscv_o_rsp_data),
+	.debug_resetOut(main_basesoc_vexriscv_o_resetOut),
+	.iBusWishbone_ADR(main_basesoc_ibus_ibus_adr),
+	.iBusWishbone_BTE(main_basesoc_ibus_ibus_bte),
+	.iBusWishbone_CTI(main_basesoc_ibus_ibus_cti),
+	.iBusWishbone_CYC(main_basesoc_ibus_ibus_cyc),
+	.iBusWishbone_DAT_MOSI(main_basesoc_ibus_ibus_dat_w),
+	.iBusWishbone_SEL(main_basesoc_ibus_ibus_sel),
+	.iBusWishbone_STB(main_basesoc_ibus_ibus_stb),
+	.iBusWishbone_WE(main_basesoc_ibus_ibus_we)
 );
 
 //------------------------------------------------------------------------------
@@ -8452,11 +7372,11 @@ VexRiscv VexRiscv(
 reg [7:0] data_mem_grain0[0:511];
 reg [8:0] data_mem_grain0_adr0;
 always @(posedge sys_clk) begin
-	if (main_basesoc_data_port_we[0])
-		data_mem_grain0[main_basesoc_data_port_adr] <= main_basesoc_data_port_dat_w[7:0];
-	data_mem_grain0_adr0 <= main_basesoc_data_port_adr;
+	if (main_data_port_we[0])
+		data_mem_grain0[main_data_port_adr] <= main_data_port_dat_w[7:0];
+	data_mem_grain0_adr0 <= main_data_port_adr;
 end
-assign main_basesoc_data_port_dat_r[7:0] = data_mem_grain0[data_mem_grain0_adr0];
+assign main_data_port_dat_r[7:0] = data_mem_grain0[data_mem_grain0_adr0];
 
 
 //------------------------------------------------------------------------------
@@ -8466,11 +7386,11 @@ assign main_basesoc_data_port_dat_r[7:0] = data_mem_grain0[data_mem_grain0_adr0]
 reg [7:0] data_mem_grain1[0:511];
 reg [8:0] data_mem_grain1_adr0;
 always @(posedge sys_clk) begin
-	if (main_basesoc_data_port_we[1])
-		data_mem_grain1[main_basesoc_data_port_adr] <= main_basesoc_data_port_dat_w[15:8];
-	data_mem_grain1_adr0 <= main_basesoc_data_port_adr;
+	if (main_data_port_we[1])
+		data_mem_grain1[main_data_port_adr] <= main_data_port_dat_w[15:8];
+	data_mem_grain1_adr0 <= main_data_port_adr;
 end
-assign main_basesoc_data_port_dat_r[15:8] = data_mem_grain1[data_mem_grain1_adr0];
+assign main_data_port_dat_r[15:8] = data_mem_grain1[data_mem_grain1_adr0];
 
 
 //------------------------------------------------------------------------------
@@ -8480,11 +7400,11 @@ assign main_basesoc_data_port_dat_r[15:8] = data_mem_grain1[data_mem_grain1_adr0
 reg [7:0] data_mem_grain2[0:511];
 reg [8:0] data_mem_grain2_adr0;
 always @(posedge sys_clk) begin
-	if (main_basesoc_data_port_we[2])
-		data_mem_grain2[main_basesoc_data_port_adr] <= main_basesoc_data_port_dat_w[23:16];
-	data_mem_grain2_adr0 <= main_basesoc_data_port_adr;
+	if (main_data_port_we[2])
+		data_mem_grain2[main_data_port_adr] <= main_data_port_dat_w[23:16];
+	data_mem_grain2_adr0 <= main_data_port_adr;
 end
-assign main_basesoc_data_port_dat_r[23:16] = data_mem_grain2[data_mem_grain2_adr0];
+assign main_data_port_dat_r[23:16] = data_mem_grain2[data_mem_grain2_adr0];
 
 
 //------------------------------------------------------------------------------
@@ -8494,11 +7414,11 @@ assign main_basesoc_data_port_dat_r[23:16] = data_mem_grain2[data_mem_grain2_adr
 reg [7:0] data_mem_grain3[0:511];
 reg [8:0] data_mem_grain3_adr0;
 always @(posedge sys_clk) begin
-	if (main_basesoc_data_port_we[3])
-		data_mem_grain3[main_basesoc_data_port_adr] <= main_basesoc_data_port_dat_w[31:24];
-	data_mem_grain3_adr0 <= main_basesoc_data_port_adr;
+	if (main_data_port_we[3])
+		data_mem_grain3[main_data_port_adr] <= main_data_port_dat_w[31:24];
+	data_mem_grain3_adr0 <= main_data_port_adr;
 end
-assign main_basesoc_data_port_dat_r[31:24] = data_mem_grain3[data_mem_grain3_adr0];
+assign main_data_port_dat_r[31:24] = data_mem_grain3[data_mem_grain3_adr0];
 
 
 //------------------------------------------------------------------------------
@@ -8508,11 +7428,11 @@ assign main_basesoc_data_port_dat_r[31:24] = data_mem_grain3[data_mem_grain3_adr
 reg [7:0] data_mem_grain4[0:511];
 reg [8:0] data_mem_grain4_adr0;
 always @(posedge sys_clk) begin
-	if (main_basesoc_data_port_we[4])
-		data_mem_grain4[main_basesoc_data_port_adr] <= main_basesoc_data_port_dat_w[39:32];
-	data_mem_grain4_adr0 <= main_basesoc_data_port_adr;
+	if (main_data_port_we[4])
+		data_mem_grain4[main_data_port_adr] <= main_data_port_dat_w[39:32];
+	data_mem_grain4_adr0 <= main_data_port_adr;
 end
-assign main_basesoc_data_port_dat_r[39:32] = data_mem_grain4[data_mem_grain4_adr0];
+assign main_data_port_dat_r[39:32] = data_mem_grain4[data_mem_grain4_adr0];
 
 
 //------------------------------------------------------------------------------
@@ -8522,11 +7442,11 @@ assign main_basesoc_data_port_dat_r[39:32] = data_mem_grain4[data_mem_grain4_adr
 reg [7:0] data_mem_grain5[0:511];
 reg [8:0] data_mem_grain5_adr0;
 always @(posedge sys_clk) begin
-	if (main_basesoc_data_port_we[5])
-		data_mem_grain5[main_basesoc_data_port_adr] <= main_basesoc_data_port_dat_w[47:40];
-	data_mem_grain5_adr0 <= main_basesoc_data_port_adr;
+	if (main_data_port_we[5])
+		data_mem_grain5[main_data_port_adr] <= main_data_port_dat_w[47:40];
+	data_mem_grain5_adr0 <= main_data_port_adr;
 end
-assign main_basesoc_data_port_dat_r[47:40] = data_mem_grain5[data_mem_grain5_adr0];
+assign main_data_port_dat_r[47:40] = data_mem_grain5[data_mem_grain5_adr0];
 
 
 //------------------------------------------------------------------------------
@@ -8536,11 +7456,11 @@ assign main_basesoc_data_port_dat_r[47:40] = data_mem_grain5[data_mem_grain5_adr
 reg [7:0] data_mem_grain6[0:511];
 reg [8:0] data_mem_grain6_adr0;
 always @(posedge sys_clk) begin
-	if (main_basesoc_data_port_we[6])
-		data_mem_grain6[main_basesoc_data_port_adr] <= main_basesoc_data_port_dat_w[55:48];
-	data_mem_grain6_adr0 <= main_basesoc_data_port_adr;
+	if (main_data_port_we[6])
+		data_mem_grain6[main_data_port_adr] <= main_data_port_dat_w[55:48];
+	data_mem_grain6_adr0 <= main_data_port_adr;
 end
-assign main_basesoc_data_port_dat_r[55:48] = data_mem_grain6[data_mem_grain6_adr0];
+assign main_data_port_dat_r[55:48] = data_mem_grain6[data_mem_grain6_adr0];
 
 
 //------------------------------------------------------------------------------
@@ -8550,11 +7470,11 @@ assign main_basesoc_data_port_dat_r[55:48] = data_mem_grain6[data_mem_grain6_adr
 reg [7:0] data_mem_grain7[0:511];
 reg [8:0] data_mem_grain7_adr0;
 always @(posedge sys_clk) begin
-	if (main_basesoc_data_port_we[7])
-		data_mem_grain7[main_basesoc_data_port_adr] <= main_basesoc_data_port_dat_w[63:56];
-	data_mem_grain7_adr0 <= main_basesoc_data_port_adr;
+	if (main_data_port_we[7])
+		data_mem_grain7[main_data_port_adr] <= main_data_port_dat_w[63:56];
+	data_mem_grain7_adr0 <= main_data_port_adr;
 end
-assign main_basesoc_data_port_dat_r[63:56] = data_mem_grain7[data_mem_grain7_adr0];
+assign main_data_port_dat_r[63:56] = data_mem_grain7[data_mem_grain7_adr0];
 
 
 //------------------------------------------------------------------------------
@@ -8564,11 +7484,11 @@ assign main_basesoc_data_port_dat_r[63:56] = data_mem_grain7[data_mem_grain7_adr
 reg [7:0] data_mem_grain8[0:511];
 reg [8:0] data_mem_grain8_adr0;
 always @(posedge sys_clk) begin
-	if (main_basesoc_data_port_we[8])
-		data_mem_grain8[main_basesoc_data_port_adr] <= main_basesoc_data_port_dat_w[71:64];
-	data_mem_grain8_adr0 <= main_basesoc_data_port_adr;
+	if (main_data_port_we[8])
+		data_mem_grain8[main_data_port_adr] <= main_data_port_dat_w[71:64];
+	data_mem_grain8_adr0 <= main_data_port_adr;
 end
-assign main_basesoc_data_port_dat_r[71:64] = data_mem_grain8[data_mem_grain8_adr0];
+assign main_data_port_dat_r[71:64] = data_mem_grain8[data_mem_grain8_adr0];
 
 
 //------------------------------------------------------------------------------
@@ -8578,11 +7498,11 @@ assign main_basesoc_data_port_dat_r[71:64] = data_mem_grain8[data_mem_grain8_adr
 reg [7:0] data_mem_grain9[0:511];
 reg [8:0] data_mem_grain9_adr0;
 always @(posedge sys_clk) begin
-	if (main_basesoc_data_port_we[9])
-		data_mem_grain9[main_basesoc_data_port_adr] <= main_basesoc_data_port_dat_w[79:72];
-	data_mem_grain9_adr0 <= main_basesoc_data_port_adr;
+	if (main_data_port_we[9])
+		data_mem_grain9[main_data_port_adr] <= main_data_port_dat_w[79:72];
+	data_mem_grain9_adr0 <= main_data_port_adr;
 end
-assign main_basesoc_data_port_dat_r[79:72] = data_mem_grain9[data_mem_grain9_adr0];
+assign main_data_port_dat_r[79:72] = data_mem_grain9[data_mem_grain9_adr0];
 
 
 //------------------------------------------------------------------------------
@@ -8592,11 +7512,11 @@ assign main_basesoc_data_port_dat_r[79:72] = data_mem_grain9[data_mem_grain9_adr
 reg [7:0] data_mem_grain10[0:511];
 reg [8:0] data_mem_grain10_adr0;
 always @(posedge sys_clk) begin
-	if (main_basesoc_data_port_we[10])
-		data_mem_grain10[main_basesoc_data_port_adr] <= main_basesoc_data_port_dat_w[87:80];
-	data_mem_grain10_adr0 <= main_basesoc_data_port_adr;
+	if (main_data_port_we[10])
+		data_mem_grain10[main_data_port_adr] <= main_data_port_dat_w[87:80];
+	data_mem_grain10_adr0 <= main_data_port_adr;
 end
-assign main_basesoc_data_port_dat_r[87:80] = data_mem_grain10[data_mem_grain10_adr0];
+assign main_data_port_dat_r[87:80] = data_mem_grain10[data_mem_grain10_adr0];
 
 
 //------------------------------------------------------------------------------
@@ -8606,11 +7526,11 @@ assign main_basesoc_data_port_dat_r[87:80] = data_mem_grain10[data_mem_grain10_a
 reg [7:0] data_mem_grain11[0:511];
 reg [8:0] data_mem_grain11_adr0;
 always @(posedge sys_clk) begin
-	if (main_basesoc_data_port_we[11])
-		data_mem_grain11[main_basesoc_data_port_adr] <= main_basesoc_data_port_dat_w[95:88];
-	data_mem_grain11_adr0 <= main_basesoc_data_port_adr;
+	if (main_data_port_we[11])
+		data_mem_grain11[main_data_port_adr] <= main_data_port_dat_w[95:88];
+	data_mem_grain11_adr0 <= main_data_port_adr;
 end
-assign main_basesoc_data_port_dat_r[95:88] = data_mem_grain11[data_mem_grain11_adr0];
+assign main_data_port_dat_r[95:88] = data_mem_grain11[data_mem_grain11_adr0];
 
 
 //------------------------------------------------------------------------------
@@ -8620,11 +7540,11 @@ assign main_basesoc_data_port_dat_r[95:88] = data_mem_grain11[data_mem_grain11_a
 reg [7:0] data_mem_grain12[0:511];
 reg [8:0] data_mem_grain12_adr0;
 always @(posedge sys_clk) begin
-	if (main_basesoc_data_port_we[12])
-		data_mem_grain12[main_basesoc_data_port_adr] <= main_basesoc_data_port_dat_w[103:96];
-	data_mem_grain12_adr0 <= main_basesoc_data_port_adr;
+	if (main_data_port_we[12])
+		data_mem_grain12[main_data_port_adr] <= main_data_port_dat_w[103:96];
+	data_mem_grain12_adr0 <= main_data_port_adr;
 end
-assign main_basesoc_data_port_dat_r[103:96] = data_mem_grain12[data_mem_grain12_adr0];
+assign main_data_port_dat_r[103:96] = data_mem_grain12[data_mem_grain12_adr0];
 
 
 //------------------------------------------------------------------------------
@@ -8634,11 +7554,11 @@ assign main_basesoc_data_port_dat_r[103:96] = data_mem_grain12[data_mem_grain12_
 reg [7:0] data_mem_grain13[0:511];
 reg [8:0] data_mem_grain13_adr0;
 always @(posedge sys_clk) begin
-	if (main_basesoc_data_port_we[13])
-		data_mem_grain13[main_basesoc_data_port_adr] <= main_basesoc_data_port_dat_w[111:104];
-	data_mem_grain13_adr0 <= main_basesoc_data_port_adr;
+	if (main_data_port_we[13])
+		data_mem_grain13[main_data_port_adr] <= main_data_port_dat_w[111:104];
+	data_mem_grain13_adr0 <= main_data_port_adr;
 end
-assign main_basesoc_data_port_dat_r[111:104] = data_mem_grain13[data_mem_grain13_adr0];
+assign main_data_port_dat_r[111:104] = data_mem_grain13[data_mem_grain13_adr0];
 
 
 //------------------------------------------------------------------------------
@@ -8648,11 +7568,11 @@ assign main_basesoc_data_port_dat_r[111:104] = data_mem_grain13[data_mem_grain13
 reg [7:0] data_mem_grain14[0:511];
 reg [8:0] data_mem_grain14_adr0;
 always @(posedge sys_clk) begin
-	if (main_basesoc_data_port_we[14])
-		data_mem_grain14[main_basesoc_data_port_adr] <= main_basesoc_data_port_dat_w[119:112];
-	data_mem_grain14_adr0 <= main_basesoc_data_port_adr;
+	if (main_data_port_we[14])
+		data_mem_grain14[main_data_port_adr] <= main_data_port_dat_w[119:112];
+	data_mem_grain14_adr0 <= main_data_port_adr;
 end
-assign main_basesoc_data_port_dat_r[119:112] = data_mem_grain14[data_mem_grain14_adr0];
+assign main_data_port_dat_r[119:112] = data_mem_grain14[data_mem_grain14_adr0];
 
 
 //------------------------------------------------------------------------------
@@ -8662,18 +7582,18 @@ assign main_basesoc_data_port_dat_r[119:112] = data_mem_grain14[data_mem_grain14
 reg [7:0] data_mem_grain15[0:511];
 reg [8:0] data_mem_grain15_adr0;
 always @(posedge sys_clk) begin
-	if (main_basesoc_data_port_we[15])
-		data_mem_grain15[main_basesoc_data_port_adr] <= main_basesoc_data_port_dat_w[127:120];
-	data_mem_grain15_adr0 <= main_basesoc_data_port_adr;
+	if (main_data_port_we[15])
+		data_mem_grain15[main_data_port_adr] <= main_data_port_dat_w[127:120];
+	data_mem_grain15_adr0 <= main_data_port_adr;
 end
-assign main_basesoc_data_port_dat_r[127:120] = data_mem_grain15[data_mem_grain15_adr0];
+assign main_data_port_dat_r[127:120] = data_mem_grain15[data_mem_grain15_adr0];
 
 
 DFF ars_cd_sys_ff0(
 	.clk(sys_clk),
 	.clrn(1'd1),
 	.d(1'd0),
-	.prn((~(~main_crg_locked))),
+	.prn((~(~main_locked))),
 	.q(ars_cd_sys_rst_meta)
 );
 
@@ -8681,7 +7601,7 @@ DFF ars_cd_sys_ff1(
 	.clk(sys_clk),
 	.clrn(1'd1),
 	.d(ars_cd_sys_rst_meta),
-	.prn((~(~main_crg_locked))),
+	.prn((~(~main_locked))),
 	.q(sys_rst)
 );
 
@@ -8689,7 +7609,7 @@ DFF ars_cd_sys_ps_ff0(
 	.clk(sys_ps_clk),
 	.clrn(1'd1),
 	.d(1'd0),
-	.prn((~(~main_crg_locked))),
+	.prn((~(~main_locked))),
 	.q(ars_cd_sys_ps_rst_meta)
 );
 
@@ -8697,7 +7617,7 @@ DFF ars_cd_sys_ps_ff1(
 	.clk(sys_ps_clk),
 	.clrn(1'd1),
 	.d(ars_cd_sys_ps_rst_meta),
-	.prn((~(~main_crg_locked))),
+	.prn((~(~main_locked))),
 	.q(sys_ps_rst)
 );
 
@@ -9247,5 +8167,5 @@ ALTDDIO_IN #(
 endmodule
 
 // -----------------------------------------------------------------------------
-//  Auto-Generated by LiteX on 2022-11-25 13:02:02.
+//  Auto-Generated by LiteX on 2022-11-29 13:42:03.
 //------------------------------------------------------------------------------

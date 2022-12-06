@@ -522,7 +522,8 @@ class USB2AudioInterface(Elaboratable):
         #if self.USE_CONVOLUTION:
         convolver_led = platform.request("led", 0)
         m.d.comb += [
-            convolver_led.o.eq(litex_soc._led ^ enable_convolver),
+            convolver_led.o.eq(enable_convolver),
+            #convolver_led.o.eq(litex_soc._led ^ enable_convolver<),
         ]
 
         return m
