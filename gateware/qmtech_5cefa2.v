@@ -8,8 +8,8 @@
 //
 // Filename   : qmtech_5cefa2.v
 // Device     : 5CEFA2F23C8
-// LiteX sha1 : c957ed6e
-// Date       : 2022-11-28 15:57:52
+// LiteX sha1 : 0ce6b555
+// Date       : 2022-11-29 13:42:03
 //------------------------------------------------------------------------------
 
 `timescale 1ns / 1ps
@@ -1093,243 +1093,215 @@ wire          main_wait;
 wire          main_done;
 reg    [25:0] main_count = 26'd52500000;
 reg           main_leds = 1'd0;
-wire          main_i2s_rx_rx_pin;
-wire          main_i2s_rx_sync_pin;
-wire          main_i2s_rx_clk_pin;
-reg           main_i2s_rx_clk_d = 1'd0;
-wire          main_i2s_rx_rising_edge;
-wire          main_i2s_rx_falling_edge;
-wire   [29:0] main_i2s_rx_bus_adr;
-wire   [31:0] main_i2s_rx_bus_dat_w;
-reg    [31:0] main_i2s_rx_bus_dat_r = 32'd0;
-wire    [3:0] main_i2s_rx_bus_sel;
-wire          main_i2s_rx_bus_cyc;
-wire          main_i2s_rx_bus_stb;
-reg           main_i2s_rx_bus_ack = 1'd0;
-wire          main_i2s_rx_bus_we;
-wire    [2:0] main_i2s_rx_bus_cti;
-wire    [1:0] main_i2s_rx_bus_bte;
-reg           main_i2s_rx_bus_err = 1'd0;
-reg           main_i2s_rx_rd_ack = 1'd0;
-reg           main_i2s_rx_wr_ack = 1'd0;
-wire          main_i2s_rx_irq;
-wire          main_i2s_rx_rx_ready_status;
-reg           main_i2s_rx_rx_ready_pending = 1'd0;
-wire          main_i2s_rx_rx_ready_trigger;
-reg           main_i2s_rx_rx_ready_clear = 1'd0;
-wire          main_i2s_rx_rx_error_status;
-reg           main_i2s_rx_rx_error_pending = 1'd0;
-wire          main_i2s_rx_rx_error_trigger;
-reg           main_i2s_rx_rx_error_clear = 1'd0;
-wire          main_i2s_rx_rx_ready0;
-wire          main_i2s_rx_rx_error0;
-reg     [1:0] main_i2s_rx_status_status = 2'd0;
-wire          main_i2s_rx_status_we;
-reg           main_i2s_rx_status_re = 1'd0;
-wire          main_i2s_rx_rx_ready1;
-wire          main_i2s_rx_rx_error1;
-reg     [1:0] main_i2s_rx_pending_status = 2'd0;
-wire          main_i2s_rx_pending_we;
-reg           main_i2s_rx_pending_re = 1'd0;
-reg     [1:0] main_i2s_rx_pending_r = 2'd0;
-wire          main_i2s_rx_rx_ready2;
-wire          main_i2s_rx_rx_error2;
-reg     [1:0] main_i2s_rx_enable_storage = 2'd0;
-reg           main_i2s_rx_enable_re = 1'd0;
-wire          main_i2s_rx_csrfield_enable;
-reg           main_i2s_rx_csrfield_reset = 1'd0;
-reg     [1:0] main_i2s_rx_rx_ctl_storage = 2'd0;
-reg           main_i2s_rx_rx_ctl_re = 1'd0;
-wire          main_i2s_rx_csrfield_overflow;
-wire          main_i2s_rx_csrfield_underflow;
-wire          main_i2s_rx_csrfield_dataready;
-wire          main_i2s_rx_csrfield_empty;
-wire    [8:0] main_i2s_rx_csrfield_wrcount;
-wire    [8:0] main_i2s_rx_csrfield_rdcount;
-wire    [8:0] main_i2s_rx_csrfield_fifo_depth;
-reg           main_i2s_rx_csrfield_concatenate_channels = 1'd0;
-reg    [31:0] main_i2s_rx_rx_stat_status = 32'd0;
-wire          main_i2s_rx_rx_stat_we;
-reg           main_i2s_rx_rx_stat_re = 1'd0;
-reg     [1:0] main_i2s_rx_csrfield_format = 2'd1;
-reg     [5:0] main_i2s_rx_csrfield_sample_width = 6'd24;
-reg    [23:0] main_i2s_rx_csrfield_lrck_freq = 24'd48000;
-reg    [31:0] main_i2s_rx_rx_conf_status = 32'd12288097;
-wire          main_i2s_rx_rx_conf_we;
-reg           main_i2s_rx_rx_conf_re = 1'd0;
-reg     [2:0] main_i2s_rx_rx_rst_cnt = 3'd0;
-reg           main_i2s_rx_rx_reset = 1'd0;
-wire   [23:0] main_i2s_rx_rx_fifo_rx_fifo_rd_d;
-reg           main_i2s_rx_rx_fifo_rx_fifo_almostfull = 1'd0;
-reg           main_i2s_rx_rx_fifo_rx_fifo_almostempty = 1'd0;
-reg           main_i2s_rx_rx_fifo_rx_fifo_full = 1'd0;
-reg           main_i2s_rx_rx_fifo_rx_fifo_empty = 1'd0;
-reg    [12:0] main_i2s_rx_rx_fifo_rx_fifo_rdcount = 13'd0;
-wire          main_i2s_rx_rx_fifo_rx_fifo_rderr;
-wire          main_i2s_rx_rx_fifo_rx_fifo_wrerr;
-reg    [12:0] main_i2s_rx_rx_fifo_rx_fifo_wrcount = 13'd0;
-reg           main_i2s_rx_rx_fifo_rx_fifo_rden = 1'd0;
-reg    [23:0] main_i2s_rx_rx_fifo_rx_fifo_wr_d = 24'd0;
-reg           main_i2s_rx_rx_fifo_rx_fifo_wren = 1'd0;
-wire          main_i2s_rx_rx_fifo_rx_fifo_reset;
-wire   [13:0] main_i2s_rx_rx_fifo_level0;
-wire          main_i2s_rx_rx_fifo_sink_valid;
-wire          main_i2s_rx_rx_fifo_sink_ready;
-reg           main_i2s_rx_rx_fifo_sink_first = 1'd0;
-reg           main_i2s_rx_rx_fifo_sink_last = 1'd0;
-wire   [23:0] main_i2s_rx_rx_fifo_sink_payload_data;
-wire          main_i2s_rx_rx_fifo_source_valid;
-wire          main_i2s_rx_rx_fifo_source_ready;
-wire          main_i2s_rx_rx_fifo_source_first;
-wire          main_i2s_rx_rx_fifo_source_last;
-wire   [23:0] main_i2s_rx_rx_fifo_source_payload_data;
-wire          main_i2s_rx_rx_fifo_syncfifo_we;
-wire          main_i2s_rx_rx_fifo_syncfifo_writable;
-wire          main_i2s_rx_rx_fifo_syncfifo_re;
-wire          main_i2s_rx_rx_fifo_syncfifo_readable;
-wire   [25:0] main_i2s_rx_rx_fifo_syncfifo_din;
-wire   [25:0] main_i2s_rx_rx_fifo_syncfifo_dout;
-reg     [9:0] main_i2s_rx_rx_fifo_level1 = 10'd0;
-reg           main_i2s_rx_rx_fifo_replace = 1'd0;
-reg     [8:0] main_i2s_rx_rx_fifo_produce = 9'd0;
-reg     [8:0] main_i2s_rx_rx_fifo_consume = 9'd0;
-reg     [8:0] main_i2s_rx_rx_fifo_wrport_adr = 9'd0;
-wire   [25:0] main_i2s_rx_rx_fifo_wrport_dat_r;
-wire          main_i2s_rx_rx_fifo_wrport_we;
-wire   [25:0] main_i2s_rx_rx_fifo_wrport_dat_w;
-wire          main_i2s_rx_rx_fifo_do_read;
-wire    [8:0] main_i2s_rx_rx_fifo_rdport_adr;
-wire   [25:0] main_i2s_rx_rx_fifo_rdport_dat_r;
-wire   [23:0] main_i2s_rx_rx_fifo_fifo_in_payload_data;
-wire          main_i2s_rx_rx_fifo_fifo_in_first;
-wire          main_i2s_rx_rx_fifo_fifo_in_last;
-wire   [23:0] main_i2s_rx_rx_fifo_fifo_out_payload_data;
-wire          main_i2s_rx_rx_fifo_fifo_out_first;
-wire          main_i2s_rx_rx_fifo_fifo_out_last;
-wire          main_i2s_rx_rx_fifo_reset;
-wire          main_i2s_rx_bus_read;
-reg           main_i2s_rx_bus_read_d = 1'd0;
-reg           main_i2s_rx_rd_ack_pipe = 1'd0;
-reg     [4:0] main_i2s_rx_rx_cnt = 5'd0;
-reg           main_i2s_rx_rx_delay_cnt = 1'd0;
-reg     [4:0] main_i2s_rx_rx_fsm = 5'd0;
-reg           main_i2s_tx_tx_pin = 1'd0;
-wire          main_i2s_tx_sync_pin;
-wire          main_i2s_tx_clk_pin;
-reg           main_i2s_tx_clk_d = 1'd0;
-wire          main_i2s_tx_rising_edge;
-wire          main_i2s_tx_falling_edge;
-wire   [29:0] main_i2s_tx_bus_adr;
-wire   [31:0] main_i2s_tx_bus_dat_w;
-reg    [31:0] main_i2s_tx_bus_dat_r = 32'd0;
-wire    [3:0] main_i2s_tx_bus_sel;
-wire          main_i2s_tx_bus_cyc;
-wire          main_i2s_tx_bus_stb;
-reg           main_i2s_tx_bus_ack = 1'd0;
-wire          main_i2s_tx_bus_we;
-wire    [2:0] main_i2s_tx_bus_cti;
-wire    [1:0] main_i2s_tx_bus_bte;
-reg           main_i2s_tx_bus_err = 1'd0;
-reg           main_i2s_tx_rd_ack = 1'd0;
-reg           main_i2s_tx_wr_ack = 1'd0;
-wire          main_i2s_tx_irq;
-wire          main_i2s_tx_tx_ready_status;
-reg           main_i2s_tx_tx_ready_pending = 1'd0;
-wire          main_i2s_tx_tx_ready_trigger;
-reg           main_i2s_tx_tx_ready_clear = 1'd0;
-wire          main_i2s_tx_tx_error_status;
-reg           main_i2s_tx_tx_error_pending = 1'd0;
-wire          main_i2s_tx_tx_error_trigger;
-reg           main_i2s_tx_tx_error_clear = 1'd0;
-wire          main_i2s_tx_tx_ready0;
-wire          main_i2s_tx_tx_error0;
-reg     [1:0] main_i2s_tx_status_status = 2'd0;
-wire          main_i2s_tx_status_we;
-reg           main_i2s_tx_status_re = 1'd0;
-wire          main_i2s_tx_tx_ready1;
-wire          main_i2s_tx_tx_error1;
-reg     [1:0] main_i2s_tx_pending_status = 2'd0;
-wire          main_i2s_tx_pending_we;
-reg           main_i2s_tx_pending_re = 1'd0;
-reg     [1:0] main_i2s_tx_pending_r = 2'd0;
-wire          main_i2s_tx_tx_ready2;
-wire          main_i2s_tx_tx_error2;
-reg     [1:0] main_i2s_tx_enable_storage = 2'd0;
-reg           main_i2s_tx_enable_re = 1'd0;
-wire          main_i2s_tx_csrfield_enable;
-reg           main_i2s_tx_csrfield_reset = 1'd0;
-reg     [1:0] main_i2s_tx_tx_ctl_storage = 2'd0;
-reg           main_i2s_tx_tx_ctl_re = 1'd0;
-reg           main_i2s_tx_csrfield_overflow = 1'd0;
-wire          main_i2s_tx_csrfield_underflow;
-wire          main_i2s_tx_csrfield_free;
-wire          main_i2s_tx_csrfield_almostfull;
-wire          main_i2s_tx_csrfield_full;
-wire          main_i2s_tx_csrfield_empty;
-wire    [8:0] main_i2s_tx_csrfield_wrcount;
-wire    [8:0] main_i2s_tx_csrfield_rdcount;
-reg           main_i2s_tx_csrfield_concatenate_channels = 1'd0;
-reg    [24:0] main_i2s_tx_tx_stat_status = 25'd0;
-wire          main_i2s_tx_tx_stat_we;
-reg           main_i2s_tx_tx_stat_re = 1'd0;
-reg     [1:0] main_i2s_tx_csrfield_format = 2'd1;
-reg     [5:0] main_i2s_tx_csrfield_sample_width = 6'd24;
-reg    [23:0] main_i2s_tx_csrfield_lrck_freq = 24'd48000;
-reg    [31:0] main_i2s_tx_tx_conf_status = 32'd12288097;
-wire          main_i2s_tx_tx_conf_we;
-reg           main_i2s_tx_tx_conf_re = 1'd0;
-reg     [2:0] main_i2s_tx_tx_rst_cnt = 3'd0;
-reg           main_i2s_tx_tx_reset = 1'd0;
-wire   [23:0] main_i2s_tx_tx_fifo_tx_fifo_rd_d;
-reg           main_i2s_tx_tx_fifo_tx_fifo_almostfull = 1'd0;
-reg           main_i2s_tx_tx_fifo_tx_fifo_almostempty = 1'd0;
-reg           main_i2s_tx_tx_fifo_tx_fifo_full = 1'd0;
-reg           main_i2s_tx_tx_fifo_tx_fifo_empty = 1'd0;
-reg    [12:0] main_i2s_tx_tx_fifo_tx_fifo_rdcount = 13'd0;
-wire          main_i2s_tx_tx_fifo_tx_fifo_rderr;
-wire          main_i2s_tx_tx_fifo_tx_fifo_wrerr;
-reg    [12:0] main_i2s_tx_tx_fifo_tx_fifo_wrcount = 13'd0;
-reg           main_i2s_tx_tx_fifo_tx_fifo_rden = 1'd0;
-reg    [23:0] main_i2s_tx_tx_fifo_tx_fifo_wr_d = 24'd0;
-reg           main_i2s_tx_tx_fifo_tx_fifo_wren = 1'd0;
-wire          main_i2s_tx_tx_fifo_tx_fifo_reset;
-wire   [13:0] main_i2s_tx_tx_fifo_level0;
-wire          main_i2s_tx_tx_fifo_sink_valid;
-wire          main_i2s_tx_tx_fifo_sink_ready;
-reg           main_i2s_tx_tx_fifo_sink_first = 1'd0;
-reg           main_i2s_tx_tx_fifo_sink_last = 1'd0;
-wire   [23:0] main_i2s_tx_tx_fifo_sink_payload_data;
-wire          main_i2s_tx_tx_fifo_source_valid;
-wire          main_i2s_tx_tx_fifo_source_ready;
-wire          main_i2s_tx_tx_fifo_source_first;
-wire          main_i2s_tx_tx_fifo_source_last;
-wire   [23:0] main_i2s_tx_tx_fifo_source_payload_data;
-wire          main_i2s_tx_tx_fifo_syncfifo_we;
-wire          main_i2s_tx_tx_fifo_syncfifo_writable;
-wire          main_i2s_tx_tx_fifo_syncfifo_re;
-wire          main_i2s_tx_tx_fifo_syncfifo_readable;
-wire   [25:0] main_i2s_tx_tx_fifo_syncfifo_din;
-wire   [25:0] main_i2s_tx_tx_fifo_syncfifo_dout;
-reg     [9:0] main_i2s_tx_tx_fifo_level1 = 10'd0;
-reg           main_i2s_tx_tx_fifo_replace = 1'd0;
-reg     [8:0] main_i2s_tx_tx_fifo_produce = 9'd0;
-reg     [8:0] main_i2s_tx_tx_fifo_consume = 9'd0;
-reg     [8:0] main_i2s_tx_tx_fifo_wrport_adr = 9'd0;
-wire   [25:0] main_i2s_tx_tx_fifo_wrport_dat_r;
-wire          main_i2s_tx_tx_fifo_wrport_we;
-wire   [25:0] main_i2s_tx_tx_fifo_wrport_dat_w;
-wire          main_i2s_tx_tx_fifo_do_read;
-wire    [8:0] main_i2s_tx_tx_fifo_rdport_adr;
-wire   [25:0] main_i2s_tx_tx_fifo_rdport_dat_r;
-wire   [23:0] main_i2s_tx_tx_fifo_fifo_in_payload_data;
-wire          main_i2s_tx_tx_fifo_fifo_in_first;
-wire          main_i2s_tx_tx_fifo_fifo_in_last;
-wire   [23:0] main_i2s_tx_tx_fifo_fifo_out_payload_data;
-wire          main_i2s_tx_tx_fifo_fifo_out_first;
-wire          main_i2s_tx_tx_fifo_fifo_out_last;
-wire          main_i2s_tx_tx_fifo_reset;
-reg     [4:0] main_i2s_tx_tx_cnt = 5'd0;
-reg    [24:0] main_i2s_tx_tx_buf = 25'd0;
+reg           main_tx_pin = 1'd0;
+wire          main_rx_pin;
+wire          main_sync_pin;
+wire          main_clk_pin;
+reg           main_clk_d = 1'd0;
+wire          main_rising_edge;
+wire          main_falling_edge;
+wire   [29:0] main_bus_adr;
+wire   [31:0] main_bus_dat_w;
+reg    [31:0] main_bus_dat_r = 32'd0;
+wire    [3:0] main_bus_sel;
+wire          main_bus_cyc;
+wire          main_bus_stb;
+reg           main_bus_ack = 1'd0;
+wire          main_bus_we;
+wire    [2:0] main_bus_cti;
+wire    [1:0] main_bus_bte;
+reg           main_bus_err = 1'd0;
+reg           main_rd_ack = 1'd0;
+reg           main_wr_ack = 1'd0;
+wire          main_irq;
+wire          main_rx_ready_status;
+reg           main_rx_ready_pending = 1'd0;
+wire          main_rx_ready_trigger;
+reg           main_rx_ready_clear = 1'd0;
+wire          main_rx_error_status;
+reg           main_rx_error_pending = 1'd0;
+wire          main_rx_error_trigger;
+reg           main_rx_error_clear = 1'd0;
+wire          main_tx_ready_status;
+reg           main_tx_ready_pending = 1'd0;
+wire          main_tx_ready_trigger;
+reg           main_tx_ready_clear = 1'd0;
+wire          main_tx_error_status;
+reg           main_tx_error_pending = 1'd0;
+wire          main_tx_error_trigger;
+reg           main_tx_error_clear = 1'd0;
+wire          main_rx_ready0;
+wire          main_rx_error0;
+wire          main_tx_ready0;
+wire          main_tx_error0;
+reg     [3:0] main_status_status = 4'd0;
+wire          main_status_we;
+reg           main_status_re = 1'd0;
+wire          main_rx_ready1;
+wire          main_rx_error1;
+wire          main_tx_ready1;
+wire          main_tx_error1;
+reg     [3:0] main_pending_status = 4'd0;
+wire          main_pending_we;
+reg           main_pending_re = 1'd0;
+reg     [3:0] main_pending_r = 4'd0;
+wire          main_rx_ready2;
+wire          main_rx_error2;
+wire          main_tx_ready2;
+wire          main_tx_error2;
+reg     [3:0] main_enable_storage = 4'd0;
+reg           main_enable_re = 1'd0;
+wire          main_csrfield_enable0;
+reg           main_csrfield_reset0 = 1'd0;
+reg     [1:0] main_rx_ctl_storage = 2'd0;
+reg           main_rx_ctl_re = 1'd0;
+wire          main_csrfield_overflow0;
+wire          main_csrfield_underflow0;
+wire          main_csrfield_dataready;
+wire          main_csrfield_empty0;
+wire    [8:0] main_csrfield_wrcount0;
+wire    [8:0] main_csrfield_rdcount0;
+wire    [8:0] main_csrfield_fifo_depth;
+reg           main_csrfield_concatenate_channels0 = 1'd0;
+reg    [31:0] main_rx_stat_status = 32'd0;
+wire          main_rx_stat_we;
+reg           main_rx_stat_re = 1'd0;
+reg     [1:0] main_csrfield_format0 = 2'd1;
+reg     [5:0] main_csrfield_sample_width0 = 6'd24;
+reg    [23:0] main_csrfield_lrck_freq0 = 24'd48000;
+reg    [31:0] main_rx_conf_status = 32'd12288097;
+wire          main_rx_conf_we;
+reg           main_rx_conf_re = 1'd0;
+reg     [2:0] main_rx_rst_cnt = 3'd0;
+reg           main_rx_reset = 1'd0;
+wire   [23:0] main_rx_fifo_rx_fifo_rd_d;
+reg           main_rx_fifo_rx_fifo_almostfull = 1'd0;
+reg           main_rx_fifo_rx_fifo_almostempty = 1'd0;
+reg           main_rx_fifo_rx_fifo_full = 1'd0;
+reg           main_rx_fifo_rx_fifo_empty = 1'd0;
+reg    [12:0] main_rx_fifo_rx_fifo_rdcount = 13'd0;
+wire          main_rx_fifo_rx_fifo_rderr;
+wire          main_rx_fifo_rx_fifo_wrerr;
+reg    [12:0] main_rx_fifo_rx_fifo_wrcount = 13'd0;
+reg           main_rx_fifo_rx_fifo_rden = 1'd0;
+reg    [23:0] main_rx_fifo_rx_fifo_wr_d = 24'd0;
+reg           main_rx_fifo_rx_fifo_wren = 1'd0;
+wire          main_rx_fifo_rx_fifo_reset;
+wire   [13:0] main_rx_fifo_level0;
+wire          main_rx_fifo_sink_valid;
+wire          main_rx_fifo_sink_ready;
+reg           main_rx_fifo_sink_first = 1'd0;
+reg           main_rx_fifo_sink_last = 1'd0;
+wire   [23:0] main_rx_fifo_sink_payload_data;
+wire          main_rx_fifo_source_valid;
+wire          main_rx_fifo_source_ready;
+wire          main_rx_fifo_source_first;
+wire          main_rx_fifo_source_last;
+wire   [23:0] main_rx_fifo_source_payload_data;
+wire          main_rx_fifo_syncfifo_we;
+wire          main_rx_fifo_syncfifo_writable;
+wire          main_rx_fifo_syncfifo_re;
+wire          main_rx_fifo_syncfifo_readable;
+wire   [25:0] main_rx_fifo_syncfifo_din;
+wire   [25:0] main_rx_fifo_syncfifo_dout;
+reg     [9:0] main_rx_fifo_level1 = 10'd0;
+reg           main_rx_fifo_replace = 1'd0;
+reg     [8:0] main_rx_fifo_produce = 9'd0;
+reg     [8:0] main_rx_fifo_consume = 9'd0;
+reg     [8:0] main_rx_fifo_wrport_adr = 9'd0;
+wire   [25:0] main_rx_fifo_wrport_dat_r;
+wire          main_rx_fifo_wrport_we;
+wire   [25:0] main_rx_fifo_wrport_dat_w;
+wire          main_rx_fifo_do_read;
+wire    [8:0] main_rx_fifo_rdport_adr;
+wire   [25:0] main_rx_fifo_rdport_dat_r;
+wire   [23:0] main_rx_fifo_fifo_in_payload_data;
+wire          main_rx_fifo_fifo_in_first;
+wire          main_rx_fifo_fifo_in_last;
+wire   [23:0] main_rx_fifo_fifo_out_payload_data;
+wire          main_rx_fifo_fifo_out_first;
+wire          main_rx_fifo_fifo_out_last;
+wire          main_rx_fifo_reset;
+wire          main_bus_read;
+reg           main_bus_read_d = 1'd0;
+reg           main_rd_ack_pipe = 1'd0;
+reg     [4:0] main_rx_cnt = 5'd0;
+reg           main_rx_delay_cnt = 1'd0;
+reg     [4:0] main_rx_fsm = 5'd0;
+wire          main_csrfield_enable1;
+reg           main_csrfield_reset1 = 1'd0;
+reg     [1:0] main_tx_ctl_storage = 2'd0;
+reg           main_tx_ctl_re = 1'd0;
+reg           main_csrfield_overflow1 = 1'd0;
+wire          main_csrfield_underflow1;
+wire          main_csrfield_free;
+wire          main_csrfield_almostfull;
+wire          main_csrfield_full;
+wire          main_csrfield_empty1;
+wire    [8:0] main_csrfield_wrcount1;
+wire    [8:0] main_csrfield_rdcount1;
+reg           main_csrfield_concatenate_channels1 = 1'd0;
+reg    [24:0] main_tx_stat_status = 25'd0;
+wire          main_tx_stat_we;
+reg           main_tx_stat_re = 1'd0;
+reg     [1:0] main_csrfield_format1 = 2'd1;
+reg     [5:0] main_csrfield_sample_width1 = 6'd24;
+reg    [23:0] main_csrfield_lrck_freq1 = 24'd48000;
+reg    [31:0] main_tx_conf_status = 32'd12288097;
+wire          main_tx_conf_we;
+reg           main_tx_conf_re = 1'd0;
+reg     [2:0] main_tx_rst_cnt = 3'd0;
+reg           main_tx_reset = 1'd0;
+wire   [23:0] main_tx_fifo_tx_fifo_rd_d;
+reg           main_tx_fifo_tx_fifo_almostfull = 1'd0;
+reg           main_tx_fifo_tx_fifo_almostempty = 1'd0;
+reg           main_tx_fifo_tx_fifo_full = 1'd0;
+reg           main_tx_fifo_tx_fifo_empty = 1'd0;
+reg    [12:0] main_tx_fifo_tx_fifo_rdcount = 13'd0;
+wire          main_tx_fifo_tx_fifo_rderr;
+wire          main_tx_fifo_tx_fifo_wrerr;
+reg    [12:0] main_tx_fifo_tx_fifo_wrcount = 13'd0;
+reg           main_tx_fifo_tx_fifo_rden = 1'd0;
+reg    [23:0] main_tx_fifo_tx_fifo_wr_d = 24'd0;
+reg           main_tx_fifo_tx_fifo_wren = 1'd0;
+wire          main_tx_fifo_tx_fifo_reset;
+wire   [13:0] main_tx_fifo_level0;
+wire          main_tx_fifo_sink_valid;
+wire          main_tx_fifo_sink_ready;
+reg           main_tx_fifo_sink_first = 1'd0;
+reg           main_tx_fifo_sink_last = 1'd0;
+wire   [23:0] main_tx_fifo_sink_payload_data;
+wire          main_tx_fifo_source_valid;
+wire          main_tx_fifo_source_ready;
+wire          main_tx_fifo_source_first;
+wire          main_tx_fifo_source_last;
+wire   [23:0] main_tx_fifo_source_payload_data;
+wire          main_tx_fifo_syncfifo_we;
+wire          main_tx_fifo_syncfifo_writable;
+wire          main_tx_fifo_syncfifo_re;
+wire          main_tx_fifo_syncfifo_readable;
+wire   [25:0] main_tx_fifo_syncfifo_din;
+wire   [25:0] main_tx_fifo_syncfifo_dout;
+reg     [9:0] main_tx_fifo_level1 = 10'd0;
+reg           main_tx_fifo_replace = 1'd0;
+reg     [8:0] main_tx_fifo_produce = 9'd0;
+reg     [8:0] main_tx_fifo_consume = 9'd0;
+reg     [8:0] main_tx_fifo_wrport_adr = 9'd0;
+wire   [25:0] main_tx_fifo_wrport_dat_r;
+wire          main_tx_fifo_wrport_we;
+wire   [25:0] main_tx_fifo_wrport_dat_w;
+wire          main_tx_fifo_do_read;
+wire    [8:0] main_tx_fifo_rdport_adr;
+wire   [25:0] main_tx_fifo_rdport_dat_r;
+wire   [23:0] main_tx_fifo_fifo_in_payload_data;
+wire          main_tx_fifo_fifo_in_first;
+wire          main_tx_fifo_fifo_in_last;
+wire   [23:0] main_tx_fifo_fifo_out_payload_data;
+wire          main_tx_fifo_fifo_out_first;
+wire          main_tx_fifo_fifo_out_last;
+wire          main_tx_fifo_reset;
+reg     [4:0] main_tx_cnt = 5'd0;
+reg    [24:0] main_tx_buf = 25'd0;
 reg           main_uartbone_phy_tx_sink_valid = 1'd0;
 reg           main_uartbone_phy_tx_sink_ready = 1'd0;
 wire          main_uartbone_phy_tx_sink_last;
@@ -1429,17 +1401,17 @@ wire          builder_csr_bankarray_interface1_bank_bus_we;
 wire   [31:0] builder_csr_bankarray_interface1_bank_bus_dat_w;
 reg    [31:0] builder_csr_bankarray_interface1_bank_bus_dat_r = 32'd0;
 reg           builder_csr_bankarray_csrbank1_ev_status_re = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank1_ev_status_r;
+wire    [3:0] builder_csr_bankarray_csrbank1_ev_status_r;
 reg           builder_csr_bankarray_csrbank1_ev_status_we = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank1_ev_status_w;
+wire    [3:0] builder_csr_bankarray_csrbank1_ev_status_w;
 reg           builder_csr_bankarray_csrbank1_ev_pending_re = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank1_ev_pending_r;
+wire    [3:0] builder_csr_bankarray_csrbank1_ev_pending_r;
 reg           builder_csr_bankarray_csrbank1_ev_pending_we = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank1_ev_pending_w;
+wire    [3:0] builder_csr_bankarray_csrbank1_ev_pending_w;
 reg           builder_csr_bankarray_csrbank1_ev_enable0_re = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank1_ev_enable0_r;
+wire    [3:0] builder_csr_bankarray_csrbank1_ev_enable0_r;
 reg           builder_csr_bankarray_csrbank1_ev_enable0_we = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank1_ev_enable0_w;
+wire    [3:0] builder_csr_bankarray_csrbank1_ev_enable0_w;
 reg           builder_csr_bankarray_csrbank1_rx_ctl0_re = 1'd0;
 wire    [1:0] builder_csr_bankarray_csrbank1_rx_ctl0_r;
 reg           builder_csr_bankarray_csrbank1_rx_ctl0_we = 1'd0;
@@ -1452,36 +1424,19 @@ reg           builder_csr_bankarray_csrbank1_rx_conf_re = 1'd0;
 wire   [31:0] builder_csr_bankarray_csrbank1_rx_conf_r;
 reg           builder_csr_bankarray_csrbank1_rx_conf_we = 1'd0;
 wire   [31:0] builder_csr_bankarray_csrbank1_rx_conf_w;
+reg           builder_csr_bankarray_csrbank1_tx_ctl0_re = 1'd0;
+wire    [1:0] builder_csr_bankarray_csrbank1_tx_ctl0_r;
+reg           builder_csr_bankarray_csrbank1_tx_ctl0_we = 1'd0;
+wire    [1:0] builder_csr_bankarray_csrbank1_tx_ctl0_w;
+reg           builder_csr_bankarray_csrbank1_tx_stat_re = 1'd0;
+wire   [24:0] builder_csr_bankarray_csrbank1_tx_stat_r;
+reg           builder_csr_bankarray_csrbank1_tx_stat_we = 1'd0;
+wire   [24:0] builder_csr_bankarray_csrbank1_tx_stat_w;
+reg           builder_csr_bankarray_csrbank1_tx_conf_re = 1'd0;
+wire   [31:0] builder_csr_bankarray_csrbank1_tx_conf_r;
+reg           builder_csr_bankarray_csrbank1_tx_conf_we = 1'd0;
+wire   [31:0] builder_csr_bankarray_csrbank1_tx_conf_w;
 wire          builder_csr_bankarray_csrbank1_sel;
-wire   [13:0] builder_csr_bankarray_interface2_bank_bus_adr;
-wire          builder_csr_bankarray_interface2_bank_bus_we;
-wire   [31:0] builder_csr_bankarray_interface2_bank_bus_dat_w;
-reg    [31:0] builder_csr_bankarray_interface2_bank_bus_dat_r = 32'd0;
-reg           builder_csr_bankarray_csrbank2_ev_status_re = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank2_ev_status_r;
-reg           builder_csr_bankarray_csrbank2_ev_status_we = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank2_ev_status_w;
-reg           builder_csr_bankarray_csrbank2_ev_pending_re = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank2_ev_pending_r;
-reg           builder_csr_bankarray_csrbank2_ev_pending_we = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank2_ev_pending_w;
-reg           builder_csr_bankarray_csrbank2_ev_enable0_re = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank2_ev_enable0_r;
-reg           builder_csr_bankarray_csrbank2_ev_enable0_we = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank2_ev_enable0_w;
-reg           builder_csr_bankarray_csrbank2_tx_ctl0_re = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank2_tx_ctl0_r;
-reg           builder_csr_bankarray_csrbank2_tx_ctl0_we = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank2_tx_ctl0_w;
-reg           builder_csr_bankarray_csrbank2_tx_stat_re = 1'd0;
-wire   [24:0] builder_csr_bankarray_csrbank2_tx_stat_r;
-reg           builder_csr_bankarray_csrbank2_tx_stat_we = 1'd0;
-wire   [24:0] builder_csr_bankarray_csrbank2_tx_stat_w;
-reg           builder_csr_bankarray_csrbank2_tx_conf_re = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank2_tx_conf_r;
-reg           builder_csr_bankarray_csrbank2_tx_conf_we = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank2_tx_conf_w;
-wire          builder_csr_bankarray_csrbank2_sel;
 wire   [13:0] builder_csr_bankarray_sram_bus_adr;
 wire          builder_csr_bankarray_sram_bus_we;
 wire   [31:0] builder_csr_bankarray_sram_bus_dat_w;
@@ -1490,114 +1445,114 @@ wire    [5:0] builder_csr_bankarray_adr;
 wire    [7:0] builder_csr_bankarray_dat_r;
 wire          builder_csr_bankarray_sel;
 reg           builder_csr_bankarray_sel_r = 1'd0;
+wire   [13:0] builder_csr_bankarray_interface2_bank_bus_adr;
+wire          builder_csr_bankarray_interface2_bank_bus_we;
+wire   [31:0] builder_csr_bankarray_interface2_bank_bus_dat_w;
+reg    [31:0] builder_csr_bankarray_interface2_bank_bus_dat_r = 32'd0;
+reg           builder_csr_bankarray_csrbank2_out0_re = 1'd0;
+wire          builder_csr_bankarray_csrbank2_out0_r;
+reg           builder_csr_bankarray_csrbank2_out0_we = 1'd0;
+wire          builder_csr_bankarray_csrbank2_out0_w;
+wire          builder_csr_bankarray_csrbank2_sel;
 wire   [13:0] builder_csr_bankarray_interface3_bank_bus_adr;
 wire          builder_csr_bankarray_interface3_bank_bus_we;
 wire   [31:0] builder_csr_bankarray_interface3_bank_bus_dat_w;
 reg    [31:0] builder_csr_bankarray_interface3_bank_bus_dat_r = 32'd0;
-reg           builder_csr_bankarray_csrbank3_out0_re = 1'd0;
-wire          builder_csr_bankarray_csrbank3_out0_r;
-reg           builder_csr_bankarray_csrbank3_out0_we = 1'd0;
-wire          builder_csr_bankarray_csrbank3_out0_w;
+reg           builder_csr_bankarray_csrbank3_dfii_control0_re = 1'd0;
+wire    [3:0] builder_csr_bankarray_csrbank3_dfii_control0_r;
+reg           builder_csr_bankarray_csrbank3_dfii_control0_we = 1'd0;
+wire    [3:0] builder_csr_bankarray_csrbank3_dfii_control0_w;
+reg           builder_csr_bankarray_csrbank3_dfii_pi0_command0_re = 1'd0;
+wire    [5:0] builder_csr_bankarray_csrbank3_dfii_pi0_command0_r;
+reg           builder_csr_bankarray_csrbank3_dfii_pi0_command0_we = 1'd0;
+wire    [5:0] builder_csr_bankarray_csrbank3_dfii_pi0_command0_w;
+reg           builder_csr_bankarray_csrbank3_dfii_pi0_address0_re = 1'd0;
+wire   [12:0] builder_csr_bankarray_csrbank3_dfii_pi0_address0_r;
+reg           builder_csr_bankarray_csrbank3_dfii_pi0_address0_we = 1'd0;
+wire   [12:0] builder_csr_bankarray_csrbank3_dfii_pi0_address0_w;
+reg           builder_csr_bankarray_csrbank3_dfii_pi0_baddress0_re = 1'd0;
+wire    [1:0] builder_csr_bankarray_csrbank3_dfii_pi0_baddress0_r;
+reg           builder_csr_bankarray_csrbank3_dfii_pi0_baddress0_we = 1'd0;
+wire    [1:0] builder_csr_bankarray_csrbank3_dfii_pi0_baddress0_w;
+reg           builder_csr_bankarray_csrbank3_dfii_pi0_wrdata0_re = 1'd0;
+wire   [15:0] builder_csr_bankarray_csrbank3_dfii_pi0_wrdata0_r;
+reg           builder_csr_bankarray_csrbank3_dfii_pi0_wrdata0_we = 1'd0;
+wire   [15:0] builder_csr_bankarray_csrbank3_dfii_pi0_wrdata0_w;
+reg           builder_csr_bankarray_csrbank3_dfii_pi0_rddata_re = 1'd0;
+wire   [15:0] builder_csr_bankarray_csrbank3_dfii_pi0_rddata_r;
+reg           builder_csr_bankarray_csrbank3_dfii_pi0_rddata_we = 1'd0;
+wire   [15:0] builder_csr_bankarray_csrbank3_dfii_pi0_rddata_w;
 wire          builder_csr_bankarray_csrbank3_sel;
 wire   [13:0] builder_csr_bankarray_interface4_bank_bus_adr;
 wire          builder_csr_bankarray_interface4_bank_bus_we;
 wire   [31:0] builder_csr_bankarray_interface4_bank_bus_dat_w;
 reg    [31:0] builder_csr_bankarray_interface4_bank_bus_dat_r = 32'd0;
-reg           builder_csr_bankarray_csrbank4_dfii_control0_re = 1'd0;
-wire    [3:0] builder_csr_bankarray_csrbank4_dfii_control0_r;
-reg           builder_csr_bankarray_csrbank4_dfii_control0_we = 1'd0;
-wire    [3:0] builder_csr_bankarray_csrbank4_dfii_control0_w;
-reg           builder_csr_bankarray_csrbank4_dfii_pi0_command0_re = 1'd0;
-wire    [5:0] builder_csr_bankarray_csrbank4_dfii_pi0_command0_r;
-reg           builder_csr_bankarray_csrbank4_dfii_pi0_command0_we = 1'd0;
-wire    [5:0] builder_csr_bankarray_csrbank4_dfii_pi0_command0_w;
-reg           builder_csr_bankarray_csrbank4_dfii_pi0_address0_re = 1'd0;
-wire   [12:0] builder_csr_bankarray_csrbank4_dfii_pi0_address0_r;
-reg           builder_csr_bankarray_csrbank4_dfii_pi0_address0_we = 1'd0;
-wire   [12:0] builder_csr_bankarray_csrbank4_dfii_pi0_address0_w;
-reg           builder_csr_bankarray_csrbank4_dfii_pi0_baddress0_re = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank4_dfii_pi0_baddress0_r;
-reg           builder_csr_bankarray_csrbank4_dfii_pi0_baddress0_we = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank4_dfii_pi0_baddress0_w;
-reg           builder_csr_bankarray_csrbank4_dfii_pi0_wrdata0_re = 1'd0;
-wire   [15:0] builder_csr_bankarray_csrbank4_dfii_pi0_wrdata0_r;
-reg           builder_csr_bankarray_csrbank4_dfii_pi0_wrdata0_we = 1'd0;
-wire   [15:0] builder_csr_bankarray_csrbank4_dfii_pi0_wrdata0_w;
-reg           builder_csr_bankarray_csrbank4_dfii_pi0_rddata_re = 1'd0;
-wire   [15:0] builder_csr_bankarray_csrbank4_dfii_pi0_rddata_r;
-reg           builder_csr_bankarray_csrbank4_dfii_pi0_rddata_we = 1'd0;
-wire   [15:0] builder_csr_bankarray_csrbank4_dfii_pi0_rddata_w;
+reg           builder_csr_bankarray_csrbank4_load0_re = 1'd0;
+wire   [31:0] builder_csr_bankarray_csrbank4_load0_r;
+reg           builder_csr_bankarray_csrbank4_load0_we = 1'd0;
+wire   [31:0] builder_csr_bankarray_csrbank4_load0_w;
+reg           builder_csr_bankarray_csrbank4_reload0_re = 1'd0;
+wire   [31:0] builder_csr_bankarray_csrbank4_reload0_r;
+reg           builder_csr_bankarray_csrbank4_reload0_we = 1'd0;
+wire   [31:0] builder_csr_bankarray_csrbank4_reload0_w;
+reg           builder_csr_bankarray_csrbank4_en0_re = 1'd0;
+wire          builder_csr_bankarray_csrbank4_en0_r;
+reg           builder_csr_bankarray_csrbank4_en0_we = 1'd0;
+wire          builder_csr_bankarray_csrbank4_en0_w;
+reg           builder_csr_bankarray_csrbank4_update_value0_re = 1'd0;
+wire          builder_csr_bankarray_csrbank4_update_value0_r;
+reg           builder_csr_bankarray_csrbank4_update_value0_we = 1'd0;
+wire          builder_csr_bankarray_csrbank4_update_value0_w;
+reg           builder_csr_bankarray_csrbank4_value_re = 1'd0;
+wire   [31:0] builder_csr_bankarray_csrbank4_value_r;
+reg           builder_csr_bankarray_csrbank4_value_we = 1'd0;
+wire   [31:0] builder_csr_bankarray_csrbank4_value_w;
+reg           builder_csr_bankarray_csrbank4_ev_status_re = 1'd0;
+wire          builder_csr_bankarray_csrbank4_ev_status_r;
+reg           builder_csr_bankarray_csrbank4_ev_status_we = 1'd0;
+wire          builder_csr_bankarray_csrbank4_ev_status_w;
+reg           builder_csr_bankarray_csrbank4_ev_pending_re = 1'd0;
+wire          builder_csr_bankarray_csrbank4_ev_pending_r;
+reg           builder_csr_bankarray_csrbank4_ev_pending_we = 1'd0;
+wire          builder_csr_bankarray_csrbank4_ev_pending_w;
+reg           builder_csr_bankarray_csrbank4_ev_enable0_re = 1'd0;
+wire          builder_csr_bankarray_csrbank4_ev_enable0_r;
+reg           builder_csr_bankarray_csrbank4_ev_enable0_we = 1'd0;
+wire          builder_csr_bankarray_csrbank4_ev_enable0_w;
 wire          builder_csr_bankarray_csrbank4_sel;
 wire   [13:0] builder_csr_bankarray_interface5_bank_bus_adr;
 wire          builder_csr_bankarray_interface5_bank_bus_we;
 wire   [31:0] builder_csr_bankarray_interface5_bank_bus_dat_w;
 reg    [31:0] builder_csr_bankarray_interface5_bank_bus_dat_r = 32'd0;
-reg           builder_csr_bankarray_csrbank5_load0_re = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank5_load0_r;
-reg           builder_csr_bankarray_csrbank5_load0_we = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank5_load0_w;
-reg           builder_csr_bankarray_csrbank5_reload0_re = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank5_reload0_r;
-reg           builder_csr_bankarray_csrbank5_reload0_we = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank5_reload0_w;
-reg           builder_csr_bankarray_csrbank5_en0_re = 1'd0;
-wire          builder_csr_bankarray_csrbank5_en0_r;
-reg           builder_csr_bankarray_csrbank5_en0_we = 1'd0;
-wire          builder_csr_bankarray_csrbank5_en0_w;
-reg           builder_csr_bankarray_csrbank5_update_value0_re = 1'd0;
-wire          builder_csr_bankarray_csrbank5_update_value0_r;
-reg           builder_csr_bankarray_csrbank5_update_value0_we = 1'd0;
-wire          builder_csr_bankarray_csrbank5_update_value0_w;
-reg           builder_csr_bankarray_csrbank5_value_re = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank5_value_r;
-reg           builder_csr_bankarray_csrbank5_value_we = 1'd0;
-wire   [31:0] builder_csr_bankarray_csrbank5_value_w;
+reg           builder_csr_bankarray_csrbank5_txfull_re = 1'd0;
+wire          builder_csr_bankarray_csrbank5_txfull_r;
+reg           builder_csr_bankarray_csrbank5_txfull_we = 1'd0;
+wire          builder_csr_bankarray_csrbank5_txfull_w;
+reg           builder_csr_bankarray_csrbank5_rxempty_re = 1'd0;
+wire          builder_csr_bankarray_csrbank5_rxempty_r;
+reg           builder_csr_bankarray_csrbank5_rxempty_we = 1'd0;
+wire          builder_csr_bankarray_csrbank5_rxempty_w;
 reg           builder_csr_bankarray_csrbank5_ev_status_re = 1'd0;
-wire          builder_csr_bankarray_csrbank5_ev_status_r;
+wire    [1:0] builder_csr_bankarray_csrbank5_ev_status_r;
 reg           builder_csr_bankarray_csrbank5_ev_status_we = 1'd0;
-wire          builder_csr_bankarray_csrbank5_ev_status_w;
+wire    [1:0] builder_csr_bankarray_csrbank5_ev_status_w;
 reg           builder_csr_bankarray_csrbank5_ev_pending_re = 1'd0;
-wire          builder_csr_bankarray_csrbank5_ev_pending_r;
+wire    [1:0] builder_csr_bankarray_csrbank5_ev_pending_r;
 reg           builder_csr_bankarray_csrbank5_ev_pending_we = 1'd0;
-wire          builder_csr_bankarray_csrbank5_ev_pending_w;
+wire    [1:0] builder_csr_bankarray_csrbank5_ev_pending_w;
 reg           builder_csr_bankarray_csrbank5_ev_enable0_re = 1'd0;
-wire          builder_csr_bankarray_csrbank5_ev_enable0_r;
+wire    [1:0] builder_csr_bankarray_csrbank5_ev_enable0_r;
 reg           builder_csr_bankarray_csrbank5_ev_enable0_we = 1'd0;
-wire          builder_csr_bankarray_csrbank5_ev_enable0_w;
+wire    [1:0] builder_csr_bankarray_csrbank5_ev_enable0_w;
+reg           builder_csr_bankarray_csrbank5_txempty_re = 1'd0;
+wire          builder_csr_bankarray_csrbank5_txempty_r;
+reg           builder_csr_bankarray_csrbank5_txempty_we = 1'd0;
+wire          builder_csr_bankarray_csrbank5_txempty_w;
+reg           builder_csr_bankarray_csrbank5_rxfull_re = 1'd0;
+wire          builder_csr_bankarray_csrbank5_rxfull_r;
+reg           builder_csr_bankarray_csrbank5_rxfull_we = 1'd0;
+wire          builder_csr_bankarray_csrbank5_rxfull_w;
 wire          builder_csr_bankarray_csrbank5_sel;
-wire   [13:0] builder_csr_bankarray_interface6_bank_bus_adr;
-wire          builder_csr_bankarray_interface6_bank_bus_we;
-wire   [31:0] builder_csr_bankarray_interface6_bank_bus_dat_w;
-reg    [31:0] builder_csr_bankarray_interface6_bank_bus_dat_r = 32'd0;
-reg           builder_csr_bankarray_csrbank6_txfull_re = 1'd0;
-wire          builder_csr_bankarray_csrbank6_txfull_r;
-reg           builder_csr_bankarray_csrbank6_txfull_we = 1'd0;
-wire          builder_csr_bankarray_csrbank6_txfull_w;
-reg           builder_csr_bankarray_csrbank6_rxempty_re = 1'd0;
-wire          builder_csr_bankarray_csrbank6_rxempty_r;
-reg           builder_csr_bankarray_csrbank6_rxempty_we = 1'd0;
-wire          builder_csr_bankarray_csrbank6_rxempty_w;
-reg           builder_csr_bankarray_csrbank6_ev_status_re = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank6_ev_status_r;
-reg           builder_csr_bankarray_csrbank6_ev_status_we = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank6_ev_status_w;
-reg           builder_csr_bankarray_csrbank6_ev_pending_re = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank6_ev_pending_r;
-reg           builder_csr_bankarray_csrbank6_ev_pending_we = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank6_ev_pending_w;
-reg           builder_csr_bankarray_csrbank6_ev_enable0_re = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank6_ev_enable0_r;
-reg           builder_csr_bankarray_csrbank6_ev_enable0_we = 1'd0;
-wire    [1:0] builder_csr_bankarray_csrbank6_ev_enable0_w;
-reg           builder_csr_bankarray_csrbank6_txempty_re = 1'd0;
-wire          builder_csr_bankarray_csrbank6_txempty_r;
-reg           builder_csr_bankarray_csrbank6_txempty_we = 1'd0;
-wire          builder_csr_bankarray_csrbank6_txempty_w;
-reg           builder_csr_bankarray_csrbank6_rxfull_re = 1'd0;
-wire          builder_csr_bankarray_csrbank6_rxfull_r;
-reg           builder_csr_bankarray_csrbank6_rxfull_we = 1'd0;
-wire          builder_csr_bankarray_csrbank6_rxfull_w;
-wire          builder_csr_bankarray_csrbank6_sel;
 wire   [13:0] builder_csr_interconnect_adr;
 wire          builder_csr_interconnect_we;
 wire   [31:0] builder_csr_interconnect_dat_w;
@@ -1661,24 +1616,24 @@ reg     [1:0] builder_basesoc_fsm_state = 2'd0;
 reg     [1:0] builder_basesoc_fsm_next_state = 2'd0;
 reg           main_wishbone_bridge_aborted_fsm_next_value = 1'd0;
 reg           main_wishbone_bridge_aborted_fsm_next_value_ce = 1'd0;
-reg     [2:0] builder_basesoc_s7i2s0_state = 3'd0;
-reg     [2:0] builder_basesoc_s7i2s0_next_state = 3'd0;
-reg     [4:0] main_i2s_rx_rx_fsm_s7i2s0_next_value0 = 5'd0;
-reg           main_i2s_rx_rx_fsm_s7i2s0_next_value_ce0 = 1'd0;
-reg    [23:0] main_i2s_rx_rx_fifo_rx_fifo_wr_d_s7i2s0_next_value1 = 24'd0;
-reg           main_i2s_rx_rx_fifo_rx_fifo_wr_d_s7i2s0_next_value_ce1 = 1'd0;
-reg           main_i2s_rx_rx_delay_cnt_s7i2s0_t_next_value = 1'd0;
-reg           main_i2s_rx_rx_delay_cnt_s7i2s0_t_next_value_ce = 1'd0;
-reg     [4:0] main_i2s_rx_rx_cnt_s7i2s0_f_next_value = 5'd0;
-reg           main_i2s_rx_rx_cnt_s7i2s0_f_next_value_ce = 1'd0;
-reg     [2:0] builder_basesoc_s7i2s1_state = 3'd0;
-reg     [2:0] builder_basesoc_s7i2s1_next_state = 3'd0;
-reg     [4:0] main_i2s_tx_tx_cnt_s7i2s1_t_next_value0 = 5'd0;
-reg           main_i2s_tx_tx_cnt_s7i2s1_t_next_value_ce0 = 1'd0;
-reg    [24:0] main_i2s_tx_tx_buf_s7i2s1_t_next_value1 = 25'd0;
-reg           main_i2s_tx_tx_buf_s7i2s1_t_next_value_ce1 = 1'd0;
-reg           main_i2s_tx_tx_pin_s7i2s1_f_next_value = 1'd0;
-reg           main_i2s_tx_tx_pin_s7i2s1_f_next_value_ce = 1'd0;
+reg     [2:0] builder_basesoc_fsm0_state = 3'd0;
+reg     [2:0] builder_basesoc_fsm0_next_state = 3'd0;
+reg     [4:0] main_rx_fsm_fsm0_next_value0 = 5'd0;
+reg           main_rx_fsm_fsm0_next_value_ce0 = 1'd0;
+reg    [23:0] main_rx_fifo_rx_fifo_wr_d_fsm0_next_value1 = 24'd0;
+reg           main_rx_fifo_rx_fifo_wr_d_fsm0_next_value_ce1 = 1'd0;
+reg           main_rx_delay_cnt_fsm0_t_next_value = 1'd0;
+reg           main_rx_delay_cnt_fsm0_t_next_value_ce = 1'd0;
+reg     [4:0] main_rx_cnt_fsm0_f_next_value = 5'd0;
+reg           main_rx_cnt_fsm0_f_next_value_ce = 1'd0;
+reg     [2:0] builder_basesoc_fsm1_state = 3'd0;
+reg     [2:0] builder_basesoc_fsm1_next_state = 3'd0;
+reg     [4:0] main_tx_cnt_fsm1_t_next_value0 = 5'd0;
+reg           main_tx_cnt_fsm1_t_next_value_ce0 = 1'd0;
+reg    [24:0] main_tx_buf_fsm1_t_next_value1 = 25'd0;
+reg           main_tx_buf_fsm1_t_next_value_ce1 = 1'd0;
+reg           main_tx_pin_fsm1_f_next_value = 1'd0;
+reg           main_tx_pin_fsm1_f_next_value_ce = 1'd0;
 reg           builder_basesoc_rs232phytx1_state = 1'd0;
 reg           builder_basesoc_rs232phytx1_next_state = 1'd0;
 reg     [3:0] main_uartbone_phy_tx_count_rs232phytx1_next_value0 = 4'd0;
@@ -1840,10 +1795,6 @@ reg           builder_impl_multiregimpl3_regs0 = 1'd0;
 reg           builder_impl_multiregimpl3_regs1 = 1'd0;
 reg           builder_impl_multiregimpl4_regs0 = 1'd0;
 reg           builder_impl_multiregimpl4_regs1 = 1'd0;
-reg           builder_impl_multiregimpl5_regs0 = 1'd0;
-reg           builder_impl_multiregimpl5_regs1 = 1'd0;
-reg           builder_impl_multiregimpl6_regs0 = 1'd0;
-reg           builder_impl_multiregimpl6_regs1 = 1'd0;
 wire          builder_impl0;
 wire          builder_impl1;
 wire          builder_impl2;
@@ -1940,20 +1891,13 @@ assign main_wb_sdram_stb = builder_shared_stb;
 assign main_wb_sdram_we = builder_shared_we;
 assign main_wb_sdram_cti = builder_shared_cti;
 assign main_wb_sdram_bte = builder_shared_bte;
-assign main_i2s_rx_bus_adr = builder_shared_adr;
-assign main_i2s_rx_bus_dat_w = builder_shared_dat_w;
-assign main_i2s_rx_bus_sel = builder_shared_sel;
-assign main_i2s_rx_bus_stb = builder_shared_stb;
-assign main_i2s_rx_bus_we = builder_shared_we;
-assign main_i2s_rx_bus_cti = builder_shared_cti;
-assign main_i2s_rx_bus_bte = builder_shared_bte;
-assign main_i2s_tx_bus_adr = builder_shared_adr;
-assign main_i2s_tx_bus_dat_w = builder_shared_dat_w;
-assign main_i2s_tx_bus_sel = builder_shared_sel;
-assign main_i2s_tx_bus_stb = builder_shared_stb;
-assign main_i2s_tx_bus_we = builder_shared_we;
-assign main_i2s_tx_bus_cti = builder_shared_cti;
-assign main_i2s_tx_bus_bte = builder_shared_bte;
+assign main_bus_adr = builder_shared_adr;
+assign main_bus_dat_w = builder_shared_dat_w;
+assign main_bus_sel = builder_shared_sel;
+assign main_bus_stb = builder_shared_stb;
+assign main_bus_we = builder_shared_we;
+assign main_bus_cti = builder_shared_cti;
+assign main_bus_bte = builder_shared_bte;
 assign builder_basesoc_wishbone_adr = builder_shared_adr;
 assign builder_basesoc_wishbone_dat_w = builder_shared_dat_w;
 assign builder_basesoc_wishbone_sel = builder_shared_sel;
@@ -1965,17 +1909,16 @@ assign main_basesoc_vexriscv_debug_bus_cyc = (builder_shared_cyc & builder_slave
 assign main_basesoc_basesoc_ram_bus_cyc = (builder_shared_cyc & builder_slave_sel[1]);
 assign main_basesoc_ram_bus_ram_bus_cyc = (builder_shared_cyc & builder_slave_sel[2]);
 assign main_wb_sdram_cyc = (builder_shared_cyc & builder_slave_sel[3]);
-assign main_i2s_rx_bus_cyc = (builder_shared_cyc & builder_slave_sel[4]);
-assign main_i2s_tx_bus_cyc = (builder_shared_cyc & builder_slave_sel[5]);
-assign builder_basesoc_wishbone_cyc = (builder_shared_cyc & builder_slave_sel[6]);
-assign builder_shared_err = ((((((main_basesoc_vexriscv_debug_bus_err | main_basesoc_basesoc_ram_bus_err) | main_basesoc_ram_bus_ram_bus_err) | main_wb_sdram_err) | main_i2s_rx_bus_err) | main_i2s_tx_bus_err) | builder_basesoc_wishbone_err);
+assign main_bus_cyc = (builder_shared_cyc & builder_slave_sel[4]);
+assign builder_basesoc_wishbone_cyc = (builder_shared_cyc & builder_slave_sel[5]);
+assign builder_shared_err = (((((main_basesoc_vexriscv_debug_bus_err | main_basesoc_basesoc_ram_bus_err) | main_basesoc_ram_bus_ram_bus_err) | main_wb_sdram_err) | main_bus_err) | builder_basesoc_wishbone_err);
 assign builder_wait = ((builder_shared_stb & builder_shared_cyc) & (~builder_shared_ack));
 always @(*) begin
-    builder_shared_ack <= 1'd0;
     builder_error <= 1'd0;
     builder_shared_dat_r <= 32'd0;
-    builder_shared_ack <= ((((((main_basesoc_vexriscv_debug_bus_ack | main_basesoc_basesoc_ram_bus_ack) | main_basesoc_ram_bus_ram_bus_ack) | main_wb_sdram_ack) | main_i2s_rx_bus_ack) | main_i2s_tx_bus_ack) | builder_basesoc_wishbone_ack);
-    builder_shared_dat_r <= ((((((({32{builder_slave_sel_r[0]}} & main_basesoc_vexriscv_debug_bus_dat_r) | ({32{builder_slave_sel_r[1]}} & main_basesoc_basesoc_ram_bus_dat_r)) | ({32{builder_slave_sel_r[2]}} & main_basesoc_ram_bus_ram_bus_dat_r)) | ({32{builder_slave_sel_r[3]}} & main_wb_sdram_dat_r)) | ({32{builder_slave_sel_r[4]}} & main_i2s_rx_bus_dat_r)) | ({32{builder_slave_sel_r[5]}} & main_i2s_tx_bus_dat_r)) | ({32{builder_slave_sel_r[6]}} & builder_basesoc_wishbone_dat_r));
+    builder_shared_ack <= 1'd0;
+    builder_shared_ack <= (((((main_basesoc_vexriscv_debug_bus_ack | main_basesoc_basesoc_ram_bus_ack) | main_basesoc_ram_bus_ram_bus_ack) | main_wb_sdram_ack) | main_bus_ack) | builder_basesoc_wishbone_ack);
+    builder_shared_dat_r <= (((((({32{builder_slave_sel_r[0]}} & main_basesoc_vexriscv_debug_bus_dat_r) | ({32{builder_slave_sel_r[1]}} & main_basesoc_basesoc_ram_bus_dat_r)) | ({32{builder_slave_sel_r[2]}} & main_basesoc_ram_bus_ram_bus_dat_r)) | ({32{builder_slave_sel_r[3]}} & main_wb_sdram_dat_r)) | ({32{builder_slave_sel_r[4]}} & main_bus_dat_r)) | ({32{builder_slave_sel_r[5]}} & builder_basesoc_wishbone_dat_r));
     if (builder_done) begin
         builder_shared_dat_r <= 32'd4294967295;
         builder_shared_ack <= 1'd1;
@@ -2008,6 +1951,7 @@ assign main_basesoc_ram_adr = main_basesoc_ram_bus_ram_bus_adr[10:0];
 assign main_basesoc_ram_bus_ram_bus_dat_r = main_basesoc_ram_dat_r;
 assign main_basesoc_ram_dat_w = main_basesoc_ram_bus_ram_bus_dat_w;
 always @(*) begin
+    main_basesoc_tx_data_rs232phytx0_next_value2 <= 8'd0;
     main_basesoc_tx_data_rs232phytx0_next_value_ce2 <= 1'd0;
     main_basesoc_tx_sink_ready <= 1'd0;
     builder_basesoc_rs232phytx0_next_state <= 1'd0;
@@ -2016,7 +1960,6 @@ always @(*) begin
     main_basesoc_tx_enable <= 1'd0;
     main_basesoc_serial_tx_rs232phytx0_next_value1 <= 1'd0;
     main_basesoc_serial_tx_rs232phytx0_next_value_ce1 <= 1'd0;
-    main_basesoc_tx_data_rs232phytx0_next_value2 <= 8'd0;
     builder_basesoc_rs232phytx0_next_state <= builder_basesoc_rs232phytx0_state;
     case (builder_basesoc_rs232phytx0_state)
         1'd1: begin
@@ -2050,14 +1993,14 @@ always @(*) begin
     endcase
 end
 always @(*) begin
+    main_basesoc_rx_data_rs232phyrx0_next_value1 <= 8'd0;
     main_basesoc_rx_data_rs232phyrx0_next_value_ce1 <= 1'd0;
     main_basesoc_rx_source_valid <= 1'd0;
-    builder_basesoc_rs232phyrx0_next_state <= 1'd0;
     main_basesoc_rx_source_payload_data <= 8'd0;
+    builder_basesoc_rs232phyrx0_next_state <= 1'd0;
     main_basesoc_rx_count_rs232phyrx0_next_value0 <= 4'd0;
     main_basesoc_rx_count_rs232phyrx0_next_value_ce0 <= 1'd0;
     main_basesoc_rx_enable <= 1'd0;
-    main_basesoc_rx_data_rs232phyrx0_next_value1 <= 8'd0;
     builder_basesoc_rs232phyrx0_next_state <= builder_basesoc_rs232phyrx0_state;
     case (builder_basesoc_rs232phyrx0_state)
         1'd1: begin
@@ -2490,8 +2433,8 @@ always @(*) begin
     main_sdram_bankmachine0_cmd_payload_ras <= 1'd0;
     main_sdram_bankmachine0_cmd_payload_we <= 1'd0;
     main_sdram_bankmachine0_cmd_payload_is_cmd <= 1'd0;
-    builder_basesoc_bankmachine0_next_state <= 3'd0;
     main_sdram_bankmachine0_cmd_payload_is_read <= 1'd0;
+    builder_basesoc_bankmachine0_next_state <= 3'd0;
     main_sdram_bankmachine0_cmd_payload_is_write <= 1'd0;
     main_sdram_bankmachine0_req_wdata_ready <= 1'd0;
     builder_basesoc_bankmachine0_next_state <= builder_basesoc_bankmachine0_state;
@@ -2657,8 +2600,8 @@ always @(*) begin
     main_sdram_bankmachine1_cmd_payload_is_cmd <= 1'd0;
     main_sdram_bankmachine1_cmd_payload_is_read <= 1'd0;
     main_sdram_bankmachine1_cmd_payload_is_write <= 1'd0;
-    builder_basesoc_bankmachine1_next_state <= 3'd0;
     main_sdram_bankmachine1_req_wdata_ready <= 1'd0;
+    builder_basesoc_bankmachine1_next_state <= 3'd0;
     main_sdram_bankmachine1_req_rdata_valid <= 1'd0;
     main_sdram_bankmachine1_refresh_gnt <= 1'd0;
     main_sdram_bankmachine1_row_open <= 1'd0;
@@ -2993,10 +2936,10 @@ always @(*) begin
     main_sdram_bankmachine3_req_wdata_ready <= 1'd0;
     main_sdram_bankmachine3_req_rdata_valid <= 1'd0;
     main_sdram_bankmachine3_refresh_gnt <= 1'd0;
-    builder_basesoc_bankmachine3_next_state <= 3'd0;
-    main_sdram_bankmachine3_cmd_valid <= 1'd0;
-    main_sdram_bankmachine3_row_close <= 1'd0;
     main_sdram_bankmachine3_row_open <= 1'd0;
+    main_sdram_bankmachine3_cmd_valid <= 1'd0;
+    builder_basesoc_bankmachine3_next_state <= 3'd0;
+    main_sdram_bankmachine3_row_close <= 1'd0;
     main_sdram_bankmachine3_row_col_n_addr_sel <= 1'd0;
     main_sdram_bankmachine3_cmd_payload_cas <= 1'd0;
     main_sdram_bankmachine3_cmd_payload_ras <= 1'd0;
@@ -3456,12 +3399,12 @@ assign main_wishbone_bridge_wdata_payload_we = main_interface_sel;
 assign main_wishbone_bridge_rdata_ready = 1'd1;
 always @(*) begin
     main_wishbone_bridge_cmd_ready <= 1'd0;
+    main_wishbone_bridge_count_litedramnativeportconverter_next_value_ce <= 1'd0;
     main_port_cmd_payload_we <= 1'd0;
     main_port_cmd_payload_addr <= 24'd0;
-    builder_basesoc_litedramnativeportconverter_next_state <= 1'd0;
     main_port_cmd_valid <= 1'd0;
+    builder_basesoc_litedramnativeportconverter_next_state <= 1'd0;
     main_wishbone_bridge_count_litedramnativeportconverter_next_value <= 3'd0;
-    main_wishbone_bridge_count_litedramnativeportconverter_next_value_ce <= 1'd0;
     builder_basesoc_litedramnativeportconverter_next_state <= builder_basesoc_litedramnativeportconverter_state;
     case (builder_basesoc_litedramnativeportconverter_state)
         1'd1: begin
@@ -3606,8 +3549,8 @@ assign main_wishbone_bridge_rdata_first = main_wishbone_bridge_rdata_converter_s
 assign main_wishbone_bridge_rdata_last = main_wishbone_bridge_rdata_converter_source_last;
 assign main_wishbone_bridge_rdata_payload_data = main_wishbone_bridge_rdata_converter_source_payload_data;
 always @(*) begin
-    builder_basesoc_fsm_next_state <= 2'd0;
     main_interface_ack <= 1'd0;
+    builder_basesoc_fsm_next_state <= 2'd0;
     main_wishbone_bridge_is_ongoing <= 1'd0;
     main_interface_dat_r <= 128'd0;
     main_wishbone_bridge_aborted_fsm_next_value <= 1'd0;
@@ -3657,439 +3600,428 @@ always @(*) begin
 end
 assign {user_led0} = (main_leds ^ 1'd0);
 assign main_done = (main_count == 1'd0);
-assign main_i2s_rx_rising_edge = (main_i2s_rx_clk_pin & (~main_i2s_rx_clk_d));
-assign main_i2s_rx_falling_edge = ((~main_i2s_rx_clk_pin) & main_i2s_rx_clk_d);
+assign i2s_tx = main_tx_pin;
+assign main_rising_edge = (main_clk_pin & (~main_clk_d));
+assign main_falling_edge = ((~main_clk_pin) & main_clk_d);
 always @(*) begin
-    main_i2s_rx_bus_ack <= 1'd0;
-    if (main_i2s_rx_bus_we) begin
-        main_i2s_rx_bus_ack <= main_i2s_rx_wr_ack;
+    main_bus_ack <= 1'd0;
+    if (main_bus_we) begin
+        main_bus_ack <= main_wr_ack;
     end else begin
-        main_i2s_rx_bus_ack <= main_i2s_rx_rd_ack;
+        main_bus_ack <= main_rd_ack;
     end
 end
-assign main_i2s_rx_csrfield_fifo_depth = 9'd256;
-assign main_i2s_rx_rx_fifo_rx_fifo_reset = main_i2s_rx_rx_reset;
-assign main_i2s_rx_csrfield_overflow = main_i2s_rx_rx_fifo_rx_fifo_wrerr;
-assign main_i2s_rx_csrfield_underflow = main_i2s_rx_rx_fifo_rx_fifo_rderr;
-assign main_i2s_rx_csrfield_dataready = main_i2s_rx_rx_fifo_rx_fifo_almostfull;
-assign main_i2s_rx_csrfield_wrcount = main_i2s_rx_rx_fifo_rx_fifo_wrcount;
-assign main_i2s_rx_csrfield_rdcount = main_i2s_rx_rx_fifo_rx_fifo_rdcount;
-assign main_i2s_rx_csrfield_empty = main_i2s_rx_rx_fifo_rx_fifo_empty;
-assign main_i2s_rx_rx_ready_trigger = main_i2s_rx_rx_fifo_rx_fifo_almostfull;
-assign main_i2s_rx_rx_error_trigger = (main_i2s_rx_rx_fifo_rx_fifo_wrerr | main_i2s_rx_rx_fifo_rx_fifo_rderr);
-assign main_i2s_rx_bus_read = (((main_i2s_rx_bus_cyc & main_i2s_rx_bus_stb) & (~main_i2s_rx_bus_we)) & (main_i2s_rx_bus_cti == 1'd0));
-assign main_i2s_rx_rx_ready0 = main_i2s_rx_rx_ready_status;
-assign main_i2s_rx_rx_ready1 = main_i2s_rx_rx_ready_pending;
+assign main_csrfield_fifo_depth = 9'd256;
+assign main_rx_fifo_rx_fifo_reset = main_rx_reset;
+assign main_csrfield_overflow0 = main_rx_fifo_rx_fifo_wrerr;
+assign main_csrfield_underflow0 = main_rx_fifo_rx_fifo_rderr;
+assign main_csrfield_dataready = main_rx_fifo_rx_fifo_almostfull;
+assign main_csrfield_wrcount0 = main_rx_fifo_rx_fifo_wrcount;
+assign main_csrfield_rdcount0 = main_rx_fifo_rx_fifo_rdcount;
+assign main_csrfield_empty0 = main_rx_fifo_rx_fifo_empty;
+assign main_rx_ready_trigger = main_rx_fifo_rx_fifo_almostfull;
+assign main_rx_error_trigger = (main_rx_fifo_rx_fifo_wrerr | main_rx_fifo_rx_fifo_rderr);
+assign main_bus_read = (((main_bus_cyc & main_bus_stb) & (~main_bus_we)) & (main_bus_cti == 1'd0));
+assign main_tx_fifo_tx_fifo_reset = main_tx_reset;
+assign main_csrfield_underflow1 = main_tx_fifo_tx_fifo_rderr;
+assign main_csrfield_free = main_tx_fifo_tx_fifo_almostempty;
+assign main_csrfield_almostfull = main_tx_fifo_tx_fifo_almostfull;
+assign main_csrfield_full = main_tx_fifo_tx_fifo_full;
+assign main_csrfield_empty1 = main_tx_fifo_tx_fifo_empty;
+assign main_csrfield_rdcount1 = main_tx_fifo_tx_fifo_rdcount;
+assign main_csrfield_wrcount1 = main_tx_fifo_tx_fifo_wrcount;
+assign main_tx_ready_trigger = main_tx_fifo_tx_fifo_almostempty;
+assign main_tx_error_trigger = (main_tx_fifo_tx_fifo_wrerr | main_tx_fifo_tx_fifo_rderr);
+assign main_rx_ready0 = main_rx_ready_status;
+assign main_rx_ready1 = main_rx_ready_pending;
 always @(*) begin
-    main_i2s_rx_rx_ready_clear <= 1'd0;
-    if ((main_i2s_rx_pending_re & main_i2s_rx_pending_r[0])) begin
-        main_i2s_rx_rx_ready_clear <= 1'd1;
+    main_rx_ready_clear <= 1'd0;
+    if ((main_pending_re & main_pending_r[0])) begin
+        main_rx_ready_clear <= 1'd1;
     end
 end
-assign main_i2s_rx_rx_error0 = main_i2s_rx_rx_error_status;
-assign main_i2s_rx_rx_error1 = main_i2s_rx_rx_error_pending;
+assign main_rx_error0 = main_rx_error_status;
+assign main_rx_error1 = main_rx_error_pending;
 always @(*) begin
-    main_i2s_rx_rx_error_clear <= 1'd0;
-    if ((main_i2s_rx_pending_re & main_i2s_rx_pending_r[1])) begin
-        main_i2s_rx_rx_error_clear <= 1'd1;
+    main_rx_error_clear <= 1'd0;
+    if ((main_pending_re & main_pending_r[1])) begin
+        main_rx_error_clear <= 1'd1;
     end
 end
-assign main_i2s_rx_irq = ((main_i2s_rx_pending_status[0] & main_i2s_rx_enable_storage[0]) | (main_i2s_rx_pending_status[1] & main_i2s_rx_enable_storage[1]));
-assign main_i2s_rx_rx_ready_status = 1'd0;
-assign main_i2s_rx_rx_error_status = 1'd0;
-assign main_i2s_rx_rx_fifo_reset = main_i2s_rx_rx_fifo_rx_fifo_reset;
-assign main_i2s_rx_rx_fifo_level0 = main_i2s_rx_rx_fifo_level1;
-assign main_i2s_rx_rx_fifo_sink_payload_data = main_i2s_rx_rx_fifo_rx_fifo_wr_d;
-assign main_i2s_rx_rx_fifo_sink_valid = main_i2s_rx_rx_fifo_rx_fifo_wren;
-assign main_i2s_rx_rx_fifo_rx_fifo_rd_d = main_i2s_rx_rx_fifo_source_payload_data;
-assign main_i2s_rx_rx_fifo_source_ready = main_i2s_rx_rx_fifo_rx_fifo_rden;
-assign main_i2s_rx_rx_fifo_rx_fifo_wrerr = ((~main_i2s_rx_rx_fifo_sink_ready) & main_i2s_rx_rx_fifo_rx_fifo_wren);
-assign main_i2s_rx_rx_fifo_rx_fifo_rderr = (main_i2s_rx_rx_fifo_source_ready & main_i2s_rx_rx_fifo_rx_fifo_rden);
+assign main_tx_ready0 = main_tx_ready_status;
+assign main_tx_ready1 = main_tx_ready_pending;
 always @(*) begin
-    main_i2s_rx_rx_fifo_rx_fifo_empty <= 1'd0;
-    if ((main_i2s_rx_rx_fifo_level0 == 1'd0)) begin
-        main_i2s_rx_rx_fifo_rx_fifo_empty <= 1'd1;
+    main_tx_ready_clear <= 1'd0;
+    if ((main_pending_re & main_pending_r[2])) begin
+        main_tx_ready_clear <= 1'd1;
+    end
+end
+assign main_tx_error0 = main_tx_error_status;
+assign main_tx_error1 = main_tx_error_pending;
+always @(*) begin
+    main_tx_error_clear <= 1'd0;
+    if ((main_pending_re & main_pending_r[3])) begin
+        main_tx_error_clear <= 1'd1;
+    end
+end
+assign main_irq = ((((main_pending_status[0] & main_enable_storage[0]) | (main_pending_status[1] & main_enable_storage[1])) | (main_pending_status[2] & main_enable_storage[2])) | (main_pending_status[3] & main_enable_storage[3]));
+assign main_rx_ready_status = 1'd0;
+assign main_rx_error_status = 1'd0;
+assign main_tx_ready_status = 1'd0;
+assign main_tx_error_status = 1'd0;
+assign main_rx_fifo_reset = main_rx_fifo_rx_fifo_reset;
+assign main_rx_fifo_level0 = main_rx_fifo_level1;
+assign main_rx_fifo_sink_payload_data = main_rx_fifo_rx_fifo_wr_d;
+assign main_rx_fifo_sink_valid = main_rx_fifo_rx_fifo_wren;
+assign main_rx_fifo_rx_fifo_rd_d = main_rx_fifo_source_payload_data;
+assign main_rx_fifo_source_ready = main_rx_fifo_rx_fifo_rden;
+assign main_rx_fifo_rx_fifo_wrerr = ((~main_rx_fifo_sink_ready) & main_rx_fifo_rx_fifo_wren);
+assign main_rx_fifo_rx_fifo_rderr = (main_rx_fifo_source_ready & main_rx_fifo_rx_fifo_rden);
+always @(*) begin
+    main_rx_fifo_rx_fifo_empty <= 1'd0;
+    if ((main_rx_fifo_level0 == 1'd0)) begin
+        main_rx_fifo_rx_fifo_empty <= 1'd1;
     end else begin
-        main_i2s_rx_rx_fifo_rx_fifo_empty <= 1'd0;
+        main_rx_fifo_rx_fifo_empty <= 1'd0;
     end
 end
 always @(*) begin
-    main_i2s_rx_rx_fifo_rx_fifo_full <= 1'd0;
-    if ((main_i2s_rx_rx_fifo_level0 == 10'd512)) begin
-        main_i2s_rx_rx_fifo_rx_fifo_full <= 1'd1;
+    main_rx_fifo_rx_fifo_full <= 1'd0;
+    if ((main_rx_fifo_level0 == 10'd512)) begin
+        main_rx_fifo_rx_fifo_full <= 1'd1;
     end else begin
-        main_i2s_rx_rx_fifo_rx_fifo_full <= 1'd0;
+        main_rx_fifo_rx_fifo_full <= 1'd0;
     end
 end
-assign main_i2s_rx_rx_fifo_syncfifo_din = {main_i2s_rx_rx_fifo_fifo_in_last, main_i2s_rx_rx_fifo_fifo_in_first, main_i2s_rx_rx_fifo_fifo_in_payload_data};
-assign {main_i2s_rx_rx_fifo_fifo_out_last, main_i2s_rx_rx_fifo_fifo_out_first, main_i2s_rx_rx_fifo_fifo_out_payload_data} = main_i2s_rx_rx_fifo_syncfifo_dout;
-assign main_i2s_rx_rx_fifo_sink_ready = main_i2s_rx_rx_fifo_syncfifo_writable;
-assign main_i2s_rx_rx_fifo_syncfifo_we = main_i2s_rx_rx_fifo_sink_valid;
-assign main_i2s_rx_rx_fifo_fifo_in_first = main_i2s_rx_rx_fifo_sink_first;
-assign main_i2s_rx_rx_fifo_fifo_in_last = main_i2s_rx_rx_fifo_sink_last;
-assign main_i2s_rx_rx_fifo_fifo_in_payload_data = main_i2s_rx_rx_fifo_sink_payload_data;
-assign main_i2s_rx_rx_fifo_source_valid = main_i2s_rx_rx_fifo_syncfifo_readable;
-assign main_i2s_rx_rx_fifo_source_first = main_i2s_rx_rx_fifo_fifo_out_first;
-assign main_i2s_rx_rx_fifo_source_last = main_i2s_rx_rx_fifo_fifo_out_last;
-assign main_i2s_rx_rx_fifo_source_payload_data = main_i2s_rx_rx_fifo_fifo_out_payload_data;
-assign main_i2s_rx_rx_fifo_syncfifo_re = main_i2s_rx_rx_fifo_source_ready;
+assign main_rx_fifo_syncfifo_din = {main_rx_fifo_fifo_in_last, main_rx_fifo_fifo_in_first, main_rx_fifo_fifo_in_payload_data};
+assign {main_rx_fifo_fifo_out_last, main_rx_fifo_fifo_out_first, main_rx_fifo_fifo_out_payload_data} = main_rx_fifo_syncfifo_dout;
+assign main_rx_fifo_sink_ready = main_rx_fifo_syncfifo_writable;
+assign main_rx_fifo_syncfifo_we = main_rx_fifo_sink_valid;
+assign main_rx_fifo_fifo_in_first = main_rx_fifo_sink_first;
+assign main_rx_fifo_fifo_in_last = main_rx_fifo_sink_last;
+assign main_rx_fifo_fifo_in_payload_data = main_rx_fifo_sink_payload_data;
+assign main_rx_fifo_source_valid = main_rx_fifo_syncfifo_readable;
+assign main_rx_fifo_source_first = main_rx_fifo_fifo_out_first;
+assign main_rx_fifo_source_last = main_rx_fifo_fifo_out_last;
+assign main_rx_fifo_source_payload_data = main_rx_fifo_fifo_out_payload_data;
+assign main_rx_fifo_syncfifo_re = main_rx_fifo_source_ready;
 always @(*) begin
-    main_i2s_rx_rx_fifo_wrport_adr <= 9'd0;
-    if (main_i2s_rx_rx_fifo_replace) begin
-        main_i2s_rx_rx_fifo_wrport_adr <= (main_i2s_rx_rx_fifo_produce - 1'd1);
+    main_rx_fifo_wrport_adr <= 9'd0;
+    if (main_rx_fifo_replace) begin
+        main_rx_fifo_wrport_adr <= (main_rx_fifo_produce - 1'd1);
     end else begin
-        main_i2s_rx_rx_fifo_wrport_adr <= main_i2s_rx_rx_fifo_produce;
+        main_rx_fifo_wrport_adr <= main_rx_fifo_produce;
     end
 end
-assign main_i2s_rx_rx_fifo_wrport_dat_w = main_i2s_rx_rx_fifo_syncfifo_din;
-assign main_i2s_rx_rx_fifo_wrport_we = (main_i2s_rx_rx_fifo_syncfifo_we & (main_i2s_rx_rx_fifo_syncfifo_writable | main_i2s_rx_rx_fifo_replace));
-assign main_i2s_rx_rx_fifo_do_read = (main_i2s_rx_rx_fifo_syncfifo_readable & main_i2s_rx_rx_fifo_syncfifo_re);
-assign main_i2s_rx_rx_fifo_rdport_adr = main_i2s_rx_rx_fifo_consume;
-assign main_i2s_rx_rx_fifo_syncfifo_dout = main_i2s_rx_rx_fifo_rdport_dat_r;
-assign main_i2s_rx_rx_fifo_syncfifo_writable = (main_i2s_rx_rx_fifo_level1 != 10'd512);
-assign main_i2s_rx_rx_fifo_syncfifo_readable = (main_i2s_rx_rx_fifo_level1 != 1'd0);
+assign main_rx_fifo_wrport_dat_w = main_rx_fifo_syncfifo_din;
+assign main_rx_fifo_wrport_we = (main_rx_fifo_syncfifo_we & (main_rx_fifo_syncfifo_writable | main_rx_fifo_replace));
+assign main_rx_fifo_do_read = (main_rx_fifo_syncfifo_readable & main_rx_fifo_syncfifo_re);
+assign main_rx_fifo_rdport_adr = main_rx_fifo_consume;
+assign main_rx_fifo_syncfifo_dout = main_rx_fifo_rdport_dat_r;
+assign main_rx_fifo_syncfifo_writable = (main_rx_fifo_level1 != 10'd512);
+assign main_rx_fifo_syncfifo_readable = (main_rx_fifo_level1 != 1'd0);
 always @(*) begin
-    builder_basesoc_s7i2s0_next_state <= 3'd0;
-    main_i2s_rx_rx_cnt_s7i2s0_f_next_value <= 5'd0;
-    main_i2s_rx_rx_fsm_s7i2s0_next_value0 <= 5'd0;
-    main_i2s_rx_rx_cnt_s7i2s0_f_next_value_ce <= 1'd0;
-    main_i2s_rx_rx_fsm_s7i2s0_next_value_ce0 <= 1'd0;
-    main_i2s_rx_rx_fifo_rx_fifo_wr_d_s7i2s0_next_value1 <= 24'd0;
-    main_i2s_rx_rx_fifo_rx_fifo_wr_d_s7i2s0_next_value_ce1 <= 1'd0;
-    main_i2s_rx_rx_delay_cnt_s7i2s0_t_next_value <= 1'd0;
-    main_i2s_rx_rx_delay_cnt_s7i2s0_t_next_value_ce <= 1'd0;
-    main_i2s_rx_rx_fifo_rx_fifo_wren <= 1'd0;
-    builder_basesoc_s7i2s0_next_state <= builder_basesoc_s7i2s0_state;
-    case (builder_basesoc_s7i2s0_state)
+    builder_basesoc_fsm0_next_state <= 3'd0;
+    main_rx_cnt_fsm0_f_next_value <= 5'd0;
+    main_rx_fsm_fsm0_next_value0 <= 5'd0;
+    main_rx_cnt_fsm0_f_next_value_ce <= 1'd0;
+    main_rx_fsm_fsm0_next_value_ce0 <= 1'd0;
+    main_rx_fifo_rx_fifo_wr_d_fsm0_next_value1 <= 24'd0;
+    main_rx_fifo_rx_fifo_wr_d_fsm0_next_value_ce1 <= 1'd0;
+    main_rx_delay_cnt_fsm0_t_next_value <= 1'd0;
+    main_rx_delay_cnt_fsm0_t_next_value_ce <= 1'd0;
+    main_rx_fifo_rx_fifo_wren <= 1'd0;
+    builder_basesoc_fsm0_next_state <= builder_basesoc_fsm0_state;
+    case (builder_basesoc_fsm0_state)
         1'd1: begin
-            main_i2s_rx_rx_fsm_s7i2s0_next_value0 <= 2'd2;
-            main_i2s_rx_rx_fsm_s7i2s0_next_value_ce0 <= 1'd1;
-            if ((main_i2s_rx_rising_edge & (~main_i2s_rx_sync_pin))) begin
-                if ((main_i2s_rx_rx_delay_cnt > 1'd0)) begin
-                    main_i2s_rx_rx_delay_cnt_s7i2s0_t_next_value <= (main_i2s_rx_rx_delay_cnt - 1'd1);
-                    main_i2s_rx_rx_delay_cnt_s7i2s0_t_next_value_ce <= 1'd1;
-                    builder_basesoc_s7i2s0_next_state <= 1'd1;
+            main_rx_fsm_fsm0_next_value0 <= 2'd2;
+            main_rx_fsm_fsm0_next_value_ce0 <= 1'd1;
+            if ((main_rising_edge & (~main_sync_pin))) begin
+                if ((main_rx_delay_cnt > 1'd0)) begin
+                    main_rx_delay_cnt_fsm0_t_next_value <= (main_rx_delay_cnt - 1'd1);
+                    main_rx_delay_cnt_fsm0_t_next_value_ce <= 1'd1;
+                    builder_basesoc_fsm0_next_state <= 1'd1;
                 end else begin
-                    builder_basesoc_s7i2s0_next_state <= 2'd2;
-                    main_i2s_rx_rx_delay_cnt_s7i2s0_t_next_value <= 1'd1;
-                    main_i2s_rx_rx_delay_cnt_s7i2s0_t_next_value_ce <= 1'd1;
-                    main_i2s_rx_rx_cnt_s7i2s0_f_next_value <= 5'd24;
-                    main_i2s_rx_rx_cnt_s7i2s0_f_next_value_ce <= 1'd1;
+                    builder_basesoc_fsm0_next_state <= 2'd2;
+                    main_rx_delay_cnt_fsm0_t_next_value <= 1'd1;
+                    main_rx_delay_cnt_fsm0_t_next_value_ce <= 1'd1;
+                    main_rx_cnt_fsm0_f_next_value <= 5'd24;
+                    main_rx_cnt_fsm0_f_next_value_ce <= 1'd1;
                 end
             end
         end
         2'd2: begin
-            main_i2s_rx_rx_fsm_s7i2s0_next_value0 <= 2'd3;
-            main_i2s_rx_rx_fsm_s7i2s0_next_value_ce0 <= 1'd1;
-            if ((~main_i2s_rx_csrfield_enable)) begin
-                builder_basesoc_s7i2s0_next_state <= 1'd0;
+            main_rx_fsm_fsm0_next_value0 <= 2'd3;
+            main_rx_fsm_fsm0_next_value_ce0 <= 1'd1;
+            if ((~main_csrfield_enable0)) begin
+                builder_basesoc_fsm0_next_state <= 1'd0;
             end else begin
-                main_i2s_rx_rx_fifo_rx_fifo_wr_d_s7i2s0_next_value1 <= {main_i2s_rx_rx_fifo_rx_fifo_wr_d[22:0], main_i2s_rx_rx_pin};
-                main_i2s_rx_rx_fifo_rx_fifo_wr_d_s7i2s0_next_value_ce1 <= 1'd1;
-                main_i2s_rx_rx_cnt_s7i2s0_f_next_value <= (main_i2s_rx_rx_cnt - 1'd1);
-                main_i2s_rx_rx_cnt_s7i2s0_f_next_value_ce <= 1'd1;
-                builder_basesoc_s7i2s0_next_state <= 2'd3;
+                main_rx_fifo_rx_fifo_wr_d_fsm0_next_value1 <= {main_rx_fifo_rx_fifo_wr_d[22:0], main_rx_pin};
+                main_rx_fifo_rx_fifo_wr_d_fsm0_next_value_ce1 <= 1'd1;
+                main_rx_cnt_fsm0_f_next_value <= (main_rx_cnt - 1'd1);
+                main_rx_cnt_fsm0_f_next_value_ce <= 1'd1;
+                builder_basesoc_fsm0_next_state <= 2'd3;
             end
         end
         2'd3: begin
-            main_i2s_rx_rx_fsm_s7i2s0_next_value0 <= 3'd5;
-            main_i2s_rx_rx_fsm_s7i2s0_next_value_ce0 <= 1'd1;
-            if ((~main_i2s_rx_csrfield_enable)) begin
-                builder_basesoc_s7i2s0_next_state <= 1'd0;
+            main_rx_fsm_fsm0_next_value0 <= 3'd5;
+            main_rx_fsm_fsm0_next_value_ce0 <= 1'd1;
+            if ((~main_csrfield_enable0)) begin
+                builder_basesoc_fsm0_next_state <= 1'd0;
             end else begin
-                if (main_i2s_rx_rising_edge) begin
-                    if ((main_i2s_rx_rx_cnt == 1'd0)) begin
-                        if (main_i2s_rx_sync_pin) begin
-                            if ((main_i2s_rx_rx_delay_cnt == 1'd0)) begin
-                                main_i2s_rx_rx_cnt_s7i2s0_f_next_value <= 5'd24;
-                                main_i2s_rx_rx_cnt_s7i2s0_f_next_value_ce <= 1'd1;
-                                main_i2s_rx_rx_delay_cnt_s7i2s0_t_next_value <= 1'd1;
-                                main_i2s_rx_rx_delay_cnt_s7i2s0_t_next_value_ce <= 1'd1;
-                                builder_basesoc_s7i2s0_next_state <= 3'd4;
-                                main_i2s_rx_rx_fifo_rx_fifo_wren <= (~main_i2s_rx_rx_reset);
+                if (main_rising_edge) begin
+                    if ((main_rx_cnt == 1'd0)) begin
+                        if (main_sync_pin) begin
+                            if ((main_rx_delay_cnt == 1'd0)) begin
+                                main_rx_cnt_fsm0_f_next_value <= 5'd24;
+                                main_rx_cnt_fsm0_f_next_value_ce <= 1'd1;
+                                main_rx_delay_cnt_fsm0_t_next_value <= 1'd1;
+                                main_rx_delay_cnt_fsm0_t_next_value_ce <= 1'd1;
+                                builder_basesoc_fsm0_next_state <= 3'd4;
+                                main_rx_fifo_rx_fifo_wren <= (~main_rx_reset);
                             end else begin
-                                main_i2s_rx_rx_delay_cnt_s7i2s0_t_next_value <= (main_i2s_rx_rx_delay_cnt - 1'd1);
-                                main_i2s_rx_rx_delay_cnt_s7i2s0_t_next_value_ce <= 1'd1;
-                                builder_basesoc_s7i2s0_next_state <= 2'd3;
+                                main_rx_delay_cnt_fsm0_t_next_value <= (main_rx_delay_cnt - 1'd1);
+                                main_rx_delay_cnt_fsm0_t_next_value_ce <= 1'd1;
+                                builder_basesoc_fsm0_next_state <= 2'd3;
                             end
                         end else begin
-                            builder_basesoc_s7i2s0_next_state <= 2'd3;
+                            builder_basesoc_fsm0_next_state <= 2'd3;
                         end
                     end else begin
-                        if ((main_i2s_rx_rx_cnt > 1'd0)) begin
-                            builder_basesoc_s7i2s0_next_state <= 2'd2;
+                        if ((main_rx_cnt > 1'd0)) begin
+                            builder_basesoc_fsm0_next_state <= 2'd2;
                         end
                     end
                 end
             end
         end
         3'd4: begin
-            main_i2s_rx_rx_fsm_s7i2s0_next_value0 <= 3'd6;
-            main_i2s_rx_rx_fsm_s7i2s0_next_value_ce0 <= 1'd1;
-            if ((~main_i2s_rx_csrfield_enable)) begin
-                builder_basesoc_s7i2s0_next_state <= 1'd0;
+            main_rx_fsm_fsm0_next_value0 <= 3'd6;
+            main_rx_fsm_fsm0_next_value_ce0 <= 1'd1;
+            if ((~main_csrfield_enable0)) begin
+                builder_basesoc_fsm0_next_state <= 1'd0;
             end else begin
-                main_i2s_rx_rx_fifo_rx_fifo_wr_d_s7i2s0_next_value1 <= {main_i2s_rx_rx_fifo_rx_fifo_wr_d[22:0], main_i2s_rx_rx_pin};
-                main_i2s_rx_rx_fifo_rx_fifo_wr_d_s7i2s0_next_value_ce1 <= 1'd1;
-                main_i2s_rx_rx_cnt_s7i2s0_f_next_value <= (main_i2s_rx_rx_cnt - 1'd1);
-                main_i2s_rx_rx_cnt_s7i2s0_f_next_value_ce <= 1'd1;
-                builder_basesoc_s7i2s0_next_state <= 3'd5;
+                main_rx_fifo_rx_fifo_wr_d_fsm0_next_value1 <= {main_rx_fifo_rx_fifo_wr_d[22:0], main_rx_pin};
+                main_rx_fifo_rx_fifo_wr_d_fsm0_next_value_ce1 <= 1'd1;
+                main_rx_cnt_fsm0_f_next_value <= (main_rx_cnt - 1'd1);
+                main_rx_cnt_fsm0_f_next_value_ce <= 1'd1;
+                builder_basesoc_fsm0_next_state <= 3'd5;
             end
         end
         3'd5: begin
-            main_i2s_rx_rx_fsm_s7i2s0_next_value0 <= 3'd7;
-            main_i2s_rx_rx_fsm_s7i2s0_next_value_ce0 <= 1'd1;
-            if ((~main_i2s_rx_csrfield_enable)) begin
-                builder_basesoc_s7i2s0_next_state <= 1'd0;
+            main_rx_fsm_fsm0_next_value0 <= 3'd7;
+            main_rx_fsm_fsm0_next_value_ce0 <= 1'd1;
+            if ((~main_csrfield_enable0)) begin
+                builder_basesoc_fsm0_next_state <= 1'd0;
             end else begin
-                if (main_i2s_rx_rising_edge) begin
-                    if (((main_i2s_rx_rx_cnt == 1'd0) & (~main_i2s_rx_sync_pin))) begin
-                        if ((main_i2s_rx_rx_delay_cnt == 1'd0)) begin
-                            main_i2s_rx_rx_cnt_s7i2s0_f_next_value <= 5'd24;
-                            main_i2s_rx_rx_cnt_s7i2s0_f_next_value_ce <= 1'd1;
-                            main_i2s_rx_rx_delay_cnt_s7i2s0_t_next_value <= 1'd1;
-                            main_i2s_rx_rx_delay_cnt_s7i2s0_t_next_value_ce <= 1'd1;
-                            builder_basesoc_s7i2s0_next_state <= 2'd2;
-                            main_i2s_rx_rx_fifo_rx_fifo_wren <= (~main_i2s_rx_rx_reset);
+                if (main_rising_edge) begin
+                    if (((main_rx_cnt == 1'd0) & (~main_sync_pin))) begin
+                        if ((main_rx_delay_cnt == 1'd0)) begin
+                            main_rx_cnt_fsm0_f_next_value <= 5'd24;
+                            main_rx_cnt_fsm0_f_next_value_ce <= 1'd1;
+                            main_rx_delay_cnt_fsm0_t_next_value <= 1'd1;
+                            main_rx_delay_cnt_fsm0_t_next_value_ce <= 1'd1;
+                            builder_basesoc_fsm0_next_state <= 2'd2;
+                            main_rx_fifo_rx_fifo_wren <= (~main_rx_reset);
                         end else begin
-                            main_i2s_rx_rx_delay_cnt_s7i2s0_t_next_value <= (main_i2s_rx_rx_delay_cnt - 1'd1);
-                            main_i2s_rx_rx_delay_cnt_s7i2s0_t_next_value_ce <= 1'd1;
-                            builder_basesoc_s7i2s0_next_state <= 3'd5;
+                            main_rx_delay_cnt_fsm0_t_next_value <= (main_rx_delay_cnt - 1'd1);
+                            main_rx_delay_cnt_fsm0_t_next_value_ce <= 1'd1;
+                            builder_basesoc_fsm0_next_state <= 3'd5;
                         end
                     end else begin
-                        if ((main_i2s_rx_rx_cnt > 1'd0)) begin
-                            builder_basesoc_s7i2s0_next_state <= 3'd4;
+                        if ((main_rx_cnt > 1'd0)) begin
+                            builder_basesoc_fsm0_next_state <= 3'd4;
                         end
                     end
                 end
             end
         end
         default: begin
-            main_i2s_rx_rx_fsm_s7i2s0_next_value0 <= 1'd1;
-            main_i2s_rx_rx_fsm_s7i2s0_next_value_ce0 <= 1'd1;
-            main_i2s_rx_rx_fifo_rx_fifo_wr_d_s7i2s0_next_value1 <= 1'd0;
-            main_i2s_rx_rx_fifo_rx_fifo_wr_d_s7i2s0_next_value_ce1 <= 1'd1;
-            if (main_i2s_rx_csrfield_enable) begin
-                if ((main_i2s_rx_rising_edge & (~main_i2s_rx_sync_pin))) begin
-                    builder_basesoc_s7i2s0_next_state <= 1'd1;
-                    main_i2s_rx_rx_delay_cnt_s7i2s0_t_next_value <= 1'd1;
-                    main_i2s_rx_rx_delay_cnt_s7i2s0_t_next_value_ce <= 1'd1;
+            main_rx_fsm_fsm0_next_value0 <= 1'd1;
+            main_rx_fsm_fsm0_next_value_ce0 <= 1'd1;
+            main_rx_fifo_rx_fifo_wr_d_fsm0_next_value1 <= 1'd0;
+            main_rx_fifo_rx_fifo_wr_d_fsm0_next_value_ce1 <= 1'd1;
+            if (main_csrfield_enable0) begin
+                if ((main_rising_edge & (~main_sync_pin))) begin
+                    builder_basesoc_fsm0_next_state <= 1'd1;
+                    main_rx_delay_cnt_fsm0_t_next_value <= 1'd1;
+                    main_rx_delay_cnt_fsm0_t_next_value_ce <= 1'd1;
                 end
             end
         end
     endcase
 end
-assign i2s_tx_tx = main_i2s_tx_tx_pin;
-assign main_i2s_tx_rising_edge = (main_i2s_tx_clk_pin & (~main_i2s_tx_clk_d));
-assign main_i2s_tx_falling_edge = ((~main_i2s_tx_clk_pin) & main_i2s_tx_clk_d);
+assign main_tx_fifo_reset = main_tx_fifo_tx_fifo_reset;
+assign main_tx_fifo_level0 = main_tx_fifo_level1;
+assign main_tx_fifo_sink_payload_data = main_tx_fifo_tx_fifo_wr_d;
+assign main_tx_fifo_sink_valid = main_tx_fifo_tx_fifo_wren;
+assign main_tx_fifo_tx_fifo_rd_d = main_tx_fifo_source_payload_data;
+assign main_tx_fifo_source_ready = main_tx_fifo_tx_fifo_rden;
+assign main_tx_fifo_tx_fifo_wrerr = ((~main_tx_fifo_sink_ready) & main_tx_fifo_tx_fifo_wren);
+assign main_tx_fifo_tx_fifo_rderr = (main_tx_fifo_source_ready & main_tx_fifo_tx_fifo_rden);
 always @(*) begin
-    main_i2s_tx_bus_ack <= 1'd0;
-    if (main_i2s_tx_bus_we) begin
-        main_i2s_tx_bus_ack <= main_i2s_tx_wr_ack;
+    main_tx_fifo_tx_fifo_empty <= 1'd0;
+    if ((main_tx_fifo_level0 == 1'd0)) begin
+        main_tx_fifo_tx_fifo_empty <= 1'd1;
     end else begin
-        main_i2s_tx_bus_ack <= main_i2s_tx_rd_ack;
+        main_tx_fifo_tx_fifo_empty <= 1'd0;
     end
 end
-assign main_i2s_tx_tx_fifo_tx_fifo_reset = main_i2s_tx_tx_reset;
-assign main_i2s_tx_csrfield_underflow = main_i2s_tx_tx_fifo_tx_fifo_rderr;
-assign main_i2s_tx_csrfield_free = main_i2s_tx_tx_fifo_tx_fifo_almostempty;
-assign main_i2s_tx_csrfield_almostfull = main_i2s_tx_tx_fifo_tx_fifo_almostfull;
-assign main_i2s_tx_csrfield_full = main_i2s_tx_tx_fifo_tx_fifo_full;
-assign main_i2s_tx_csrfield_empty = main_i2s_tx_tx_fifo_tx_fifo_empty;
-assign main_i2s_tx_csrfield_rdcount = main_i2s_tx_tx_fifo_tx_fifo_rdcount;
-assign main_i2s_tx_csrfield_wrcount = main_i2s_tx_tx_fifo_tx_fifo_wrcount;
-assign main_i2s_tx_tx_ready_trigger = main_i2s_tx_tx_fifo_tx_fifo_almostempty;
-assign main_i2s_tx_tx_error_trigger = (main_i2s_tx_tx_fifo_tx_fifo_wrerr | main_i2s_tx_tx_fifo_tx_fifo_rderr);
-assign main_i2s_tx_tx_ready0 = main_i2s_tx_tx_ready_status;
-assign main_i2s_tx_tx_ready1 = main_i2s_tx_tx_ready_pending;
 always @(*) begin
-    main_i2s_tx_tx_ready_clear <= 1'd0;
-    if ((main_i2s_tx_pending_re & main_i2s_tx_pending_r[0])) begin
-        main_i2s_tx_tx_ready_clear <= 1'd1;
-    end
-end
-assign main_i2s_tx_tx_error0 = main_i2s_tx_tx_error_status;
-assign main_i2s_tx_tx_error1 = main_i2s_tx_tx_error_pending;
-always @(*) begin
-    main_i2s_tx_tx_error_clear <= 1'd0;
-    if ((main_i2s_tx_pending_re & main_i2s_tx_pending_r[1])) begin
-        main_i2s_tx_tx_error_clear <= 1'd1;
-    end
-end
-assign main_i2s_tx_irq = ((main_i2s_tx_pending_status[0] & main_i2s_tx_enable_storage[0]) | (main_i2s_tx_pending_status[1] & main_i2s_tx_enable_storage[1]));
-assign main_i2s_tx_tx_ready_status = 1'd0;
-assign main_i2s_tx_tx_error_status = 1'd0;
-assign main_i2s_tx_tx_fifo_reset = main_i2s_tx_tx_fifo_tx_fifo_reset;
-assign main_i2s_tx_tx_fifo_level0 = main_i2s_tx_tx_fifo_level1;
-assign main_i2s_tx_tx_fifo_sink_payload_data = main_i2s_tx_tx_fifo_tx_fifo_wr_d;
-assign main_i2s_tx_tx_fifo_sink_valid = main_i2s_tx_tx_fifo_tx_fifo_wren;
-assign main_i2s_tx_tx_fifo_tx_fifo_rd_d = main_i2s_tx_tx_fifo_source_payload_data;
-assign main_i2s_tx_tx_fifo_source_ready = main_i2s_tx_tx_fifo_tx_fifo_rden;
-assign main_i2s_tx_tx_fifo_tx_fifo_wrerr = ((~main_i2s_tx_tx_fifo_sink_ready) & main_i2s_tx_tx_fifo_tx_fifo_wren);
-assign main_i2s_tx_tx_fifo_tx_fifo_rderr = (main_i2s_tx_tx_fifo_source_ready & main_i2s_tx_tx_fifo_tx_fifo_rden);
-always @(*) begin
-    main_i2s_tx_tx_fifo_tx_fifo_empty <= 1'd0;
-    if ((main_i2s_tx_tx_fifo_level0 == 1'd0)) begin
-        main_i2s_tx_tx_fifo_tx_fifo_empty <= 1'd1;
+    main_tx_fifo_tx_fifo_full <= 1'd0;
+    if ((main_tx_fifo_level0 == 10'd512)) begin
+        main_tx_fifo_tx_fifo_full <= 1'd1;
     end else begin
-        main_i2s_tx_tx_fifo_tx_fifo_empty <= 1'd0;
+        main_tx_fifo_tx_fifo_full <= 1'd0;
     end
 end
+assign main_tx_fifo_syncfifo_din = {main_tx_fifo_fifo_in_last, main_tx_fifo_fifo_in_first, main_tx_fifo_fifo_in_payload_data};
+assign {main_tx_fifo_fifo_out_last, main_tx_fifo_fifo_out_first, main_tx_fifo_fifo_out_payload_data} = main_tx_fifo_syncfifo_dout;
+assign main_tx_fifo_sink_ready = main_tx_fifo_syncfifo_writable;
+assign main_tx_fifo_syncfifo_we = main_tx_fifo_sink_valid;
+assign main_tx_fifo_fifo_in_first = main_tx_fifo_sink_first;
+assign main_tx_fifo_fifo_in_last = main_tx_fifo_sink_last;
+assign main_tx_fifo_fifo_in_payload_data = main_tx_fifo_sink_payload_data;
+assign main_tx_fifo_source_valid = main_tx_fifo_syncfifo_readable;
+assign main_tx_fifo_source_first = main_tx_fifo_fifo_out_first;
+assign main_tx_fifo_source_last = main_tx_fifo_fifo_out_last;
+assign main_tx_fifo_source_payload_data = main_tx_fifo_fifo_out_payload_data;
+assign main_tx_fifo_syncfifo_re = main_tx_fifo_source_ready;
 always @(*) begin
-    main_i2s_tx_tx_fifo_tx_fifo_full <= 1'd0;
-    if ((main_i2s_tx_tx_fifo_level0 == 10'd512)) begin
-        main_i2s_tx_tx_fifo_tx_fifo_full <= 1'd1;
+    main_tx_fifo_wrport_adr <= 9'd0;
+    if (main_tx_fifo_replace) begin
+        main_tx_fifo_wrport_adr <= (main_tx_fifo_produce - 1'd1);
     end else begin
-        main_i2s_tx_tx_fifo_tx_fifo_full <= 1'd0;
+        main_tx_fifo_wrport_adr <= main_tx_fifo_produce;
     end
 end
-assign main_i2s_tx_tx_fifo_syncfifo_din = {main_i2s_tx_tx_fifo_fifo_in_last, main_i2s_tx_tx_fifo_fifo_in_first, main_i2s_tx_tx_fifo_fifo_in_payload_data};
-assign {main_i2s_tx_tx_fifo_fifo_out_last, main_i2s_tx_tx_fifo_fifo_out_first, main_i2s_tx_tx_fifo_fifo_out_payload_data} = main_i2s_tx_tx_fifo_syncfifo_dout;
-assign main_i2s_tx_tx_fifo_sink_ready = main_i2s_tx_tx_fifo_syncfifo_writable;
-assign main_i2s_tx_tx_fifo_syncfifo_we = main_i2s_tx_tx_fifo_sink_valid;
-assign main_i2s_tx_tx_fifo_fifo_in_first = main_i2s_tx_tx_fifo_sink_first;
-assign main_i2s_tx_tx_fifo_fifo_in_last = main_i2s_tx_tx_fifo_sink_last;
-assign main_i2s_tx_tx_fifo_fifo_in_payload_data = main_i2s_tx_tx_fifo_sink_payload_data;
-assign main_i2s_tx_tx_fifo_source_valid = main_i2s_tx_tx_fifo_syncfifo_readable;
-assign main_i2s_tx_tx_fifo_source_first = main_i2s_tx_tx_fifo_fifo_out_first;
-assign main_i2s_tx_tx_fifo_source_last = main_i2s_tx_tx_fifo_fifo_out_last;
-assign main_i2s_tx_tx_fifo_source_payload_data = main_i2s_tx_tx_fifo_fifo_out_payload_data;
-assign main_i2s_tx_tx_fifo_syncfifo_re = main_i2s_tx_tx_fifo_source_ready;
+assign main_tx_fifo_wrport_dat_w = main_tx_fifo_syncfifo_din;
+assign main_tx_fifo_wrport_we = (main_tx_fifo_syncfifo_we & (main_tx_fifo_syncfifo_writable | main_tx_fifo_replace));
+assign main_tx_fifo_do_read = (main_tx_fifo_syncfifo_readable & main_tx_fifo_syncfifo_re);
+assign main_tx_fifo_rdport_adr = main_tx_fifo_consume;
+assign main_tx_fifo_syncfifo_dout = main_tx_fifo_rdport_dat_r;
+assign main_tx_fifo_syncfifo_writable = (main_tx_fifo_level1 != 10'd512);
+assign main_tx_fifo_syncfifo_readable = (main_tx_fifo_level1 != 1'd0);
 always @(*) begin
-    main_i2s_tx_tx_fifo_wrport_adr <= 9'd0;
-    if (main_i2s_tx_tx_fifo_replace) begin
-        main_i2s_tx_tx_fifo_wrport_adr <= (main_i2s_tx_tx_fifo_produce - 1'd1);
-    end else begin
-        main_i2s_tx_tx_fifo_wrport_adr <= main_i2s_tx_tx_fifo_produce;
-    end
-end
-assign main_i2s_tx_tx_fifo_wrport_dat_w = main_i2s_tx_tx_fifo_syncfifo_din;
-assign main_i2s_tx_tx_fifo_wrport_we = (main_i2s_tx_tx_fifo_syncfifo_we & (main_i2s_tx_tx_fifo_syncfifo_writable | main_i2s_tx_tx_fifo_replace));
-assign main_i2s_tx_tx_fifo_do_read = (main_i2s_tx_tx_fifo_syncfifo_readable & main_i2s_tx_tx_fifo_syncfifo_re);
-assign main_i2s_tx_tx_fifo_rdport_adr = main_i2s_tx_tx_fifo_consume;
-assign main_i2s_tx_tx_fifo_syncfifo_dout = main_i2s_tx_tx_fifo_rdport_dat_r;
-assign main_i2s_tx_tx_fifo_syncfifo_writable = (main_i2s_tx_tx_fifo_level1 != 10'd512);
-assign main_i2s_tx_tx_fifo_syncfifo_readable = (main_i2s_tx_tx_fifo_level1 != 1'd0);
-always @(*) begin
-    builder_basesoc_s7i2s1_next_state <= 3'd0;
-    main_i2s_tx_tx_cnt_s7i2s1_t_next_value0 <= 5'd0;
-    main_i2s_tx_tx_fifo_tx_fifo_rden <= 1'd0;
-    main_i2s_tx_tx_cnt_s7i2s1_t_next_value_ce0 <= 1'd0;
-    main_i2s_tx_tx_buf_s7i2s1_t_next_value1 <= 25'd0;
-    main_i2s_tx_tx_buf_s7i2s1_t_next_value_ce1 <= 1'd0;
-    main_i2s_tx_tx_pin_s7i2s1_f_next_value <= 1'd0;
-    main_i2s_tx_tx_pin_s7i2s1_f_next_value_ce <= 1'd0;
-    builder_basesoc_s7i2s1_next_state <= builder_basesoc_s7i2s1_state;
-    case (builder_basesoc_s7i2s1_state)
+    main_tx_fifo_tx_fifo_rden <= 1'd0;
+    builder_basesoc_fsm1_next_state <= 3'd0;
+    main_tx_cnt_fsm1_t_next_value0 <= 5'd0;
+    main_tx_cnt_fsm1_t_next_value_ce0 <= 1'd0;
+    main_tx_buf_fsm1_t_next_value1 <= 25'd0;
+    main_tx_buf_fsm1_t_next_value_ce1 <= 1'd0;
+    main_tx_pin_fsm1_f_next_value <= 1'd0;
+    main_tx_pin_fsm1_f_next_value_ce <= 1'd0;
+    builder_basesoc_fsm1_next_state <= builder_basesoc_fsm1_state;
+    case (builder_basesoc_fsm1_state)
         1'd1: begin
-            if ((main_i2s_tx_rising_edge & (~main_i2s_tx_sync_pin))) begin
-                builder_basesoc_s7i2s1_next_state <= 2'd2;
-                main_i2s_tx_tx_cnt_s7i2s1_t_next_value0 <= 5'd25;
-                main_i2s_tx_tx_cnt_s7i2s1_t_next_value_ce0 <= 1'd1;
-                main_i2s_tx_tx_buf_s7i2s1_t_next_value1 <= {1'd0, main_i2s_tx_tx_fifo_tx_fifo_rd_d};
-                main_i2s_tx_tx_buf_s7i2s1_t_next_value_ce1 <= 1'd1;
-                main_i2s_tx_tx_fifo_tx_fifo_rden <= (~main_i2s_tx_tx_reset);
+            if ((main_rising_edge & (~main_sync_pin))) begin
+                builder_basesoc_fsm1_next_state <= 2'd2;
+                main_tx_cnt_fsm1_t_next_value0 <= 5'd25;
+                main_tx_cnt_fsm1_t_next_value_ce0 <= 1'd1;
+                main_tx_buf_fsm1_t_next_value1 <= {1'd0, main_tx_fifo_tx_fifo_rd_d};
+                main_tx_buf_fsm1_t_next_value_ce1 <= 1'd1;
+                main_tx_fifo_tx_fifo_rden <= (~main_tx_reset);
             end
         end
         2'd2: begin
-            if (main_i2s_tx_falling_edge) begin
-                builder_basesoc_s7i2s1_next_state <= 2'd3;
+            if (main_falling_edge) begin
+                builder_basesoc_fsm1_next_state <= 2'd3;
             end
         end
         2'd3: begin
-            if ((~main_i2s_tx_csrfield_enable)) begin
-                builder_basesoc_s7i2s1_next_state <= 1'd0;
+            if ((~main_csrfield_enable1)) begin
+                builder_basesoc_fsm1_next_state <= 1'd0;
             end else begin
-                main_i2s_tx_tx_pin_s7i2s1_f_next_value <= main_i2s_tx_tx_buf[23];
-                main_i2s_tx_tx_pin_s7i2s1_f_next_value_ce <= 1'd1;
-                main_i2s_tx_tx_buf_s7i2s1_t_next_value1 <= {main_i2s_tx_tx_buf[23:0], 1'd0};
-                main_i2s_tx_tx_buf_s7i2s1_t_next_value_ce1 <= 1'd1;
-                main_i2s_tx_tx_cnt_s7i2s1_t_next_value0 <= (main_i2s_tx_tx_cnt - 1'd1);
-                main_i2s_tx_tx_cnt_s7i2s1_t_next_value_ce0 <= 1'd1;
-                builder_basesoc_s7i2s1_next_state <= 3'd4;
+                main_tx_pin_fsm1_f_next_value <= main_tx_buf[23];
+                main_tx_pin_fsm1_f_next_value_ce <= 1'd1;
+                main_tx_buf_fsm1_t_next_value1 <= {main_tx_buf[23:0], 1'd0};
+                main_tx_buf_fsm1_t_next_value_ce1 <= 1'd1;
+                main_tx_cnt_fsm1_t_next_value0 <= (main_tx_cnt - 1'd1);
+                main_tx_cnt_fsm1_t_next_value_ce0 <= 1'd1;
+                builder_basesoc_fsm1_next_state <= 3'd4;
             end
         end
         3'd4: begin
-            if ((~main_i2s_tx_csrfield_enable)) begin
-                builder_basesoc_s7i2s1_next_state <= 1'd0;
+            if ((~main_csrfield_enable1)) begin
+                builder_basesoc_fsm1_next_state <= 1'd0;
             end else begin
-                if (main_i2s_tx_rising_edge) begin
-                    if ((main_i2s_tx_tx_cnt == 1'd0)) begin
-                        if (main_i2s_tx_sync_pin) begin
-                            main_i2s_tx_tx_cnt_s7i2s1_t_next_value0 <= 5'd25;
-                            main_i2s_tx_tx_cnt_s7i2s1_t_next_value_ce0 <= 1'd1;
-                            builder_basesoc_s7i2s1_next_state <= 3'd5;
-                            main_i2s_tx_tx_buf_s7i2s1_t_next_value1 <= {1'd0, main_i2s_tx_tx_fifo_tx_fifo_rd_d};
-                            main_i2s_tx_tx_buf_s7i2s1_t_next_value_ce1 <= 1'd1;
-                            main_i2s_tx_tx_fifo_tx_fifo_rden <= (~main_i2s_tx_tx_reset);
+                if (main_rising_edge) begin
+                    if ((main_tx_cnt == 1'd0)) begin
+                        if (main_sync_pin) begin
+                            main_tx_cnt_fsm1_t_next_value0 <= 5'd25;
+                            main_tx_cnt_fsm1_t_next_value_ce0 <= 1'd1;
+                            builder_basesoc_fsm1_next_state <= 3'd5;
+                            main_tx_buf_fsm1_t_next_value1 <= {1'd0, main_tx_fifo_tx_fifo_rd_d};
+                            main_tx_buf_fsm1_t_next_value_ce1 <= 1'd1;
+                            main_tx_fifo_tx_fifo_rden <= (~main_tx_reset);
                         end else begin
-                            builder_basesoc_s7i2s1_next_state <= 3'd4;
+                            builder_basesoc_fsm1_next_state <= 3'd4;
                         end
                     end else begin
-                        if ((main_i2s_tx_tx_cnt > 1'd0)) begin
-                            builder_basesoc_s7i2s1_next_state <= 2'd2;
+                        if ((main_tx_cnt > 1'd0)) begin
+                            builder_basesoc_fsm1_next_state <= 2'd2;
                         end
                     end
                 end
             end
         end
         3'd5: begin
-            if (main_i2s_tx_falling_edge) begin
-                builder_basesoc_s7i2s1_next_state <= 3'd6;
+            if (main_falling_edge) begin
+                builder_basesoc_fsm1_next_state <= 3'd6;
             end
         end
         3'd6: begin
-            if ((~main_i2s_tx_csrfield_enable)) begin
-                builder_basesoc_s7i2s1_next_state <= 1'd0;
+            if ((~main_csrfield_enable1)) begin
+                builder_basesoc_fsm1_next_state <= 1'd0;
             end else begin
-                main_i2s_tx_tx_pin_s7i2s1_f_next_value <= main_i2s_tx_tx_buf[23];
-                main_i2s_tx_tx_pin_s7i2s1_f_next_value_ce <= 1'd1;
-                main_i2s_tx_tx_buf_s7i2s1_t_next_value1 <= {main_i2s_tx_tx_buf[23:0], 1'd0};
-                main_i2s_tx_tx_buf_s7i2s1_t_next_value_ce1 <= 1'd1;
-                main_i2s_tx_tx_cnt_s7i2s1_t_next_value0 <= (main_i2s_tx_tx_cnt - 1'd1);
-                main_i2s_tx_tx_cnt_s7i2s1_t_next_value_ce0 <= 1'd1;
-                builder_basesoc_s7i2s1_next_state <= 3'd7;
+                main_tx_pin_fsm1_f_next_value <= main_tx_buf[23];
+                main_tx_pin_fsm1_f_next_value_ce <= 1'd1;
+                main_tx_buf_fsm1_t_next_value1 <= {main_tx_buf[23:0], 1'd0};
+                main_tx_buf_fsm1_t_next_value_ce1 <= 1'd1;
+                main_tx_cnt_fsm1_t_next_value0 <= (main_tx_cnt - 1'd1);
+                main_tx_cnt_fsm1_t_next_value_ce0 <= 1'd1;
+                builder_basesoc_fsm1_next_state <= 3'd7;
             end
         end
         3'd7: begin
-            if ((~main_i2s_tx_csrfield_enable)) begin
-                builder_basesoc_s7i2s1_next_state <= 1'd0;
+            if ((~main_csrfield_enable1)) begin
+                builder_basesoc_fsm1_next_state <= 1'd0;
             end else begin
-                if (main_i2s_tx_rising_edge) begin
-                    if (((main_i2s_tx_tx_cnt == 1'd0) & (~main_i2s_tx_sync_pin))) begin
-                        main_i2s_tx_tx_cnt_s7i2s1_t_next_value0 <= 5'd25;
-                        main_i2s_tx_tx_cnt_s7i2s1_t_next_value_ce0 <= 1'd1;
-                        builder_basesoc_s7i2s1_next_state <= 2'd2;
-                        main_i2s_tx_tx_buf_s7i2s1_t_next_value1 <= {1'd0, main_i2s_tx_tx_fifo_tx_fifo_rd_d};
-                        main_i2s_tx_tx_buf_s7i2s1_t_next_value_ce1 <= 1'd1;
-                        main_i2s_tx_tx_fifo_tx_fifo_rden <= (~main_i2s_tx_tx_reset);
+                if (main_rising_edge) begin
+                    if (((main_tx_cnt == 1'd0) & (~main_sync_pin))) begin
+                        main_tx_cnt_fsm1_t_next_value0 <= 5'd25;
+                        main_tx_cnt_fsm1_t_next_value_ce0 <= 1'd1;
+                        builder_basesoc_fsm1_next_state <= 2'd2;
+                        main_tx_buf_fsm1_t_next_value1 <= {1'd0, main_tx_fifo_tx_fifo_rd_d};
+                        main_tx_buf_fsm1_t_next_value_ce1 <= 1'd1;
+                        main_tx_fifo_tx_fifo_rden <= (~main_tx_reset);
                     end else begin
-                        if ((main_i2s_tx_tx_cnt > 1'd0)) begin
-                            builder_basesoc_s7i2s1_next_state <= 3'd5;
+                        if ((main_tx_cnt > 1'd0)) begin
+                            builder_basesoc_fsm1_next_state <= 3'd5;
                         end
                     end
                 end
             end
         end
         default: begin
-            if (main_i2s_tx_csrfield_enable) begin
-                if ((main_i2s_tx_rising_edge & (~main_i2s_tx_sync_pin))) begin
-                    builder_basesoc_s7i2s1_next_state <= 1'd1;
+            if (main_csrfield_enable1) begin
+                if ((main_rising_edge & (~main_sync_pin))) begin
+                    builder_basesoc_fsm1_next_state <= 1'd1;
                 end
             end
         end
     endcase
 end
 always @(*) begin
+    main_uartbone_phy_tx_data_rs232phytx1_next_value2 <= 8'd0;
     main_uartbone_phy_tx_data_rs232phytx1_next_value_ce2 <= 1'd0;
-    main_uartbone_phy_tx_enable <= 1'd0;
+    main_uartbone_phy_tx_sink_ready <= 1'd0;
     builder_basesoc_rs232phytx1_next_state <= 1'd0;
     main_uartbone_phy_tx_count_rs232phytx1_next_value0 <= 4'd0;
     main_uartbone_phy_tx_count_rs232phytx1_next_value_ce0 <= 1'd0;
-    main_uartbone_phy_tx_sink_ready <= 1'd0;
+    main_uartbone_phy_tx_enable <= 1'd0;
     main_serial_debug_tx_rs232phytx1_next_value1 <= 1'd0;
     main_serial_debug_tx_rs232phytx1_next_value_ce1 <= 1'd0;
-    main_uartbone_phy_tx_data_rs232phytx1_next_value2 <= 8'd0;
     builder_basesoc_rs232phytx1_next_state <= builder_basesoc_rs232phytx1_state;
     case (builder_basesoc_rs232phytx1_state)
         1'd1: begin
@@ -4123,14 +4055,14 @@ always @(*) begin
     endcase
 end
 always @(*) begin
-    main_uartbone_phy_rx_source_payload_data <= 8'd0;
-    main_uartbone_phy_rx_enable <= 1'd0;
+    main_uartbone_phy_rx_data_rs232phyrx1_next_value_ce1 <= 1'd0;
+    main_uartbone_phy_rx_source_valid <= 1'd0;
     builder_basesoc_rs232phyrx1_next_state <= 1'd0;
     main_uartbone_phy_rx_count_rs232phyrx1_next_value0 <= 4'd0;
+    main_uartbone_phy_rx_source_payload_data <= 8'd0;
     main_uartbone_phy_rx_count_rs232phyrx1_next_value_ce0 <= 1'd0;
-    main_uartbone_phy_rx_source_valid <= 1'd0;
+    main_uartbone_phy_rx_enable <= 1'd0;
     main_uartbone_phy_rx_data_rs232phyrx1_next_value1 <= 8'd0;
-    main_uartbone_phy_rx_data_rs232phyrx1_next_value_ce1 <= 1'd0;
     builder_basesoc_rs232phyrx1_next_state <= builder_basesoc_rs232phyrx1_state;
     case (builder_basesoc_rs232phyrx1_state)
         1'd1: begin
@@ -4180,29 +4112,29 @@ always @(*) begin
 end
 assign main_uartbone_phy_tx_sink_last = ((main_uartbone_data_bytes_count == 2'd3) & (main_uartbone_words_count == (main_uartbone_length - 1'd1)));
 always @(*) begin
+    main_uartbone_wishbone_cyc <= 1'd0;
+    main_uartbone_wishbone_stb <= 1'd0;
     main_uartbone_data_uartbone_next_value7 <= 32'd0;
     main_uartbone_data_uartbone_next_value_ce7 <= 1'd0;
+    main_uartbone_wishbone_we <= 1'd0;
+    main_uartbone_phy_rx_source_ready <= 1'd0;
     builder_basesoc_uartbone_next_state <= 3'd0;
     main_uartbone_data_bytes_count_uartbone_next_value0 <= 2'd0;
     main_uartbone_data_bytes_count_uartbone_next_value_ce0 <= 1'd0;
     main_uartbone_addr_bytes_count_uartbone_next_value1 <= 2'd0;
-    main_uartbone_phy_tx_sink_valid <= 1'd0;
     main_uartbone_addr_bytes_count_uartbone_next_value_ce1 <= 1'd0;
     main_uartbone_words_count_uartbone_next_value2 <= 8'd0;
     main_uartbone_words_count_uartbone_next_value_ce2 <= 1'd0;
-    main_uartbone_is_ongoing <= 1'd0;
     main_uartbone_cmd_uartbone_next_value3 <= 8'd0;
     main_uartbone_cmd_uartbone_next_value_ce3 <= 1'd0;
     main_uartbone_length_uartbone_next_value4 <= 8'd0;
+    main_uartbone_phy_tx_sink_valid <= 1'd0;
     main_uartbone_length_uartbone_next_value_ce4 <= 1'd0;
     main_uartbone_address_uartbone_next_value5 <= 32'd0;
-    main_uartbone_wishbone_cyc <= 1'd0;
     main_uartbone_address_uartbone_next_value_ce5 <= 1'd0;
-    main_uartbone_wishbone_stb <= 1'd0;
-    main_uartbone_wishbone_we <= 1'd0;
+    main_uartbone_is_ongoing <= 1'd0;
     main_uartbone_incr_uartbone_next_value6 <= 1'd0;
     main_uartbone_incr_uartbone_next_value_ce6 <= 1'd0;
-    main_uartbone_phy_rx_source_ready <= 1'd0;
     builder_basesoc_uartbone_next_state <= builder_basesoc_uartbone_state;
     case (builder_basesoc_uartbone_state)
         1'd1: begin
@@ -4319,11 +4251,12 @@ always @(*) begin
     builder_basesoc_wishbone2csr_next_state <= 2'd0;
     builder_basesoc_dat_w_wishbone2csr_next_value0 <= 32'd0;
     builder_basesoc_dat_w_wishbone2csr_next_value_ce0 <= 1'd0;
-    builder_basesoc_wishbone_ack <= 1'd0;
     builder_basesoc_adr_wishbone2csr_next_value1 <= 14'd0;
     builder_basesoc_adr_wishbone2csr_next_value_ce1 <= 1'd0;
     builder_basesoc_we_wishbone2csr_next_value2 <= 1'd0;
+    builder_basesoc_wishbone_dat_r <= 32'd0;
     builder_basesoc_we_wishbone2csr_next_value_ce2 <= 1'd0;
+    builder_basesoc_wishbone_ack <= 1'd0;
     builder_basesoc_wishbone2csr_next_state <= builder_basesoc_wishbone2csr_state;
     case (builder_basesoc_wishbone2csr_state)
         1'd1: begin
@@ -4372,15 +4305,15 @@ always @(*) begin
 end
 assign builder_csr_bankarray_csrbank0_bus_errors_r = builder_csr_bankarray_interface0_bank_bus_dat_w[31:0];
 always @(*) begin
-    builder_csr_bankarray_csrbank0_bus_errors_we <= 1'd0;
     builder_csr_bankarray_csrbank0_bus_errors_re <= 1'd0;
+    builder_csr_bankarray_csrbank0_bus_errors_we <= 1'd0;
     if ((builder_csr_bankarray_csrbank0_sel & (builder_csr_bankarray_interface0_bank_bus_adr[8:0] == 2'd2))) begin
         builder_csr_bankarray_csrbank0_bus_errors_re <= builder_csr_bankarray_interface0_bank_bus_we;
         builder_csr_bankarray_csrbank0_bus_errors_we <= (~builder_csr_bankarray_interface0_bank_bus_we);
     end
 end
 assign builder_csr_bankarray_csrbank1_sel = (builder_csr_bankarray_interface1_bank_bus_adr[13:9] == 1'd1);
-assign builder_csr_bankarray_csrbank1_ev_status_r = builder_csr_bankarray_interface1_bank_bus_dat_w[1:0];
+assign builder_csr_bankarray_csrbank1_ev_status_r = builder_csr_bankarray_interface1_bank_bus_dat_w[3:0];
 always @(*) begin
     builder_csr_bankarray_csrbank1_ev_status_re <= 1'd0;
     builder_csr_bankarray_csrbank1_ev_status_we <= 1'd0;
@@ -4389,16 +4322,16 @@ always @(*) begin
         builder_csr_bankarray_csrbank1_ev_status_we <= (~builder_csr_bankarray_interface1_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank1_ev_pending_r = builder_csr_bankarray_interface1_bank_bus_dat_w[1:0];
+assign builder_csr_bankarray_csrbank1_ev_pending_r = builder_csr_bankarray_interface1_bank_bus_dat_w[3:0];
 always @(*) begin
-    builder_csr_bankarray_csrbank1_ev_pending_we <= 1'd0;
     builder_csr_bankarray_csrbank1_ev_pending_re <= 1'd0;
+    builder_csr_bankarray_csrbank1_ev_pending_we <= 1'd0;
     if ((builder_csr_bankarray_csrbank1_sel & (builder_csr_bankarray_interface1_bank_bus_adr[8:0] == 1'd1))) begin
         builder_csr_bankarray_csrbank1_ev_pending_re <= builder_csr_bankarray_interface1_bank_bus_we;
         builder_csr_bankarray_csrbank1_ev_pending_we <= (~builder_csr_bankarray_interface1_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank1_ev_enable0_r = builder_csr_bankarray_interface1_bank_bus_dat_w[1:0];
+assign builder_csr_bankarray_csrbank1_ev_enable0_r = builder_csr_bankarray_interface1_bank_bus_dat_w[3:0];
 always @(*) begin
     builder_csr_bankarray_csrbank1_ev_enable0_we <= 1'd0;
     builder_csr_bankarray_csrbank1_ev_enable0_re <= 1'd0;
@@ -4434,155 +4367,116 @@ always @(*) begin
         builder_csr_bankarray_csrbank1_rx_conf_we <= (~builder_csr_bankarray_interface1_bank_bus_we);
     end
 end
+assign builder_csr_bankarray_csrbank1_tx_ctl0_r = builder_csr_bankarray_interface1_bank_bus_dat_w[1:0];
 always @(*) begin
-    main_i2s_rx_status_status <= 2'd0;
-    main_i2s_rx_status_status[0] <= main_i2s_rx_rx_ready0;
-    main_i2s_rx_status_status[1] <= main_i2s_rx_rx_error0;
-end
-assign builder_csr_bankarray_csrbank1_ev_status_w = main_i2s_rx_status_status[1:0];
-assign main_i2s_rx_status_we = builder_csr_bankarray_csrbank1_ev_status_we;
-always @(*) begin
-    main_i2s_rx_pending_status <= 2'd0;
-    main_i2s_rx_pending_status[0] <= main_i2s_rx_rx_ready1;
-    main_i2s_rx_pending_status[1] <= main_i2s_rx_rx_error1;
-end
-assign builder_csr_bankarray_csrbank1_ev_pending_w = main_i2s_rx_pending_status[1:0];
-assign main_i2s_rx_pending_we = builder_csr_bankarray_csrbank1_ev_pending_we;
-assign main_i2s_rx_rx_ready2 = main_i2s_rx_enable_storage[0];
-assign main_i2s_rx_rx_error2 = main_i2s_rx_enable_storage[1];
-assign builder_csr_bankarray_csrbank1_ev_enable0_w = main_i2s_rx_enable_storage[1:0];
-assign main_i2s_rx_csrfield_enable = main_i2s_rx_rx_ctl_storage[0];
-always @(*) begin
-    main_i2s_rx_csrfield_reset <= 1'd0;
-    if (main_i2s_rx_rx_ctl_re) begin
-        main_i2s_rx_csrfield_reset <= main_i2s_rx_rx_ctl_storage[1];
+    builder_csr_bankarray_csrbank1_tx_ctl0_re <= 1'd0;
+    builder_csr_bankarray_csrbank1_tx_ctl0_we <= 1'd0;
+    if ((builder_csr_bankarray_csrbank1_sel & (builder_csr_bankarray_interface1_bank_bus_adr[8:0] == 3'd6))) begin
+        builder_csr_bankarray_csrbank1_tx_ctl0_re <= builder_csr_bankarray_interface1_bank_bus_we;
+        builder_csr_bankarray_csrbank1_tx_ctl0_we <= (~builder_csr_bankarray_interface1_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank1_rx_ctl0_w = main_i2s_rx_rx_ctl_storage[1:0];
+assign builder_csr_bankarray_csrbank1_tx_stat_r = builder_csr_bankarray_interface1_bank_bus_dat_w[24:0];
 always @(*) begin
-    main_i2s_rx_rx_stat_status <= 32'd0;
-    main_i2s_rx_rx_stat_status[0] <= main_i2s_rx_csrfield_overflow;
-    main_i2s_rx_rx_stat_status[1] <= main_i2s_rx_csrfield_underflow;
-    main_i2s_rx_rx_stat_status[2] <= main_i2s_rx_csrfield_dataready;
-    main_i2s_rx_rx_stat_status[3] <= main_i2s_rx_csrfield_empty;
-    main_i2s_rx_rx_stat_status[12:4] <= main_i2s_rx_csrfield_wrcount;
-    main_i2s_rx_rx_stat_status[21:13] <= main_i2s_rx_csrfield_rdcount;
-    main_i2s_rx_rx_stat_status[30:22] <= main_i2s_rx_csrfield_fifo_depth;
-    main_i2s_rx_rx_stat_status[31] <= main_i2s_rx_csrfield_concatenate_channels;
-end
-assign builder_csr_bankarray_csrbank1_rx_stat_w = main_i2s_rx_rx_stat_status[31:0];
-assign main_i2s_rx_rx_stat_we = builder_csr_bankarray_csrbank1_rx_stat_we;
-always @(*) begin
-    main_i2s_rx_rx_conf_status <= 32'd12288097;
-    main_i2s_rx_rx_conf_status[1:0] <= main_i2s_rx_csrfield_format;
-    main_i2s_rx_rx_conf_status[7:2] <= main_i2s_rx_csrfield_sample_width;
-    main_i2s_rx_rx_conf_status[31:8] <= main_i2s_rx_csrfield_lrck_freq;
-end
-assign builder_csr_bankarray_csrbank1_rx_conf_w = main_i2s_rx_rx_conf_status[31:0];
-assign main_i2s_rx_rx_conf_we = builder_csr_bankarray_csrbank1_rx_conf_we;
-assign builder_csr_bankarray_csrbank2_sel = (builder_csr_bankarray_interface2_bank_bus_adr[13:9] == 2'd2);
-assign builder_csr_bankarray_csrbank2_ev_status_r = builder_csr_bankarray_interface2_bank_bus_dat_w[1:0];
-always @(*) begin
-    builder_csr_bankarray_csrbank2_ev_status_re <= 1'd0;
-    builder_csr_bankarray_csrbank2_ev_status_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank2_sel & (builder_csr_bankarray_interface2_bank_bus_adr[8:0] == 1'd0))) begin
-        builder_csr_bankarray_csrbank2_ev_status_re <= builder_csr_bankarray_interface2_bank_bus_we;
-        builder_csr_bankarray_csrbank2_ev_status_we <= (~builder_csr_bankarray_interface2_bank_bus_we);
+    builder_csr_bankarray_csrbank1_tx_stat_re <= 1'd0;
+    builder_csr_bankarray_csrbank1_tx_stat_we <= 1'd0;
+    if ((builder_csr_bankarray_csrbank1_sel & (builder_csr_bankarray_interface1_bank_bus_adr[8:0] == 3'd7))) begin
+        builder_csr_bankarray_csrbank1_tx_stat_re <= builder_csr_bankarray_interface1_bank_bus_we;
+        builder_csr_bankarray_csrbank1_tx_stat_we <= (~builder_csr_bankarray_interface1_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank2_ev_pending_r = builder_csr_bankarray_interface2_bank_bus_dat_w[1:0];
+assign builder_csr_bankarray_csrbank1_tx_conf_r = builder_csr_bankarray_interface1_bank_bus_dat_w[31:0];
 always @(*) begin
-    builder_csr_bankarray_csrbank2_ev_pending_we <= 1'd0;
-    builder_csr_bankarray_csrbank2_ev_pending_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank2_sel & (builder_csr_bankarray_interface2_bank_bus_adr[8:0] == 1'd1))) begin
-        builder_csr_bankarray_csrbank2_ev_pending_re <= builder_csr_bankarray_interface2_bank_bus_we;
-        builder_csr_bankarray_csrbank2_ev_pending_we <= (~builder_csr_bankarray_interface2_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank2_ev_enable0_r = builder_csr_bankarray_interface2_bank_bus_dat_w[1:0];
-always @(*) begin
-    builder_csr_bankarray_csrbank2_ev_enable0_we <= 1'd0;
-    builder_csr_bankarray_csrbank2_ev_enable0_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank2_sel & (builder_csr_bankarray_interface2_bank_bus_adr[8:0] == 2'd2))) begin
-        builder_csr_bankarray_csrbank2_ev_enable0_re <= builder_csr_bankarray_interface2_bank_bus_we;
-        builder_csr_bankarray_csrbank2_ev_enable0_we <= (~builder_csr_bankarray_interface2_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank2_tx_ctl0_r = builder_csr_bankarray_interface2_bank_bus_dat_w[1:0];
-always @(*) begin
-    builder_csr_bankarray_csrbank2_tx_ctl0_re <= 1'd0;
-    builder_csr_bankarray_csrbank2_tx_ctl0_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank2_sel & (builder_csr_bankarray_interface2_bank_bus_adr[8:0] == 2'd3))) begin
-        builder_csr_bankarray_csrbank2_tx_ctl0_re <= builder_csr_bankarray_interface2_bank_bus_we;
-        builder_csr_bankarray_csrbank2_tx_ctl0_we <= (~builder_csr_bankarray_interface2_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank2_tx_stat_r = builder_csr_bankarray_interface2_bank_bus_dat_w[24:0];
-always @(*) begin
-    builder_csr_bankarray_csrbank2_tx_stat_we <= 1'd0;
-    builder_csr_bankarray_csrbank2_tx_stat_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank2_sel & (builder_csr_bankarray_interface2_bank_bus_adr[8:0] == 3'd4))) begin
-        builder_csr_bankarray_csrbank2_tx_stat_re <= builder_csr_bankarray_interface2_bank_bus_we;
-        builder_csr_bankarray_csrbank2_tx_stat_we <= (~builder_csr_bankarray_interface2_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank2_tx_conf_r = builder_csr_bankarray_interface2_bank_bus_dat_w[31:0];
-always @(*) begin
-    builder_csr_bankarray_csrbank2_tx_conf_we <= 1'd0;
-    builder_csr_bankarray_csrbank2_tx_conf_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank2_sel & (builder_csr_bankarray_interface2_bank_bus_adr[8:0] == 3'd5))) begin
-        builder_csr_bankarray_csrbank2_tx_conf_re <= builder_csr_bankarray_interface2_bank_bus_we;
-        builder_csr_bankarray_csrbank2_tx_conf_we <= (~builder_csr_bankarray_interface2_bank_bus_we);
+    builder_csr_bankarray_csrbank1_tx_conf_we <= 1'd0;
+    builder_csr_bankarray_csrbank1_tx_conf_re <= 1'd0;
+    if ((builder_csr_bankarray_csrbank1_sel & (builder_csr_bankarray_interface1_bank_bus_adr[8:0] == 4'd8))) begin
+        builder_csr_bankarray_csrbank1_tx_conf_re <= builder_csr_bankarray_interface1_bank_bus_we;
+        builder_csr_bankarray_csrbank1_tx_conf_we <= (~builder_csr_bankarray_interface1_bank_bus_we);
     end
 end
 always @(*) begin
-    main_i2s_tx_status_status <= 2'd0;
-    main_i2s_tx_status_status[0] <= main_i2s_tx_tx_ready0;
-    main_i2s_tx_status_status[1] <= main_i2s_tx_tx_error0;
+    main_status_status <= 4'd0;
+    main_status_status[0] <= main_rx_ready0;
+    main_status_status[1] <= main_rx_error0;
+    main_status_status[2] <= main_tx_ready0;
+    main_status_status[3] <= main_tx_error0;
 end
-assign builder_csr_bankarray_csrbank2_ev_status_w = main_i2s_tx_status_status[1:0];
-assign main_i2s_tx_status_we = builder_csr_bankarray_csrbank2_ev_status_we;
+assign builder_csr_bankarray_csrbank1_ev_status_w = main_status_status[3:0];
+assign main_status_we = builder_csr_bankarray_csrbank1_ev_status_we;
 always @(*) begin
-    main_i2s_tx_pending_status <= 2'd0;
-    main_i2s_tx_pending_status[0] <= main_i2s_tx_tx_ready1;
-    main_i2s_tx_pending_status[1] <= main_i2s_tx_tx_error1;
+    main_pending_status <= 4'd0;
+    main_pending_status[0] <= main_rx_ready1;
+    main_pending_status[1] <= main_rx_error1;
+    main_pending_status[2] <= main_tx_ready1;
+    main_pending_status[3] <= main_tx_error1;
 end
-assign builder_csr_bankarray_csrbank2_ev_pending_w = main_i2s_tx_pending_status[1:0];
-assign main_i2s_tx_pending_we = builder_csr_bankarray_csrbank2_ev_pending_we;
-assign main_i2s_tx_tx_ready2 = main_i2s_tx_enable_storage[0];
-assign main_i2s_tx_tx_error2 = main_i2s_tx_enable_storage[1];
-assign builder_csr_bankarray_csrbank2_ev_enable0_w = main_i2s_tx_enable_storage[1:0];
-assign main_i2s_tx_csrfield_enable = main_i2s_tx_tx_ctl_storage[0];
+assign builder_csr_bankarray_csrbank1_ev_pending_w = main_pending_status[3:0];
+assign main_pending_we = builder_csr_bankarray_csrbank1_ev_pending_we;
+assign main_rx_ready2 = main_enable_storage[0];
+assign main_rx_error2 = main_enable_storage[1];
+assign main_tx_ready2 = main_enable_storage[2];
+assign main_tx_error2 = main_enable_storage[3];
+assign builder_csr_bankarray_csrbank1_ev_enable0_w = main_enable_storage[3:0];
+assign main_csrfield_enable0 = main_rx_ctl_storage[0];
 always @(*) begin
-    main_i2s_tx_csrfield_reset <= 1'd0;
-    if (main_i2s_tx_tx_ctl_re) begin
-        main_i2s_tx_csrfield_reset <= main_i2s_tx_tx_ctl_storage[1];
+    main_csrfield_reset0 <= 1'd0;
+    if (main_rx_ctl_re) begin
+        main_csrfield_reset0 <= main_rx_ctl_storage[1];
     end
 end
-assign builder_csr_bankarray_csrbank2_tx_ctl0_w = main_i2s_tx_tx_ctl_storage[1:0];
+assign builder_csr_bankarray_csrbank1_rx_ctl0_w = main_rx_ctl_storage[1:0];
 always @(*) begin
-    main_i2s_tx_tx_stat_status <= 25'd0;
-    main_i2s_tx_tx_stat_status[0] <= main_i2s_tx_csrfield_overflow;
-    main_i2s_tx_tx_stat_status[1] <= main_i2s_tx_csrfield_underflow;
-    main_i2s_tx_tx_stat_status[2] <= main_i2s_tx_csrfield_free;
-    main_i2s_tx_tx_stat_status[3] <= main_i2s_tx_csrfield_almostfull;
-    main_i2s_tx_tx_stat_status[4] <= main_i2s_tx_csrfield_full;
-    main_i2s_tx_tx_stat_status[5] <= main_i2s_tx_csrfield_empty;
-    main_i2s_tx_tx_stat_status[14:6] <= main_i2s_tx_csrfield_wrcount;
-    main_i2s_tx_tx_stat_status[23:15] <= main_i2s_tx_csrfield_rdcount;
-    main_i2s_tx_tx_stat_status[24] <= main_i2s_tx_csrfield_concatenate_channels;
+    main_rx_stat_status <= 32'd0;
+    main_rx_stat_status[0] <= main_csrfield_overflow0;
+    main_rx_stat_status[1] <= main_csrfield_underflow0;
+    main_rx_stat_status[2] <= main_csrfield_dataready;
+    main_rx_stat_status[3] <= main_csrfield_empty0;
+    main_rx_stat_status[12:4] <= main_csrfield_wrcount0;
+    main_rx_stat_status[21:13] <= main_csrfield_rdcount0;
+    main_rx_stat_status[30:22] <= main_csrfield_fifo_depth;
+    main_rx_stat_status[31] <= main_csrfield_concatenate_channels0;
 end
-assign builder_csr_bankarray_csrbank2_tx_stat_w = main_i2s_tx_tx_stat_status[24:0];
-assign main_i2s_tx_tx_stat_we = builder_csr_bankarray_csrbank2_tx_stat_we;
+assign builder_csr_bankarray_csrbank1_rx_stat_w = main_rx_stat_status[31:0];
+assign main_rx_stat_we = builder_csr_bankarray_csrbank1_rx_stat_we;
 always @(*) begin
-    main_i2s_tx_tx_conf_status <= 32'd12288097;
-    main_i2s_tx_tx_conf_status[1:0] <= main_i2s_tx_csrfield_format;
-    main_i2s_tx_tx_conf_status[7:2] <= main_i2s_tx_csrfield_sample_width;
-    main_i2s_tx_tx_conf_status[31:8] <= main_i2s_tx_csrfield_lrck_freq;
+    main_rx_conf_status <= 32'd12288097;
+    main_rx_conf_status[1:0] <= main_csrfield_format0;
+    main_rx_conf_status[7:2] <= main_csrfield_sample_width0;
+    main_rx_conf_status[31:8] <= main_csrfield_lrck_freq0;
 end
-assign builder_csr_bankarray_csrbank2_tx_conf_w = main_i2s_tx_tx_conf_status[31:0];
-assign main_i2s_tx_tx_conf_we = builder_csr_bankarray_csrbank2_tx_conf_we;
-assign builder_csr_bankarray_sel = (builder_csr_bankarray_sram_bus_adr[13:9] == 2'd3);
+assign builder_csr_bankarray_csrbank1_rx_conf_w = main_rx_conf_status[31:0];
+assign main_rx_conf_we = builder_csr_bankarray_csrbank1_rx_conf_we;
+assign main_csrfield_enable1 = main_tx_ctl_storage[0];
+always @(*) begin
+    main_csrfield_reset1 <= 1'd0;
+    if (main_tx_ctl_re) begin
+        main_csrfield_reset1 <= main_tx_ctl_storage[1];
+    end
+end
+assign builder_csr_bankarray_csrbank1_tx_ctl0_w = main_tx_ctl_storage[1:0];
+always @(*) begin
+    main_tx_stat_status <= 25'd0;
+    main_tx_stat_status[0] <= main_csrfield_overflow1;
+    main_tx_stat_status[1] <= main_csrfield_underflow1;
+    main_tx_stat_status[2] <= main_csrfield_free;
+    main_tx_stat_status[3] <= main_csrfield_almostfull;
+    main_tx_stat_status[4] <= main_csrfield_full;
+    main_tx_stat_status[5] <= main_csrfield_empty1;
+    main_tx_stat_status[14:6] <= main_csrfield_wrcount1;
+    main_tx_stat_status[23:15] <= main_csrfield_rdcount1;
+    main_tx_stat_status[24] <= main_csrfield_concatenate_channels1;
+end
+assign builder_csr_bankarray_csrbank1_tx_stat_w = main_tx_stat_status[24:0];
+assign main_tx_stat_we = builder_csr_bankarray_csrbank1_tx_stat_we;
+always @(*) begin
+    main_tx_conf_status <= 32'd12288097;
+    main_tx_conf_status[1:0] <= main_csrfield_format1;
+    main_tx_conf_status[7:2] <= main_csrfield_sample_width1;
+    main_tx_conf_status[31:8] <= main_csrfield_lrck_freq1;
+end
+assign builder_csr_bankarray_csrbank1_tx_conf_w = main_tx_conf_status[31:0];
+assign main_tx_conf_we = builder_csr_bankarray_csrbank1_tx_conf_we;
+assign builder_csr_bankarray_sel = (builder_csr_bankarray_sram_bus_adr[13:9] == 2'd2);
 always @(*) begin
     builder_csr_bankarray_sram_bus_dat_r <= 32'd0;
     if (builder_csr_bankarray_sel_r) begin
@@ -4590,283 +4484,283 @@ always @(*) begin
     end
 end
 assign builder_csr_bankarray_adr = builder_csr_bankarray_sram_bus_adr[5:0];
+assign builder_csr_bankarray_csrbank2_sel = (builder_csr_bankarray_interface2_bank_bus_adr[13:9] == 2'd3);
+assign builder_csr_bankarray_csrbank2_out0_r = builder_csr_bankarray_interface2_bank_bus_dat_w[0];
+always @(*) begin
+    builder_csr_bankarray_csrbank2_out0_re <= 1'd0;
+    builder_csr_bankarray_csrbank2_out0_we <= 1'd0;
+    if ((builder_csr_bankarray_csrbank2_sel & (builder_csr_bankarray_interface2_bank_bus_adr[8:0] == 1'd0))) begin
+        builder_csr_bankarray_csrbank2_out0_re <= builder_csr_bankarray_interface2_bank_bus_we;
+        builder_csr_bankarray_csrbank2_out0_we <= (~builder_csr_bankarray_interface2_bank_bus_we);
+    end
+end
+assign builder_csr_bankarray_csrbank2_out0_w = main_storage;
 assign builder_csr_bankarray_csrbank3_sel = (builder_csr_bankarray_interface3_bank_bus_adr[13:9] == 3'd4);
-assign builder_csr_bankarray_csrbank3_out0_r = builder_csr_bankarray_interface3_bank_bus_dat_w[0];
+assign builder_csr_bankarray_csrbank3_dfii_control0_r = builder_csr_bankarray_interface3_bank_bus_dat_w[3:0];
 always @(*) begin
-    builder_csr_bankarray_csrbank3_out0_re <= 1'd0;
-    builder_csr_bankarray_csrbank3_out0_we <= 1'd0;
+    builder_csr_bankarray_csrbank3_dfii_control0_we <= 1'd0;
+    builder_csr_bankarray_csrbank3_dfii_control0_re <= 1'd0;
     if ((builder_csr_bankarray_csrbank3_sel & (builder_csr_bankarray_interface3_bank_bus_adr[8:0] == 1'd0))) begin
-        builder_csr_bankarray_csrbank3_out0_re <= builder_csr_bankarray_interface3_bank_bus_we;
-        builder_csr_bankarray_csrbank3_out0_we <= (~builder_csr_bankarray_interface3_bank_bus_we);
+        builder_csr_bankarray_csrbank3_dfii_control0_re <= builder_csr_bankarray_interface3_bank_bus_we;
+        builder_csr_bankarray_csrbank3_dfii_control0_we <= (~builder_csr_bankarray_interface3_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank3_out0_w = main_storage;
-assign builder_csr_bankarray_csrbank4_sel = (builder_csr_bankarray_interface4_bank_bus_adr[13:9] == 3'd5);
-assign builder_csr_bankarray_csrbank4_dfii_control0_r = builder_csr_bankarray_interface4_bank_bus_dat_w[3:0];
+assign builder_csr_bankarray_csrbank3_dfii_pi0_command0_r = builder_csr_bankarray_interface3_bank_bus_dat_w[5:0];
 always @(*) begin
-    builder_csr_bankarray_csrbank4_dfii_control0_re <= 1'd0;
-    builder_csr_bankarray_csrbank4_dfii_control0_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank4_sel & (builder_csr_bankarray_interface4_bank_bus_adr[8:0] == 1'd0))) begin
-        builder_csr_bankarray_csrbank4_dfii_control0_re <= builder_csr_bankarray_interface4_bank_bus_we;
-        builder_csr_bankarray_csrbank4_dfii_control0_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
+    builder_csr_bankarray_csrbank3_dfii_pi0_command0_we <= 1'd0;
+    builder_csr_bankarray_csrbank3_dfii_pi0_command0_re <= 1'd0;
+    if ((builder_csr_bankarray_csrbank3_sel & (builder_csr_bankarray_interface3_bank_bus_adr[8:0] == 1'd1))) begin
+        builder_csr_bankarray_csrbank3_dfii_pi0_command0_re <= builder_csr_bankarray_interface3_bank_bus_we;
+        builder_csr_bankarray_csrbank3_dfii_pi0_command0_we <= (~builder_csr_bankarray_interface3_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank4_dfii_pi0_command0_r = builder_csr_bankarray_interface4_bank_bus_dat_w[5:0];
-always @(*) begin
-    builder_csr_bankarray_csrbank4_dfii_pi0_command0_we <= 1'd0;
-    builder_csr_bankarray_csrbank4_dfii_pi0_command0_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank4_sel & (builder_csr_bankarray_interface4_bank_bus_adr[8:0] == 1'd1))) begin
-        builder_csr_bankarray_csrbank4_dfii_pi0_command0_re <= builder_csr_bankarray_interface4_bank_bus_we;
-        builder_csr_bankarray_csrbank4_dfii_pi0_command0_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
-    end
-end
-assign main_sdram_command_issue_r = builder_csr_bankarray_interface4_bank_bus_dat_w[0];
+assign main_sdram_command_issue_r = builder_csr_bankarray_interface3_bank_bus_dat_w[0];
 always @(*) begin
     main_sdram_command_issue_re <= 1'd0;
     main_sdram_command_issue_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank4_sel & (builder_csr_bankarray_interface4_bank_bus_adr[8:0] == 2'd2))) begin
-        main_sdram_command_issue_re <= builder_csr_bankarray_interface4_bank_bus_we;
-        main_sdram_command_issue_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
+    if ((builder_csr_bankarray_csrbank3_sel & (builder_csr_bankarray_interface3_bank_bus_adr[8:0] == 2'd2))) begin
+        main_sdram_command_issue_re <= builder_csr_bankarray_interface3_bank_bus_we;
+        main_sdram_command_issue_we <= (~builder_csr_bankarray_interface3_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank4_dfii_pi0_address0_r = builder_csr_bankarray_interface4_bank_bus_dat_w[12:0];
+assign builder_csr_bankarray_csrbank3_dfii_pi0_address0_r = builder_csr_bankarray_interface3_bank_bus_dat_w[12:0];
 always @(*) begin
-    builder_csr_bankarray_csrbank4_dfii_pi0_address0_we <= 1'd0;
-    builder_csr_bankarray_csrbank4_dfii_pi0_address0_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank4_sel & (builder_csr_bankarray_interface4_bank_bus_adr[8:0] == 2'd3))) begin
-        builder_csr_bankarray_csrbank4_dfii_pi0_address0_re <= builder_csr_bankarray_interface4_bank_bus_we;
-        builder_csr_bankarray_csrbank4_dfii_pi0_address0_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
+    builder_csr_bankarray_csrbank3_dfii_pi0_address0_re <= 1'd0;
+    builder_csr_bankarray_csrbank3_dfii_pi0_address0_we <= 1'd0;
+    if ((builder_csr_bankarray_csrbank3_sel & (builder_csr_bankarray_interface3_bank_bus_adr[8:0] == 2'd3))) begin
+        builder_csr_bankarray_csrbank3_dfii_pi0_address0_re <= builder_csr_bankarray_interface3_bank_bus_we;
+        builder_csr_bankarray_csrbank3_dfii_pi0_address0_we <= (~builder_csr_bankarray_interface3_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank4_dfii_pi0_baddress0_r = builder_csr_bankarray_interface4_bank_bus_dat_w[1:0];
+assign builder_csr_bankarray_csrbank3_dfii_pi0_baddress0_r = builder_csr_bankarray_interface3_bank_bus_dat_w[1:0];
 always @(*) begin
-    builder_csr_bankarray_csrbank4_dfii_pi0_baddress0_re <= 1'd0;
-    builder_csr_bankarray_csrbank4_dfii_pi0_baddress0_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank4_sel & (builder_csr_bankarray_interface4_bank_bus_adr[8:0] == 3'd4))) begin
-        builder_csr_bankarray_csrbank4_dfii_pi0_baddress0_re <= builder_csr_bankarray_interface4_bank_bus_we;
-        builder_csr_bankarray_csrbank4_dfii_pi0_baddress0_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
+    builder_csr_bankarray_csrbank3_dfii_pi0_baddress0_we <= 1'd0;
+    builder_csr_bankarray_csrbank3_dfii_pi0_baddress0_re <= 1'd0;
+    if ((builder_csr_bankarray_csrbank3_sel & (builder_csr_bankarray_interface3_bank_bus_adr[8:0] == 3'd4))) begin
+        builder_csr_bankarray_csrbank3_dfii_pi0_baddress0_re <= builder_csr_bankarray_interface3_bank_bus_we;
+        builder_csr_bankarray_csrbank3_dfii_pi0_baddress0_we <= (~builder_csr_bankarray_interface3_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank4_dfii_pi0_wrdata0_r = builder_csr_bankarray_interface4_bank_bus_dat_w[15:0];
+assign builder_csr_bankarray_csrbank3_dfii_pi0_wrdata0_r = builder_csr_bankarray_interface3_bank_bus_dat_w[15:0];
 always @(*) begin
-    builder_csr_bankarray_csrbank4_dfii_pi0_wrdata0_we <= 1'd0;
-    builder_csr_bankarray_csrbank4_dfii_pi0_wrdata0_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank4_sel & (builder_csr_bankarray_interface4_bank_bus_adr[8:0] == 3'd5))) begin
-        builder_csr_bankarray_csrbank4_dfii_pi0_wrdata0_re <= builder_csr_bankarray_interface4_bank_bus_we;
-        builder_csr_bankarray_csrbank4_dfii_pi0_wrdata0_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
+    builder_csr_bankarray_csrbank3_dfii_pi0_wrdata0_re <= 1'd0;
+    builder_csr_bankarray_csrbank3_dfii_pi0_wrdata0_we <= 1'd0;
+    if ((builder_csr_bankarray_csrbank3_sel & (builder_csr_bankarray_interface3_bank_bus_adr[8:0] == 3'd5))) begin
+        builder_csr_bankarray_csrbank3_dfii_pi0_wrdata0_re <= builder_csr_bankarray_interface3_bank_bus_we;
+        builder_csr_bankarray_csrbank3_dfii_pi0_wrdata0_we <= (~builder_csr_bankarray_interface3_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank4_dfii_pi0_rddata_r = builder_csr_bankarray_interface4_bank_bus_dat_w[15:0];
+assign builder_csr_bankarray_csrbank3_dfii_pi0_rddata_r = builder_csr_bankarray_interface3_bank_bus_dat_w[15:0];
 always @(*) begin
-    builder_csr_bankarray_csrbank4_dfii_pi0_rddata_re <= 1'd0;
-    builder_csr_bankarray_csrbank4_dfii_pi0_rddata_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank4_sel & (builder_csr_bankarray_interface4_bank_bus_adr[8:0] == 3'd6))) begin
-        builder_csr_bankarray_csrbank4_dfii_pi0_rddata_re <= builder_csr_bankarray_interface4_bank_bus_we;
-        builder_csr_bankarray_csrbank4_dfii_pi0_rddata_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
+    builder_csr_bankarray_csrbank3_dfii_pi0_rddata_re <= 1'd0;
+    builder_csr_bankarray_csrbank3_dfii_pi0_rddata_we <= 1'd0;
+    if ((builder_csr_bankarray_csrbank3_sel & (builder_csr_bankarray_interface3_bank_bus_adr[8:0] == 3'd6))) begin
+        builder_csr_bankarray_csrbank3_dfii_pi0_rddata_re <= builder_csr_bankarray_interface3_bank_bus_we;
+        builder_csr_bankarray_csrbank3_dfii_pi0_rddata_we <= (~builder_csr_bankarray_interface3_bank_bus_we);
     end
 end
 assign main_sdram_sel = main_sdram_storage[0];
 assign main_sdram_cke1 = main_sdram_storage[1];
 assign main_sdram_odt = main_sdram_storage[2];
 assign main_sdram_reset_n = main_sdram_storage[3];
-assign builder_csr_bankarray_csrbank4_dfii_control0_w = main_sdram_storage[3:0];
+assign builder_csr_bankarray_csrbank3_dfii_control0_w = main_sdram_storage[3:0];
 assign main_sdram_csrfield_cs = main_sdram_command_storage[0];
 assign main_sdram_csrfield_we = main_sdram_command_storage[1];
 assign main_sdram_csrfield_cas = main_sdram_command_storage[2];
 assign main_sdram_csrfield_ras = main_sdram_command_storage[3];
 assign main_sdram_csrfield_wren = main_sdram_command_storage[4];
 assign main_sdram_csrfield_rden = main_sdram_command_storage[5];
-assign builder_csr_bankarray_csrbank4_dfii_pi0_command0_w = main_sdram_command_storage[5:0];
-assign builder_csr_bankarray_csrbank4_dfii_pi0_address0_w = main_sdram_address_storage[12:0];
-assign builder_csr_bankarray_csrbank4_dfii_pi0_baddress0_w = main_sdram_baddress_storage[1:0];
-assign builder_csr_bankarray_csrbank4_dfii_pi0_wrdata0_w = main_sdram_wrdata_storage[15:0];
-assign builder_csr_bankarray_csrbank4_dfii_pi0_rddata_w = main_sdram_rddata_status[15:0];
-assign main_sdram_rddata_we = builder_csr_bankarray_csrbank4_dfii_pi0_rddata_we;
+assign builder_csr_bankarray_csrbank3_dfii_pi0_command0_w = main_sdram_command_storage[5:0];
+assign builder_csr_bankarray_csrbank3_dfii_pi0_address0_w = main_sdram_address_storage[12:0];
+assign builder_csr_bankarray_csrbank3_dfii_pi0_baddress0_w = main_sdram_baddress_storage[1:0];
+assign builder_csr_bankarray_csrbank3_dfii_pi0_wrdata0_w = main_sdram_wrdata_storage[15:0];
+assign builder_csr_bankarray_csrbank3_dfii_pi0_rddata_w = main_sdram_rddata_status[15:0];
+assign main_sdram_rddata_we = builder_csr_bankarray_csrbank3_dfii_pi0_rddata_we;
+assign builder_csr_bankarray_csrbank4_sel = (builder_csr_bankarray_interface4_bank_bus_adr[13:9] == 3'd5);
+assign builder_csr_bankarray_csrbank4_load0_r = builder_csr_bankarray_interface4_bank_bus_dat_w[31:0];
+always @(*) begin
+    builder_csr_bankarray_csrbank4_load0_we <= 1'd0;
+    builder_csr_bankarray_csrbank4_load0_re <= 1'd0;
+    if ((builder_csr_bankarray_csrbank4_sel & (builder_csr_bankarray_interface4_bank_bus_adr[8:0] == 1'd0))) begin
+        builder_csr_bankarray_csrbank4_load0_re <= builder_csr_bankarray_interface4_bank_bus_we;
+        builder_csr_bankarray_csrbank4_load0_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
+    end
+end
+assign builder_csr_bankarray_csrbank4_reload0_r = builder_csr_bankarray_interface4_bank_bus_dat_w[31:0];
+always @(*) begin
+    builder_csr_bankarray_csrbank4_reload0_re <= 1'd0;
+    builder_csr_bankarray_csrbank4_reload0_we <= 1'd0;
+    if ((builder_csr_bankarray_csrbank4_sel & (builder_csr_bankarray_interface4_bank_bus_adr[8:0] == 1'd1))) begin
+        builder_csr_bankarray_csrbank4_reload0_re <= builder_csr_bankarray_interface4_bank_bus_we;
+        builder_csr_bankarray_csrbank4_reload0_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
+    end
+end
+assign builder_csr_bankarray_csrbank4_en0_r = builder_csr_bankarray_interface4_bank_bus_dat_w[0];
+always @(*) begin
+    builder_csr_bankarray_csrbank4_en0_re <= 1'd0;
+    builder_csr_bankarray_csrbank4_en0_we <= 1'd0;
+    if ((builder_csr_bankarray_csrbank4_sel & (builder_csr_bankarray_interface4_bank_bus_adr[8:0] == 2'd2))) begin
+        builder_csr_bankarray_csrbank4_en0_re <= builder_csr_bankarray_interface4_bank_bus_we;
+        builder_csr_bankarray_csrbank4_en0_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
+    end
+end
+assign builder_csr_bankarray_csrbank4_update_value0_r = builder_csr_bankarray_interface4_bank_bus_dat_w[0];
+always @(*) begin
+    builder_csr_bankarray_csrbank4_update_value0_we <= 1'd0;
+    builder_csr_bankarray_csrbank4_update_value0_re <= 1'd0;
+    if ((builder_csr_bankarray_csrbank4_sel & (builder_csr_bankarray_interface4_bank_bus_adr[8:0] == 2'd3))) begin
+        builder_csr_bankarray_csrbank4_update_value0_re <= builder_csr_bankarray_interface4_bank_bus_we;
+        builder_csr_bankarray_csrbank4_update_value0_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
+    end
+end
+assign builder_csr_bankarray_csrbank4_value_r = builder_csr_bankarray_interface4_bank_bus_dat_w[31:0];
+always @(*) begin
+    builder_csr_bankarray_csrbank4_value_re <= 1'd0;
+    builder_csr_bankarray_csrbank4_value_we <= 1'd0;
+    if ((builder_csr_bankarray_csrbank4_sel & (builder_csr_bankarray_interface4_bank_bus_adr[8:0] == 3'd4))) begin
+        builder_csr_bankarray_csrbank4_value_re <= builder_csr_bankarray_interface4_bank_bus_we;
+        builder_csr_bankarray_csrbank4_value_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
+    end
+end
+assign builder_csr_bankarray_csrbank4_ev_status_r = builder_csr_bankarray_interface4_bank_bus_dat_w[0];
+always @(*) begin
+    builder_csr_bankarray_csrbank4_ev_status_re <= 1'd0;
+    builder_csr_bankarray_csrbank4_ev_status_we <= 1'd0;
+    if ((builder_csr_bankarray_csrbank4_sel & (builder_csr_bankarray_interface4_bank_bus_adr[8:0] == 3'd5))) begin
+        builder_csr_bankarray_csrbank4_ev_status_re <= builder_csr_bankarray_interface4_bank_bus_we;
+        builder_csr_bankarray_csrbank4_ev_status_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
+    end
+end
+assign builder_csr_bankarray_csrbank4_ev_pending_r = builder_csr_bankarray_interface4_bank_bus_dat_w[0];
+always @(*) begin
+    builder_csr_bankarray_csrbank4_ev_pending_we <= 1'd0;
+    builder_csr_bankarray_csrbank4_ev_pending_re <= 1'd0;
+    if ((builder_csr_bankarray_csrbank4_sel & (builder_csr_bankarray_interface4_bank_bus_adr[8:0] == 3'd6))) begin
+        builder_csr_bankarray_csrbank4_ev_pending_re <= builder_csr_bankarray_interface4_bank_bus_we;
+        builder_csr_bankarray_csrbank4_ev_pending_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
+    end
+end
+assign builder_csr_bankarray_csrbank4_ev_enable0_r = builder_csr_bankarray_interface4_bank_bus_dat_w[0];
+always @(*) begin
+    builder_csr_bankarray_csrbank4_ev_enable0_re <= 1'd0;
+    builder_csr_bankarray_csrbank4_ev_enable0_we <= 1'd0;
+    if ((builder_csr_bankarray_csrbank4_sel & (builder_csr_bankarray_interface4_bank_bus_adr[8:0] == 3'd7))) begin
+        builder_csr_bankarray_csrbank4_ev_enable0_re <= builder_csr_bankarray_interface4_bank_bus_we;
+        builder_csr_bankarray_csrbank4_ev_enable0_we <= (~builder_csr_bankarray_interface4_bank_bus_we);
+    end
+end
+assign builder_csr_bankarray_csrbank4_load0_w = main_basesoc_timer_load_storage[31:0];
+assign builder_csr_bankarray_csrbank4_reload0_w = main_basesoc_timer_reload_storage[31:0];
+assign builder_csr_bankarray_csrbank4_en0_w = main_basesoc_timer_en_storage;
+assign builder_csr_bankarray_csrbank4_update_value0_w = main_basesoc_timer_update_value_storage;
+assign builder_csr_bankarray_csrbank4_value_w = main_basesoc_timer_value_status[31:0];
+assign main_basesoc_timer_value_we = builder_csr_bankarray_csrbank4_value_we;
+assign main_basesoc_timer_status_status = main_basesoc_timer_zero0;
+assign builder_csr_bankarray_csrbank4_ev_status_w = main_basesoc_timer_status_status;
+assign main_basesoc_timer_status_we = builder_csr_bankarray_csrbank4_ev_status_we;
+assign main_basesoc_timer_pending_status = main_basesoc_timer_zero1;
+assign builder_csr_bankarray_csrbank4_ev_pending_w = main_basesoc_timer_pending_status;
+assign main_basesoc_timer_pending_we = builder_csr_bankarray_csrbank4_ev_pending_we;
+assign main_basesoc_timer_zero2 = main_basesoc_timer_enable_storage;
+assign builder_csr_bankarray_csrbank4_ev_enable0_w = main_basesoc_timer_enable_storage;
 assign builder_csr_bankarray_csrbank5_sel = (builder_csr_bankarray_interface5_bank_bus_adr[13:9] == 3'd6);
-assign builder_csr_bankarray_csrbank5_load0_r = builder_csr_bankarray_interface5_bank_bus_dat_w[31:0];
+assign main_basesoc_uart_rxtx_r = builder_csr_bankarray_interface5_bank_bus_dat_w[7:0];
 always @(*) begin
-    builder_csr_bankarray_csrbank5_load0_re <= 1'd0;
-    builder_csr_bankarray_csrbank5_load0_we <= 1'd0;
+    main_basesoc_uart_rxtx_we <= 1'd0;
+    main_basesoc_uart_rxtx_re <= 1'd0;
     if ((builder_csr_bankarray_csrbank5_sel & (builder_csr_bankarray_interface5_bank_bus_adr[8:0] == 1'd0))) begin
-        builder_csr_bankarray_csrbank5_load0_re <= builder_csr_bankarray_interface5_bank_bus_we;
-        builder_csr_bankarray_csrbank5_load0_we <= (~builder_csr_bankarray_interface5_bank_bus_we);
+        main_basesoc_uart_rxtx_re <= builder_csr_bankarray_interface5_bank_bus_we;
+        main_basesoc_uart_rxtx_we <= (~builder_csr_bankarray_interface5_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank5_reload0_r = builder_csr_bankarray_interface5_bank_bus_dat_w[31:0];
+assign builder_csr_bankarray_csrbank5_txfull_r = builder_csr_bankarray_interface5_bank_bus_dat_w[0];
 always @(*) begin
-    builder_csr_bankarray_csrbank5_reload0_we <= 1'd0;
-    builder_csr_bankarray_csrbank5_reload0_re <= 1'd0;
+    builder_csr_bankarray_csrbank5_txfull_re <= 1'd0;
+    builder_csr_bankarray_csrbank5_txfull_we <= 1'd0;
     if ((builder_csr_bankarray_csrbank5_sel & (builder_csr_bankarray_interface5_bank_bus_adr[8:0] == 1'd1))) begin
-        builder_csr_bankarray_csrbank5_reload0_re <= builder_csr_bankarray_interface5_bank_bus_we;
-        builder_csr_bankarray_csrbank5_reload0_we <= (~builder_csr_bankarray_interface5_bank_bus_we);
+        builder_csr_bankarray_csrbank5_txfull_re <= builder_csr_bankarray_interface5_bank_bus_we;
+        builder_csr_bankarray_csrbank5_txfull_we <= (~builder_csr_bankarray_interface5_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank5_en0_r = builder_csr_bankarray_interface5_bank_bus_dat_w[0];
+assign builder_csr_bankarray_csrbank5_rxempty_r = builder_csr_bankarray_interface5_bank_bus_dat_w[0];
 always @(*) begin
-    builder_csr_bankarray_csrbank5_en0_re <= 1'd0;
-    builder_csr_bankarray_csrbank5_en0_we <= 1'd0;
+    builder_csr_bankarray_csrbank5_rxempty_we <= 1'd0;
+    builder_csr_bankarray_csrbank5_rxempty_re <= 1'd0;
     if ((builder_csr_bankarray_csrbank5_sel & (builder_csr_bankarray_interface5_bank_bus_adr[8:0] == 2'd2))) begin
-        builder_csr_bankarray_csrbank5_en0_re <= builder_csr_bankarray_interface5_bank_bus_we;
-        builder_csr_bankarray_csrbank5_en0_we <= (~builder_csr_bankarray_interface5_bank_bus_we);
+        builder_csr_bankarray_csrbank5_rxempty_re <= builder_csr_bankarray_interface5_bank_bus_we;
+        builder_csr_bankarray_csrbank5_rxempty_we <= (~builder_csr_bankarray_interface5_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank5_update_value0_r = builder_csr_bankarray_interface5_bank_bus_dat_w[0];
+assign builder_csr_bankarray_csrbank5_ev_status_r = builder_csr_bankarray_interface5_bank_bus_dat_w[1:0];
 always @(*) begin
-    builder_csr_bankarray_csrbank5_update_value0_re <= 1'd0;
-    builder_csr_bankarray_csrbank5_update_value0_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank5_sel & (builder_csr_bankarray_interface5_bank_bus_adr[8:0] == 2'd3))) begin
-        builder_csr_bankarray_csrbank5_update_value0_re <= builder_csr_bankarray_interface5_bank_bus_we;
-        builder_csr_bankarray_csrbank5_update_value0_we <= (~builder_csr_bankarray_interface5_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank5_value_r = builder_csr_bankarray_interface5_bank_bus_dat_w[31:0];
-always @(*) begin
-    builder_csr_bankarray_csrbank5_value_we <= 1'd0;
-    builder_csr_bankarray_csrbank5_value_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank5_sel & (builder_csr_bankarray_interface5_bank_bus_adr[8:0] == 3'd4))) begin
-        builder_csr_bankarray_csrbank5_value_re <= builder_csr_bankarray_interface5_bank_bus_we;
-        builder_csr_bankarray_csrbank5_value_we <= (~builder_csr_bankarray_interface5_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank5_ev_status_r = builder_csr_bankarray_interface5_bank_bus_dat_w[0];
-always @(*) begin
-    builder_csr_bankarray_csrbank5_ev_status_re <= 1'd0;
     builder_csr_bankarray_csrbank5_ev_status_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank5_sel & (builder_csr_bankarray_interface5_bank_bus_adr[8:0] == 3'd5))) begin
+    builder_csr_bankarray_csrbank5_ev_status_re <= 1'd0;
+    if ((builder_csr_bankarray_csrbank5_sel & (builder_csr_bankarray_interface5_bank_bus_adr[8:0] == 2'd3))) begin
         builder_csr_bankarray_csrbank5_ev_status_re <= builder_csr_bankarray_interface5_bank_bus_we;
         builder_csr_bankarray_csrbank5_ev_status_we <= (~builder_csr_bankarray_interface5_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank5_ev_pending_r = builder_csr_bankarray_interface5_bank_bus_dat_w[0];
+assign builder_csr_bankarray_csrbank5_ev_pending_r = builder_csr_bankarray_interface5_bank_bus_dat_w[1:0];
 always @(*) begin
     builder_csr_bankarray_csrbank5_ev_pending_re <= 1'd0;
     builder_csr_bankarray_csrbank5_ev_pending_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank5_sel & (builder_csr_bankarray_interface5_bank_bus_adr[8:0] == 3'd6))) begin
+    if ((builder_csr_bankarray_csrbank5_sel & (builder_csr_bankarray_interface5_bank_bus_adr[8:0] == 3'd4))) begin
         builder_csr_bankarray_csrbank5_ev_pending_re <= builder_csr_bankarray_interface5_bank_bus_we;
         builder_csr_bankarray_csrbank5_ev_pending_we <= (~builder_csr_bankarray_interface5_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank5_ev_enable0_r = builder_csr_bankarray_interface5_bank_bus_dat_w[0];
+assign builder_csr_bankarray_csrbank5_ev_enable0_r = builder_csr_bankarray_interface5_bank_bus_dat_w[1:0];
 always @(*) begin
-    builder_csr_bankarray_csrbank5_ev_enable0_we <= 1'd0;
     builder_csr_bankarray_csrbank5_ev_enable0_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank5_sel & (builder_csr_bankarray_interface5_bank_bus_adr[8:0] == 3'd7))) begin
+    builder_csr_bankarray_csrbank5_ev_enable0_we <= 1'd0;
+    if ((builder_csr_bankarray_csrbank5_sel & (builder_csr_bankarray_interface5_bank_bus_adr[8:0] == 3'd5))) begin
         builder_csr_bankarray_csrbank5_ev_enable0_re <= builder_csr_bankarray_interface5_bank_bus_we;
         builder_csr_bankarray_csrbank5_ev_enable0_we <= (~builder_csr_bankarray_interface5_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank5_load0_w = main_basesoc_timer_load_storage[31:0];
-assign builder_csr_bankarray_csrbank5_reload0_w = main_basesoc_timer_reload_storage[31:0];
-assign builder_csr_bankarray_csrbank5_en0_w = main_basesoc_timer_en_storage;
-assign builder_csr_bankarray_csrbank5_update_value0_w = main_basesoc_timer_update_value_storage;
-assign builder_csr_bankarray_csrbank5_value_w = main_basesoc_timer_value_status[31:0];
-assign main_basesoc_timer_value_we = builder_csr_bankarray_csrbank5_value_we;
-assign main_basesoc_timer_status_status = main_basesoc_timer_zero0;
-assign builder_csr_bankarray_csrbank5_ev_status_w = main_basesoc_timer_status_status;
-assign main_basesoc_timer_status_we = builder_csr_bankarray_csrbank5_ev_status_we;
-assign main_basesoc_timer_pending_status = main_basesoc_timer_zero1;
-assign builder_csr_bankarray_csrbank5_ev_pending_w = main_basesoc_timer_pending_status;
-assign main_basesoc_timer_pending_we = builder_csr_bankarray_csrbank5_ev_pending_we;
-assign main_basesoc_timer_zero2 = main_basesoc_timer_enable_storage;
-assign builder_csr_bankarray_csrbank5_ev_enable0_w = main_basesoc_timer_enable_storage;
-assign builder_csr_bankarray_csrbank6_sel = (builder_csr_bankarray_interface6_bank_bus_adr[13:9] == 3'd7);
-assign main_basesoc_uart_rxtx_r = builder_csr_bankarray_interface6_bank_bus_dat_w[7:0];
+assign builder_csr_bankarray_csrbank5_txempty_r = builder_csr_bankarray_interface5_bank_bus_dat_w[0];
 always @(*) begin
-    main_basesoc_uart_rxtx_we <= 1'd0;
-    main_basesoc_uart_rxtx_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank6_sel & (builder_csr_bankarray_interface6_bank_bus_adr[8:0] == 1'd0))) begin
-        main_basesoc_uart_rxtx_re <= builder_csr_bankarray_interface6_bank_bus_we;
-        main_basesoc_uart_rxtx_we <= (~builder_csr_bankarray_interface6_bank_bus_we);
+    builder_csr_bankarray_csrbank5_txempty_we <= 1'd0;
+    builder_csr_bankarray_csrbank5_txempty_re <= 1'd0;
+    if ((builder_csr_bankarray_csrbank5_sel & (builder_csr_bankarray_interface5_bank_bus_adr[8:0] == 3'd6))) begin
+        builder_csr_bankarray_csrbank5_txempty_re <= builder_csr_bankarray_interface5_bank_bus_we;
+        builder_csr_bankarray_csrbank5_txempty_we <= (~builder_csr_bankarray_interface5_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank6_txfull_r = builder_csr_bankarray_interface6_bank_bus_dat_w[0];
+assign builder_csr_bankarray_csrbank5_rxfull_r = builder_csr_bankarray_interface5_bank_bus_dat_w[0];
 always @(*) begin
-    builder_csr_bankarray_csrbank6_txfull_we <= 1'd0;
-    builder_csr_bankarray_csrbank6_txfull_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank6_sel & (builder_csr_bankarray_interface6_bank_bus_adr[8:0] == 1'd1))) begin
-        builder_csr_bankarray_csrbank6_txfull_re <= builder_csr_bankarray_interface6_bank_bus_we;
-        builder_csr_bankarray_csrbank6_txfull_we <= (~builder_csr_bankarray_interface6_bank_bus_we);
+    builder_csr_bankarray_csrbank5_rxfull_re <= 1'd0;
+    builder_csr_bankarray_csrbank5_rxfull_we <= 1'd0;
+    if ((builder_csr_bankarray_csrbank5_sel & (builder_csr_bankarray_interface5_bank_bus_adr[8:0] == 3'd7))) begin
+        builder_csr_bankarray_csrbank5_rxfull_re <= builder_csr_bankarray_interface5_bank_bus_we;
+        builder_csr_bankarray_csrbank5_rxfull_we <= (~builder_csr_bankarray_interface5_bank_bus_we);
     end
 end
-assign builder_csr_bankarray_csrbank6_rxempty_r = builder_csr_bankarray_interface6_bank_bus_dat_w[0];
-always @(*) begin
-    builder_csr_bankarray_csrbank6_rxempty_re <= 1'd0;
-    builder_csr_bankarray_csrbank6_rxempty_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank6_sel & (builder_csr_bankarray_interface6_bank_bus_adr[8:0] == 2'd2))) begin
-        builder_csr_bankarray_csrbank6_rxempty_re <= builder_csr_bankarray_interface6_bank_bus_we;
-        builder_csr_bankarray_csrbank6_rxempty_we <= (~builder_csr_bankarray_interface6_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank6_ev_status_r = builder_csr_bankarray_interface6_bank_bus_dat_w[1:0];
-always @(*) begin
-    builder_csr_bankarray_csrbank6_ev_status_re <= 1'd0;
-    builder_csr_bankarray_csrbank6_ev_status_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank6_sel & (builder_csr_bankarray_interface6_bank_bus_adr[8:0] == 2'd3))) begin
-        builder_csr_bankarray_csrbank6_ev_status_re <= builder_csr_bankarray_interface6_bank_bus_we;
-        builder_csr_bankarray_csrbank6_ev_status_we <= (~builder_csr_bankarray_interface6_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank6_ev_pending_r = builder_csr_bankarray_interface6_bank_bus_dat_w[1:0];
-always @(*) begin
-    builder_csr_bankarray_csrbank6_ev_pending_we <= 1'd0;
-    builder_csr_bankarray_csrbank6_ev_pending_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank6_sel & (builder_csr_bankarray_interface6_bank_bus_adr[8:0] == 3'd4))) begin
-        builder_csr_bankarray_csrbank6_ev_pending_re <= builder_csr_bankarray_interface6_bank_bus_we;
-        builder_csr_bankarray_csrbank6_ev_pending_we <= (~builder_csr_bankarray_interface6_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank6_ev_enable0_r = builder_csr_bankarray_interface6_bank_bus_dat_w[1:0];
-always @(*) begin
-    builder_csr_bankarray_csrbank6_ev_enable0_re <= 1'd0;
-    builder_csr_bankarray_csrbank6_ev_enable0_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank6_sel & (builder_csr_bankarray_interface6_bank_bus_adr[8:0] == 3'd5))) begin
-        builder_csr_bankarray_csrbank6_ev_enable0_re <= builder_csr_bankarray_interface6_bank_bus_we;
-        builder_csr_bankarray_csrbank6_ev_enable0_we <= (~builder_csr_bankarray_interface6_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank6_txempty_r = builder_csr_bankarray_interface6_bank_bus_dat_w[0];
-always @(*) begin
-    builder_csr_bankarray_csrbank6_txempty_re <= 1'd0;
-    builder_csr_bankarray_csrbank6_txempty_we <= 1'd0;
-    if ((builder_csr_bankarray_csrbank6_sel & (builder_csr_bankarray_interface6_bank_bus_adr[8:0] == 3'd6))) begin
-        builder_csr_bankarray_csrbank6_txempty_re <= builder_csr_bankarray_interface6_bank_bus_we;
-        builder_csr_bankarray_csrbank6_txempty_we <= (~builder_csr_bankarray_interface6_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank6_rxfull_r = builder_csr_bankarray_interface6_bank_bus_dat_w[0];
-always @(*) begin
-    builder_csr_bankarray_csrbank6_rxfull_we <= 1'd0;
-    builder_csr_bankarray_csrbank6_rxfull_re <= 1'd0;
-    if ((builder_csr_bankarray_csrbank6_sel & (builder_csr_bankarray_interface6_bank_bus_adr[8:0] == 3'd7))) begin
-        builder_csr_bankarray_csrbank6_rxfull_re <= builder_csr_bankarray_interface6_bank_bus_we;
-        builder_csr_bankarray_csrbank6_rxfull_we <= (~builder_csr_bankarray_interface6_bank_bus_we);
-    end
-end
-assign builder_csr_bankarray_csrbank6_txfull_w = main_basesoc_uart_txfull_status;
-assign main_basesoc_uart_txfull_we = builder_csr_bankarray_csrbank6_txfull_we;
-assign builder_csr_bankarray_csrbank6_rxempty_w = main_basesoc_uart_rxempty_status;
-assign main_basesoc_uart_rxempty_we = builder_csr_bankarray_csrbank6_rxempty_we;
+assign builder_csr_bankarray_csrbank5_txfull_w = main_basesoc_uart_txfull_status;
+assign main_basesoc_uart_txfull_we = builder_csr_bankarray_csrbank5_txfull_we;
+assign builder_csr_bankarray_csrbank5_rxempty_w = main_basesoc_uart_rxempty_status;
+assign main_basesoc_uart_rxempty_we = builder_csr_bankarray_csrbank5_rxempty_we;
 always @(*) begin
     main_basesoc_uart_status_status <= 2'd0;
     main_basesoc_uart_status_status[0] <= main_basesoc_uart_tx0;
     main_basesoc_uart_status_status[1] <= main_basesoc_uart_rx0;
 end
-assign builder_csr_bankarray_csrbank6_ev_status_w = main_basesoc_uart_status_status[1:0];
-assign main_basesoc_uart_status_we = builder_csr_bankarray_csrbank6_ev_status_we;
+assign builder_csr_bankarray_csrbank5_ev_status_w = main_basesoc_uart_status_status[1:0];
+assign main_basesoc_uart_status_we = builder_csr_bankarray_csrbank5_ev_status_we;
 always @(*) begin
     main_basesoc_uart_pending_status <= 2'd0;
     main_basesoc_uart_pending_status[0] <= main_basesoc_uart_tx1;
     main_basesoc_uart_pending_status[1] <= main_basesoc_uart_rx1;
 end
-assign builder_csr_bankarray_csrbank6_ev_pending_w = main_basesoc_uart_pending_status[1:0];
-assign main_basesoc_uart_pending_we = builder_csr_bankarray_csrbank6_ev_pending_we;
+assign builder_csr_bankarray_csrbank5_ev_pending_w = main_basesoc_uart_pending_status[1:0];
+assign main_basesoc_uart_pending_we = builder_csr_bankarray_csrbank5_ev_pending_we;
 assign main_basesoc_uart_tx2 = main_basesoc_uart_enable_storage[0];
 assign main_basesoc_uart_rx2 = main_basesoc_uart_enable_storage[1];
-assign builder_csr_bankarray_csrbank6_ev_enable0_w = main_basesoc_uart_enable_storage[1:0];
-assign builder_csr_bankarray_csrbank6_txempty_w = main_basesoc_uart_txempty_status;
-assign main_basesoc_uart_txempty_we = builder_csr_bankarray_csrbank6_txempty_we;
-assign builder_csr_bankarray_csrbank6_rxfull_w = main_basesoc_uart_rxfull_status;
-assign main_basesoc_uart_rxfull_we = builder_csr_bankarray_csrbank6_rxfull_we;
+assign builder_csr_bankarray_csrbank5_ev_enable0_w = main_basesoc_uart_enable_storage[1:0];
+assign builder_csr_bankarray_csrbank5_txempty_w = main_basesoc_uart_txempty_status;
+assign main_basesoc_uart_txempty_we = builder_csr_bankarray_csrbank5_txempty_we;
+assign builder_csr_bankarray_csrbank5_rxfull_w = main_basesoc_uart_rxfull_status;
+assign main_basesoc_uart_rxfull_we = builder_csr_bankarray_csrbank5_rxfull_we;
 assign builder_csr_interconnect_adr = builder_basesoc_adr;
 assign builder_csr_interconnect_we = builder_basesoc_we;
 assign builder_csr_interconnect_dat_w = builder_basesoc_dat_w;
@@ -4877,7 +4771,6 @@ assign builder_csr_bankarray_interface2_bank_bus_adr = builder_csr_interconnect_
 assign builder_csr_bankarray_interface3_bank_bus_adr = builder_csr_interconnect_adr;
 assign builder_csr_bankarray_interface4_bank_bus_adr = builder_csr_interconnect_adr;
 assign builder_csr_bankarray_interface5_bank_bus_adr = builder_csr_interconnect_adr;
-assign builder_csr_bankarray_interface6_bank_bus_adr = builder_csr_interconnect_adr;
 assign builder_csr_bankarray_sram_bus_adr = builder_csr_interconnect_adr;
 assign builder_csr_bankarray_interface0_bank_bus_we = builder_csr_interconnect_we;
 assign builder_csr_bankarray_interface1_bank_bus_we = builder_csr_interconnect_we;
@@ -4885,7 +4778,6 @@ assign builder_csr_bankarray_interface2_bank_bus_we = builder_csr_interconnect_w
 assign builder_csr_bankarray_interface3_bank_bus_we = builder_csr_interconnect_we;
 assign builder_csr_bankarray_interface4_bank_bus_we = builder_csr_interconnect_we;
 assign builder_csr_bankarray_interface5_bank_bus_we = builder_csr_interconnect_we;
-assign builder_csr_bankarray_interface6_bank_bus_we = builder_csr_interconnect_we;
 assign builder_csr_bankarray_sram_bus_we = builder_csr_interconnect_we;
 assign builder_csr_bankarray_interface0_bank_bus_dat_w = builder_csr_interconnect_dat_w;
 assign builder_csr_bankarray_interface1_bank_bus_dat_w = builder_csr_interconnect_dat_w;
@@ -4893,9 +4785,8 @@ assign builder_csr_bankarray_interface2_bank_bus_dat_w = builder_csr_interconnec
 assign builder_csr_bankarray_interface3_bank_bus_dat_w = builder_csr_interconnect_dat_w;
 assign builder_csr_bankarray_interface4_bank_bus_dat_w = builder_csr_interconnect_dat_w;
 assign builder_csr_bankarray_interface5_bank_bus_dat_w = builder_csr_interconnect_dat_w;
-assign builder_csr_bankarray_interface6_bank_bus_dat_w = builder_csr_interconnect_dat_w;
 assign builder_csr_bankarray_sram_bus_dat_w = builder_csr_interconnect_dat_w;
-assign builder_csr_interconnect_dat_r = (((((((builder_csr_bankarray_interface0_bank_bus_dat_r | builder_csr_bankarray_interface1_bank_bus_dat_r) | builder_csr_bankarray_interface2_bank_bus_dat_r) | builder_csr_bankarray_interface3_bank_bus_dat_r) | builder_csr_bankarray_interface4_bank_bus_dat_r) | builder_csr_bankarray_interface5_bank_bus_dat_r) | builder_csr_bankarray_interface6_bank_bus_dat_r) | builder_csr_bankarray_sram_bus_dat_r);
+assign builder_csr_interconnect_dat_r = ((((((builder_csr_bankarray_interface0_bank_bus_dat_r | builder_csr_bankarray_interface1_bank_bus_dat_r) | builder_csr_bankarray_interface2_bank_bus_dat_r) | builder_csr_bankarray_interface3_bank_bus_dat_r) | builder_csr_bankarray_interface4_bank_bus_dat_r) | builder_csr_bankarray_interface5_bank_bus_dat_r) | builder_csr_bankarray_sram_bus_dat_r);
 always @(*) begin
     builder_rhs_array_muxed0 <= 32'd0;
     case (builder_grant)
@@ -5546,12 +5437,10 @@ assign sdrio_clk_12 = sys_clk;
 assign sdrio_clk_13 = sys_clk;
 assign sdrio_clk_14 = sys_clk;
 assign sdrio_clk_15 = sys_clk;
-assign main_i2s_rx_rx_pin = builder_impl_multiregimpl1_regs1;
-assign main_i2s_rx_sync_pin = builder_impl_multiregimpl2_regs1;
-assign main_i2s_rx_clk_pin = builder_impl_multiregimpl3_regs1;
-assign main_i2s_tx_sync_pin = builder_impl_multiregimpl4_regs1;
-assign main_i2s_tx_clk_pin = builder_impl_multiregimpl5_regs1;
-assign main_uartbone_phy_rx_rx = builder_impl_multiregimpl6_regs1;
+assign main_rx_pin = builder_impl_multiregimpl1_regs1;
+assign main_sync_pin = builder_impl_multiregimpl2_regs1;
+assign main_clk_pin = builder_impl_multiregimpl3_regs1;
+assign main_uartbone_phy_rx_rx = builder_impl_multiregimpl4_regs1;
 
 
 //------------------------------------------------------------------------------
@@ -6435,200 +6324,199 @@ always @(posedge sys_clk) begin
     end else begin
         main_count <= 26'd52500000;
     end
-    main_i2s_rx_clk_d <= main_i2s_rx_clk_pin;
-    if (main_i2s_rx_csrfield_reset) begin
-        main_i2s_rx_rx_rst_cnt <= 3'd5;
-        main_i2s_rx_rx_reset <= 1'd1;
+    main_clk_d <= main_clk_pin;
+    if (main_csrfield_reset0) begin
+        main_rx_rst_cnt <= 3'd5;
+        main_rx_reset <= 1'd1;
     end else begin
-        if ((main_i2s_rx_rx_rst_cnt == 1'd0)) begin
-            main_i2s_rx_rx_reset <= 1'd0;
+        if ((main_rx_rst_cnt == 1'd0)) begin
+            main_rx_reset <= 1'd0;
         end else begin
-            main_i2s_rx_rx_rst_cnt <= (main_i2s_rx_rx_rst_cnt - 1'd1);
-            main_i2s_rx_rx_reset <= 1'd1;
+            main_rx_rst_cnt <= (main_rx_rst_cnt - 1'd1);
+            main_rx_reset <= 1'd1;
         end
     end
-    main_i2s_rx_bus_read_d <= main_i2s_rx_bus_read;
-    if ((main_i2s_rx_bus_read & (~main_i2s_rx_bus_read_d))) begin
-        main_i2s_rx_rd_ack_pipe <= 1'd1;
-        if ((~main_i2s_rx_rx_fifo_rx_fifo_empty)) begin
-            main_i2s_rx_bus_dat_r <= main_i2s_rx_rx_fifo_rx_fifo_rd_d;
-            main_i2s_rx_rx_fifo_rx_fifo_rden <= (~main_i2s_rx_rx_reset);
+    main_bus_read_d <= main_bus_read;
+    if ((main_bus_read & (~main_bus_read_d))) begin
+        main_rd_ack_pipe <= 1'd1;
+        if ((~main_rx_fifo_rx_fifo_empty)) begin
+            main_bus_dat_r <= main_rx_fifo_rx_fifo_rd_d;
+            main_rx_fifo_rx_fifo_rden <= (~main_rx_reset);
         end else begin
-            main_i2s_rx_bus_dat_r <= 32'd3735928559;
-            main_i2s_rx_rx_fifo_rx_fifo_rden <= 1'd0;
+            main_bus_dat_r <= 32'd3735928559;
+            main_rx_fifo_rx_fifo_rden <= 1'd0;
         end
     end else begin
-        main_i2s_rx_rx_fifo_rx_fifo_rden <= 1'd0;
-        main_i2s_rx_rd_ack_pipe <= 1'd0;
+        main_rx_fifo_rx_fifo_rden <= 1'd0;
+        main_rd_ack_pipe <= 1'd0;
     end
-    main_i2s_rx_rd_ack <= main_i2s_rx_rd_ack_pipe;
-    if (main_i2s_rx_rx_ready_clear) begin
-        main_i2s_rx_rx_ready_pending <= 1'd0;
-    end
-    if (main_i2s_rx_rx_ready_trigger) begin
-        main_i2s_rx_rx_ready_pending <= 1'd1;
-    end
-    if (main_i2s_rx_rx_error_clear) begin
-        main_i2s_rx_rx_error_pending <= 1'd0;
-    end
-    if (main_i2s_rx_rx_error_trigger) begin
-        main_i2s_rx_rx_error_pending <= 1'd1;
-    end
-    if (main_i2s_rx_rx_fifo_rx_fifo_reset) begin
-        main_i2s_rx_rx_fifo_rx_fifo_rdcount <= 1'd0;
-        main_i2s_rx_rx_fifo_rx_fifo_wrcount <= 1'd0;
-    end
-    if ((main_i2s_rx_rx_fifo_sink_ready & main_i2s_rx_rx_fifo_sink_valid)) begin
-        if ((main_i2s_rx_rx_fifo_rx_fifo_wrcount == 9'd511)) begin
-            main_i2s_rx_rx_fifo_rx_fifo_wrcount <= 1'd0;
+    main_rd_ack <= main_rd_ack_pipe;
+    if (main_csrfield_reset1) begin
+        main_tx_rst_cnt <= 3'd5;
+        main_tx_reset <= 1'd1;
+    end else begin
+        if ((main_tx_rst_cnt == 1'd0)) begin
+            main_tx_reset <= 1'd0;
         end else begin
-            main_i2s_rx_rx_fifo_rx_fifo_wrcount <= (main_i2s_rx_rx_fifo_rx_fifo_wrcount + 1'd1);
+            main_tx_rst_cnt <= (main_tx_rst_cnt - 1'd1);
+            main_tx_reset <= 1'd1;
         end
     end
-    if ((main_i2s_rx_rx_fifo_source_ready & main_i2s_rx_rx_fifo_source_valid)) begin
-        if ((main_i2s_rx_rx_fifo_rx_fifo_rdcount == 9'd511)) begin
-            main_i2s_rx_rx_fifo_rx_fifo_rdcount <= 1'd0;
+    if ((((main_bus_cyc & main_bus_stb) & main_bus_we) & (~main_bus_ack))) begin
+        if ((~main_tx_fifo_tx_fifo_full)) begin
+            main_tx_fifo_tx_fifo_wr_d <= main_bus_dat_w;
+            main_tx_fifo_tx_fifo_wren <= (~main_tx_reset);
+            main_wr_ack <= 1'd1;
         end else begin
-            main_i2s_rx_rx_fifo_rx_fifo_rdcount <= (main_i2s_rx_rx_fifo_rx_fifo_rdcount + 1'd1);
-        end
-    end
-    if ((main_i2s_rx_rx_fifo_level0 <= 4'd8)) begin
-        main_i2s_rx_rx_fifo_rx_fifo_almostempty <= 1'd1;
-    end else begin
-        main_i2s_rx_rx_fifo_rx_fifo_almostempty <= 1'd0;
-    end
-    if ((main_i2s_rx_rx_fifo_level0 >= 9'd256)) begin
-        main_i2s_rx_rx_fifo_rx_fifo_almostfull <= 1'd1;
-    end else begin
-        main_i2s_rx_rx_fifo_rx_fifo_almostfull <= 1'd0;
-    end
-    if (((main_i2s_rx_rx_fifo_syncfifo_we & main_i2s_rx_rx_fifo_syncfifo_writable) & (~main_i2s_rx_rx_fifo_replace))) begin
-        main_i2s_rx_rx_fifo_produce <= (main_i2s_rx_rx_fifo_produce + 1'd1);
-    end
-    if (main_i2s_rx_rx_fifo_do_read) begin
-        main_i2s_rx_rx_fifo_consume <= (main_i2s_rx_rx_fifo_consume + 1'd1);
-    end
-    if (((main_i2s_rx_rx_fifo_syncfifo_we & main_i2s_rx_rx_fifo_syncfifo_writable) & (~main_i2s_rx_rx_fifo_replace))) begin
-        if ((~main_i2s_rx_rx_fifo_do_read)) begin
-            main_i2s_rx_rx_fifo_level1 <= (main_i2s_rx_rx_fifo_level1 + 1'd1);
+            main_tx_fifo_tx_fifo_wren <= 1'd0;
+            main_wr_ack <= 1'd0;
         end
     end else begin
-        if (main_i2s_rx_rx_fifo_do_read) begin
-            main_i2s_rx_rx_fifo_level1 <= (main_i2s_rx_rx_fifo_level1 - 1'd1);
-        end
+        main_tx_fifo_tx_fifo_wren <= 1'd0;
+        main_wr_ack <= 1'd0;
     end
-    if (main_i2s_rx_rx_fifo_reset) begin
-        main_i2s_rx_rx_fifo_level1 <= 10'd0;
-        main_i2s_rx_rx_fifo_produce <= 9'd0;
-        main_i2s_rx_rx_fifo_consume <= 9'd0;
+    if (main_rx_ready_clear) begin
+        main_rx_ready_pending <= 1'd0;
     end
-    builder_basesoc_s7i2s0_state <= builder_basesoc_s7i2s0_next_state;
-    if (main_i2s_rx_rx_fsm_s7i2s0_next_value_ce0) begin
-        main_i2s_rx_rx_fsm <= main_i2s_rx_rx_fsm_s7i2s0_next_value0;
+    if (main_rx_ready_trigger) begin
+        main_rx_ready_pending <= 1'd1;
     end
-    if (main_i2s_rx_rx_fifo_rx_fifo_wr_d_s7i2s0_next_value_ce1) begin
-        main_i2s_rx_rx_fifo_rx_fifo_wr_d <= main_i2s_rx_rx_fifo_rx_fifo_wr_d_s7i2s0_next_value1;
+    if (main_rx_error_clear) begin
+        main_rx_error_pending <= 1'd0;
     end
-    if (main_i2s_rx_rx_delay_cnt_s7i2s0_t_next_value_ce) begin
-        main_i2s_rx_rx_delay_cnt <= main_i2s_rx_rx_delay_cnt_s7i2s0_t_next_value;
+    if (main_rx_error_trigger) begin
+        main_rx_error_pending <= 1'd1;
     end
-    if (main_i2s_rx_rx_cnt_s7i2s0_f_next_value_ce) begin
-        main_i2s_rx_rx_cnt <= main_i2s_rx_rx_cnt_s7i2s0_f_next_value;
+    if (main_tx_ready_clear) begin
+        main_tx_ready_pending <= 1'd0;
     end
-    main_i2s_tx_clk_d <= main_i2s_tx_clk_pin;
-    if (main_i2s_tx_csrfield_reset) begin
-        main_i2s_tx_tx_rst_cnt <= 3'd5;
-        main_i2s_tx_tx_reset <= 1'd1;
-    end else begin
-        if ((main_i2s_tx_tx_rst_cnt == 1'd0)) begin
-            main_i2s_tx_tx_reset <= 1'd0;
+    if (main_tx_ready_trigger) begin
+        main_tx_ready_pending <= 1'd1;
+    end
+    if (main_tx_error_clear) begin
+        main_tx_error_pending <= 1'd0;
+    end
+    if (main_tx_error_trigger) begin
+        main_tx_error_pending <= 1'd1;
+    end
+    if (main_rx_fifo_rx_fifo_reset) begin
+        main_rx_fifo_rx_fifo_rdcount <= 1'd0;
+        main_rx_fifo_rx_fifo_wrcount <= 1'd0;
+    end
+    if ((main_rx_fifo_sink_ready & main_rx_fifo_sink_valid)) begin
+        if ((main_rx_fifo_rx_fifo_wrcount == 9'd511)) begin
+            main_rx_fifo_rx_fifo_wrcount <= 1'd0;
         end else begin
-            main_i2s_tx_tx_rst_cnt <= (main_i2s_tx_tx_rst_cnt - 1'd1);
-            main_i2s_tx_tx_reset <= 1'd1;
+            main_rx_fifo_rx_fifo_wrcount <= (main_rx_fifo_rx_fifo_wrcount + 1'd1);
         end
     end
-    if ((((main_i2s_tx_bus_cyc & main_i2s_tx_bus_stb) & main_i2s_tx_bus_we) & (~main_i2s_tx_bus_ack))) begin
-        if ((~main_i2s_tx_tx_fifo_tx_fifo_full)) begin
-            main_i2s_tx_tx_fifo_tx_fifo_wr_d <= main_i2s_tx_bus_dat_w;
-            main_i2s_tx_tx_fifo_tx_fifo_wren <= (~main_i2s_tx_tx_reset);
-            main_i2s_tx_wr_ack <= 1'd1;
+    if ((main_rx_fifo_source_ready & main_rx_fifo_source_valid)) begin
+        if ((main_rx_fifo_rx_fifo_rdcount == 9'd511)) begin
+            main_rx_fifo_rx_fifo_rdcount <= 1'd0;
         end else begin
-            main_i2s_tx_tx_fifo_tx_fifo_wren <= 1'd0;
-            main_i2s_tx_wr_ack <= 1'd0;
+            main_rx_fifo_rx_fifo_rdcount <= (main_rx_fifo_rx_fifo_rdcount + 1'd1);
+        end
+    end
+    if ((main_rx_fifo_level0 <= 4'd8)) begin
+        main_rx_fifo_rx_fifo_almostempty <= 1'd1;
+    end else begin
+        main_rx_fifo_rx_fifo_almostempty <= 1'd0;
+    end
+    if ((main_rx_fifo_level0 >= 9'd256)) begin
+        main_rx_fifo_rx_fifo_almostfull <= 1'd1;
+    end else begin
+        main_rx_fifo_rx_fifo_almostfull <= 1'd0;
+    end
+    if (((main_rx_fifo_syncfifo_we & main_rx_fifo_syncfifo_writable) & (~main_rx_fifo_replace))) begin
+        main_rx_fifo_produce <= (main_rx_fifo_produce + 1'd1);
+    end
+    if (main_rx_fifo_do_read) begin
+        main_rx_fifo_consume <= (main_rx_fifo_consume + 1'd1);
+    end
+    if (((main_rx_fifo_syncfifo_we & main_rx_fifo_syncfifo_writable) & (~main_rx_fifo_replace))) begin
+        if ((~main_rx_fifo_do_read)) begin
+            main_rx_fifo_level1 <= (main_rx_fifo_level1 + 1'd1);
         end
     end else begin
-        main_i2s_tx_tx_fifo_tx_fifo_wren <= 1'd0;
-        main_i2s_tx_wr_ack <= 1'd0;
+        if (main_rx_fifo_do_read) begin
+            main_rx_fifo_level1 <= (main_rx_fifo_level1 - 1'd1);
+        end
     end
-    if (main_i2s_tx_tx_ready_clear) begin
-        main_i2s_tx_tx_ready_pending <= 1'd0;
+    if (main_rx_fifo_reset) begin
+        main_rx_fifo_level1 <= 10'd0;
+        main_rx_fifo_produce <= 9'd0;
+        main_rx_fifo_consume <= 9'd0;
     end
-    if (main_i2s_tx_tx_ready_trigger) begin
-        main_i2s_tx_tx_ready_pending <= 1'd1;
+    builder_basesoc_fsm0_state <= builder_basesoc_fsm0_next_state;
+    if (main_rx_fsm_fsm0_next_value_ce0) begin
+        main_rx_fsm <= main_rx_fsm_fsm0_next_value0;
     end
-    if (main_i2s_tx_tx_error_clear) begin
-        main_i2s_tx_tx_error_pending <= 1'd0;
+    if (main_rx_fifo_rx_fifo_wr_d_fsm0_next_value_ce1) begin
+        main_rx_fifo_rx_fifo_wr_d <= main_rx_fifo_rx_fifo_wr_d_fsm0_next_value1;
     end
-    if (main_i2s_tx_tx_error_trigger) begin
-        main_i2s_tx_tx_error_pending <= 1'd1;
+    if (main_rx_delay_cnt_fsm0_t_next_value_ce) begin
+        main_rx_delay_cnt <= main_rx_delay_cnt_fsm0_t_next_value;
     end
-    if (main_i2s_tx_tx_fifo_tx_fifo_reset) begin
-        main_i2s_tx_tx_fifo_tx_fifo_rdcount <= 1'd0;
-        main_i2s_tx_tx_fifo_tx_fifo_wrcount <= 1'd0;
+    if (main_rx_cnt_fsm0_f_next_value_ce) begin
+        main_rx_cnt <= main_rx_cnt_fsm0_f_next_value;
     end
-    if ((main_i2s_tx_tx_fifo_sink_ready & main_i2s_tx_tx_fifo_sink_valid)) begin
-        if ((main_i2s_tx_tx_fifo_tx_fifo_wrcount == 9'd511)) begin
-            main_i2s_tx_tx_fifo_tx_fifo_wrcount <= 1'd0;
+    if (main_tx_fifo_tx_fifo_reset) begin
+        main_tx_fifo_tx_fifo_rdcount <= 1'd0;
+        main_tx_fifo_tx_fifo_wrcount <= 1'd0;
+    end
+    if ((main_tx_fifo_sink_ready & main_tx_fifo_sink_valid)) begin
+        if ((main_tx_fifo_tx_fifo_wrcount == 9'd511)) begin
+            main_tx_fifo_tx_fifo_wrcount <= 1'd0;
         end else begin
-            main_i2s_tx_tx_fifo_tx_fifo_wrcount <= (main_i2s_tx_tx_fifo_tx_fifo_wrcount + 1'd1);
+            main_tx_fifo_tx_fifo_wrcount <= (main_tx_fifo_tx_fifo_wrcount + 1'd1);
         end
     end
-    if ((main_i2s_tx_tx_fifo_source_ready & main_i2s_tx_tx_fifo_source_valid)) begin
-        if ((main_i2s_tx_tx_fifo_tx_fifo_rdcount == 9'd511)) begin
-            main_i2s_tx_tx_fifo_tx_fifo_rdcount <= 1'd0;
+    if ((main_tx_fifo_source_ready & main_tx_fifo_source_valid)) begin
+        if ((main_tx_fifo_tx_fifo_rdcount == 9'd511)) begin
+            main_tx_fifo_tx_fifo_rdcount <= 1'd0;
         end else begin
-            main_i2s_tx_tx_fifo_tx_fifo_rdcount <= (main_i2s_tx_tx_fifo_tx_fifo_rdcount + 1'd1);
+            main_tx_fifo_tx_fifo_rdcount <= (main_tx_fifo_tx_fifo_rdcount + 1'd1);
         end
     end
-    if ((main_i2s_tx_tx_fifo_level0 <= 9'd256)) begin
-        main_i2s_tx_tx_fifo_tx_fifo_almostempty <= 1'd1;
+    if ((main_tx_fifo_level0 <= 9'd256)) begin
+        main_tx_fifo_tx_fifo_almostempty <= 1'd1;
     end else begin
-        main_i2s_tx_tx_fifo_tx_fifo_almostempty <= 1'd0;
+        main_tx_fifo_tx_fifo_almostempty <= 1'd0;
     end
-    if ((main_i2s_tx_tx_fifo_level0 >= 9'd504)) begin
-        main_i2s_tx_tx_fifo_tx_fifo_almostfull <= 1'd1;
+    if ((main_tx_fifo_level0 >= 9'd504)) begin
+        main_tx_fifo_tx_fifo_almostfull <= 1'd1;
     end else begin
-        main_i2s_tx_tx_fifo_tx_fifo_almostfull <= 1'd0;
+        main_tx_fifo_tx_fifo_almostfull <= 1'd0;
     end
-    if (((main_i2s_tx_tx_fifo_syncfifo_we & main_i2s_tx_tx_fifo_syncfifo_writable) & (~main_i2s_tx_tx_fifo_replace))) begin
-        main_i2s_tx_tx_fifo_produce <= (main_i2s_tx_tx_fifo_produce + 1'd1);
+    if (((main_tx_fifo_syncfifo_we & main_tx_fifo_syncfifo_writable) & (~main_tx_fifo_replace))) begin
+        main_tx_fifo_produce <= (main_tx_fifo_produce + 1'd1);
     end
-    if (main_i2s_tx_tx_fifo_do_read) begin
-        main_i2s_tx_tx_fifo_consume <= (main_i2s_tx_tx_fifo_consume + 1'd1);
+    if (main_tx_fifo_do_read) begin
+        main_tx_fifo_consume <= (main_tx_fifo_consume + 1'd1);
     end
-    if (((main_i2s_tx_tx_fifo_syncfifo_we & main_i2s_tx_tx_fifo_syncfifo_writable) & (~main_i2s_tx_tx_fifo_replace))) begin
-        if ((~main_i2s_tx_tx_fifo_do_read)) begin
-            main_i2s_tx_tx_fifo_level1 <= (main_i2s_tx_tx_fifo_level1 + 1'd1);
+    if (((main_tx_fifo_syncfifo_we & main_tx_fifo_syncfifo_writable) & (~main_tx_fifo_replace))) begin
+        if ((~main_tx_fifo_do_read)) begin
+            main_tx_fifo_level1 <= (main_tx_fifo_level1 + 1'd1);
         end
     end else begin
-        if (main_i2s_tx_tx_fifo_do_read) begin
-            main_i2s_tx_tx_fifo_level1 <= (main_i2s_tx_tx_fifo_level1 - 1'd1);
+        if (main_tx_fifo_do_read) begin
+            main_tx_fifo_level1 <= (main_tx_fifo_level1 - 1'd1);
         end
     end
-    if (main_i2s_tx_tx_fifo_reset) begin
-        main_i2s_tx_tx_fifo_level1 <= 10'd0;
-        main_i2s_tx_tx_fifo_produce <= 9'd0;
-        main_i2s_tx_tx_fifo_consume <= 9'd0;
+    if (main_tx_fifo_reset) begin
+        main_tx_fifo_level1 <= 10'd0;
+        main_tx_fifo_produce <= 9'd0;
+        main_tx_fifo_consume <= 9'd0;
     end
-    builder_basesoc_s7i2s1_state <= builder_basesoc_s7i2s1_next_state;
-    if (main_i2s_tx_tx_cnt_s7i2s1_t_next_value_ce0) begin
-        main_i2s_tx_tx_cnt <= main_i2s_tx_tx_cnt_s7i2s1_t_next_value0;
+    builder_basesoc_fsm1_state <= builder_basesoc_fsm1_next_state;
+    if (main_tx_cnt_fsm1_t_next_value_ce0) begin
+        main_tx_cnt <= main_tx_cnt_fsm1_t_next_value0;
     end
-    if (main_i2s_tx_tx_buf_s7i2s1_t_next_value_ce1) begin
-        main_i2s_tx_tx_buf <= main_i2s_tx_tx_buf_s7i2s1_t_next_value1;
+    if (main_tx_buf_fsm1_t_next_value_ce1) begin
+        main_tx_buf <= main_tx_buf_fsm1_t_next_value1;
     end
-    if (main_i2s_tx_tx_pin_s7i2s1_f_next_value_ce) begin
-        main_i2s_tx_tx_pin <= main_i2s_tx_tx_pin_s7i2s1_f_next_value;
+    if (main_tx_pin_fsm1_f_next_value_ce) begin
+        main_tx_pin <= main_tx_pin_fsm1_f_next_value;
     end
     {main_uartbone_phy_tx_tick, main_uartbone_phy_tx_phase} <= 23'd4712192;
     if (main_uartbone_phy_tx_enable) begin
@@ -6737,218 +6625,195 @@ always @(posedge sys_clk) begin
             3'd5: begin
                 builder_csr_bankarray_interface1_bank_bus_dat_r <= builder_csr_bankarray_csrbank1_rx_conf_w;
             end
+            3'd6: begin
+                builder_csr_bankarray_interface1_bank_bus_dat_r <= builder_csr_bankarray_csrbank1_tx_ctl0_w;
+            end
+            3'd7: begin
+                builder_csr_bankarray_interface1_bank_bus_dat_r <= builder_csr_bankarray_csrbank1_tx_stat_w;
+            end
+            4'd8: begin
+                builder_csr_bankarray_interface1_bank_bus_dat_r <= builder_csr_bankarray_csrbank1_tx_conf_w;
+            end
         endcase
     end
-    main_i2s_rx_status_re <= builder_csr_bankarray_csrbank1_ev_status_re;
+    main_status_re <= builder_csr_bankarray_csrbank1_ev_status_re;
     if (builder_csr_bankarray_csrbank1_ev_pending_re) begin
-        main_i2s_rx_pending_r[1:0] <= builder_csr_bankarray_csrbank1_ev_pending_r;
+        main_pending_r[3:0] <= builder_csr_bankarray_csrbank1_ev_pending_r;
     end
-    main_i2s_rx_pending_re <= builder_csr_bankarray_csrbank1_ev_pending_re;
+    main_pending_re <= builder_csr_bankarray_csrbank1_ev_pending_re;
     if (builder_csr_bankarray_csrbank1_ev_enable0_re) begin
-        main_i2s_rx_enable_storage[1:0] <= builder_csr_bankarray_csrbank1_ev_enable0_r;
+        main_enable_storage[3:0] <= builder_csr_bankarray_csrbank1_ev_enable0_r;
     end
-    main_i2s_rx_enable_re <= builder_csr_bankarray_csrbank1_ev_enable0_re;
+    main_enable_re <= builder_csr_bankarray_csrbank1_ev_enable0_re;
     if (builder_csr_bankarray_csrbank1_rx_ctl0_re) begin
-        main_i2s_rx_rx_ctl_storage[1:0] <= builder_csr_bankarray_csrbank1_rx_ctl0_r;
+        main_rx_ctl_storage[1:0] <= builder_csr_bankarray_csrbank1_rx_ctl0_r;
     end
-    main_i2s_rx_rx_ctl_re <= builder_csr_bankarray_csrbank1_rx_ctl0_re;
-    main_i2s_rx_rx_stat_re <= builder_csr_bankarray_csrbank1_rx_stat_re;
-    main_i2s_rx_rx_conf_re <= builder_csr_bankarray_csrbank1_rx_conf_re;
+    main_rx_ctl_re <= builder_csr_bankarray_csrbank1_rx_ctl0_re;
+    main_rx_stat_re <= builder_csr_bankarray_csrbank1_rx_stat_re;
+    main_rx_conf_re <= builder_csr_bankarray_csrbank1_rx_conf_re;
+    if (builder_csr_bankarray_csrbank1_tx_ctl0_re) begin
+        main_tx_ctl_storage[1:0] <= builder_csr_bankarray_csrbank1_tx_ctl0_r;
+    end
+    main_tx_ctl_re <= builder_csr_bankarray_csrbank1_tx_ctl0_re;
+    main_tx_stat_re <= builder_csr_bankarray_csrbank1_tx_stat_re;
+    main_tx_conf_re <= builder_csr_bankarray_csrbank1_tx_conf_re;
+    builder_csr_bankarray_sel_r <= builder_csr_bankarray_sel;
     builder_csr_bankarray_interface2_bank_bus_dat_r <= 1'd0;
     if (builder_csr_bankarray_csrbank2_sel) begin
         case (builder_csr_bankarray_interface2_bank_bus_adr[8:0])
             1'd0: begin
-                builder_csr_bankarray_interface2_bank_bus_dat_r <= builder_csr_bankarray_csrbank2_ev_status_w;
-            end
-            1'd1: begin
-                builder_csr_bankarray_interface2_bank_bus_dat_r <= builder_csr_bankarray_csrbank2_ev_pending_w;
-            end
-            2'd2: begin
-                builder_csr_bankarray_interface2_bank_bus_dat_r <= builder_csr_bankarray_csrbank2_ev_enable0_w;
-            end
-            2'd3: begin
-                builder_csr_bankarray_interface2_bank_bus_dat_r <= builder_csr_bankarray_csrbank2_tx_ctl0_w;
-            end
-            3'd4: begin
-                builder_csr_bankarray_interface2_bank_bus_dat_r <= builder_csr_bankarray_csrbank2_tx_stat_w;
-            end
-            3'd5: begin
-                builder_csr_bankarray_interface2_bank_bus_dat_r <= builder_csr_bankarray_csrbank2_tx_conf_w;
+                builder_csr_bankarray_interface2_bank_bus_dat_r <= builder_csr_bankarray_csrbank2_out0_w;
             end
         endcase
     end
-    main_i2s_tx_status_re <= builder_csr_bankarray_csrbank2_ev_status_re;
-    if (builder_csr_bankarray_csrbank2_ev_pending_re) begin
-        main_i2s_tx_pending_r[1:0] <= builder_csr_bankarray_csrbank2_ev_pending_r;
+    if (builder_csr_bankarray_csrbank2_out0_re) begin
+        main_storage <= builder_csr_bankarray_csrbank2_out0_r;
     end
-    main_i2s_tx_pending_re <= builder_csr_bankarray_csrbank2_ev_pending_re;
-    if (builder_csr_bankarray_csrbank2_ev_enable0_re) begin
-        main_i2s_tx_enable_storage[1:0] <= builder_csr_bankarray_csrbank2_ev_enable0_r;
-    end
-    main_i2s_tx_enable_re <= builder_csr_bankarray_csrbank2_ev_enable0_re;
-    if (builder_csr_bankarray_csrbank2_tx_ctl0_re) begin
-        main_i2s_tx_tx_ctl_storage[1:0] <= builder_csr_bankarray_csrbank2_tx_ctl0_r;
-    end
-    main_i2s_tx_tx_ctl_re <= builder_csr_bankarray_csrbank2_tx_ctl0_re;
-    main_i2s_tx_tx_stat_re <= builder_csr_bankarray_csrbank2_tx_stat_re;
-    main_i2s_tx_tx_conf_re <= builder_csr_bankarray_csrbank2_tx_conf_re;
-    builder_csr_bankarray_sel_r <= builder_csr_bankarray_sel;
+    main_re <= builder_csr_bankarray_csrbank2_out0_re;
     builder_csr_bankarray_interface3_bank_bus_dat_r <= 1'd0;
     if (builder_csr_bankarray_csrbank3_sel) begin
         case (builder_csr_bankarray_interface3_bank_bus_adr[8:0])
             1'd0: begin
-                builder_csr_bankarray_interface3_bank_bus_dat_r <= builder_csr_bankarray_csrbank3_out0_w;
+                builder_csr_bankarray_interface3_bank_bus_dat_r <= builder_csr_bankarray_csrbank3_dfii_control0_w;
+            end
+            1'd1: begin
+                builder_csr_bankarray_interface3_bank_bus_dat_r <= builder_csr_bankarray_csrbank3_dfii_pi0_command0_w;
+            end
+            2'd2: begin
+                builder_csr_bankarray_interface3_bank_bus_dat_r <= main_sdram_command_issue_w;
+            end
+            2'd3: begin
+                builder_csr_bankarray_interface3_bank_bus_dat_r <= builder_csr_bankarray_csrbank3_dfii_pi0_address0_w;
+            end
+            3'd4: begin
+                builder_csr_bankarray_interface3_bank_bus_dat_r <= builder_csr_bankarray_csrbank3_dfii_pi0_baddress0_w;
+            end
+            3'd5: begin
+                builder_csr_bankarray_interface3_bank_bus_dat_r <= builder_csr_bankarray_csrbank3_dfii_pi0_wrdata0_w;
+            end
+            3'd6: begin
+                builder_csr_bankarray_interface3_bank_bus_dat_r <= builder_csr_bankarray_csrbank3_dfii_pi0_rddata_w;
             end
         endcase
     end
-    if (builder_csr_bankarray_csrbank3_out0_re) begin
-        main_storage <= builder_csr_bankarray_csrbank3_out0_r;
+    if (builder_csr_bankarray_csrbank3_dfii_control0_re) begin
+        main_sdram_storage[3:0] <= builder_csr_bankarray_csrbank3_dfii_control0_r;
     end
-    main_re <= builder_csr_bankarray_csrbank3_out0_re;
+    main_sdram_re <= builder_csr_bankarray_csrbank3_dfii_control0_re;
+    if (builder_csr_bankarray_csrbank3_dfii_pi0_command0_re) begin
+        main_sdram_command_storage[5:0] <= builder_csr_bankarray_csrbank3_dfii_pi0_command0_r;
+    end
+    main_sdram_command_re <= builder_csr_bankarray_csrbank3_dfii_pi0_command0_re;
+    if (builder_csr_bankarray_csrbank3_dfii_pi0_address0_re) begin
+        main_sdram_address_storage[12:0] <= builder_csr_bankarray_csrbank3_dfii_pi0_address0_r;
+    end
+    main_sdram_address_re <= builder_csr_bankarray_csrbank3_dfii_pi0_address0_re;
+    if (builder_csr_bankarray_csrbank3_dfii_pi0_baddress0_re) begin
+        main_sdram_baddress_storage[1:0] <= builder_csr_bankarray_csrbank3_dfii_pi0_baddress0_r;
+    end
+    main_sdram_baddress_re <= builder_csr_bankarray_csrbank3_dfii_pi0_baddress0_re;
+    if (builder_csr_bankarray_csrbank3_dfii_pi0_wrdata0_re) begin
+        main_sdram_wrdata_storage[15:0] <= builder_csr_bankarray_csrbank3_dfii_pi0_wrdata0_r;
+    end
+    main_sdram_wrdata_re <= builder_csr_bankarray_csrbank3_dfii_pi0_wrdata0_re;
+    main_sdram_rddata_re <= builder_csr_bankarray_csrbank3_dfii_pi0_rddata_re;
     builder_csr_bankarray_interface4_bank_bus_dat_r <= 1'd0;
     if (builder_csr_bankarray_csrbank4_sel) begin
         case (builder_csr_bankarray_interface4_bank_bus_adr[8:0])
             1'd0: begin
-                builder_csr_bankarray_interface4_bank_bus_dat_r <= builder_csr_bankarray_csrbank4_dfii_control0_w;
+                builder_csr_bankarray_interface4_bank_bus_dat_r <= builder_csr_bankarray_csrbank4_load0_w;
             end
             1'd1: begin
-                builder_csr_bankarray_interface4_bank_bus_dat_r <= builder_csr_bankarray_csrbank4_dfii_pi0_command0_w;
+                builder_csr_bankarray_interface4_bank_bus_dat_r <= builder_csr_bankarray_csrbank4_reload0_w;
             end
             2'd2: begin
-                builder_csr_bankarray_interface4_bank_bus_dat_r <= main_sdram_command_issue_w;
+                builder_csr_bankarray_interface4_bank_bus_dat_r <= builder_csr_bankarray_csrbank4_en0_w;
             end
             2'd3: begin
-                builder_csr_bankarray_interface4_bank_bus_dat_r <= builder_csr_bankarray_csrbank4_dfii_pi0_address0_w;
+                builder_csr_bankarray_interface4_bank_bus_dat_r <= builder_csr_bankarray_csrbank4_update_value0_w;
             end
             3'd4: begin
-                builder_csr_bankarray_interface4_bank_bus_dat_r <= builder_csr_bankarray_csrbank4_dfii_pi0_baddress0_w;
+                builder_csr_bankarray_interface4_bank_bus_dat_r <= builder_csr_bankarray_csrbank4_value_w;
             end
             3'd5: begin
-                builder_csr_bankarray_interface4_bank_bus_dat_r <= builder_csr_bankarray_csrbank4_dfii_pi0_wrdata0_w;
+                builder_csr_bankarray_interface4_bank_bus_dat_r <= builder_csr_bankarray_csrbank4_ev_status_w;
             end
             3'd6: begin
-                builder_csr_bankarray_interface4_bank_bus_dat_r <= builder_csr_bankarray_csrbank4_dfii_pi0_rddata_w;
+                builder_csr_bankarray_interface4_bank_bus_dat_r <= builder_csr_bankarray_csrbank4_ev_pending_w;
+            end
+            3'd7: begin
+                builder_csr_bankarray_interface4_bank_bus_dat_r <= builder_csr_bankarray_csrbank4_ev_enable0_w;
             end
         endcase
     end
-    if (builder_csr_bankarray_csrbank4_dfii_control0_re) begin
-        main_sdram_storage[3:0] <= builder_csr_bankarray_csrbank4_dfii_control0_r;
+    if (builder_csr_bankarray_csrbank4_load0_re) begin
+        main_basesoc_timer_load_storage[31:0] <= builder_csr_bankarray_csrbank4_load0_r;
     end
-    main_sdram_re <= builder_csr_bankarray_csrbank4_dfii_control0_re;
-    if (builder_csr_bankarray_csrbank4_dfii_pi0_command0_re) begin
-        main_sdram_command_storage[5:0] <= builder_csr_bankarray_csrbank4_dfii_pi0_command0_r;
+    main_basesoc_timer_load_re <= builder_csr_bankarray_csrbank4_load0_re;
+    if (builder_csr_bankarray_csrbank4_reload0_re) begin
+        main_basesoc_timer_reload_storage[31:0] <= builder_csr_bankarray_csrbank4_reload0_r;
     end
-    main_sdram_command_re <= builder_csr_bankarray_csrbank4_dfii_pi0_command0_re;
-    if (builder_csr_bankarray_csrbank4_dfii_pi0_address0_re) begin
-        main_sdram_address_storage[12:0] <= builder_csr_bankarray_csrbank4_dfii_pi0_address0_r;
+    main_basesoc_timer_reload_re <= builder_csr_bankarray_csrbank4_reload0_re;
+    if (builder_csr_bankarray_csrbank4_en0_re) begin
+        main_basesoc_timer_en_storage <= builder_csr_bankarray_csrbank4_en0_r;
     end
-    main_sdram_address_re <= builder_csr_bankarray_csrbank4_dfii_pi0_address0_re;
-    if (builder_csr_bankarray_csrbank4_dfii_pi0_baddress0_re) begin
-        main_sdram_baddress_storage[1:0] <= builder_csr_bankarray_csrbank4_dfii_pi0_baddress0_r;
+    main_basesoc_timer_en_re <= builder_csr_bankarray_csrbank4_en0_re;
+    if (builder_csr_bankarray_csrbank4_update_value0_re) begin
+        main_basesoc_timer_update_value_storage <= builder_csr_bankarray_csrbank4_update_value0_r;
     end
-    main_sdram_baddress_re <= builder_csr_bankarray_csrbank4_dfii_pi0_baddress0_re;
-    if (builder_csr_bankarray_csrbank4_dfii_pi0_wrdata0_re) begin
-        main_sdram_wrdata_storage[15:0] <= builder_csr_bankarray_csrbank4_dfii_pi0_wrdata0_r;
+    main_basesoc_timer_update_value_re <= builder_csr_bankarray_csrbank4_update_value0_re;
+    main_basesoc_timer_value_re <= builder_csr_bankarray_csrbank4_value_re;
+    main_basesoc_timer_status_re <= builder_csr_bankarray_csrbank4_ev_status_re;
+    if (builder_csr_bankarray_csrbank4_ev_pending_re) begin
+        main_basesoc_timer_pending_r <= builder_csr_bankarray_csrbank4_ev_pending_r;
     end
-    main_sdram_wrdata_re <= builder_csr_bankarray_csrbank4_dfii_pi0_wrdata0_re;
-    main_sdram_rddata_re <= builder_csr_bankarray_csrbank4_dfii_pi0_rddata_re;
+    main_basesoc_timer_pending_re <= builder_csr_bankarray_csrbank4_ev_pending_re;
+    if (builder_csr_bankarray_csrbank4_ev_enable0_re) begin
+        main_basesoc_timer_enable_storage <= builder_csr_bankarray_csrbank4_ev_enable0_r;
+    end
+    main_basesoc_timer_enable_re <= builder_csr_bankarray_csrbank4_ev_enable0_re;
     builder_csr_bankarray_interface5_bank_bus_dat_r <= 1'd0;
     if (builder_csr_bankarray_csrbank5_sel) begin
         case (builder_csr_bankarray_interface5_bank_bus_adr[8:0])
             1'd0: begin
-                builder_csr_bankarray_interface5_bank_bus_dat_r <= builder_csr_bankarray_csrbank5_load0_w;
+                builder_csr_bankarray_interface5_bank_bus_dat_r <= main_basesoc_uart_rxtx_w;
             end
             1'd1: begin
-                builder_csr_bankarray_interface5_bank_bus_dat_r <= builder_csr_bankarray_csrbank5_reload0_w;
+                builder_csr_bankarray_interface5_bank_bus_dat_r <= builder_csr_bankarray_csrbank5_txfull_w;
             end
             2'd2: begin
-                builder_csr_bankarray_interface5_bank_bus_dat_r <= builder_csr_bankarray_csrbank5_en0_w;
+                builder_csr_bankarray_interface5_bank_bus_dat_r <= builder_csr_bankarray_csrbank5_rxempty_w;
             end
             2'd3: begin
-                builder_csr_bankarray_interface5_bank_bus_dat_r <= builder_csr_bankarray_csrbank5_update_value0_w;
-            end
-            3'd4: begin
-                builder_csr_bankarray_interface5_bank_bus_dat_r <= builder_csr_bankarray_csrbank5_value_w;
-            end
-            3'd5: begin
                 builder_csr_bankarray_interface5_bank_bus_dat_r <= builder_csr_bankarray_csrbank5_ev_status_w;
             end
-            3'd6: begin
+            3'd4: begin
                 builder_csr_bankarray_interface5_bank_bus_dat_r <= builder_csr_bankarray_csrbank5_ev_pending_w;
             end
-            3'd7: begin
+            3'd5: begin
                 builder_csr_bankarray_interface5_bank_bus_dat_r <= builder_csr_bankarray_csrbank5_ev_enable0_w;
             end
-        endcase
-    end
-    if (builder_csr_bankarray_csrbank5_load0_re) begin
-        main_basesoc_timer_load_storage[31:0] <= builder_csr_bankarray_csrbank5_load0_r;
-    end
-    main_basesoc_timer_load_re <= builder_csr_bankarray_csrbank5_load0_re;
-    if (builder_csr_bankarray_csrbank5_reload0_re) begin
-        main_basesoc_timer_reload_storage[31:0] <= builder_csr_bankarray_csrbank5_reload0_r;
-    end
-    main_basesoc_timer_reload_re <= builder_csr_bankarray_csrbank5_reload0_re;
-    if (builder_csr_bankarray_csrbank5_en0_re) begin
-        main_basesoc_timer_en_storage <= builder_csr_bankarray_csrbank5_en0_r;
-    end
-    main_basesoc_timer_en_re <= builder_csr_bankarray_csrbank5_en0_re;
-    if (builder_csr_bankarray_csrbank5_update_value0_re) begin
-        main_basesoc_timer_update_value_storage <= builder_csr_bankarray_csrbank5_update_value0_r;
-    end
-    main_basesoc_timer_update_value_re <= builder_csr_bankarray_csrbank5_update_value0_re;
-    main_basesoc_timer_value_re <= builder_csr_bankarray_csrbank5_value_re;
-    main_basesoc_timer_status_re <= builder_csr_bankarray_csrbank5_ev_status_re;
-    if (builder_csr_bankarray_csrbank5_ev_pending_re) begin
-        main_basesoc_timer_pending_r <= builder_csr_bankarray_csrbank5_ev_pending_r;
-    end
-    main_basesoc_timer_pending_re <= builder_csr_bankarray_csrbank5_ev_pending_re;
-    if (builder_csr_bankarray_csrbank5_ev_enable0_re) begin
-        main_basesoc_timer_enable_storage <= builder_csr_bankarray_csrbank5_ev_enable0_r;
-    end
-    main_basesoc_timer_enable_re <= builder_csr_bankarray_csrbank5_ev_enable0_re;
-    builder_csr_bankarray_interface6_bank_bus_dat_r <= 1'd0;
-    if (builder_csr_bankarray_csrbank6_sel) begin
-        case (builder_csr_bankarray_interface6_bank_bus_adr[8:0])
-            1'd0: begin
-                builder_csr_bankarray_interface6_bank_bus_dat_r <= main_basesoc_uart_rxtx_w;
-            end
-            1'd1: begin
-                builder_csr_bankarray_interface6_bank_bus_dat_r <= builder_csr_bankarray_csrbank6_txfull_w;
-            end
-            2'd2: begin
-                builder_csr_bankarray_interface6_bank_bus_dat_r <= builder_csr_bankarray_csrbank6_rxempty_w;
-            end
-            2'd3: begin
-                builder_csr_bankarray_interface6_bank_bus_dat_r <= builder_csr_bankarray_csrbank6_ev_status_w;
-            end
-            3'd4: begin
-                builder_csr_bankarray_interface6_bank_bus_dat_r <= builder_csr_bankarray_csrbank6_ev_pending_w;
-            end
-            3'd5: begin
-                builder_csr_bankarray_interface6_bank_bus_dat_r <= builder_csr_bankarray_csrbank6_ev_enable0_w;
-            end
             3'd6: begin
-                builder_csr_bankarray_interface6_bank_bus_dat_r <= builder_csr_bankarray_csrbank6_txempty_w;
+                builder_csr_bankarray_interface5_bank_bus_dat_r <= builder_csr_bankarray_csrbank5_txempty_w;
             end
             3'd7: begin
-                builder_csr_bankarray_interface6_bank_bus_dat_r <= builder_csr_bankarray_csrbank6_rxfull_w;
+                builder_csr_bankarray_interface5_bank_bus_dat_r <= builder_csr_bankarray_csrbank5_rxfull_w;
             end
         endcase
     end
-    main_basesoc_uart_txfull_re <= builder_csr_bankarray_csrbank6_txfull_re;
-    main_basesoc_uart_rxempty_re <= builder_csr_bankarray_csrbank6_rxempty_re;
-    main_basesoc_uart_status_re <= builder_csr_bankarray_csrbank6_ev_status_re;
-    if (builder_csr_bankarray_csrbank6_ev_pending_re) begin
-        main_basesoc_uart_pending_r[1:0] <= builder_csr_bankarray_csrbank6_ev_pending_r;
+    main_basesoc_uart_txfull_re <= builder_csr_bankarray_csrbank5_txfull_re;
+    main_basesoc_uart_rxempty_re <= builder_csr_bankarray_csrbank5_rxempty_re;
+    main_basesoc_uart_status_re <= builder_csr_bankarray_csrbank5_ev_status_re;
+    if (builder_csr_bankarray_csrbank5_ev_pending_re) begin
+        main_basesoc_uart_pending_r[1:0] <= builder_csr_bankarray_csrbank5_ev_pending_r;
     end
-    main_basesoc_uart_pending_re <= builder_csr_bankarray_csrbank6_ev_pending_re;
-    if (builder_csr_bankarray_csrbank6_ev_enable0_re) begin
-        main_basesoc_uart_enable_storage[1:0] <= builder_csr_bankarray_csrbank6_ev_enable0_r;
+    main_basesoc_uart_pending_re <= builder_csr_bankarray_csrbank5_ev_pending_re;
+    if (builder_csr_bankarray_csrbank5_ev_enable0_re) begin
+        main_basesoc_uart_enable_storage[1:0] <= builder_csr_bankarray_csrbank5_ev_enable0_r;
     end
-    main_basesoc_uart_enable_re <= builder_csr_bankarray_csrbank6_ev_enable0_re;
-    main_basesoc_uart_txempty_re <= builder_csr_bankarray_csrbank6_txempty_re;
-    main_basesoc_uart_rxfull_re <= builder_csr_bankarray_csrbank6_rxfull_re;
+    main_basesoc_uart_enable_re <= builder_csr_bankarray_csrbank5_ev_enable0_re;
+    main_basesoc_uart_txempty_re <= builder_csr_bankarray_csrbank5_txempty_re;
+    main_basesoc_uart_rxfull_re <= builder_csr_bankarray_csrbank5_rxfull_re;
     if (sys_rst) begin
         main_basesoc_reset_storage <= 2'd0;
         main_basesoc_reset_re <= 1'd0;
@@ -7121,62 +6986,56 @@ always @(posedge sys_clk) begin
         main_chaser <= 1'd0;
         main_mode <= 1'd0;
         main_count <= 26'd52500000;
-        main_i2s_rx_clk_d <= 1'd0;
-        main_i2s_rx_rd_ack <= 1'd0;
-        main_i2s_rx_rx_ready_pending <= 1'd0;
-        main_i2s_rx_rx_error_pending <= 1'd0;
-        main_i2s_rx_status_re <= 1'd0;
-        main_i2s_rx_pending_re <= 1'd0;
-        main_i2s_rx_pending_r <= 2'd0;
-        main_i2s_rx_enable_storage <= 2'd0;
-        main_i2s_rx_enable_re <= 1'd0;
-        main_i2s_rx_rx_ctl_storage <= 2'd0;
-        main_i2s_rx_rx_ctl_re <= 1'd0;
-        main_i2s_rx_rx_stat_re <= 1'd0;
-        main_i2s_rx_rx_conf_re <= 1'd0;
-        main_i2s_rx_rx_rst_cnt <= 3'd0;
-        main_i2s_rx_rx_reset <= 1'd0;
-        main_i2s_rx_rx_fifo_rx_fifo_almostfull <= 1'd0;
-        main_i2s_rx_rx_fifo_rx_fifo_almostempty <= 1'd0;
-        main_i2s_rx_rx_fifo_rx_fifo_rdcount <= 13'd0;
-        main_i2s_rx_rx_fifo_rx_fifo_wrcount <= 13'd0;
-        main_i2s_rx_rx_fifo_rx_fifo_rden <= 1'd0;
-        main_i2s_rx_rx_fifo_rx_fifo_wr_d <= 24'd0;
-        main_i2s_rx_rx_fifo_level1 <= 10'd0;
-        main_i2s_rx_rx_fifo_produce <= 9'd0;
-        main_i2s_rx_rx_fifo_consume <= 9'd0;
-        main_i2s_rx_bus_read_d <= 1'd0;
-        main_i2s_rx_rd_ack_pipe <= 1'd0;
-        main_i2s_rx_rx_cnt <= 5'd0;
-        main_i2s_rx_rx_delay_cnt <= 1'd0;
-        main_i2s_rx_rx_fsm <= 5'd0;
-        main_i2s_tx_tx_pin <= 1'd0;
-        main_i2s_tx_clk_d <= 1'd0;
-        main_i2s_tx_wr_ack <= 1'd0;
-        main_i2s_tx_tx_ready_pending <= 1'd0;
-        main_i2s_tx_tx_error_pending <= 1'd0;
-        main_i2s_tx_status_re <= 1'd0;
-        main_i2s_tx_pending_re <= 1'd0;
-        main_i2s_tx_pending_r <= 2'd0;
-        main_i2s_tx_enable_storage <= 2'd0;
-        main_i2s_tx_enable_re <= 1'd0;
-        main_i2s_tx_tx_ctl_storage <= 2'd0;
-        main_i2s_tx_tx_ctl_re <= 1'd0;
-        main_i2s_tx_tx_stat_re <= 1'd0;
-        main_i2s_tx_tx_conf_re <= 1'd0;
-        main_i2s_tx_tx_rst_cnt <= 3'd0;
-        main_i2s_tx_tx_reset <= 1'd0;
-        main_i2s_tx_tx_fifo_tx_fifo_almostfull <= 1'd0;
-        main_i2s_tx_tx_fifo_tx_fifo_almostempty <= 1'd0;
-        main_i2s_tx_tx_fifo_tx_fifo_rdcount <= 13'd0;
-        main_i2s_tx_tx_fifo_tx_fifo_wrcount <= 13'd0;
-        main_i2s_tx_tx_fifo_tx_fifo_wr_d <= 24'd0;
-        main_i2s_tx_tx_fifo_tx_fifo_wren <= 1'd0;
-        main_i2s_tx_tx_fifo_level1 <= 10'd0;
-        main_i2s_tx_tx_fifo_produce <= 9'd0;
-        main_i2s_tx_tx_fifo_consume <= 9'd0;
-        main_i2s_tx_tx_cnt <= 5'd0;
-        main_i2s_tx_tx_buf <= 25'd0;
+        main_tx_pin <= 1'd0;
+        main_clk_d <= 1'd0;
+        main_rd_ack <= 1'd0;
+        main_wr_ack <= 1'd0;
+        main_rx_ready_pending <= 1'd0;
+        main_rx_error_pending <= 1'd0;
+        main_tx_ready_pending <= 1'd0;
+        main_tx_error_pending <= 1'd0;
+        main_status_re <= 1'd0;
+        main_pending_re <= 1'd0;
+        main_pending_r <= 4'd0;
+        main_enable_storage <= 4'd0;
+        main_enable_re <= 1'd0;
+        main_rx_ctl_storage <= 2'd0;
+        main_rx_ctl_re <= 1'd0;
+        main_rx_stat_re <= 1'd0;
+        main_rx_conf_re <= 1'd0;
+        main_rx_rst_cnt <= 3'd0;
+        main_rx_reset <= 1'd0;
+        main_rx_fifo_rx_fifo_almostfull <= 1'd0;
+        main_rx_fifo_rx_fifo_almostempty <= 1'd0;
+        main_rx_fifo_rx_fifo_rdcount <= 13'd0;
+        main_rx_fifo_rx_fifo_wrcount <= 13'd0;
+        main_rx_fifo_rx_fifo_rden <= 1'd0;
+        main_rx_fifo_rx_fifo_wr_d <= 24'd0;
+        main_rx_fifo_level1 <= 10'd0;
+        main_rx_fifo_produce <= 9'd0;
+        main_rx_fifo_consume <= 9'd0;
+        main_bus_read_d <= 1'd0;
+        main_rd_ack_pipe <= 1'd0;
+        main_rx_cnt <= 5'd0;
+        main_rx_delay_cnt <= 1'd0;
+        main_rx_fsm <= 5'd0;
+        main_tx_ctl_storage <= 2'd0;
+        main_tx_ctl_re <= 1'd0;
+        main_tx_stat_re <= 1'd0;
+        main_tx_conf_re <= 1'd0;
+        main_tx_rst_cnt <= 3'd0;
+        main_tx_reset <= 1'd0;
+        main_tx_fifo_tx_fifo_almostfull <= 1'd0;
+        main_tx_fifo_tx_fifo_almostempty <= 1'd0;
+        main_tx_fifo_tx_fifo_rdcount <= 13'd0;
+        main_tx_fifo_tx_fifo_wrcount <= 13'd0;
+        main_tx_fifo_tx_fifo_wr_d <= 24'd0;
+        main_tx_fifo_tx_fifo_wren <= 1'd0;
+        main_tx_fifo_level1 <= 10'd0;
+        main_tx_fifo_produce <= 9'd0;
+        main_tx_fifo_consume <= 9'd0;
+        main_tx_cnt <= 5'd0;
+        main_tx_buf <= 25'd0;
         serial_debug_tx <= 1'd1;
         main_uartbone_phy_tx_tick <= 1'd0;
         main_uartbone_phy_rx_tick <= 1'd0;
@@ -7205,8 +7064,8 @@ always @(posedge sys_clk) begin
         builder_basesoc_fullmemorywe_state <= 2'd0;
         builder_basesoc_litedramnativeportconverter_state <= 1'd0;
         builder_basesoc_fsm_state <= 2'd0;
-        builder_basesoc_s7i2s0_state <= 3'd0;
-        builder_basesoc_s7i2s1_state <= 3'd0;
+        builder_basesoc_fsm0_state <= 3'd0;
+        builder_basesoc_fsm1_state <= 3'd0;
         builder_basesoc_rs232phytx1_state <= 1'd0;
         builder_basesoc_rs232phyrx1_state <= 1'd0;
         builder_basesoc_uartbone_state <= 3'd0;
@@ -7220,12 +7079,8 @@ always @(posedge sys_clk) begin
     builder_impl_multiregimpl2_regs1 <= builder_impl_multiregimpl2_regs0;
     builder_impl_multiregimpl3_regs0 <= i2s_rx_clk;
     builder_impl_multiregimpl3_regs1 <= builder_impl_multiregimpl3_regs0;
-    builder_impl_multiregimpl4_regs0 <= i2s_tx_sync;
+    builder_impl_multiregimpl4_regs0 <= serial_debug_rx;
     builder_impl_multiregimpl4_regs1 <= builder_impl_multiregimpl4_regs0;
-    builder_impl_multiregimpl5_regs0 <= i2s_tx_clk;
-    builder_impl_multiregimpl5_regs1 <= builder_impl_multiregimpl5_regs0;
-    builder_impl_multiregimpl6_regs0 <= serial_debug_rx;
-    builder_impl_multiregimpl6_regs1 <= builder_impl_multiregimpl6_regs0;
 end
 
 
@@ -7422,14 +7277,14 @@ assign main_tag_port_dat_r = tag_mem[tag_mem_adr0];
 reg [25:0] storage_6[0:511];
 reg [25:0] storage_6_dat0;
 always @(posedge sys_clk) begin
-	if (main_i2s_rx_rx_fifo_wrport_we)
-		storage_6[main_i2s_rx_rx_fifo_wrport_adr] <= main_i2s_rx_rx_fifo_wrport_dat_w;
-	storage_6_dat0 <= storage_6[main_i2s_rx_rx_fifo_wrport_adr];
+	if (main_rx_fifo_wrport_we)
+		storage_6[main_rx_fifo_wrport_adr] <= main_rx_fifo_wrport_dat_w;
+	storage_6_dat0 <= storage_6[main_rx_fifo_wrport_adr];
 end
 always @(posedge sys_clk) begin
 end
-assign main_i2s_rx_rx_fifo_wrport_dat_r = storage_6_dat0;
-assign main_i2s_rx_rx_fifo_rdport_dat_r = storage_6[main_i2s_rx_rx_fifo_rdport_adr];
+assign main_rx_fifo_wrport_dat_r = storage_6_dat0;
+assign main_rx_fifo_rdport_dat_r = storage_6[main_rx_fifo_rdport_adr];
 
 
 //------------------------------------------------------------------------------
@@ -7440,14 +7295,14 @@ assign main_i2s_rx_rx_fifo_rdport_dat_r = storage_6[main_i2s_rx_rx_fifo_rdport_a
 reg [25:0] storage_7[0:511];
 reg [25:0] storage_7_dat0;
 always @(posedge sys_clk) begin
-	if (main_i2s_tx_tx_fifo_wrport_we)
-		storage_7[main_i2s_tx_tx_fifo_wrport_adr] <= main_i2s_tx_tx_fifo_wrport_dat_w;
-	storage_7_dat0 <= storage_7[main_i2s_tx_tx_fifo_wrport_adr];
+	if (main_tx_fifo_wrport_we)
+		storage_7[main_tx_fifo_wrport_adr] <= main_tx_fifo_wrport_dat_w;
+	storage_7_dat0 <= storage_7[main_tx_fifo_wrport_adr];
 end
 always @(posedge sys_clk) begin
 end
-assign main_i2s_tx_tx_fifo_wrport_dat_r = storage_7_dat0;
-assign main_i2s_tx_tx_fifo_rdport_dat_r = storage_7[main_i2s_tx_tx_fifo_rdport_adr];
+assign main_tx_fifo_wrport_dat_r = storage_7_dat0;
+assign main_tx_fifo_rdport_dat_r = storage_7[main_tx_fifo_rdport_adr];
 
 
 ALTPLL #(
@@ -8316,5 +8171,5 @@ ALTDDIO_IN #(
 endmodule
 
 // -----------------------------------------------------------------------------
-//  Auto-Generated by LiteX on 2022-11-28 15:57:52.
+//  Auto-Generated by LiteX on 2022-11-29 13:42:03.
 //------------------------------------------------------------------------------
