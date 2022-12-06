@@ -33,12 +33,10 @@ module qmtech_5cefa2 (
     inout  wire   [15:0] sdram_dq,
     output wire    [1:0] sdram_dm,
     output wire          user_led0,
-    input  wire          i2s_rx_rx,
-    input  wire          i2s_rx_clk,
-    input  wire          i2s_rx_sync,
-    output wire          i2s_tx_tx,
-    input  wire          i2s_tx_clk,
-    input  wire          i2s_tx_sync,
+    input  wire          i2s_rx,
+    output wire          i2s_tx,
+    input  wire          i2s_clk,
+    input  wire          i2s_sync,
     output reg           serial_debug_tx,
     input  wire          serial_debug_rx
 );
@@ -1373,8 +1371,8 @@ wire    [1:0] builder_shared_bte;
 wire          builder_shared_err;
 wire    [2:0] builder_request;
 reg     [1:0] builder_grant = 2'd0;
-reg     [6:0] builder_slave_sel = 7'd0;
-reg     [6:0] builder_slave_sel_r = 7'd0;
+reg     [5:0] builder_slave_sel = 6'd0;
+reg     [5:0] builder_slave_sel_r = 6'd0;
 reg           builder_error = 1'd0;
 wire          builder_wait;
 wire          builder_done;
@@ -1854,14 +1852,13 @@ assign main_basesoc_dbus_dbus_err = (builder_shared_err & (builder_grant == 1'd1
 assign main_uartbone_wishbone_err = (builder_shared_err & (builder_grant == 2'd2));
 assign builder_request = {main_uartbone_wishbone_cyc, main_basesoc_dbus_dbus_cyc, main_basesoc_ibus_ibus_cyc};
 always @(*) begin
-    builder_slave_sel <= 7'd0;
+    builder_slave_sel <= 6'd0;
     builder_slave_sel[0] <= (builder_shared_adr[29:6] == 24'd15732480);
     builder_slave_sel[1] <= (builder_shared_adr[29:15] == 1'd0);
     builder_slave_sel[2] <= (builder_shared_adr[29:11] == 16'd32768);
     builder_slave_sel[3] <= (builder_shared_adr[29:23] == 6'd32);
-    builder_slave_sel[4] <= (builder_shared_adr[29:16] == 14'd11328);
-    builder_slave_sel[5] <= (builder_shared_adr[29:16] == 14'd11392);
-    builder_slave_sel[6] <= (builder_shared_adr[29:14] == 16'd61440);
+    builder_slave_sel[4] <= (builder_shared_adr[29:17] == 13'd5664);
+    builder_slave_sel[5] <= (builder_shared_adr[29:14] == 16'd61440);
 end
 assign main_basesoc_vexriscv_debug_bus_adr = builder_shared_adr;
 assign main_basesoc_vexriscv_debug_bus_dat_w = builder_shared_dat_w;
@@ -4247,7 +4244,6 @@ always @(*) begin
 end
 assign main_uartbone_done = (main_uartbone_count == 1'd0);
 always @(*) begin
-    builder_basesoc_wishbone_dat_r <= 32'd0;
     builder_basesoc_wishbone2csr_next_state <= 2'd0;
     builder_basesoc_dat_w_wishbone2csr_next_value0 <= 32'd0;
     builder_basesoc_dat_w_wishbone2csr_next_value_ce0 <= 1'd0;
@@ -7044,7 +7040,7 @@ always @(posedge sys_clk) begin
         main_uartbone_count <= 24'd10500000;
         builder_basesoc_we <= 1'd0;
         builder_grant <= 2'd0;
-        builder_slave_sel_r <= 7'd0;
+        builder_slave_sel_r <= 6'd0;
         builder_count <= 20'd1000000;
         builder_csr_bankarray_sel_r <= 1'd0;
         builder_basesoc_rs232phytx0_state <= 1'd0;
@@ -7073,11 +7069,11 @@ always @(posedge sys_clk) begin
     end
     builder_impl_multiregimpl0_regs0 <= serial_rx;
     builder_impl_multiregimpl0_regs1 <= builder_impl_multiregimpl0_regs0;
-    builder_impl_multiregimpl1_regs0 <= i2s_rx_rx;
+    builder_impl_multiregimpl1_regs0 <= i2s_rx;
     builder_impl_multiregimpl1_regs1 <= builder_impl_multiregimpl1_regs0;
-    builder_impl_multiregimpl2_regs0 <= i2s_rx_sync;
+    builder_impl_multiregimpl2_regs0 <= i2s_sync;
     builder_impl_multiregimpl2_regs1 <= builder_impl_multiregimpl2_regs0;
-    builder_impl_multiregimpl3_regs0 <= i2s_rx_clk;
+    builder_impl_multiregimpl3_regs0 <= i2s_clk;
     builder_impl_multiregimpl3_regs1 <= builder_impl_multiregimpl3_regs0;
     builder_impl_multiregimpl4_regs0 <= serial_debug_rx;
     builder_impl_multiregimpl4_regs1 <= builder_impl_multiregimpl4_regs0;
@@ -7089,10 +7085,10 @@ end
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-// Memory rom: 6151-words x 32-bit
+// Memory rom: 6141-words x 32-bit
 //------------------------------------------------------------------------------
 // Port 0 | Read: Sync  | Write: ---- | 
-reg [31:0] rom[0:6150];
+reg [31:0] rom[0:6140];
 initial begin
 	$readmemh("qmtech_5cefa2_rom.init", rom);
 end
