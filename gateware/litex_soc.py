@@ -5,6 +5,13 @@ import subprocess
 import shutil
 from amaranth_boards.resources import SDRAMResource, UARTResource
 from utils import request_bare
+
+# FPGA Update: Meine ersten Tests der convolution haben erschreckend viele Taktzyklen gebraucht. Habe deswegen nun auch die Möglichkeit gesucht Instruktionen zu zählen.
+# Es bleibt erschreckend: Für 37.500 Instruktionen brauche ich 585.000 Taktzyklen :-O
+# Das Bottleneck war mir schon von vornherein bekannt: Der RAM ist nur mit 16bit angebunden, das heißt im Optimalfall 2 Zyklen pro Instruction. Dass es aber so viel länger dauert erkläre ich mir momentan damit, dass ich mit 3 großen Puffern arbeite: 2 zum lesen und einer fürs Ergebnis. Also muss der SDRAM wohl ziemlich häufig die Bank switchen und das scheint ewig zu dauern :-O
+# Mal schauen, ob mir da was effektives einfällt...entweder gleich größere Blöcke im SRAM wegspeichern und von da einzeln abarbeiten oder die 3 Puffer interleaved ablegen, sodass er nicht so viele Adressen springen muss. Ich denke das letztere ist erfolgsversprechender...
+# Ich lerne jedenfalls aktuell viel über Busse und Speicher xD
+
 class LiteXSoC(Elaboratable):
     def __init__(self, sample_width):
         self._led = Signal()
@@ -27,11 +34,11 @@ class LiteXSoC(Elaboratable):
         #sdram_resource = (SDRAMResource)(platform.request("sdram"))
         #uart_resource = (UARTResource())(platform.request("uart"))
         sdram_resource = request_bare(platform, "sdram", 0)
-        
-        uart_resource = platform.request("uart", 0)        
+
+        uart_resource = platform.request("uart", 0)
         uartbone_resource = platform.request("uart", 1)
 
-        
+
         #module qmtech_5cefa2 (
         #    input  wire clk50,
         #    output wire sdram_clock,
