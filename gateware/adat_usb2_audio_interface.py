@@ -35,8 +35,8 @@ from bundle_demultiplexer    import BundleDemultiplexer
 from stereopair_extractor    import StereoPairExtractor
 from requesthandlers         import UAC2RequestHandlers
 from debug                   import setup_ila, add_debug_led_array
-from stereo_convolution_fft           import StereoConvolutionFFT, ConvolutionMode
-#from stereo_convolution_mac           import StereoConvolutionMAC, ConvolutionMode
+#from stereo_convolution_fft           import StereoConvolutionFFT, ConvolutionMode
+from stereo_convolution_mac           import StereoConvolutionMAC, ConvolutionMode
 from debouncer               import Debouncer
 
 from usb_descriptors import USBDescriptors
@@ -292,7 +292,7 @@ class USB2AudioInterface(Elaboratable):
                 bundle_demultiplexer.bundles_out[i].ready.eq(adat_transmitters[i].ready_out),
                 adat_transmitters[i].user_data_in .eq(0),
 
-                adat_pads[i].tx.eq(adat_transmitters[i].adat_out),
+                adat_pads[i].tx.o.eq(adat_transmitters[i].adat_out),
 
                 # receivers
                 adat_receivers[i].adat_in.eq(adat_pads[i].rx),
@@ -433,13 +433,13 @@ class USB2AudioInterface(Elaboratable):
         for tap in range(len(taps)):
             assert -1 * 2 ** (audio_bits-1) <= taps[tap, 0] <= 1 * 2 ** (audio_bits-1)-1, f"Tap #{tap} is out of range for bitwidth {audio_bits}: {taps[tap, 0]}"
 
-        m.submodules.fir = fir = DomainRenamer("usb")(StereoConvolutionFFT(taps=taps, samplerate=samplerate, clockfrequency=60e6,
+        m.submodules.fir = fir = DomainRenamer("usb")(StereoConvolutionMAC(taps=taps, samplerate=samplerate, clockfrequency=60e6,
                                                                    bitwidth=audio_bits, convolutionMode=ConvolutionMode.CROSSFEED))
 
         m.submodules.button_debouncer = button_debouncer = Debouncer()
         m.submodules.request_debouncer = request_debouncer = Debouncer()
         m.d.comb += [
-            button_debouncer.btn.eq(platform.request("core_button")[0]),
+            button_debouncer.btn.eq(platform.request("core_button",0).i),
             request_debouncer.btn.eq(usb1_class_request_handler.enable_convolution)
         ]
 

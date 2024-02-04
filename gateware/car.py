@@ -85,7 +85,7 @@ class IntelFPGAClockDomainGenerator(Elaboratable, ClockDomainGeneratorBase):
 
             # Drive our clock from the USB clock
             # coming from the USB clock pin of the USB3300
-            i_inclk  = clk,
+            i_inclk  = clk.i,
             o_clk    = main_clocks,
             o_locked = sys_locked,
         )
