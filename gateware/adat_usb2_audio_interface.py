@@ -58,7 +58,7 @@ class USB2AudioInterface(Elaboratable):
     USE_ILA             = False
     ILA_MAX_PACKET_SIZE = 512
 
-    USE_DEBUG_LED_ARRAY = True
+    USE_DEBUG_LED_ARRAY = False
 
     def elaborate(self, platform):
         m = Module()
@@ -416,17 +416,18 @@ class USB2AudioInterface(Elaboratable):
 
         #sample_rate, sig = wavfile.read('IRs/IR_4800_minus24db.wav')
         #with wave.open('IRs/IR_4800.wav', 'rb') as wav:
-        with wave.open('IRs/ISONE_DT990_combined_4800_plus12db.wav', 'rb') as wav:
+        with wave.open('IRs/DT990_crossfeed_plus4db.wav', 'rb') as wav:
             ir_data = wav.readframes(wav.getnframes())
             ir_sample_rate = wav.getframerate()
 
         #ir_sig = np.zeros((len(ir_data)//6, 2), dtype='int32')
-        ir_sig = np.zeros((4096, 2), dtype='int32')
+        ir_length = 24000
+        ir_sig = np.zeros((ir_length, 2), dtype='int32')
         for i in range(0, len(ir_sig), 6):
             ir_sig[i // 6, 0] = int.from_bytes(ir_data[i:i + 3], byteorder='little', signed=True)
             ir_sig[i // 6, 1] = int.from_bytes(ir_data[i + 3:i + 6], byteorder='little', signed=True)
 
-        taps = ir_sig #ir_sig[:4096,:] #tapcount 4096 - more is failing to synthesize right now. 4800 would be the goal for 100ms.
+        taps = ir_sig[:ir_length,:] #ir_sig[:4096,:] #tapcount 4096 - more is failing to synthesize right now. 4800 would be the goal for 100ms.
 
         # some validation of the IR file
         assert ir_sample_rate == samplerate, f"Unsupported samplerate {ir_sample_rate} for IR file. Required samplerate is {samplerate}"
