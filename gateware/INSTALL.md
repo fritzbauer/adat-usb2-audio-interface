@@ -7,7 +7,7 @@ pip install git+https://github.com/amaranth-farm/amlib
 pip install git+https://github.com/amaranth-community-unofficial/adat-core.git
 pip install git+https://github.com/amaranth-community-unofficial/amaranth-boards.git
 pip install git+https://github.com/amaranth-lang/amaranth-soc.git@87ee8a52d07a2f85b05a04db84644dce48fdfa23
-pip install networkx
+# pip install networkx
 cd ../../usb2-highspeed-core
 pip install -r requirements.txt
 python setup.py install
