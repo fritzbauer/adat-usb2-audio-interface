@@ -58,6 +58,14 @@ class USB2AudioInterface(Elaboratable):
     USE_ILA             = False
     ILA_MAX_PACKET_SIZE = 512
 
+    # FIR crossfeed convolver (StereoConvolutionMAC, 4096 taps). The serial MAC
+    # itself is small, but its 96-bit sample memories fail to infer M9K block
+    # RAMs with the amaranth 0.4.1 Verilog output (write-first collision
+    # bypass), so they end up in distributed logic and blow up the fitter:
+    # "Fitter requires 2338 LABs ... device contains only 943 LABs" on the
+    # 5CEFA2. With the MAC convolver it only ever fit on the EP4CGX150.
+    USE_FIR             = False
+
     USE_DEBUG_LED_ARRAY = True
 
     def elaborate(self, platform):
@@ -414,27 +422,30 @@ class USB2AudioInterface(Elaboratable):
 
         enable_fir = Signal()
 
-        #sample_rate, sig = wavfile.read('IRs/IR_4800_minus24db.wav')
-        #with wave.open('IRs/IR_4800.wav', 'rb') as wav:
-        with wave.open('IRs/ISONE_DT990_combined_4800_plus12db.wav', 'rb') as wav:
-            ir_data = wav.readframes(wav.getnframes())
-            ir_sample_rate = wav.getframerate()
+        fir_for_dac = None
+        if self.USE_FIR:
+            #sample_rate, sig = wavfile.read('IRs/IR_4800_minus24db.wav')
+            #with wave.open('IRs/IR_4800.wav', 'rb') as wav:
+            with wave.open('IRs/ISONE_DT990_combined_4800_plus12db.wav', 'rb') as wav:
+                ir_data = wav.readframes(wav.getnframes())
+                ir_sample_rate = wav.getframerate()
 
-        #ir_sig = np.zeros((len(ir_data)//6, 2), dtype='int32')
-        ir_sig = np.zeros((4096, 2), dtype='int32')
-        for i in range(0, len(ir_sig), 6):
-            ir_sig[i // 6, 0] = int.from_bytes(ir_data[i:i + 3], byteorder='little', signed=True)
-            ir_sig[i // 6, 1] = int.from_bytes(ir_data[i + 3:i + 6], byteorder='little', signed=True)
+            #ir_sig = np.zeros((len(ir_data)//6, 2), dtype='int32')
+            ir_sig = np.zeros((4096, 2), dtype='int32')
+            for i in range(0, len(ir_sig), 6):
+                ir_sig[i // 6, 0] = int.from_bytes(ir_data[i:i + 3], byteorder='little', signed=True)
+                ir_sig[i // 6, 1] = int.from_bytes(ir_data[i + 3:i + 6], byteorder='little', signed=True)
 
-        taps = ir_sig #ir_sig[:4096,:] #tapcount 4096 - more is failing to synthesize right now. 4800 would be the goal for 100ms.
+            taps = ir_sig #ir_sig[:4096,:] #tapcount 4096 - more is failing to synthesize right now. 4800 would be the goal for 100ms.
 
-        # some validation of the IR file
-        assert ir_sample_rate == samplerate, f"Unsupported samplerate {ir_sample_rate} for IR file. Required samplerate is {samplerate}"
-        for tap in range(len(taps)):
-            assert -1 * 2 ** (audio_bits-1) <= taps[tap, 0] <= 1 * 2 ** (audio_bits-1)-1, f"Tap #{tap} is out of range for bitwidth {audio_bits}: {taps[tap, 0]}"
+            # some validation of the IR file
+            assert ir_sample_rate == samplerate, f"Unsupported samplerate {ir_sample_rate} for IR file. Required samplerate is {samplerate}"
+            for tap in range(len(taps)):
+                assert -1 * 2 ** (audio_bits-1) <= taps[tap, 0] <= 1 * 2 ** (audio_bits-1)-1, f"Tap #{tap} is out of range for bitwidth {audio_bits}: {taps[tap, 0]}"
 
-        m.submodules.fir = fir = DomainRenamer("usb")(StereoConvolutionMAC(taps=taps, samplerate=samplerate, clockfrequency=60e6,
-                                                                   bitwidth=audio_bits, convolutionMode=ConvolutionMode.CROSSFEED))
+            m.submodules.fir = fir = DomainRenamer("usb")(StereoConvolutionMAC(taps=taps, samplerate=samplerate, clockfrequency=60e6,
+                                                                       bitwidth=audio_bits, convolutionMode=ConvolutionMode.CROSSFEED))
+            fir_for_dac = fir
 
         m.submodules.button_debouncer = button_debouncer = Debouncer()
         m.submodules.request_debouncer = request_debouncer = Debouncer()
@@ -443,7 +454,7 @@ class USB2AudioInterface(Elaboratable):
             request_debouncer.btn.eq(usb1_class_request_handler.enable_convolution)
         ]
 
-        self.wire_up_dac(m, usb1_to_channel_stream, dac1_extractor, dac1, lrclk, dac1_pads, fir, enable_fir)
+        self.wire_up_dac(m, usb1_to_channel_stream, dac1_extractor, dac1, lrclk, dac1_pads, fir_for_dac, enable_fir)
         self.wire_up_dac(m, usb1_to_channel_stream, dac2_extractor, dac2, lrclk, dac2_pads)
 
         with m.If(button_debouncer.btn_up | request_debouncer.btn_up): # toggle fir convolution on/off
@@ -703,7 +714,7 @@ class USB2AudioInterface(Elaboratable):
 
 if __name__ == "__main__":
     #os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceCycloneIV"
-    os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceCycloneIV_EP4CGX150"
+    os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceCycloneV"
     #os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceCycloneV"
     #os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceCyclone10"
     #os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceArtix7"
