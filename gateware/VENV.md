@@ -127,3 +127,10 @@ aus dem Repo sind sie damit enthalten; das Egg muss dann nicht mehr gepatcht
 werden, solange das Egg aus der gepatchten Quelle stammt.
 Backup: `/tmp/eggpatch/egg_new` (+ `egg_orig` = Original). Beim Neu-Zusammensetzen
 des Eggs per `zipfile`: nur die **erste** Instanz jedes Namens behalten.
+
+## luna-Pin (WICSLIG beim Aktualisieren)
+
+`/mnt/Audio/usb2-highspeed-core` ist bewusst am Nov-2023-Snapshot (`13acd44`,
++ M9K-Patch-Commit `a9d5217`) gepinnt. `origin/main` war am 13.11.2026 129
+Commits voraus (amaranth-Pins etc. geändert) — **nicht pullen** ohne Neutest
+des Gateware-Builds; sonst bricht die „Tricks"-Kombination aus VENV.md.
