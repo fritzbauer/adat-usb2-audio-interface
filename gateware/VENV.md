@@ -121,5 +121,9 @@ lokale Patches für M9K-Inferenz (Quartus LAB-Problem, s. Bericht):
 
 Das gepatchte Egg liegt **auch** in `venv-3.11-alt/lib/python3.11/site-packages/`,
 somit reproduziert `initialize-python-environment.sh` den Patch automatisch.
+Quelle der Patches ist inzwischen auch das luna-Repo selbst
+(`/mnt/Audio/usb2-highspeed-core`, Commit `a9d5217`) — bei einem Neu-Bau von luna
+aus dem Repo sind sie damit enthalten; das Egg muss dann nicht mehr gepatcht
+werden, solange das Egg aus der gepatchten Quelle stammt.
 Backup: `/tmp/eggpatch/egg_new` (+ `egg_orig` = Original). Beim Neu-Zusammensetzen
 des Eggs per `zipfile`: nur die **erste** Instanz jedes Namens behalten.
