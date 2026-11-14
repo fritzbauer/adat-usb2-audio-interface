@@ -94,3 +94,24 @@ index 8640f93..473219a 100644
                  with sim.write_vcd(vcd_file=open("test.vcd", "w")):
                      sim.add_clock(1e-8)
                      sim.add_sync_process(setup_wrapper)
+diff --git a/amlib/utils/nrziencoder.py b/amlib/utils/nrziencoder.py
+index a3e9eba..b24399a 100644
+--- a/amlib/utils/nrziencoder.py
++++ b/amlib/utils/nrziencoder.py
+@@ -18,7 +18,15 @@ class NRZIEncoder(Elaboratable):
+         """ build the module """
+         m = Module()
+ 
+-        m.d.sync += self.nrzi_out.eq(
++        # NOTE: this encoder MUST run in the "adat" domain (12.288 MHz bit
++        # clock), because adat-core's ADATTransmitter instantiates it bare
++        # (no DomainRenamer). amlib upstream commit 9a43a4a (2022-01-27,
++        # "NRZIEncoder: user default clock domain") changed this to m.d.sync,
++        # which put the NRZI output at 5x the ADAT bit rate (61.44 MHz sync
++        # domain) and broke the ADAT output completely (no receiver could
++        # sync). Reverted to the 2022 behavior; see
++        # patches/amlib-db885c9-local.patch.
++        m.d.adat += self.nrzi_out.eq(
+                         Mux(self.data_in,
+                             ~self.nrzi_out,
+                             self.nrzi_out)),
