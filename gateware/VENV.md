@@ -134,3 +134,23 @@ des Eggs per `zipfile`: nur die **erste** Instanz jedes Namens behalten.
 + M9K-Patch-Commit `a9d5217`) gepinnt. `origin/main` war am 13.11.2026 129
 Commits voraus (amaranth-Pins etc. geändert) — **nicht pullen** ohne Neutest
 des Gateware-Builds; sonst bricht die „Tricks"-Kombination aus VENV.md.
+
+## Update 14.11.2026 — venv-3.11-alt gelöscht & restauriert, neue Source-Heimat `gateware/src/`
+
+`venv-3.11-alt/` wurde am 13.11. versehentlich gelöscht (dadurch fehlten alle
+editable Sourcen → `No module named 'amlib'`) und am 14.11. aus einem **älteren
+Backup** restauriert. Konsequenzen:
+
+- Die lokal gepatchten Editable-Sourcen leben jetzt **kanonisch in
+  `gateware/src/`** (gitignore): `amlib` (db885c9 + i2c.py/test-Patches),
+  `amaranth-boards` (627badc + qmtech_ep4cgx150-Patch), `usb-descriptors`
+  (5cc4faf), `python-usb-protocol` (538983d). Patches wurden aus dem restaurierten
+  Backup rüberkopiert — die Backup-Sourcen sind identisch mit dem Stand von
+  gestern (nur das luna-Egg darin war alt und wurde erneut gepatcht).
+- `initialize-python-environment.sh` baut das venv jetzt **netz-basiert** auf:
+  PyPI-Pakete + gepinnte amaranth/amaramanth-soc-Commits (`--no-deps`, nie
+  resolvieren lassen!) + `pip install --no-deps -e gateware/src/*` + luna-Egg
+  aus `venv-3.11-alt` (gepatcht). Der alte "site-packages kopieren"-Weg ist obsolet.
+- Merkwürdigkeit: `pip` meldet für amaranth-Commit `597b1b8` heute
+  `0.5.0.dev0` statt `0.4.1.dev1` (Metadaten-Berechnung upstream geändert) —
+  entscheidend ist der **Commit-Hash**, `direct_url.json` bestätigt ihn.
