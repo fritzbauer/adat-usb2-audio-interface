@@ -169,3 +169,24 @@ Backup** restauriert. Konsequenzen:
 Vollständiger Selftest bestanden: frisches venv von Null + Generatorlauf.
 **`venv-3.11-alt/` kann gelöscht werden.** Zu erhalten bleiben: `gateware/src/`
 (gitignored, lokal gepatchte Sourcen) und `gateware/vendor/` (im Repo).
+
+## Patches als Dateien (`gateware/patches/`)
+
+Die lokalen Änderungen in `gateware/src/` sind zusätzlich als Patch-Dateien
+gesichert (Round-Trip-geprüft, sie passen sauber auf frische Clones):
+
+- `patches/amlib-db885c9-local.patch` — amlib@db885c9: `amlib/io/i2c.py`
+  + `amlib/test/__init__.py` (amaranth-API-Compat: `amaranth.compat`→0.4-API,
+  `amaranth.back.pysim`→`amaranth.sim.pysim`)
+- `patches/amaranth-boards-627badc-local.patch` — amaranth-boards@627badc:
+  `qmtech_ep4cgx150.py` (PinsN/Pins mit dir=, LED/Button-Nummerierung)
+
+Wiederherstellung, falls `gateware/src/` verlorengeht:
+
+```bash
+cd gateware/src
+git clone https://github.com/amaranth-farm/amlib.git && git -C amlib checkout db885c9 && git -C amlib apply ../patches/amlib-db885c9-local.patch
+git clone https://github.com/amaranth-community-unofficial/amaranth-boards.git && git -C amaranth-boards checkout 627badc && git -C amaranth-boards apply ../patches/amaranth-boards-627badc-local.patch
+git clone -c checkout=... https://github.com/amaranth-community-unofficial/python-usb-descriptors.git usb-descriptors && git -C usb-descriptors checkout 5cc4faf   # unmodifiziert
+git clone https://github.com/usb-tools/python-usb-protocol.git && git -C python-usb-protocol checkout 538983d   # unmodifiziert
+```

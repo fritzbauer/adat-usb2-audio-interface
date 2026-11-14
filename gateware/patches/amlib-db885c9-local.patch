@@ -1,0 +1,96 @@
+diff --git a/amlib/io/i2c.py b/amlib/io/i2c.py
+index 3061964..80858d5 100644
+--- a/amlib/io/i2c.py
++++ b/amlib/io/i2c.py
+@@ -8,14 +8,15 @@
+ # I2C reference: https://www.nxp.com/docs/en/user-guide/UM10204.pdf
+ 
+ import unittest
+-from amaranth.compat import *
+-from amaranth.compat.genlib.cdc import MultiReg
++from amaranth import Elaboratable, Module
++#from amaranth.compat import *
++from amaranth.lib.cdc import FFSynchronizer
+ from ..test import simulation_test
+ 
+ __all__ = ["I2CInitiator", "I2CTarget"]
+ 
+ 
+-class I2CBus(Module):
++class I2CBus(Elaboratable):
+     """
+     I2C bus.
+ 
+@@ -56,12 +57,12 @@ class I2CBus(Module):
+             sda_r.eq(self.sda_i),
+         ]
+         self.specials += [
+-            MultiReg(self.scl_t.i, self.scl_i, reset=1),
+-            MultiReg(self.sda_t.i, self.sda_i, reset=1),
++            FFSynchronizer(self.scl_t.i, self.scl_i, reset=1),
++            FFSynchronizer(self.sda_t.i, self.sda_i, reset=1),
+         ]
+ 
+ 
+-class I2CInitiator(Module):
++class I2CInitiator(Elaboratable):
+     """
+     Simple I2C transaction initiator.
+ 
+@@ -258,7 +259,7 @@ class I2CInitiator(Module):
+         stb_x("READ-ACK-SDA-N", "IDLE")
+ 
+ 
+-class I2CTarget(Module):
++class I2CTarget(Elaboratable):
+     """
+     Simple I2C target.
+ 
+@@ -467,7 +468,7 @@ class I2CTarget(Module):
+ 
+ # -------------------------------------------------------------------------------------------------
+ 
+-class I2CTestbench(Module):
++class I2CTestbench(Elaboratable):
+     def __init__(self):
+         self.scl_t = TSTriple()
+         self.sda_t = TSTriple()
+@@ -947,7 +948,7 @@ class I2CTargetTestCase(I2CTestCase):
+         yield from self.assertState(tb, "READ-SHIFT")
+ 
+ 
+-class _DummyPads(Module):
++class _DummyPads(Elaboratable):
+     def __init__(self):
+         self.scl_t = TSTriple()
+         self.sda_t = TSTriple()
+\ No newline at end of file
+diff --git a/amlib/test/__init__.py b/amlib/test/__init__.py
+index 8640f93..473219a 100644
+--- a/amlib/test/__init__.py
++++ b/amlib/test/__init__.py
+@@ -8,8 +8,8 @@
+ import functools
+ 
+ from amaranth import Elaboratable
+-from amaranth.back.pysim import Simulator
+-from amaranth.compat import Module as CompatModule, run_simulation as compat_run_simulation
++from amaranth.sim.pysim import PySimEngine
++#from amaranth.compat import Module as CompatModule, run_simulation as compat_run_simulation
+ 
+ from .utils import GatewareTestCase, sync_test_case
+ 
+@@ -25,10 +25,10 @@ def simulation_test(case=None, **kwargs):
+                 if hasattr(self, "simulationSetUp"):
+                     yield from self.simulationSetUp(self.tb)
+                 yield from case(self, self.tb)
+-            if isinstance(self.tb, CompatModule):
+-                compat_run_simulation(self.tb, setup_wrapper(), vcd_name="test.vcd")
++            #if isinstance(self.tb, CompatModule):
++            #    compat_run_simulation(self.tb, setup_wrapper(), vcd_name="test.vcd")
+             if isinstance(self.tb, Elaboratable):
+-                sim = Simulator(self.tb)
++                sim = PySimEngine(self.tb)
+                 with sim.write_vcd(vcd_file=open("test.vcd", "w")):
+                     sim.add_clock(1e-8)
+                     sim.add_sync_process(setup_wrapper)
