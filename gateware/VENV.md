@@ -154,3 +154,18 @@ Backup** restauriert. Konsequenzen:
 - Merkwürdigkeit: `pip` meldet für amaranth-Commit `597b1b8` heute
   `0.5.0.dev0` statt `0.4.1.dev1` (Metadaten-Berechnung upstream geändert) —
   entscheidend ist der **Commit-Hash**, `direct_url.json` bestätigt ihn.
+
+## Update 14.11.2026 (Abend) — Setup ist jetzt self-contained
+
+`initialize-python-environment.sh` baut ein vollständiges venv ohne
+`venv-3.11-alt` auf:
+
+- gepatchtes luna-Egg ist **vendored**: `gateware/vendor/luna-0.1.0.dev0-py3.11.egg`
+- `adat` wird aus git am erprobten Commit `700d2ad` installiert
+  (Repo-HEAD `49092bd` ist neuer = ungetestet)
+- optionaler Ziel-Parameter: `./initialize-python-environment.sh /tmp/testvenv`
+  (für Wegwerf-Tests)
+
+Vollständiger Selftest bestanden: frisches venv von Null + Generatorlauf.
+**`venv-3.11-alt/` kann gelöscht werden.** Zu erhalten bleiben: `gateware/src/`
+(gitignored, lokal gepatchte Sourcen) und `gateware/vendor/` (im Repo).
