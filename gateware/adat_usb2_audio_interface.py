@@ -66,7 +66,7 @@ class USB2AudioInterface(Elaboratable):
     # 5CEFA2. With the MAC convolver it only ever fit on the EP4CGX150.
     USE_FIR             = False
 
-    USE_DEBUG_LED_ARRAY = True
+    USE_DEBUG_LED_ARRAY = False
 
     def elaborate(self, platform):
         m = Module()
@@ -713,8 +713,7 @@ class USB2AudioInterface(Elaboratable):
         ]
 
 if __name__ == "__main__":
-    #os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceCycloneIV"
-    os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceCycloneV"
+    os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceCycloneIV_EP4CGX150"
     #os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceCycloneV"
     #os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceCyclone10"
     #os.environ["LUNA_PLATFORM"] = "platforms:ADATFaceArtix7"
