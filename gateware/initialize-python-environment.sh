@@ -1,5 +1,8 @@
 #!/bin/bash
-# Rebuild the project venv for the adat-usb2-audio-interface gateware.
+# Build a fully self-contained project venv for the adat-usb2-audio-interface
+# gateware. Everything needed lives in this repository (gateware/src,
+# gateware/vendor) plus PyPI/git network access — no external venv backup
+# required.
 #
 # Details and background: see VENV.md. Key facts:
 #  - amaranth is pinned to commit 597b1b8 (0.4.1-era code; pip reports the
@@ -9,27 +12,41 @@
 #    installs from gateware/src/ — these checkouts carry local patches
 #    (amlib test/i2c import fixes, qmtech_ep4cgx150 pin fixes) that are NOT
 #    upstream. Don't refresh them from git without diffing first!
-#  - luna (usb2-highspeed-core) is installed editable from
-#    /mnt/Audio/usb2-highspeed-core; the M9K patch (read_port
-#    transparent=False) is committed there (a9d5217). Alternatively the
-#    pre-built patched egg from venv-3.11-alt can be used (see below).
+#  - luna is installed from the vendored patched egg in gateware/vendor/
+#    (M9K patch: read_port transparent=False; also committed in
+#    /mnt/Audio/usb2-highspeed-core as a9d5217).
+#  - Everything installed with --no-deps where pinning matters: pip must
+#    never re-resolve amaranth (it would pull 0.4.5/0.6 from PyPI and break
+#    the patched amlib).
 #
-# Usage:  ./initialize-python-environment.sh   (run from the gateware directory)
+# Usage:  ./initialize-python-environment.sh [VENV_DIR]   (default: venv)
 set -e
 cd "$(dirname "$0")"
 
+VENV_DIR="${1:-venv}"
+if [ "$VENV_DIR" != "venv" ]; then
+    echo "NOTE: installing into non-default directory '$VENV_DIR'"
+fi
+
 if [ ! -d src/amlib ]; then
     echo "ERROR: src/amlib not found — the pinned editable sources are missing."
-    echo "They were reconstructed from git at pinned commits on 14.11.2026;"
-    echo "see VENV.md for the exact commits."
+    echo "They are gitignored; reconstruct from git at the pinned commits"
+    echo "documented in VENV.md."
+    exit 1
+fi
+if [ ! -f vendor/luna-0.1.0.dev0-py3.11.egg ]; then
+    echo "ERROR: vendor/luna-0.1.0.dev0-py3.11.egg not found — vendored patched"
+    echo "luna egg is missing."
     exit 1
 fi
 
-rm -rf venv
-python3 -m venv venv
-. venv/bin/activate
+rm -rf "$VENV_DIR"
+python3 -m venv "$VENV_DIR"
+. "$VENV_DIR/bin/activate"
 
-# 1. PyPI packages (plain, ABI-bound ones get matching wheels automatically)
+SITE="$(python -c 'import site; print(site.getsitepackages()[0])')"
+
+# 1. PyPI packages (ABI-bound ones get matching wheels automatically)
 pip install -q numpy markupsafe pyyaml charset-normalizer pyvcd==0.2.4 \
     pyserial pyusb construct packaging decorator networkx jinja2 \
     platformdirs filelock pluggy pyproject_api
@@ -40,26 +57,19 @@ pip install -q --no-deps \
     "amaranth @ git+https://github.com/amaranth-lang/amaranth.git@597b1b883924d8949061b52270eb55b97a7cfb76"
 pip install -q --no-deps \
     "amaranth-soc @ git+https://github.com/amaranth-lang/amaranth-soc.git@87ee8a52d07a2f85b05a04db84644dce48fdfa23"
+# adat-core: proven working state is 700d2ad (repo HEAD 49092bd is newer,
+# not the tested configuration)
+pip install -q --no-deps \
+    "adat @ git+https://github.com/amaranth-community-unofficial/adat-core.git@700d2ad"
 
 # 3. editable installs from the local patched checkouts
 for p in src/amlib src/usb-descriptors src/python-usb-protocol src/amaranth-boards; do
     pip install -q --no-deps -e "$p"
 done
 
-# 4. luna: pre-built patched egg (proven path). The M9K patch is also
-#    committed in /mnt/Audio/usb2-highspeed-core (a9d5217); installing luna
-#    editable from that repo (pip install --no-deps -e ...) is a possible
-#    alternative but is NOT the tested configuration.
-if [ -f venv-3.11-alt/lib/python3.11/site-packages/luna-0.1.0.dev0-py3.11.egg ]; then
-    cp venv-3.11-alt/lib/python3.11/site-packages/luna-0.1.0.dev0-py3.11.egg \
-       venv/lib/python3.13/site-packages/
-    echo "venv/lib/python3.13/site-packages/luna-0.1.0.dev0-py3.11.egg" \
-        > venv/lib/python3.13/site-packages/luna_egg.pth
-else
-    echo "WARNING: luna egg not found in venv-3.11-alt; installing luna editable"
-    echo "from the local repo (untested configuration, M9K patch is committed there)."
-    pip install -q --no-deps -e /mnt/Audio/usb2-highspeed-core
-fi
+# 4. luna from the vendored patched egg
+cp vendor/luna-0.1.0.dev0-py3.11.egg "$SITE/"
+echo "$SITE/luna-0.1.0.dev0-py3.11.egg" > "$SITE/luna_egg.pth"
 
 # 5. smoke test
 python - <<'EOF'
@@ -71,4 +81,4 @@ from amaranth_boards.qmtech_5cefa2 import QMTech5CEFA2Platform
 import amaranth_yosys
 print("venv OK — amaranth", amaranth.__version__)
 EOF
-echo "Done. Use: . venv/bin/activate"
+echo "Done. Use: . $VENV_DIR/bin/activate"
