@@ -177,8 +177,10 @@ def run_arecord(dev, nch, seconds, out_path):
 
 
 def run_aplay(dev, nch, in_path):
+    # large buffer: absorbs host (VM) jitter; a small buffer makes the
+    # USB OUT packets arrive late and the gateware replays/skips frames
     return subprocess.Popen(
-        ["aplay", "-D", dev, "-c", str(nch), "-r", str(SR),
+        ["aplay", "--buffer-size=48000", "-D", dev, "-c", str(nch), "-r", str(SR),
          "-f", "S32_LE", "-t", "raw", in_path],
         stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
 
