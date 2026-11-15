@@ -27,7 +27,7 @@ seither weiterbewegt haben und luna geändert wurde — deshalb die lokale Kopie
 
 ## Weg 1 (VM/offline, bewährt): venv aus dem Alt-Bestand rekonstruieren
 
-Der alte venv (`venv-3.11-alt`) wurde auf dem alten Host unter `/home/user/Computer/Coden/Audio/…`
+Der alte venv (`venv-3.11-alt`) wurde auf dem alten Host unter `<altes Home>/Computer/Coden/Audio/…`
 mit Python 3.11 angelegt und ist nicht-relocatable. Er wird nur noch als
 **Abbild der Pinning-Entscheidungen** benutzt (`site-packages` + `src/`-Checkouts).
 
@@ -43,7 +43,7 @@ Das Skript:
    (numpy/markupsafe/PyYAML) werden frisch installiert bzw. haben pure-Python-Fallbacks),
 2. kopiert die gepinnten Pakete aus `venv-3.11-alt/lib/python3.11/site-packages`
    (ohne pip/setuptools und die ABI-gebundenen Pakete),
-3. schreibt die alten Host-Pfade (`/home/user/Computer/Coden/Audio/…`) auf
+3. schreibt die alten Host-Pfade (`<altes Home>/Computer/Coden/Audio/…`) auf
    `/mnt/Audio/…` um und fixiert die `venv-3.11-alt/src`-Pfade der editable
    Installs (die Sourcen der lokalen Patches liegen in `venv-3.11-alt/src/`,
    **dort nicht aufräumen!**),

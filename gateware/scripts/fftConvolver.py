@@ -1,6 +1,7 @@
 import wave
 #import matplotlib.pyplot as plt
 import numpy as np
+import os
 
 from datetime import datetime
 import binascii
@@ -17,9 +18,9 @@ class FFTConvolver:
         else:
             self.tapcount = 4096
 
-        self.ir_filename = '/home/user/tmp/IR_4800.wav'
-        self.samples_filename = '/home/user/tmp/CS.wav'
-        self.output_filename = '/home/user/tmp/CS_modfft.wav'
+        self.ir_filename = os.environ.get('IR_FILENAME', 'IR_4800.wav')
+        self.samples_filename = os.environ.get('SAMPLES_FILENAME', 'CS.wav')
+        self.output_filename = os.environ.get('OUTPUT_FILENAME', 'CS_modfft.wav')
 
     def run(self):
         print(f"{datetime.now().strftime('%H:%M:%S')}: Loading Taps")

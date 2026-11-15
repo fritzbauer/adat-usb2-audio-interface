@@ -6,7 +6,7 @@ Quartus-Synthese/-Fitting darf **nicht** in dieser VM ausgeführt werden —
 nur über den Host:
 
 ```bash
-~/quartus_build_host.sh        # = ssh -T <user>@<host>
+~/quartus_build_host.sh        # ssh auf den Quartus-Host (User/IP stehen im Skript)
 ```
 
 Die Verbindung zum Host startet direkt den Build des Projekts in
