@@ -1,5 +1,5 @@
---- /tmp/adat_orig/receiver.py	2026-11-15 08:39:26.153535400 +0100
-+++ venv/lib/python3.13/site-packages/adat/receiver.py	2026-11-15 09:02:39.166986365 +0100
+--- a/adat/receiver.py	2026-11-16 20:25:36.435079754 +0100
++++ b/adat/receiver.py	2026-11-16 20:25:36.439079790 +0100
 @@ -23,6 +23,18 @@
          self.recovered_clock_out = Signal()
          self.synced_out          = Signal()

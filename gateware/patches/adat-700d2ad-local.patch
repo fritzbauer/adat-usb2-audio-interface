@@ -1,5 +1,5 @@
---- /tmp/adat_orig/nrzidecoder.py	2026-11-15 08:04:55.606074444 +0100
-+++ venv/lib/python3.13/site-packages/adat/nrzidecoder.py	2026-11-15 09:12:52.923473921 +0100
+--- a/adat/nrzidecoder.py	2026-11-16 20:25:14.954877716 +0100
++++ b/adat/nrzidecoder.py	2026-11-16 20:25:14.958877756 +0100
 @@ -5,15 +5,37 @@
  #
  """Find bit timing and decode NRZI"""

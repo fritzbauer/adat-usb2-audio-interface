@@ -28,6 +28,28 @@ if [ "$VENV_DIR" != "venv" ]; then
     echo "NOTE: installing into non-default directory '$VENV_DIR'"
 fi
 
+# Python version guard: amaranth 0.5.0.dev0 loses the automatic port
+# naming under Python >= 3.14 (all ports come out as anonymous
+# "\$signal" identifiers in the generated Verilog and Quartus's
+# synthesis then fails with 'Port "$signal" does not exist'). Use 3.13
+# or older; fall back to an explicit python3.13 if available.
+PYV="$(python3 -c 'import sys; print(sys.version_info[0]*100 + sys.version_info[1])')"
+if [ "$PYV" -ge 314 ]; then
+    if command -v python3.13 > /dev/null 2>&1; then
+        echo "NOTE: python3 is $(python3 -V) (>= 3.14 breaks the gateware); using python3.13"
+        PYTHON3=python3.13
+    else
+        echo "ERROR: python3 is $(python3 -V). Python >= 3.14 breaks the gateware:"
+        echo "amaranth's automatic signal/port naming fails, the generated Verilog"
+        echo "uses anonymous \$signal ports and Quartus synthesis rejects them."
+        echo "Install python3.13 (or older) and make sure 'python3' resolves to it,"
+        echo "e.g.: python3.13 -m venv ... or update the alternatives."
+        exit 1
+    fi
+else
+    PYTHON3=python3
+fi
+
 if [ ! -d src/amlib ]; then
     echo "ERROR: src/amlib not found — the pinned editable sources are missing."
     echo "They are gitignored; reconstruct from git at the pinned commits"
@@ -41,7 +63,7 @@ if [ ! -f vendor/luna-0.1.0.dev0-py3.11.egg ]; then
 fi
 
 rm -rf "$VENV_DIR"
-python3 -m venv "$VENV_DIR"
+$PYTHON3 -m venv "$VENV_DIR"
 . "$VENV_DIR/bin/activate"
 
 SITE="$(python -c 'import site; print(site.getsitepackages()[0])')"
@@ -62,7 +84,35 @@ pip install -q --no-deps \
 pip install -q --no-deps \
     "adat @ git+https://github.com/amaranth-community-unofficial/adat-core.git@700d2ad"
 
+# 2b. apply all local patches from patches/ to the freshly installed
+# adat-core in site-packages. Idempotent: if a patch no longer applies
+# forward but applies in reverse, it is already in place and skipped.
+ADAT_PKG="$SITE/adat"
+for pf in patches/adat-*700d2ad-local.patch; do
+    if patch -d "$SITE" --dry-run -p1 -s < "$pf" > /dev/null 2>&1; then
+        patch -d "$SITE" -p1 -s < "$pf" && echo "applied $(basename "$pf")"
+    elif patch -d "$SITE" --dry-run -R -p1 -s < "$pf" > /dev/null 2>&1; then
+        echo "$(basename "$pf") already applied"
+    else
+        echo "ERROR: $(basename "$pf") neither applies nor reverse-applies to $ADAT_PKG"
+        echo "(the pinned adat-core source may have changed upstream)"
+        exit 1
+    fi
+done
+
 # 3. editable installs from the local patched checkouts
+# verify they still carry their local patches (documented in patches/)
+if ! grep -q "FFSynchronizer" src/amlib/amlib/io/i2c.py; then
+    echo "ERROR: src/amlib is missing its local patch (i2c.py should use FFSynchronizer)"
+    echo "see patches/amlib-db885c9-local.patch; the checkout may have been refreshed"
+    exit 1
+fi
+if ! grep -q 'PinsN("A25", dir="o")' src/amaranth-boards/amaranth_boards/qmtech_ep4cgx150.py; then
+    echo "ERROR: src/amaranth-boards is missing its local patch"
+    echo "(qmtech_ep4cgx150.py pin dir= fixes; see patches/amaranth-boards-627badc-local.patch)"
+    echo "the checkout may have been refreshed from git"
+    exit 1
+fi
 for p in src/amlib src/usb-descriptors src/python-usb-protocol src/amaranth-boards; do
     pip install -q --no-deps -e "$p"
 done
@@ -80,5 +130,42 @@ from usb_descriptors import USBDescriptors
 from amaranth_boards.qmtech_5cefa2 import QMTech5CEFA2Platform
 import amaranth_yosys
 print("venv OK — amaranth", amaranth.__version__)
+EOF
+
+# 6. verify the adat patches landed (the fixed decoder's characteristic
+# constant must be present) and that port naming is intact
+if ! grep -q "bit_time - 1" "$SITE/adat/nrzidecoder.py"; then
+    echo "ERROR: adat patch did not land (no bit_time-1 wrap in nrzidecoder.py)"
+    exit 1
+fi
+# elaborate an ADAT receiver/transmitter and check the emitted ports are
+# NAMED (anonymous \$signal ports mean the amaranth naming inference
+# failed, which Quartus synthesis then rejects)
+python - <<'EOF'
+import sys
+from amaranth import Module
+from adat import ADATReceiver, ADATTransmitter
+from amaranth.back import verilog
+
+m = Module()
+r0 = ADATReceiver(98304000)
+r1 = ADATTransmitter()
+m.submodules.r0 = r0
+m.submodules.r1 = r1
+m.d.comb += [
+    r0.adat_in.eq(0),
+    r1.sample_in.eq(0),
+    r1.valid_in.eq(0),
+    r1.last_in.eq(0),
+    r1.user_data_in.eq(0),
+]
+src = verilog.convert(m, name="top",
+                      ports=[r0.adat_in, r0.sample_out, r1.adat_out])
+bad = src.count("\\$signal")
+if bad:
+    print(f"ERROR: port naming failed: {bad} anonymous \\$signal ports in emitted Verilog")
+    print("this happens on Python >= 3.14; use Python 3.13 or older")
+    sys.exit(1)
+print("port naming OK (no anonymous $signal ports)")
 EOF
 echo "Done. Use: . $VENV_DIR/bin/activate"
