@@ -1,0 +1,43 @@
+--- a/amaranth/tracer.py	2026-11-16 20:35:38.350656897 +0100
++++ b/amaranth/tracer.py	2026-11-16 20:35:38.354656919 +0100
+@@ -1,4 +1,5 @@
+ import sys
++import platform
+ from opcode import opname
+ 
+ 
+@@ -25,7 +26,7 @@
+         else:
+             break
+     if call_opc not in ("CALL_FUNCTION", "CALL_FUNCTION_KW", "CALL_FUNCTION_EX",
+-                        "CALL_METHOD", "CALL", "CALL_KW"):
++                        "CALL_METHOD", "CALL_METHOD_KW", "CALL", "CALL_KW"):
+         if default is _raise_exception:
+             raise NameNotFound
+         else:
+@@ -44,21 +45,21 @@
+             return code.co_names[imm]
+         elif opc == "STORE_FAST":
+             imm |= int(code.co_code[index + 1])
+-            if sys.version_info >= (3, 11):
++            if sys.version_info >= (3, 11) and platform.python_implementation() == 'CPython':
+                 return code._varname_from_oparg(imm)
+             else:
+                 return code.co_varnames[imm]
+         elif opc == "STORE_DEREF":
+             imm |= int(code.co_code[index + 1])
+-            if sys.version_info >= (3, 11):
++            if sys.version_info >= (3, 11) and platform.python_implementation() == 'CPython':
+                 return code._varname_from_oparg(imm)
+             else:
+                 if imm < len(code.co_cellvars):
+                     return code.co_cellvars[imm]
+                 else:
+                     return code.co_freevars[imm - len(code.co_cellvars)]
+-        elif opc in ("LOAD_GLOBAL", "LOAD_NAME", "LOAD_ATTR", "LOAD_FAST", "LOAD_DEREF",
+-                     "DUP_TOP", "BUILD_LIST", "CACHE", "COPY"):
++        elif opc in ("LOAD_GLOBAL", "LOAD_NAME", "LOAD_ATTR", "LOAD_FAST", "LOAD_FAST_BORROW",
++                     "LOAD_DEREF", "DUP_TOP", "BUILD_LIST", "CACHE", "COPY"):
+             imm = 0
+             index += 2
+         else:

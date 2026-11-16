@@ -1,0 +1,80 @@
+generating playback signal (336000 frames x 36 ch)...
+=== test B: ADATface playback -> ADATface capture (ADAT loopback 9-16) ===
+  captured 288000 frames x 36 ch
+
+=== testB: ADATface out -> ADATface in (same clock domain) ===
+  ch  9: events=  9 (1.50/s, limit 18) bad-samples=9 [PASS]
+        t~  0.0368s: +1 extra
+        t~  0.0430s: +1 extra
+        t~  0.0440s: -1 dropped
+        t~  0.0838s: +1 extra
+        t~  1.9425s: +1 extra
+        t~  2.1307s: +1 extra
+        t~  2.1320s: -1 dropped
+        t~  4.2265s: +1 extra
+  ch 10: events=  9 (1.50/s, limit 18) bad-samples=9 [PASS]
+        t~  0.0368s: +1 extra
+        t~  0.0430s: +1 extra
+        t~  0.0440s: -1 dropped
+        t~  0.0838s: +1 extra
+        t~  1.9425s: +1 extra
+        t~  2.1307s: +1 extra
+        t~  2.1320s: -1 dropped
+        t~  4.2265s: +1 extra
+  ch 11: events=  9 (1.50/s, limit 18) bad-samples=9 [PASS]
+        t~  0.0368s: +1 extra
+        t~  0.0430s: +1 extra
+        t~  0.0440s: -1 dropped
+        t~  0.0838s: +1 extra
+        t~  1.9425s: +1 extra
+        t~  2.1307s: +1 extra
+        t~  2.1320s: -1 dropped
+        t~  4.2265s: +1 extra
+  ch 12: events=  9 (1.50/s, limit 18) bad-samples=9 [PASS]
+        t~  0.0368s: +1 extra
+        t~  0.0430s: +1 extra
+        t~  0.0440s: -1 dropped
+        t~  0.0838s: +1 extra
+        t~  1.9425s: +1 extra
+        t~  2.1307s: +1 extra
+        t~  2.1320s: -1 dropped
+        t~  4.2265s: +1 extra
+  ch 13: events=  9 (1.50/s, limit 18) bad-samples=9 [PASS]
+        t~  0.0368s: +1 extra
+        t~  0.0430s: +1 extra
+        t~  0.0440s: -1 dropped
+        t~  0.0838s: +1 extra
+        t~  1.9425s: +1 extra
+        t~  2.1307s: +1 extra
+        t~  2.1320s: -1 dropped
+        t~  4.2265s: +1 extra
+  ch 14: events=  9 (1.50/s, limit 18) bad-samples=9 [PASS]
+        t~  0.0368s: +1 extra
+        t~  0.0430s: +1 extra
+        t~  0.0440s: -1 dropped
+        t~  0.0838s: +1 extra
+        t~  1.9425s: +1 extra
+        t~  2.1307s: +1 extra
+        t~  2.1320s: -1 dropped
+        t~  4.2265s: +1 extra
+  ch 15: events=  9 (1.50/s, limit 18) bad-samples=9 [PASS]
+        t~  0.0368s: +1 extra
+        t~  0.0430s: +1 extra
+        t~  0.0440s: -1 dropped
+        t~  0.0838s: +1 extra
+        t~  1.9425s: +1 extra
+        t~  2.1307s: +1 extra
+        t~  2.1320s: -1 dropped
+        t~  4.2265s: +1 extra
+  ch 16: events=  9 (1.50/s, limit 18) bad-samples=9 [PASS]
+        t~  0.0368s: +1 extra
+        t~  0.0430s: +1 extra
+        t~  0.0440s: -1 dropped
+        t~  0.0838s: +1 extra
+        t~  1.9425s: +1 extra
+        t~  2.1307s: +1 extra
+        t~  2.1320s: -1 dropped
+        t~  4.2265s: +1 extra
+
+=== SUMMARY ===
+  test B: PASS

@@ -1,0 +1,38 @@
+--- a/adat/receiver.py	2026-11-16 20:25:36.435079754 +0100
++++ b/adat/receiver.py	2026-11-16 20:25:36.439079790 +0100
+@@ -23,6 +23,18 @@
+         self.recovered_clock_out = Signal()
+         self.synced_out          = Signal()
+ 
++        # debug observation points forwarded from the NRZI decoder
++        # (unused outputs cost nothing after synthesis)
++        self.dbg_qualified_edge  = Signal()
++        self.dbg_interval        = Signal(8)
++        self.dbg_interval_count  = Signal(5)
++        self.dbg_sync_state      = Signal()
++        self.dbg_raw_edge        = Signal()
++        self.dbg_gap_timer       = Signal(8)
++        self.dbg_nrzi            = Signal()
++        self.dbg_data_out        = Signal()
++        self.dbg_data_out_en     = Signal()
++
+         # Parameters
+         self.clk_freq            = clk_freq
+ 
+@@ -53,6 +65,16 @@
+             nrzidecoder.nrzi_in.eq(self.adat_in),
+             self.synced_out.eq(nrzidecoder.running),
+             self.recovered_clock_out.eq(nrzidecoder.recovered_clock_out),
++
++            self.dbg_qualified_edge.eq(nrzidecoder.dbg_qualified_edge),
++            self.dbg_interval.eq(nrzidecoder.dbg_interval),
++            self.dbg_interval_count.eq(nrzidecoder.dbg_interval_count),
++            self.dbg_sync_state.eq(nrzidecoder.dbg_sync_state),
++            self.dbg_raw_edge.eq(nrzidecoder.dbg_raw_edge),
++            self.dbg_gap_timer.eq(nrzidecoder.dbg_gap_timer),
++            self.dbg_nrzi.eq(nrzidecoder.dbg_nrzi),
++            self.dbg_data_out.eq(nrzidecoder.data_out),
++            self.dbg_data_out_en.eq(nrzidecoder.data_out_en),
+         ]
+ 
+         with m.FSM():

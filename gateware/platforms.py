@@ -34,7 +34,13 @@ class IntelFPGAParameters:
         """
 
 class ADATFaceCycloneV(QMTech5CEFA2Platform, LUNAPlatform):
-    fast_multiplier        = 9
+    # NOTE: fast_multiplier must be 8, not 9: car.py's
+    # IntelCycloneVFPGAClockDomainGenerator generates the fast domain at
+    # 98.304 MHz = 48 kHz * 256 * 8 (same PLL VCO as the 12.288 MHz ADAT
+    # bit clock, integer dividers 40:5, so the actual ratio is exactly
+    # 8.000). The old value 9 declared 110.592 MHz which does not exist on
+    # this board; ADATReceiver derives its bit timing from this number.
+    fast_multiplier        = 8
     clock_domain_generator = IntelCycloneVFPGAClockDomainGenerator
     fast_domain_clock_freq = int(48e3 * 256 * fast_multiplier)
 

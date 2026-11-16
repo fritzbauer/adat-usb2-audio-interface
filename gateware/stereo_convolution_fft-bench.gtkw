@@ -2,10 +2,10 @@
 [*] GTKWave Analyzer v3.3.106 (w)1999-2020 BSI
 [*] Fri Jun  3 19:52:59 2022
 [*]
-[dumpfile] "/home/user/Computer/Coden/Audio/adat-usb2-audio-interface/gateware/test_StereoConvolutionFFTTest_test_fir.vcd"
+[dumpfile] "test_StereoConvolutionFFTTest_test_fir.vcd"
 [dumpfile_mtime] "Fri Jun  3 19:49:33 2022"
 [dumpfile_size] 392471
-[savefile] "/home/user/Computer/Coden/Audio/adat-usb2-audio-interface/gateware/stereo_convolution_fft-bench.gtkw"
+[savefile] "stereo_convolution_fft-bench.gtkw"
 [timestart] 0
 [size] 1920 1011
 [pos] -1 -1

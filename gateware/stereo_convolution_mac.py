@@ -113,8 +113,8 @@ class StereoConvolutionMAC(Elaboratable):
         taps2_read_port = self._taps2_memory.read_port()
         samples1_write_port = self._samples1_memory.write_port()
         samples2_write_port = self._samples2_memory.write_port()
-        samples1_read_port = self._samples1_memory.read_port()
-        samples2_read_port = self._samples2_memory.read_port()
+        samples1_read_port = self._samples1_memory.read_port(transparent=False)  # M9K inference (old-data RDW)
+        samples2_read_port = self._samples2_memory.read_port(transparent=False)  # M9K inference (old-data RDW)
 
         m.submodules += [taps1_read_port, taps2_read_port, samples1_write_port, samples2_write_port, samples1_read_port, samples2_read_port]
 

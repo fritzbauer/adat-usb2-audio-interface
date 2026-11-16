@@ -2,10 +2,10 @@
 [*] GTKWave Analyzer v3.3.106 (w)1999-2020 BSI
 [*] Fri Apr  8 14:42:45 2022
 [*]
-[dumpfile] "/home/user/Computer/Coden/Audio/adat-usb2-audio-interface/gateware/test_StereoConvolutionMACTest_test_fir.vcd"
+[dumpfile] "test_StereoConvolutionMACTest_test_fir.vcd"
 [dumpfile_mtime] "Fri Apr  8 14:42:12 2022"
 [dumpfile_size] 2118493
-[savefile] "/home/user/Computer/Coden/Audio/adat-usb2-audio-interface/gateware/stereo_convolution_mac-bench.gtkw"
+[savefile] "stereo_convolution_mac-bench.gtkw"
 [timestart] 4227600
 [size] 1850 1011
 [pos] -1 -1

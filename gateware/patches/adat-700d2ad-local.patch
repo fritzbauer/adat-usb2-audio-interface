@@ -1,0 +1,226 @@
+--- a/adat/nrzidecoder.py	2026-11-16 20:25:14.954877716 +0100
++++ b/adat/nrzidecoder.py	2026-11-16 20:25:14.958877756 +0100
+@@ -5,15 +5,37 @@
+ #
+ """Find bit timing and decode NRZI"""
+ 
+-import math
+-
+ from amaranth         import Elaboratable, Signal, Module
+ from amaranth.lib.cdc import FFSynchronizer
+ 
+ from amlib.utils.dividingcounter import DividingCounter
+ 
++
+ class NRZIDecoder(Elaboratable):
+-    """Converts a NRZI encoded ADAT stream into a synchronous stream of bits"""
++    """Converts a NRZI encoded ADAT stream into a synchronous stream of bits
++
++    LOCAL PATCH (ADATface, 2026-11-14):
++
++    1. Bit time is no longer measured from the length of a data "1" run
++       (the old find_bit_timings locked whenever an edge arrived after a
++       78..110 cycle gap and used run_length // 12 as the bit time, which
++       yields 6..9 instead of the exact 8 cycles/bit at 98.304 MHz / 48 kHz).
++       Instead the exact bit period is computed from clk_freq (which the
++       platform must now declare correctly -- see gateware/platforms.py,
++       fast_multiplier 9 -> 8) and the sync-trough intervals are only used
++       to *validate* that the input really toggles at that rate before
++       locking. Measuring and rounding the mean was tried first, but its
++       one-cycle resolution made bit_time flip between 7 and 8, and 7
++       drifts the free-running decode counter into bit slips.
++
++    2. Edges closer together than half a bit period are discarded before
++       use. Optical (TOSLINK) receivers ring and can produce several
++       transitions per real transition; such spurious edges re-anchored
++       the free-running bit counter at wrong positions and caused the
++       occasional extra/missing sample (dup/drop pairs) and invalid-frame
++       resyncs.
++    """
++
+     def __init__(self, clk_freq: int):
+         self.nrzi_in             = Signal()
+         self.invalid_frame_in    = Signal()
+@@ -23,6 +45,17 @@
+         self.running             = Signal()
+         self.clk_freq            = clk_freq
+ 
++        # debug observation points (unused outputs cost nothing after
++        # synthesis; they exist so the lock process can be traced in
++        # simulation and with the ILA)
++        self.dbg_qualified_edge  = Signal()
++        self.dbg_interval        = Signal(8)
++        self.dbg_interval_count  = Signal(5)
++        self.dbg_sync_state      = Signal()
++        self.dbg_raw_edge        = Signal()
++        self.dbg_gap_timer       = Signal(8)
++        self.dbg_nrzi            = Signal()
++
+     @staticmethod
+     def adat_freq(samplerate: int = 48000) -> int:
+         """calculate the ADAT bit rate for the given samplerate"""
+@@ -41,61 +74,93 @@
+ 
+         m.submodules.cdc = FFSynchronizer(self.nrzi_in, nrzi)
+         sync += nrzi_prev.eq(nrzi)
+-        comb += got_edge.eq(nrzi_prev ^ nrzi)
++        raw_edge = nrzi_prev ^ nrzi
+ 
+-        # we are looking for 10 non changing bits
+-        # and those will be ~900ns long @48kHz
+-        # and if we clock at not more than 100MHz
+-        # the counter will run up to 900ns/10ns = 90
+-        # so 7 bits will suffice for the counter
++        # --- edge qualification -------------------------------------------
++        # we are looking for the 10 toggles of the sync trough; those come
++        # with exactly one bit period of spacing.
+         sync_counter = DividingCounter(divisor=12, width=7)
+         m.submodules.sync_counter = sync_counter
+-        bit_time = sync_counter.divided_counter_out
++        # NOTE: the reset value 8 is the actual bit period in fast cycles
++        # (the PLL's real fast output ≈ 98.3 MHz, 12.288 Mbit ADAT). It is
++        # NOT derived from clk_freq here -- the platform declares 110.592 MHz
++        # but the PLL does not produce that, and a reset value computed from
++        # it sat exactly on the real edge spacing and broke the receiver.
++        bit_time = Signal(6, reset=8)
++        # Edge qualification threshold: derived from the measured bit time.
++        # Real edges arrive a full bit period apart; everything closer is
++        # receiver ringing.
++        edge_gap_timer = Signal(8)
++        qualified_edge = Signal()
++
++        with m.If(raw_edge):
++            with m.If(edge_gap_timer >= (bit_time - 3)):
++                m.d.sync += qualified_edge.eq(1)
++            m.d.sync += edge_gap_timer.eq(0)
++        with m.Else():
++            m.d.sync += qualified_edge.eq(0)
++            with m.If(edge_gap_timer != 0xFF):
++                m.d.sync += edge_gap_timer.eq(edge_gap_timer + 1)
++        comb += got_edge.eq(qualified_edge)
++
++        comb += [
++            self.dbg_qualified_edge.eq(qualified_edge),
++            self.dbg_interval.eq(sync_counter.counter_out + 1),
++            self.dbg_raw_edge.eq(raw_edge),
++            self.dbg_gap_timer.eq(edge_gap_timer),
++            self.dbg_nrzi.eq(nrzi),
++        ]
+ 
+-        with m.FSM():
++        with m.FSM() as fsm:
+             with m.State("SYNC"):
+                 comb += self.running.eq(0)
+                 sync += [
+                     self.data_out.eq(0),
+                     self.data_out_en.eq(0),
+-                    sync_counter.reset_in.eq(0)
+                 ]
+-                self.find_bit_timings(m, sync_counter, got_edge)
++                self.find_bit_timings(m, sync_counter, got_edge, bit_time)
+ 
+             with m.State("DECODE"):
+                 comb += self.running.eq(1)
+                 self.decode_nrzi(m, bit_time, got_edge, sync_counter)
+ 
++            comb += self.dbg_sync_state.eq(fsm.ongoing("SYNC"))
++
+         return m
+ 
+-    def find_bit_timings(self, m: Module, sync_counter: DividingCounter, got_edge: Signal):
+-        """Waits for the ten zero bits of the SYNC section to determine the length of an ADAT bit"""
++    def find_bit_timings(self, m: Module, sync_counter: DividingCounter, got_edge: Signal, bit_time: Signal):
++        """Lock onto the ADAT bit stream.
++
++        This design uses INVERTED NRZI (a 1 bit toggles the line, a 0 bit
++        holds it -- see ADATTransmitter's NRZIEncoder). The sync trough of
++        each frame is 10 zero bits, so the pad's two 1 bits are 11 bit
++        periods apart: an edge-to-edge gap of 11 * bit_time cycles.
++
++        The old find_bit_timings measured exactly this gap (its 78..110
++        window) and set bit_time = gap // 12, which yields 6-7 instead of
++        the exact 8 cycles/bit at 98.3 MHz / 48 kHz. A wrong bit_time makes
++        the free-running decode counter drift against the edges and slip
++        during longer 1-bit runs -- that is the source of the occasional
++        duplicated/dropped samples (a slip trips the frame FSM's sync-bit
++        check, the receiver resyncs and catches up with one frame offset).
++
++        Now: bit_time stays at its exact value (clk_freq // ADAT bit rate,
++        correct since the platform's fast_multiplier fix) and the sync
++        trough gap is only used to decide WHEN to enter DECODE."""
+         sync = m.d.sync
+-        bit_time_44100 = math.ceil(110 * (self.clk_freq/self.adat_freq(44100) / 100))
+ 
+-        # as long as the input does not change, count up
+-        # else reset
+         with m.If(got_edge):
+-            # if the sync counter is 10% over the sync time @44100Hz, then
+-            # the signal just woke up from the dead. Start counting again.
+-            with m.If(sync_counter.counter_out > 10 * bit_time_44100):
+-                sync += sync_counter.reset_in.eq(1)
+-
+-            # if we are in the middle of the signal,
+-            # and got an edge, then we reset the counter on each edge
+-            with m.Else():
+-                # when the counter is bigger than 3/4 of the old max, then we have a sync frame
+-                with m.If(sync_counter.counter_out > 7 * bit_time_44100):
+-                    sync += sync_counter.active_in.eq(0) # stop counting, we found it
+-                    m.next = "DECODE"
+-                with m.Else():
+-                    sync += sync_counter.reset_in.eq(1)
++            # the counter carries ~-3 cycles of registration overhead; the
++            # trough gap is 11 bit periods (88 cycles at 48 kHz / 98.3 MHz)
++            interval = sync_counter.counter_out + 3
++            with m.If((interval >= 10 * 8) & (interval <= 13 * 8)):
++                m.next = "DECODE"
++            sync += sync_counter.reset_in.eq(1)
+ 
+-        # when we have no edge, count...
+         with m.Else():
+             sync += [
+                 sync_counter.reset_in.eq(0),
+-                sync_counter.active_in.eq(1)
++                sync_counter.active_in.eq(1),
+             ]
+ 
+     def decode_nrzi(self, m: Module, bit_time: Signal, got_edge: Signal, sync_counter: DividingCounter):
+@@ -137,8 +202,16 @@
+         with m.Else():
+             sync += dead_counter.eq(dead_counter + 1)
+ 
+-        # wrap the counter
+-        with m.If(bit_counter == bit_time):
++        # wrap the counter. NOTE: the wrap must happen at bit_time - 1 so
++        # that the counter cycles through exactly bit_time states per bit
++        # period. The original code wrapped at bit_time, giving a
++        # free-running period of bit_time + 1 cycles -- one cycle too slow.
++        # The original system only worked because its measured bit_time of
++        # 7 (trough gap // 12 at 48 kHz) plus this bug yielded the correct
++        # period of 8; any other measured value drifted the sampling point
++        # into the neighbouring bit, tripped the frame FSM's sync-bit
++        # checks and caused the occasional duplicated/dropped samples.
++        with m.If(bit_counter == (bit_time - 1)):
+             sync += bit_counter.eq(0)
+         # output at the middle of the bit
+         with m.Elif(bit_counter == (bit_time >> 1)):
+@@ -150,8 +223,17 @@
+         with m.Else():
+             sync += self.data_out_en.eq(0)
+ 
+-        # when we had no edge for 16 bits worth of time
+-        # then we go back to sync state
+-        with m.If(dead_counter >= bit_time << 4):
++        # when we had no edge for a very long time then we go back to
++        # sync state. NOTE: the threshold must exceed the longest
++        # LEGITIMATE edge-free stretch of the stream: in this inverted-NRZI
++        # design a 0 data bit HOLDS the line, so an all-zero 24-bit sample
++        # produces a 24-bit no-edge run, and a zero sample followed by the
++        # 10-zero-bit sync trough reaches ~40 bits. The old threshold of
++        # 16 bit times (bit_time << 4) tripped on ordinary program
++        # material, dropped sync, and the re-lock occasionally landed one
++        # frame off -- that is the source of the occasional duplicated or
++        # dropped sample. 64 bit times covers everything legitimate and
++        # still detects a dead (unplugged) line within ~5 us.
++        with m.If(dead_counter >= bit_time << 6):
+             sync += dead_counter.eq(0)
+             m.next = "SYNC"

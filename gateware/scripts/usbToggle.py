@@ -34,7 +34,8 @@ except Exception as e:
 time.sleep(1)
 #dev.ctrl_transfer(0b01000000, 0x1, 0, 0, [])
 try:
-    ret = dev.ctrl_transfer(bmRequestType=0b11000000, bRequest=0x1) #VENDOR (2) request; TOGGLE_CONVOLUTION (1)
+    #ret = dev.ctrl_transfer(bmRequestType=0b11000000, bRequest=0x1) #VENDOR (2) request; TOGGLE_CONVOLUTION (1)
+    ret = dev.ctrl_transfer(bmRequestType=0xa1, bRequest=0x02, wIndex=256, data_or_wLength=2) #CLASS (1) request RANGE(2)
     #ret = dev.ctrl_transfer(bmRequestType=0b10100001, bRequest=0x02, wIndex=2, data_or_wLength=4) #CLASS (1) request RANGE(2)
     #ret = dev.ctrl_transfer(bmRequestType=0b10100000, bRequest=0x01, data_or_wLength=4)  # CLASS (1) request CUR(1)
     print(f"Result: {ret}")
