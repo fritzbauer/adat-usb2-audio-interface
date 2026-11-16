@@ -8,3 +8,5 @@ gateware/src/
 gateware/venv-3.11-alt/
 gateware/build_*/
 gateware/.venv/
+*.log
+gateware/tools/openfpgaloader_bridge/*.rbf
