@@ -28,27 +28,17 @@ if [ "$VENV_DIR" != "venv" ]; then
     echo "NOTE: installing into non-default directory '$VENV_DIR'"
 fi
 
-# Python version guard: amaranth 0.5.0.dev0 loses the automatic port
-# naming under Python >= 3.14 (all ports come out as anonymous
-# "\$signal" identifiers in the generated Verilog and Quartus's
-# synthesis then fails with 'Port "$signal" does not exist'). Use 3.13
-# or older; fall back to an explicit python3.13 if available.
+# Python version guard: Python 3.14 is supported since the tracer patch
+# (patches/amaranth-597b1b8-local.patch restores automatic port naming;
+# without it every port comes out as an anonymous "\$signal" identifier
+# and Quartus synthesis fails). Hard-fail only on untested versions.
 PYV="$(python3 -c 'import sys; print(sys.version_info[0]*100 + sys.version_info[1])')"
-if [ "$PYV" -ge 314 ]; then
-    if command -v python3.13 > /dev/null 2>&1; then
-        echo "NOTE: python3 is $(python3 -V) (>= 3.14 breaks the gateware); using python3.13"
-        PYTHON3=python3.13
-    else
-        echo "ERROR: python3 is $(python3 -V). Python >= 3.14 breaks the gateware:"
-        echo "amaranth's automatic signal/port naming fails, the generated Verilog"
-        echo "uses anonymous \$signal ports and Quartus synthesis rejects them."
-        echo "Install python3.13 (or older) and make sure 'python3' resolves to it,"
-        echo "e.g.: python3.13 -m venv ... or update the alternatives."
-        exit 1
-    fi
-else
-    PYTHON3=python3
+if [ "$PYV" -ge 315 ]; then
+    echo "ERROR: python3 is $(python3 -V). Gateware compatibility is only"
+    echo "verified up to Python 3.14 (port-naming inference). Use 3.13 or 3.14."
+    exit 1
 fi
+PYTHON3=python3
 
 if [ ! -d src/amlib ]; then
     echo "ERROR: src/amlib not found — the pinned editable sources are missing."
@@ -83,6 +73,19 @@ pip install -q --no-deps \
 # not the tested configuration)
 pip install -q --no-deps \
     "adat @ git+https://github.com/amaranth-community-unofficial/adat-core.git@700d2ad"
+
+# 2a. apply the amaranth patches (e.g. the Python 3.14 port-naming fix in
+# tracer.py). Same idempotency scheme as the adat patches below.
+for pf in patches/amaranth-597b1b8-local.patch; do
+    if patch -d "$SITE" --dry-run -p1 -s < "$pf" > /dev/null 2>&1; then
+        patch -d "$SITE" -p1 -s < "$pf" && echo "applied $(basename "$pf")"
+    elif patch -d "$SITE" --dry-run -R -p1 -s < "$pf" > /dev/null 2>&1; then
+        echo "$(basename "$pf") already applied"
+    else
+        echo "ERROR: $(basename "$pf") neither applies nor reverse-applies to $SITE/amaranth"
+        exit 1
+    fi
+done
 
 # 2b. apply all local patches from patches/ to the freshly installed
 # adat-core in site-packages. Idempotent: if a patch no longer applies
@@ -136,6 +139,10 @@ EOF
 # constant must be present) and that port naming is intact
 if ! grep -q "bit_time - 1" "$SITE/adat/nrzidecoder.py"; then
     echo "ERROR: adat patch did not land (no bit_time-1 wrap in nrzidecoder.py)"
+    exit 1
+fi
+if ! grep -q "LOAD_FAST_BORROW" "$SITE/amaranth/tracer.py"; then
+    echo "ERROR: amaranth patch did not land (no LOAD_FAST_BORROW in tracer.py)"
     exit 1
 fi
 # elaborate an ADAT receiver/transmitter and check the emitted ports are
