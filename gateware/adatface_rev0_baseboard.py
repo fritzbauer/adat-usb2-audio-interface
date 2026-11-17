@@ -104,7 +104,9 @@ class ADATFaceRev0Baseboard:
                 Subsignal("rxd1",   Pins("J_2:16", dir="i")),
                 Subsignal("crs_dv", Pins("J_2:18", dir="i")),
                 Subsignal("ref_clk", Pins("J_2:20", dir="io")),
-                Subsignal("rst_n",  Pins("J_2:22", dir="o")),
+                # J_2:22 unassigned: the LAN8720 module's reset pin is
+                # NC — the PHY resets from its own power-on RC and the
+                # straps are sampled then (keep REF_CLK running early)
                 Subsignal("mdc",    Pins("J_2:24", dir="o")),
                 Subsignal("mdio",   Pins("J_2:26", dir="io")),
                 attrs),

@@ -53,7 +53,7 @@ Modul hat 12 Pins (2 Versorgung, 10 Signale):
 | 16            | RXD1     | RXD1                   |
 | 18            | CRS_DV   | CRS_DV                 |
 | 20            | REF_CLK  | REF_CLK (Richtung s. u.) |
-| 22            | nRST     | nRST                   |
+| 22            | (frei)   | nRST ist am Modul **NC** |
 | 24            | MDC      | MDC                    |
 | 26            | MDIO     | MDIO                   |
 
@@ -78,8 +78,16 @@ Der Top hat einen Parameter `ref_clk_mode`:
   REF_CLK-OUT-Strap, der bei den meisten fertigen Modulen Default
   ist) und die FPGA takten ihre RMII-Domäne vom REF_CLK-Eingang.
 
-In beiden Fällen wird der Modul-nRST von der FPGA getrieben (Reset
-bis nach dem PLL-Lock).
+**Kein nRST**: Das Modul hat keinen Reset-Pin (NC) — der LAN8720
+resettet über seinen eigenen Power-on-RC und sampelt dabei seine
+Straps. Konsequenz für den Kaltstart: Beim Release des PHY-Resets
+muss der 50-MHz-Takt (bei `ref_clk_mode="output"`) bereits am
+REF_CLK-Eingang anliegen, sonst können die Straps (nINTSEL, PHYAD)
+falsch gelatcht werden. Ist das FPGA bereits konfiguriert und liefert
+den Takt, ist das unkritisch. Falls das Modul nach dem Kaltstart
+falsch gestrappt ist: Spannung wegnehmen und neu aufstecken, wenn der
+Takt steht — oder später einen MDIO-Soft-Reset einbauen (der aktuelle
+MDIO-Master ist read-only).
 
 ## MDIO
 

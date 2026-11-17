@@ -17,10 +17,10 @@
 #   J2 pin  8 -> TXD0        J2 pin 18 -> CRS_DV
 #   J2 pin 10 -> TXD1        J2 pin 20 -> REF_CLK (direction depends
 #   J2 pin 12 -> TX_EN                     on ref_clk_mode, see below)
-#   J2 pin 14 -> RXD0        J2 pin 22 -> nRST
-#   J2 pin 16 -> RXD1        J2 pin 24 -> MDC
-#   J2 pin  4 -> +3.3V       J2 pin 26 -> MDIO
-#   J2 pin  6 -> GND
+#   J2 pin 14 -> RXD0        J2 pin 24 -> MDC
+#   J2 pin 16 -> RXD1        J2 pin 26 -> MDIO
+#   J2 pin  4 -> +3.3V       (J2 pin 22 unassigned: the module's nRST
+#   J2 pin  6 -> GND          is NC, the PHY self-resets)
 
 import os
 import sys
@@ -83,7 +83,8 @@ class EtherADATInterface(Elaboratable):
             rmii_domain.clk_in.eq(rmii_clk),
             rmii_domain.rst_in.eq(0),
         ]
-        m.d.comb += rmii.rst_n.o.eq(~ResetSignal("rmii"))
+        # no PHY reset line: the LAN8720 module's nRST is NC, the PHY
+        # releases its own power-on reset and samples its straps then
 
         #
         # the bridge
