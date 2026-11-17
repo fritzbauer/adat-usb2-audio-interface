@@ -23,8 +23,12 @@ class IntelFPGAClockDomainGenerator(Elaboratable, ClockDomainGeneratorBase):
 
     DUTY_CYCLE      = 50
 
-    def __init__(self, *, clock_frequencies=None, clock_signal_name=None):
-        pass
+    def __init__(self, *, clock_frequencies=None, clock_signal_name=None,
+                 clk_input=None):
+        # clk_input: use an already-requested input signal (e.g. the
+        # 50 MHz oscillator net, when the caller also needs it for other
+        # purposes) instead of requesting platform.default_clk here.
+        self._clk_input = clk_input
 
     def elaborate(self, platform):
         m = Module()
@@ -36,7 +40,10 @@ class IntelFPGAClockDomainGenerator(Elaboratable, ClockDomainGeneratorBase):
         m.domains.adat = ClockDomain("adat")
         m.domains.dac  = ClockDomain("dac")
 
-        clk = flipped(platform.request(platform.default_clk))
+        if self._clk_input is not None:
+            clk = self._clk_input
+        else:
+            clk = flipped(platform.request(platform.default_clk)).i
 
         main_clocks    = Signal(5)
         audio_clocks   = Signal(4)
@@ -86,7 +93,7 @@ class IntelFPGAClockDomainGenerator(Elaboratable, ClockDomainGeneratorBase):
 
             # Drive our clock from the USB clock
             # coming from the USB clock pin of the USB3300
-            i_inclk  = clk.i,
+            i_inclk  = clk,
             o_clk    = main_clocks,
             o_locked = sys_locked,
         )
@@ -153,6 +160,10 @@ class IntelFPGAClockDomainGenerator(Elaboratable, ClockDomainGeneratorBase):
             ClockSignal("sync").eq(audio_clocks[3]),
         ]
 
+        # exposed for additional clock domains (see CycloneV variant)
+        self.clk50_in = clk
+        self.reset_out = reset
+
         self.wire_up_reset(m, reset)
 
         return m
@@ -160,8 +171,12 @@ class IntelFPGAClockDomainGenerator(Elaboratable, ClockDomainGeneratorBase):
 
 class IntelCycloneVFPGAClockDomainGenerator(Elaboratable, ClockDomainGeneratorBase):
 
-    def __init__(self, *, clock_frequencies=None, clock_signal_name=None):
-        pass
+    def __init__(self, *, clock_frequencies=None, clock_signal_name=None,
+                 clk_input=None):
+        # clk_input: use an already-requested input signal (e.g. the
+        # 50 MHz oscillator net, when the caller also needs it for other
+        # purposes) instead of requesting platform.default_clk here.
+        self._clk_input = clk_input
 
     def elaborate(self, platform):
         m = Module()
@@ -178,7 +193,10 @@ class IntelCycloneVFPGAClockDomainGenerator(Elaboratable, ClockDomainGeneratorBa
         m.domains.adat = ClockDomain("adat")
         m.domains.dac  = ClockDomain("dac")
 
-        clk = flipped(platform.request(platform.default_clk))
+        if self._clk_input is not None:
+            clk = self._clk_input
+        else:
+            clk = flipped(platform.request(platform.default_clk)).i
 
         main_clock    = Signal()
         audio_clocks  = Signal(4)
@@ -232,6 +250,11 @@ class IntelCycloneVFPGAClockDomainGenerator(Elaboratable, ClockDomainGeneratorBa
             ClockSignal("sync").eq(audio_clocks[2]),
             ClockSignal("fast").eq(audio_clocks[3])
         ]
+
+        # exposed for additional clock domains (e.g. the EtherADAT
+        # bridge's RMII domain, which shares the 50 MHz oscillator)
+        self.clk50_in = clk
+        self.reset_out = reset
 
         self.wire_up_reset(m, reset)
 

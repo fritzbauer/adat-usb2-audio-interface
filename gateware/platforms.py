@@ -31,6 +31,16 @@ class IntelFPGAParameters:
 
             # USB to fast clock domain crossing
             set_max_delay -from [get_clocks {car|mainpll|auto_generated|pll1|clk[0]}]  -to  [get_clocks {car|fastopll|auto_generated|pll1|clk[0]}] 5
+
+            # EtherADAT: the RMII domain runs on the raw 50 MHz oscillator
+            # (clk50), the audio domains on the PLL outputs. All transfers
+            # between them are gray-coded counters or FFSynchronizers, i.e.
+            # asynchronous by design; without this the STA times the
+            # transfers at the worst phase relationship and reports large
+            # (harmless) setup violations on the CDC paths.
+            set_clock_groups -asynchronous \
+                -group [get_clocks {clk50*}] \
+                -group [get_clocks {car|audiopll|* car|mainpll|* car|fastpll|*}]
         """
 
 class ADATFaceCycloneV(QMTech5CEFA2Platform, LUNAPlatform):

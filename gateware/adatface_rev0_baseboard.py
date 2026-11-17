@@ -86,4 +86,26 @@ class ADATFaceRev0Baseboard:
 
             # Debug
             SPIResource(0, clk="J_2:12", copi="J_2:8", cipo=None, cs_n="J_2:10", attrs=attrs),
+
+            # RMII (LAN8720 PHY module on the J7 header; J7 maps to the
+            # QMTech daughterboard's J2, even pins 8..26). The pins overlap
+            # with the debug SPI above -- only one of the two resources may
+            # be requested by a design. ref_clk is declared "io" because
+            # either side may source the 50 MHz reference: the usual
+            # module (25 MHz crystal, REF_CLK-out strap) drives it into
+            # the FPGA, or the FPGA drives the module's clock input
+            # (REF_CLK-in strap; see etheradat/README.md) -- pass
+            # dir={"ref_clk": "o"} resp. {"ref_clk": "i"} to request().
+            Resource("rmii", 0,
+                Subsignal("txd0",   Pins("J_2:8",  dir="o")),
+                Subsignal("txd1",   Pins("J_2:10", dir="o")),
+                Subsignal("tx_en",  Pins("J_2:12", dir="o")),
+                Subsignal("rxd0",   Pins("J_2:14", dir="i")),
+                Subsignal("rxd1",   Pins("J_2:16", dir="i")),
+                Subsignal("crs_dv", Pins("J_2:18", dir="i")),
+                Subsignal("ref_clk", Pins("J_2:20", dir="io")),
+                Subsignal("rst_n",  Pins("J_2:22", dir="o")),
+                Subsignal("mdc",    Pins("J_2:24", dir="o")),
+                Subsignal("mdio",   Pins("J_2:26", dir="io")),
+                attrs),
         ]
