@@ -47,30 +47,27 @@ class RMIITXShim(LiteXModule):
     def __init__(self, tx_en, txd):
         self.sink = sink = stream.Endpoint(eth_phy_description(8))
 
-        byte = Signal(8)
-        pair = Signal(2)               # dibit pair index of the current byte
-        emitting = Signal()
+        # 4-dibit shift register + remaining-count FSM (22.11.2026).
+        # The old pair/emitting version dropped the first and last dibit
+        # of every byte: `tx_en` fell one cycle before the final dibit
+        # was driven, so no valid Ethernet frame reached the PHY.
+        shift = Signal(8)
+        count = Signal(3)   # 0 = idle, 4..1 = dibits still to send
 
         self.comb += [
-            # dibit pair `pair` = byte bits (2*pair+1 : 2*pair), LSB first
-            txd.eq(byte >> (pair << 1)),
-            tx_en.eq(emitting),
-            # accept the first byte while idle, the next one on the
-            # last dibit cycle of the current one
-            sink.ready.eq(~emitting | (pair == 3)),
+            txd.eq(shift[0:2]),       # registered data, LSB dibit first
+            tx_en.eq(count != 0),     # registered enable
+            # Accept the next byte on the last dibit of the current one
+            # so frames are gapless while TX_EN stays high.
+            sink.ready.eq(count <= 1),
         ]
         self.sync += [
             If(sink.valid & sink.ready,
-               # a byte is consumed at this edge: latch it and start
-               # (or continue) the serialization seamlessly
-               byte.eq(sink.payload.data),
-               pair.eq(0),
-               emitting.eq(1),
-            ).Elif(emitting,
-               pair.eq(pair + 1),
-               If(pair == 3,
-                  emitting.eq(0),
-               ),
+               shift.eq(sink.payload.data),
+               count.eq(4),
+            ).Elif(count != 0,
+                   shift.eq(shift >> 2),
+                   count.eq(count - 1),
             ),
         ]
 
@@ -83,7 +80,27 @@ class RMIIRXShim(LiteXModule):
     cycles, `crs_last`) lands exactly on the cycle at which the last
     data dibit is consumed by the byte assembler: the last byte's beat
     then carries `last` from the start.
+
+    SFD realignment (found on hardware 21.11.2026): the LAN8720 asserts
+    CRS_DV one or two cycles AFTER the first preamble dibits are driven
+    (carrier detection is asynchronous, the data path is not), so the
+    byte assembly would start mid-preamble, the SFD byte would land
+    misaligned (0xD7 instead of 0xD5). Fix: scan the dibit stream for
+    the SFD pattern (01,01,01,11) and resume capturing at the dibit
+    right after it. The number of missed leading dibits no longer
+    matters.
+
+    Update 22.11.2026: the shim now emits ONLY frame bytes (dst MAC
+    onwards), no synthetic preamble. LiteEth's preamble checker passed
+    the preamble through on this Cyclone IV build (verified by UART
+    byte taps), shifting the MAC/ARP headers by one byte; the baseline
+    disables the MAC preamble/CRC stages (`with_preamble_crc=False`),
+    so the stack expects the frame to start at the destination MAC.
     """
+
+    MODE_SEARCH = 0
+    MODE_PRE = 1
+    MODE_DATA = 2
 
     def __init__(self, crs_dv_i, rxd_i):
         self.source = source = stream.Endpoint(eth_phy_description(8))
@@ -126,42 +143,134 @@ class RMIIRXShim(LiteXModule):
             e1.eq(e0),
         ]
 
-        # byte assembler: 4 delayed dibits -> 1 byte (first dibit in the
-        # LSB pair), one-beat skid so the consumer's ready cannot
-        # overwrite a held byte
+        mode = Signal(2, reset=self.MODE_SEARCH)
+
+        # 2-entry byte queue between the assembler and the source: the
+        # synthetic preamble drains while the real dst-MAC bytes keep
+        # arriving (they complete at one byte per 4 dibit cycles)
+        f0_valid = Signal()
+        f0_data = Signal(8)
+        f0_last = Signal()
+        f1_valid = Signal()
+        f1_data = Signal(8)
+        f1_last = Signal()
+
+        # SFD scanner (SEARCH mode): last 4 captured dibits, newest pair
+        # at [1:0]; the SFD pattern is (01,01,01,11) = 0x57
+        sreg = Signal(8, reset=0)     # reset to a non-matching pattern
+        self.sync += If(e1 & (mode == self.MODE_SEARCH),
+                        sreg.eq(Cat(d1, sreg[0:6])))
+        sfd_hit = Signal()
+        # sreg holds the dibits presented BEFORE the current d1 (they
+        # shift in at the end of each cycle), so the pattern check must
+        # combine sreg[5:0] (the three dibits before the SFD close) with
+        # the current d1: firing one cycle later would eat the first
+        # dst-MAC dibit into the scanner.
+        self.comb += sfd_hit.eq(e1 & (mode == self.MODE_SEARCH) &
+                                (sreg[:6] == 0b01_01_01) & (d1 == 0b11))
+
+        # Synthetic preamble (7x 0x55 + SFD) for the stock MAC framing.
+        pre_cnt = Signal(3)
+        pre_byte = Signal(8)
+        self.comb += [
+            pre_byte.eq(Mux(pre_cnt == 7, 0xD5, 0x55)),
+            source.valid.eq((mode == self.MODE_PRE) |
+                            ((mode == self.MODE_DATA) & f0_valid)),
+            source.payload.data.eq(Mux(mode == self.MODE_PRE, pre_byte,
+                                       f0_data)),
+            source.last.eq((mode == self.MODE_DATA) & f0_last),
+        ]
+
+        # byte assembler (PRE and DATA modes): 4 delayed dibits -> 1
+        # byte (first dibit in the LSB pair)
         shift = Signal(8)
         bits = Signal(2)               # dibits collected 0..3
-        beat_valid = Signal()
-        beat_last = Signal()
         consume = Signal()
-        self.comb += [
-            consume.eq(source.valid & source.ready),
-            source.valid.eq(beat_valid),
-            source.payload.data.eq(shift),
-            source.last.eq(beat_last),
-        ]
+        self.comb += consume.eq(source.valid & source.ready)
+        new_byte = Signal(8)
+        self.comb += new_byte.eq(Cat(shift[2:8], d1))
+        pushing = Signal()
+        self.comb += pushing.eq((mode != self.MODE_SEARCH) & e1 &
+                                (bits == 3))
+
         self.sync += [
-            # an incomplete byte at frame end is dropped; a held
-            # complete byte waits for the consumer
-            If(~e1 & (~beat_valid | consume),
-               beat_valid.eq(0),
-               beat_last.eq(0),
+            # mode FSM
+            If(mode == self.MODE_SEARCH,
+               If(sfd_hit,
+                  mode.eq(self.MODE_PRE),
+                  pre_cnt.eq(0),
+                  bits.eq(0),
+               ),
+            ).Elif(mode == self.MODE_PRE,
+               If(consume,
+                  If(pre_cnt == 7,
+                     mode.eq(self.MODE_DATA),
+                  ).Else(
+                     pre_cnt.eq(pre_cnt + 1),
+                  ),
+               ),
             ),
-            If(~e1,
-               bits.eq(0),
-            ).Elif(consume | ~beat_valid,
+
+            # byte queue: pop on consume (DATA mode), push on completion
+            If((mode == self.MODE_DATA) & consume,
+               If(pushing,
+                  # queue full and draining: f1 advances to f0, the new
+                  # byte takes f1's slot
+                  f0_valid.eq(1),
+                  f0_data.eq(f1_data),
+                  f0_last.eq(f1_last),
+                  f1_valid.eq(1),
+                  f1_data.eq(new_byte),
+                  f1_last.eq(crs_last),
+               ).Else(
+                  f0_valid.eq(f1_valid),
+                  f0_data.eq(f1_data),
+                  f0_last.eq(f1_last),
+                  f1_valid.eq(0),
+               ),
+            ).Elif(pushing & ~((mode == self.MODE_DATA) & f0_valid & f1_valid),
+               If(~f0_valid,
+                  f0_valid.eq(1),
+                  f0_data.eq(new_byte),
+                  f0_last.eq(crs_last),
+               ).Elif(~f1_valid,
+                  f1_valid.eq(1),
+                  f1_data.eq(new_byte),
+                  f1_last.eq(crs_last),
+               ),
+            ),  # else: queue overflow, byte dropped
+
+            # dibit assembly runs in PRE and DATA modes (the dst MAC
+            # dibits already arrive while the preamble is synthetic)
+            If((mode != self.MODE_SEARCH) & e1,
                # the new dibit lands in the high pair and the older
                # ones shift down: after 4 dibits the first-received
                # pair sits in the LSB pair (LSB-first byte)
-               shift.eq(Cat(shift[2:8], d1)),
-               bits.eq(bits + 1),
-               beat_valid.eq(bits == 3),
-               beat_last.eq(crs_last),   # aligned with the last dibit
+               shift.eq(new_byte),
                If(bits == 3,
                   bits.eq(0),
+               ).Else(
+                  bits.eq(bits + 1),
                ),
+            ).Elif(~e1,
+               # an incomplete byte at frame end is dropped
+               bits.eq(0),
+            ),
+
+            # Re-arm the SFD scanner after the last byte has been taken.
+            # Without this the shim stays in DATA mode and emits the next
+            # frame's preamble as payload (observed on HW 22.11.2026).
+            # Last in the list so it overrides the queue/assembler above.
+            If(consume & source.last,
+               mode.eq(self.MODE_SEARCH),
+               sreg.eq(0),
+               bits.eq(0),
+               f0_valid.eq(0),
+               f1_valid.eq(0),
             ),
         ]
+
+
 
 
 class LiteEthRMIIShim(LiteXModule):
