@@ -5971,18 +5971,25 @@ always @(posedge eth_rx_clk) begin
 		end
 	end
 	if (((phy_rmiirxshim_mode == 2'd2) & phy_rmiirxshim_consume)) begin
-		if (phy_rmiirxshim_pushing) begin
+		if ((phy_rmiirxshim_pushing & (~phy_rmiirxshim_f1_valid))) begin
 			phy_rmiirxshim_f0_valid <= 1'd1;
-			phy_rmiirxshim_f0_data <= phy_rmiirxshim_f1_data;
-			phy_rmiirxshim_f0_last <= phy_rmiirxshim_f1_last;
-			phy_rmiirxshim_f1_valid <= 1'd1;
-			phy_rmiirxshim_f1_data <= phy_rmiirxshim_new_byte;
-			phy_rmiirxshim_f1_last <= phy_rmiirxshim_crs_last;
-		end else begin
-			phy_rmiirxshim_f0_valid <= phy_rmiirxshim_f1_valid;
-			phy_rmiirxshim_f0_data <= phy_rmiirxshim_f1_data;
-			phy_rmiirxshim_f0_last <= phy_rmiirxshim_f1_last;
+			phy_rmiirxshim_f0_data <= phy_rmiirxshim_new_byte;
+			phy_rmiirxshim_f0_last <= phy_rmiirxshim_crs_last;
 			phy_rmiirxshim_f1_valid <= 1'd0;
+		end else begin
+			if (phy_rmiirxshim_pushing) begin
+				phy_rmiirxshim_f0_valid <= 1'd1;
+				phy_rmiirxshim_f0_data <= phy_rmiirxshim_f1_data;
+				phy_rmiirxshim_f0_last <= phy_rmiirxshim_f1_last;
+				phy_rmiirxshim_f1_valid <= 1'd1;
+				phy_rmiirxshim_f1_data <= phy_rmiirxshim_new_byte;
+				phy_rmiirxshim_f1_last <= phy_rmiirxshim_crs_last;
+			end else begin
+				phy_rmiirxshim_f0_valid <= phy_rmiirxshim_f1_valid;
+				phy_rmiirxshim_f0_data <= phy_rmiirxshim_f1_data;
+				phy_rmiirxshim_f0_last <= phy_rmiirxshim_f1_last;
+				phy_rmiirxshim_f1_valid <= 1'd0;
+			end
 		end
 	end else begin
 		if ((phy_rmiirxshim_pushing & (~(((phy_rmiirxshim_mode == 2'd2) & phy_rmiirxshim_f0_valid) & phy_rmiirxshim_f1_valid)))) begin

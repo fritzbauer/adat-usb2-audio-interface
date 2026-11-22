@@ -130,10 +130,44 @@ zweiter Trace mit `icmp.rx.depacketizer.source`, `icmp.echo.sink`,
 `icmp.echo.source`, `icmp.tx.sink` zeigt ebenfalls identische Bytes bis
 zum Echo-Eingang.
 
-Damit ist die Fehlerstelle eingegrenzt: der zusätzliche Byte entsteht
-**am Übergang Header→Payload innerhalb des ICMP-Depacketizers**
-(`FixedDepacketizer` in `fixed_depacketizer.py`), nicht in Crossbar,
-IP-RX oder Echo. Der Simulator zeigt dort korrektes Verhalten; auf
-Hardware beginnt die Payload mit dem letzten Header-Byte. Eine direkte
-Ursache (z. B. anderes FSM-Timing durch Synthese/Constraint) ist noch
-nicht gefunden.
+Damit war die Fehlerstelle zunächst **fälschlich** im ICMP-Depacketizer
+vermutet. Die späteren Stage-Probes (unten) zeigen: der Byte ist schon im
+Shim-Ausgang enthalten; Depacketizer, Crossbar, IP-RX und Echo leiten ihn
+nur weiter. Die obige Eingrenzung war ein Artefakt der Triggerung auf den
+ersten Payload-Takt — die zusätzlichen Takte davor wurden nicht
+mitgezeichnet.
+
+## Root-Cause und Fix (Nachtrag, 22.11., final)
+
+**Ursache ist der 2-Byte-Queue im RMII-RX-Shim**, nicht der Depacketizer.
+In `RMIIRXShim` (`etheradat/liteeth/rmii_shim.py`) werden Bytes im
+DATA-Modus in `f0`/`f1` zwischengespeichert. Wenn in demselben Takt ein
+Byte konsumiert (`consume = source.valid & source.ready`) **und** ein
+neues Byte fertig assembliert wird (`pushing`), wurde immer
+`f0_data <= f1_data` ausgeführt — auch wenn `f1_valid = 0` war. `f1_data`
+enthält dann noch die **veralteten Daten des zuletzt konsumierten Bytes**,
+und genau dieses Byte wurde ein zweites Mal ausgegeben. Bei Rückdruck
+(die MAC-Pipeline nimmt nicht jeden Takt ein Byte an) entsteht so genau
+**ein doppeltes Byte** im RX-Strom. Liegt die Stelle im ICMP-/UDP-Header,
+erscheint sie als 1-Byte-Shift der Payload (letztes Header-Byte zuerst,
+letztes Payload-Byte fehlt), wodurch auch die ICMP-Checksum
+(`request + 0x800`) ungültig wurde.
+
+**Fix:** in diesem Fall das neu assemblierte Byte direkt nach `f0`
+schreiben (`f0_data <= new_byte`, `f0_last <= crs_last`, `f1_valid <= 0`);
+die bisherige `f1 → f0`-Weiterleitung nur noch bei `f1_valid = 1`.
+
+### Verifikation
+
+- Shim-Standalone-Sim mit periodischem `ready`-Stall: vorher 73 Bytes
+ _output_ für 72 Bytes _input_ (dupliziertes `0xad`), nachher 72 = 72.
+- Full-Stack-Sim (`sim_ping.py`, ARP-Priming + ICMP-Echo): Reply ist
+  byte-exakt, ICMP-Checksum über die gesendeten 32 Bytes = 0x0000.
+- Alle Depacketizer-Monkeypatches (MAC/ARP/IP/UDP/ICMP) blieben unverändert;
+  der Fehler trat mit `FixedDepacketizer` **und** mit Stock-`Depacketizer`
+  identisch auf. Zwei erfolglose Kontrollversuche (Ersetzen von
+  `PipeReady` durch Durchreichen; Stock-Depacketizer für UDP/ICMP) wurden
+  wieder entfernt.
+- Hardware (EP4CGX150, LAN8720, Build 19:45):
+  `ping -c 5 -W 1 192.168.42.2` → 5 gesendet, 5 empfangen, 0 % Verlust;
+  UDP-Echo Port 1234 → `b'hello-etheradat'` byte-exakt.

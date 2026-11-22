@@ -213,7 +213,16 @@ class RMIIRXShim(LiteXModule):
 
             # byte queue: pop on consume (DATA mode), push on completion
             If((mode == self.MODE_DATA) & consume,
-               If(pushing,
+               If(pushing & ~f1_valid,
+                  # Only one byte queued: the new byte goes straight into
+                  # f0. Advancing a stale f1_data would emit the byte we
+                  # just consumed a second time on hardware (one extra
+                  # byte after the 8th byte of an ICMP/UDP header).
+                  f0_valid.eq(1),
+                  f0_data.eq(new_byte),
+                  f0_last.eq(crs_last),
+                  f1_valid.eq(0),
+               ).Elif(pushing,
                   # queue full and draining: f1 advances to f0, the new
                   # byte takes f1's slot
                   f0_valid.eq(1),
