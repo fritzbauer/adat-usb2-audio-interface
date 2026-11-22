@@ -1,0 +1,23 @@
+I would like to extend this FPGA USB Audio Interface project with additional functionality.
+
+It should be possible to transmit audio signals over a CAT Ethernet cable. This allows for much longer transmission distances than pure ADAT.
+
+I already have a project located at /mnt/Audio/etheradat. There you will find the Ethernet protocol definition and its implementation. It does not use UDP, TCP, or IP, but instead operates exclusively on the physical Ethernet layer.
+
+Can you implement a new module for this FPGA project in the etheradat directory?
+Instead of being an USB Audio Interface our FPGA Board should implement the RP2350 part which routes between ADAT and RMII in the first version. (in a second version, we want to implement the other end as well, to receive the ethernet signal and route it to USB as audio interface (instead of using the PCs ethernet port). Consider this when making design decisions)
+Like in the original EtherADAT project, the module should have 3 ADAT inputs and 2 ADAT outputs. It should interface with a LAN8720 PHY via RMII, transmitting and receiving these signals through it.
+
+You can probably use the LiteX LiteEth RMII module: https://github.com/enjoy-digital/liteeth/tree/master
+
+The RMII module is not connected yet. Let's connect it to the J7 connectors of the ADATFace. These correspond to the following J2 pins on the QMTech board:
+
+J2 pin 4: +3.3V
+J2 pin 6: GND
+J2 pins 8, 10, 12, 14, 16, 18, 20, 22: available for RMII signals
+
+Please write comprehensive simulation tests to verify and validate the module functionality before integrating it into the audio interface.
+
+If useful, you may reuse the ADAT encoding/decoding code from the EtherADAT project to generate and verify test vectors.
+
+If anything is unclear, please ask follow-up questions.

@@ -12,3 +12,4 @@ gateware/.venv/
 gateware/tools/openfpgaloader_bridge/*.rbf
 *.vcd
 *.gtkw
+/etheradat-scratch-saved/

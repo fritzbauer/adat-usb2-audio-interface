@@ -77,7 +77,12 @@ class RMIIClockDomain(Elaboratable):
         m.domains.rmii = ClockDomain()
         m.d.comb += ClockSignal("rmii").eq(self.clk_in)
 
-        por_cnt = Signal(max(1, self.por_cycles.bit_length()))
+        # reset_less: the POR counter must keep running while the
+        # synchronized reset (which it produces) holds the domain —
+        # otherwise it is held at 0 forever and the domain never starts
+        # (verified in pysim 18.11.2026).
+        por_cnt = Signal(max(1, self.por_cycles.bit_length()),
+                         reset_less=True)
         por = por_cnt < self.por_cycles
         with m.If(por):
             m.d.rmii += por_cnt.eq(por_cnt + 1)

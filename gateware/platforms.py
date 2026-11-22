@@ -40,6 +40,7 @@ class IntelFPGAParameters:
             # (harmless) setup violations on the CDC paths.
             set_clock_groups -asynchronous \
                 -group [get_clocks {clk50*}] \
+                -group [get_clocks {rmii_0__ref_clk*}] \
                 -group [get_clocks {car|audiopll|* car|mainpll|* car|fastpll|*}]
         """
 

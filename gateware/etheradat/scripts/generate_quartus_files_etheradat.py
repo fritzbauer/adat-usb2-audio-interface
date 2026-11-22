@@ -34,6 +34,10 @@ def main():
                         choices=["input", "output"],
                         help="who sources the 50 MHz RMII reference "
                              "(default: the FPGA)")
+    parser.add_argument("--debug-leds", action="store_true",
+                        help="map RMII-domain debug signals onto the LEDs")
+    parser.add_argument("--led-test", action="store_true",
+                        help="minimal PLL/LED blink test, no rmii/bridge")
     args = parser.parse_args()
 
     platform = get_appropriate_platform()
@@ -45,7 +49,9 @@ def main():
         plat_name = platform.__class__.__name__.lower()
         build_dir = f"build_etheradat_{plat_name}"
 
-    top = EtherADATInterface(ref_clk_mode=args.ref_clk_mode)
+    top = EtherADATInterface(ref_clk_mode=args.ref_clk_mode,
+                             debug_leds=args.debug_leds,
+                             led_test=args.led_test)
     plan = platform.build(top, do_build=False)
     plan.execute_local(build_dir, run_script=False)
 

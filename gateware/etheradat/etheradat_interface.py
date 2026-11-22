@@ -50,15 +50,42 @@ class EtherADATInterface(Elaboratable):
     """
 
     def __init__(self, ref_clk_mode="output", own_mac=0x02AD6E657401,
-                 device_serial=0x41444146, session_nonce=0):
+                 device_serial=0x41444146, session_nonce=0,
+                 debug_leds=False, led_test=False):
         assert ref_clk_mode in ("input", "output")
         self.ref_clk_mode = ref_clk_mode
         self.own_mac = own_mac
         self.device_serial = device_serial
         self.session_nonce = session_nonce
+        self.debug_leds = debug_leds
+        self.led_test = led_test
 
     def elaborate(self, platform):
         m = Module()
+
+        if self.led_test:
+            # minimal bring-up probe: all 8 LEDs blink from PLL-clocked
+            # counters (fast and sync domains). No rmii, no bridge.
+            # All LEDs blinking = both PLLs locked + every LED pin wired.
+            clk_pin = platform.request(platform.default_clk)
+            m.submodules.car = car = platform.clock_domain_generator(
+                clk_input=clk_pin.i)
+            leds = platform.request("leds")
+            c_fast = Signal(27)
+            c_sync = Signal(27)
+            m.d.fast += c_fast.eq(c_fast + 1)
+            m.d.sync += c_sync.eq(c_sync + 1)
+            m.d.comb += [
+                leds.host.eq(c_fast[24]),
+                leds.usb1.eq(c_fast[25]),
+                leds.usb2.eq(c_fast[26]),
+                leds.sync1.eq(c_fast[24]),
+                leds.sync2.eq(c_fast[25]),
+                leds.sync3.eq(c_fast[26]),
+                leds.active1.eq(c_sync[24]),
+                leds.active2.eq(c_sync[25]),
+            ]
+            return m
 
         # the 50 MHz oscillator is requested here so the RMII reference
         # (in ref_clk_mode="output") and the PLLs share the exact same net
@@ -178,17 +205,49 @@ class EtherADATInterface(Elaboratable):
         # status LEDs (bring-up aid)
         #
         leds = platform.request("leds")
-        m.d.comb += [
-            leds.host.eq(bridge.link_up),          # PHY link (BMSR)
-            leds.usb1.eq(bridge.pc_linked),        # PC MAC learned
-            leds.usb2.eq(bridge.free_run),         # no ADAT input synced
-            leds.sync1.eq(bridge.builder.synced_in[0]),
-            leds.sync2.eq(bridge.builder.synced_in[1]),
-            leds.sync3.eq(bridge.builder.synced_in[2]),
-            # activity: MSB of the free-running frame counters
-            leds.active1.eq(bridge.stats_tx_frames[22]),
-            leds.active2.eq(bridge.stats_rx_frames[22]),
-        ]
+        if self.debug_leds:
+            # debug build: the RMII domain made directly visible.
+            #   host        : free-running counter in the rmii domain —
+            #                 toggles ~1.5 Hz iff the rmii clock ticks
+            #   usb1        : MDIO found a PHY (PHYID1 probe succeeded)
+            #   usb2        : raw CRS_DV — flickers on ANY wire traffic
+            #   sync1       : bridge -> MAC core TX handshake
+            #   sync2       : MAC core -> bridge RX stream valid
+            #   sync3       : raw MDIO line (on = released/pulled up,
+            #                 flicker = PHY responds)
+            #   sync4       : discovery hello timer expired (4 Hz blink
+            #                 = FSM alive and wants to send)
+            #   active1     : free_run (audio builder alive)
+            #   active2     : MDIO oe (master actively driving reads)
+            #   suspended1  : raw RXD0 (wire data activity)
+            #   suspended2  : TX_EN output (pulses while transmitting)
+            dbg_cnt = Signal(26)
+            m.d["rmii"] += dbg_cnt.eq(dbg_cnt + 1)
+            m.d.comb += [
+                leds.host.eq(dbg_cnt[24]),
+                leds.usb1.eq(bridge.mdio.phy_found_out),
+                leds.usb2.eq(rmii.crs_dv.i),
+                leds.sync1.eq(bridge.mac_tx_valid & bridge.mac_tx_ready),
+                leds.sync2.eq(bridge.mac_rx_valid),
+                leds.sync3.eq(rmii.mdio.i),
+                leds.sync4.eq(bridge.discovery.dbg_hello_due),
+                leds.active1.eq(bridge.free_run),
+                leds.active2.eq(bridge.mdio.mdio_oe),
+                leds.suspended1.eq(rmii.rxd0.i),
+                leds.suspended2.eq(rmii.tx_en.o),
+            ]
+        else:
+            m.d.comb += [
+                leds.host.eq(bridge.link_up),          # PHY link (BMSR)
+                leds.usb1.eq(bridge.pc_linked),        # PC MAC learned
+                leds.usb2.eq(bridge.free_run),         # no ADAT input synced
+                leds.sync1.eq(bridge.builder.synced_in[0]),
+                leds.sync2.eq(bridge.builder.synced_in[1]),
+                leds.sync3.eq(bridge.builder.synced_in[2]),
+                # activity: MSB of the free-running frame counters
+                leds.active1.eq(bridge.stats_tx_frames[22]),
+                leds.active2.eq(bridge.stats_rx_frames[22]),
+            ]
 
         return m
 

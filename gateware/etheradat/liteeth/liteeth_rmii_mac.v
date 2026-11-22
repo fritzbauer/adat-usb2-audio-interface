@@ -33,107 +33,42 @@ wire rmiitxshim_sink_last;
 wire [7:0] rmiitxshim_sink_payload_data;
 wire rmiitxshim_sink_payload_be;
 wire rmiitxshim_sink_payload_error;
-wire rmiitxshim_converter_sink_valid;
-wire rmiitxshim_converter_sink_ready;
-reg rmiitxshim_converter_sink_first = 1'd0;
-reg rmiitxshim_converter_sink_last = 1'd0;
-wire [7:0] rmiitxshim_converter_sink_payload_data;
-wire rmiitxshim_converter_source_valid;
-wire rmiitxshim_converter_source_ready;
-wire rmiitxshim_converter_source_first;
-wire rmiitxshim_converter_source_last;
-reg [1:0] rmiitxshim_converter_source_payload_data;
-wire rmiitxshim_converter_source_payload_valid_token_count;
-reg [1:0] rmiitxshim_converter_mux = 2'd0;
-wire rmiitxshim_converter_first;
-wire rmiitxshim_converter_last;
-wire rmiitxshim_source_source_valid;
-wire rmiitxshim_source_source_ready;
-wire rmiitxshim_source_source_first;
-wire rmiitxshim_source_source_last;
-wire [1:0] rmiitxshim_source_source_payload_data;
-wire rmiirxshim_source_source_valid0;
-wire rmiirxshim_source_source_ready0;
-wire rmiirxshim_source_source_first0;
-wire rmiirxshim_source_source_last0;
-wire [7:0] rmiirxshim_source_source_payload_data0;
-reg rmiirxshim_source_source_payload_be;
-wire rmiirxshim_source_source_payload_error;
+reg [7:0] rmiitxshim_shift = 8'd0;
+reg [2:0] rmiitxshim_count = 3'd0;
+wire rmiirxshim_source_valid;
+wire rmiirxshim_source_ready;
+reg rmiirxshim_source_first = 1'd0;
+wire rmiirxshim_source_last;
+wire [7:0] rmiirxshim_source_payload_data;
+wire rmiirxshim_source_payload_be;
+reg rmiirxshim_source_payload_error = 1'd0;
 wire rmiirxshim_crs_dv;
 wire [1:0] rmiirxshim_rx_data;
-reg rmiirxshim_converter_sink_valid;
-wire rmiirxshim_converter_sink_ready;
-reg rmiirxshim_converter_sink_first = 1'd0;
-reg rmiirxshim_converter_sink_last;
-wire [1:0] rmiirxshim_converter_sink_payload_data;
-wire rmiirxshim_converter_source_valid;
-wire rmiirxshim_converter_source_ready;
-reg rmiirxshim_converter_source_first = 1'd0;
-reg rmiirxshim_converter_source_last = 1'd0;
-reg [7:0] rmiirxshim_converter_source_payload_data = 8'd0;
-reg [2:0] rmiirxshim_converter_source_payload_valid_token_count = 3'd0;
-reg [1:0] rmiirxshim_converter_demux = 2'd0;
-wire rmiirxshim_converter_load_part;
-reg rmiirxshim_converter_strobe_all = 1'd0;
-wire rmiirxshim_source_source_valid1;
-wire rmiirxshim_source_source_ready1;
-wire rmiirxshim_source_source_first1;
-wire rmiirxshim_source_source_last1;
-wire [7:0] rmiirxshim_source_source_payload_data1;
-wire rmiirxshim_delay_sink_valid;
-wire rmiirxshim_delay_sink_ready;
-reg rmiirxshim_delay_sink_first = 1'd0;
-reg rmiirxshim_delay_sink_last = 1'd0;
-wire [1:0] rmiirxshim_delay_sink_payload_data;
-wire rmiirxshim_delay_source_valid;
-reg rmiirxshim_delay_source_ready;
-wire rmiirxshim_delay_source_first;
-wire rmiirxshim_delay_source_last;
-wire [1:0] rmiirxshim_delay_source_payload_data;
-wire rmiirxshim_delay_buffer0_sink_sink_valid;
-wire rmiirxshim_delay_buffer0_sink_sink_ready;
-wire rmiirxshim_delay_buffer0_sink_sink_first;
-wire rmiirxshim_delay_buffer0_sink_sink_last;
-wire [1:0] rmiirxshim_delay_buffer0_sink_sink_payload_data;
-wire rmiirxshim_delay_buffer0_source_source_valid;
-wire rmiirxshim_delay_buffer0_source_source_ready;
-wire rmiirxshim_delay_buffer0_source_source_first;
-wire rmiirxshim_delay_buffer0_source_source_last;
-wire [1:0] rmiirxshim_delay_buffer0_source_source_payload_data;
-wire rmiirxshim_delay_buffer0_pipe_valid_sink_valid;
-wire rmiirxshim_delay_buffer0_pipe_valid_sink_ready;
-wire rmiirxshim_delay_buffer0_pipe_valid_sink_first;
-wire rmiirxshim_delay_buffer0_pipe_valid_sink_last;
-wire [1:0] rmiirxshim_delay_buffer0_pipe_valid_sink_payload_data;
-reg rmiirxshim_delay_buffer0_pipe_valid_source_valid = 1'd0;
-wire rmiirxshim_delay_buffer0_pipe_valid_source_ready;
-reg rmiirxshim_delay_buffer0_pipe_valid_source_first = 1'd0;
-reg rmiirxshim_delay_buffer0_pipe_valid_source_last = 1'd0;
-reg [1:0] rmiirxshim_delay_buffer0_pipe_valid_source_payload_data = 2'd0;
-wire rmiirxshim_delay_buffer1_sink_sink_valid;
-wire rmiirxshim_delay_buffer1_sink_sink_ready;
-wire rmiirxshim_delay_buffer1_sink_sink_first;
-wire rmiirxshim_delay_buffer1_sink_sink_last;
-wire [1:0] rmiirxshim_delay_buffer1_sink_sink_payload_data;
-wire rmiirxshim_delay_buffer1_source_source_valid;
-wire rmiirxshim_delay_buffer1_source_source_ready;
-wire rmiirxshim_delay_buffer1_source_source_first;
-wire rmiirxshim_delay_buffer1_source_source_last;
-wire [1:0] rmiirxshim_delay_buffer1_source_source_payload_data;
-wire rmiirxshim_delay_buffer1_pipe_valid_sink_valid;
-wire rmiirxshim_delay_buffer1_pipe_valid_sink_ready;
-wire rmiirxshim_delay_buffer1_pipe_valid_sink_first;
-wire rmiirxshim_delay_buffer1_pipe_valid_sink_last;
-wire [1:0] rmiirxshim_delay_buffer1_pipe_valid_sink_payload_data;
-reg rmiirxshim_delay_buffer1_pipe_valid_source_valid = 1'd0;
-wire rmiirxshim_delay_buffer1_pipe_valid_source_ready;
-reg rmiirxshim_delay_buffer1_pipe_valid_source_first = 1'd0;
-reg rmiirxshim_delay_buffer1_pipe_valid_source_last = 1'd0;
-reg [1:0] rmiirxshim_delay_buffer1_pipe_valid_source_payload_data = 2'd0;
 wire rmiirxshim_crs_first;
 wire rmiirxshim_crs_last;
 reg rmiirxshim_crs_run = 1'd0;
 reg rmiirxshim_crs_dv_d = 1'd0;
+reg [1:0] rmiirxshim_d0 = 2'd0;
+reg [1:0] rmiirxshim_d1 = 2'd0;
+reg rmiirxshim_e0 = 1'd0;
+reg rmiirxshim_e1 = 1'd0;
+wire rmiirxshim_cap;
+reg [1:0] rmiirxshim_mode = 2'd0;
+reg rmiirxshim_f0_valid = 1'd0;
+reg [7:0] rmiirxshim_f0_data = 8'd0;
+reg rmiirxshim_f0_last = 1'd0;
+reg rmiirxshim_f1_valid = 1'd0;
+reg [7:0] rmiirxshim_f1_data = 8'd0;
+reg rmiirxshim_f1_last = 1'd0;
+reg [7:0] rmiirxshim_sreg = 8'd0;
+wire rmiirxshim_sfd_hit;
+reg [2:0] rmiirxshim_pre_cnt = 3'd0;
+wire [7:0] rmiirxshim_pre_byte;
+reg [7:0] rmiirxshim_shift = 8'd0;
+reg [1:0] rmiirxshim_bits = 2'd0;
+wire rmiirxshim_consume;
+wire [7:0] rmiirxshim_new_byte;
+wire rmiirxshim_pushing;
 wire sink_valid;
 wire sink_ready;
 wire sink_first;
@@ -289,7 +224,6 @@ reg [5:0] txdatapath_cdc_graycounter1_q_next_binary;
 wire [5:0] txdatapath_cdc_produce_rdomain;
 wire [5:0] txdatapath_cdc_consume_wdomain;
 wire [4:0] txdatapath_cdc_wrport_adr;
-wire [11:0] txdatapath_cdc_wrport_dat_r;
 wire txdatapath_cdc_wrport_we;
 wire [11:0] txdatapath_cdc_wrport_dat_w;
 wire [4:0] txdatapath_cdc_rdport_adr;
@@ -347,7 +281,6 @@ reg tx_packet_fifo_payload_fifo_replace = 1'd0;
 reg [10:0] tx_packet_fifo_payload_fifo_produce = 11'd0;
 reg [10:0] tx_packet_fifo_payload_fifo_consume = 11'd0;
 reg [10:0] tx_packet_fifo_payload_fifo_wrport_adr;
-wire [11:0] tx_packet_fifo_payload_fifo_wrport_dat_r;
 wire tx_packet_fifo_payload_fifo_wrport_we;
 wire [11:0] tx_packet_fifo_payload_fifo_wrport_dat_w;
 wire tx_packet_fifo_payload_fifo_do_read;
@@ -388,7 +321,6 @@ reg tx_packet_fifo_param_fifo_replace = 1'd0;
 reg [2:0] tx_packet_fifo_param_fifo_produce = 3'd0;
 reg [2:0] tx_packet_fifo_param_fifo_consume = 3'd0;
 reg [2:0] tx_packet_fifo_param_fifo_wrport_adr;
-wire [2:0] tx_packet_fifo_param_fifo_wrport_dat_r;
 wire tx_packet_fifo_param_fifo_wrport_we;
 wire [2:0] tx_packet_fifo_param_fifo_wrport_dat_w;
 wire tx_packet_fifo_param_fifo_do_read;
@@ -459,7 +391,6 @@ reg rx_packet_fifo_param_fifo_replace = 1'd0;
 reg [1:0] rx_packet_fifo_param_fifo_produce = 2'd0;
 reg [1:0] rx_packet_fifo_param_fifo_consume = 2'd0;
 reg [1:0] rx_packet_fifo_param_fifo_wrport_adr;
-wire [2:0] rx_packet_fifo_param_fifo_wrport_dat_r;
 wire rx_packet_fifo_param_fifo_wrport_we;
 wire [2:0] rx_packet_fifo_param_fifo_wrport_dat_w;
 wire rx_packet_fifo_param_fifo_do_read;
@@ -543,7 +474,6 @@ reg [5:0] rx_cdc_cdc_graycounter1_q_next_binary;
 wire [5:0] rx_cdc_cdc_produce_rdomain;
 wire [5:0] rx_cdc_cdc_consume_wdomain;
 wire [4:0] rx_cdc_cdc_wrport_adr;
-wire [11:0] rx_cdc_cdc_wrport_dat_r;
 wire rx_cdc_cdc_wrport_we;
 wire [11:0] rx_cdc_cdc_wrport_dat_w;
 wire [4:0] rx_cdc_cdc_rdport_adr;
@@ -630,7 +560,6 @@ reg liteethmaccrc32checker_syncfifo_replace = 1'd0;
 reg [2:0] liteethmaccrc32checker_syncfifo_produce = 3'd0;
 reg [2:0] liteethmaccrc32checker_syncfifo_consume = 3'd0;
 reg [2:0] liteethmaccrc32checker_syncfifo_wrport_adr;
-wire [11:0] liteethmaccrc32checker_syncfifo_wrport_dat_r;
 wire liteethmaccrc32checker_syncfifo_wrport_we;
 wire [11:0] liteethmaccrc32checker_syncfifo_wrport_dat_w;
 wire liteethmaccrc32checker_syncfifo_do_read;
@@ -777,143 +706,30 @@ assign user_source_last = source_last;
 assign user_source_payload_data = source_payload_data;
 assign user_source_payload_be = source_payload_be;
 assign user_source_payload_error = source_payload_error;
-assign rmiitxshim_converter_sink_valid = rmiitxshim_sink_valid;
-assign rmiitxshim_sink_ready = rmiitxshim_converter_sink_ready;
-assign rmiitxshim_converter_sink_payload_data = rmiitxshim_sink_payload_data;
-assign rmiitxshim_source_source_ready = 1'd1;
-assign rmii_tx_en = rmiitxshim_source_source_valid;
-assign rmii_txd = rmiitxshim_source_source_payload_data;
-assign rmiitxshim_source_source_valid = rmiitxshim_converter_source_valid;
-assign rmiitxshim_converter_source_ready = rmiitxshim_source_source_ready;
-assign rmiitxshim_source_source_first = rmiitxshim_converter_source_first;
-assign rmiitxshim_source_source_last = rmiitxshim_converter_source_last;
-assign rmiitxshim_source_source_payload_data = rmiitxshim_converter_source_payload_data;
-assign rmiitxshim_converter_first = (rmiitxshim_converter_mux == 1'd0);
-assign rmiitxshim_converter_last = (rmiitxshim_converter_mux == 2'd3);
-assign rmiitxshim_converter_source_valid = rmiitxshim_converter_sink_valid;
-assign rmiitxshim_converter_source_first = (rmiitxshim_converter_sink_first & rmiitxshim_converter_first);
-assign rmiitxshim_converter_source_last = (rmiitxshim_converter_sink_last & rmiitxshim_converter_last);
-assign rmiitxshim_converter_sink_ready = (rmiitxshim_converter_last & rmiitxshim_converter_source_ready);
-
-// synthesis translate_off
-reg dummy_d;
-// synthesis translate_on
-always @(*) begin
-	rmiitxshim_converter_source_payload_data <= 2'd0;
-	case (rmiitxshim_converter_mux)
-		1'd0: begin
-			rmiitxshim_converter_source_payload_data <= rmiitxshim_converter_sink_payload_data[1:0];
-		end
-		1'd1: begin
-			rmiitxshim_converter_source_payload_data <= rmiitxshim_converter_sink_payload_data[3:2];
-		end
-		2'd2: begin
-			rmiitxshim_converter_source_payload_data <= rmiitxshim_converter_sink_payload_data[5:4];
-		end
-		default: begin
-			rmiitxshim_converter_source_payload_data <= rmiitxshim_converter_sink_payload_data[7:6];
-		end
-	endcase
-// synthesis translate_off
-	dummy_d <= dummy_s;
-// synthesis translate_on
-end
-assign rmiitxshim_converter_source_payload_valid_token_count = rmiitxshim_converter_last;
+assign rmii_txd = rmiitxshim_shift[1:0];
+assign rmii_tx_en = (rmiitxshim_count != 1'd0);
+assign rmiitxshim_sink_ready = (rmiitxshim_count <= 1'd1);
+assign rmiirxshim_source_payload_be = 1'd1;
 assign rmiirxshim_crs_dv = rmii_crs_dv;
 assign rmiirxshim_rx_data = rmii_rxd;
 assign rmiirxshim_crs_first = (rmiirxshim_crs_dv & (rmiirxshim_rx_data != 1'd0));
 assign rmiirxshim_crs_last = ((~rmiirxshim_crs_dv) & (~rmiirxshim_crs_dv_d));
-assign rmiirxshim_delay_sink_valid = (rmiirxshim_crs_first | rmiirxshim_crs_run);
-assign rmiirxshim_delay_sink_payload_data = rmiirxshim_rx_data;
-assign rmiirxshim_converter_sink_payload_data = rmiirxshim_delay_source_payload_data;
-
-// synthesis translate_off
-reg dummy_d_1;
-// synthesis translate_on
-always @(*) begin
-	rmiirxshim_converter_sink_valid <= 1'd0;
-	rmiirxshim_converter_sink_last <= 1'd0;
-	rmiirxshim_delay_source_ready <= 1'd0;
-	rmiirxshim_delay_source_ready <= (~rmiirxshim_crs_run);
-	if (rmiirxshim_crs_run) begin
-		rmiirxshim_converter_sink_valid <= rmiirxshim_delay_source_valid;
-		rmiirxshim_delay_source_ready <= rmiirxshim_converter_sink_ready;
-		rmiirxshim_converter_sink_last <= rmiirxshim_crs_last;
-	end
-// synthesis translate_off
-	dummy_d_1 <= dummy_s;
-// synthesis translate_on
-end
-assign rmiirxshim_source_source_valid0 = rmiirxshim_source_source_valid1;
-assign rmiirxshim_source_source_ready1 = rmiirxshim_source_source_ready0;
-assign rmiirxshim_source_source_first0 = rmiirxshim_source_source_first1;
-assign rmiirxshim_source_source_last0 = rmiirxshim_source_source_last1;
-assign rmiirxshim_source_source_payload_data0 = rmiirxshim_source_source_payload_data1;
-
-// synthesis translate_off
-reg dummy_d_2;
-// synthesis translate_on
-always @(*) begin
-	rmiirxshim_source_source_payload_be <= 1'd0;
-	rmiirxshim_source_source_payload_be <= 1'd1;
-	rmiirxshim_source_source_payload_be <= 1'd1;
-// synthesis translate_off
-	dummy_d_2 <= dummy_s;
-// synthesis translate_on
-end
-assign rmiirxshim_source_source_payload_error = 1'd0;
-assign rmiirxshim_source_source_valid1 = rmiirxshim_converter_source_valid;
-assign rmiirxshim_converter_source_ready = rmiirxshim_source_source_ready1;
-assign rmiirxshim_source_source_first1 = rmiirxshim_converter_source_first;
-assign rmiirxshim_source_source_last1 = rmiirxshim_converter_source_last;
-assign rmiirxshim_source_source_payload_data1 = rmiirxshim_converter_source_payload_data;
-assign rmiirxshim_converter_sink_ready = ((~rmiirxshim_converter_strobe_all) | rmiirxshim_converter_source_ready);
-assign rmiirxshim_converter_source_valid = rmiirxshim_converter_strobe_all;
-assign rmiirxshim_converter_load_part = (rmiirxshim_converter_sink_valid & rmiirxshim_converter_sink_ready);
-assign rmiirxshim_delay_buffer0_pipe_valid_sink_ready = ((~rmiirxshim_delay_buffer0_pipe_valid_source_valid) | rmiirxshim_delay_buffer0_pipe_valid_source_ready);
-assign rmiirxshim_delay_buffer0_pipe_valid_sink_valid = rmiirxshim_delay_buffer0_sink_sink_valid;
-assign rmiirxshim_delay_buffer0_sink_sink_ready = rmiirxshim_delay_buffer0_pipe_valid_sink_ready;
-assign rmiirxshim_delay_buffer0_pipe_valid_sink_first = rmiirxshim_delay_buffer0_sink_sink_first;
-assign rmiirxshim_delay_buffer0_pipe_valid_sink_last = rmiirxshim_delay_buffer0_sink_sink_last;
-assign rmiirxshim_delay_buffer0_pipe_valid_sink_payload_data = rmiirxshim_delay_buffer0_sink_sink_payload_data;
-assign rmiirxshim_delay_buffer0_source_source_valid = rmiirxshim_delay_buffer0_pipe_valid_source_valid;
-assign rmiirxshim_delay_buffer0_pipe_valid_source_ready = rmiirxshim_delay_buffer0_source_source_ready;
-assign rmiirxshim_delay_buffer0_source_source_first = rmiirxshim_delay_buffer0_pipe_valid_source_first;
-assign rmiirxshim_delay_buffer0_source_source_last = rmiirxshim_delay_buffer0_pipe_valid_source_last;
-assign rmiirxshim_delay_buffer0_source_source_payload_data = rmiirxshim_delay_buffer0_pipe_valid_source_payload_data;
-assign rmiirxshim_delay_buffer1_pipe_valid_sink_ready = ((~rmiirxshim_delay_buffer1_pipe_valid_source_valid) | rmiirxshim_delay_buffer1_pipe_valid_source_ready);
-assign rmiirxshim_delay_buffer1_pipe_valid_sink_valid = rmiirxshim_delay_buffer1_sink_sink_valid;
-assign rmiirxshim_delay_buffer1_sink_sink_ready = rmiirxshim_delay_buffer1_pipe_valid_sink_ready;
-assign rmiirxshim_delay_buffer1_pipe_valid_sink_first = rmiirxshim_delay_buffer1_sink_sink_first;
-assign rmiirxshim_delay_buffer1_pipe_valid_sink_last = rmiirxshim_delay_buffer1_sink_sink_last;
-assign rmiirxshim_delay_buffer1_pipe_valid_sink_payload_data = rmiirxshim_delay_buffer1_sink_sink_payload_data;
-assign rmiirxshim_delay_buffer1_source_source_valid = rmiirxshim_delay_buffer1_pipe_valid_source_valid;
-assign rmiirxshim_delay_buffer1_pipe_valid_source_ready = rmiirxshim_delay_buffer1_source_source_ready;
-assign rmiirxshim_delay_buffer1_source_source_first = rmiirxshim_delay_buffer1_pipe_valid_source_first;
-assign rmiirxshim_delay_buffer1_source_source_last = rmiirxshim_delay_buffer1_pipe_valid_source_last;
-assign rmiirxshim_delay_buffer1_source_source_payload_data = rmiirxshim_delay_buffer1_pipe_valid_source_payload_data;
-assign rmiirxshim_delay_buffer0_sink_sink_valid = rmiirxshim_delay_sink_valid;
-assign rmiirxshim_delay_sink_ready = rmiirxshim_delay_buffer0_sink_sink_ready;
-assign rmiirxshim_delay_buffer0_sink_sink_first = rmiirxshim_delay_sink_first;
-assign rmiirxshim_delay_buffer0_sink_sink_last = rmiirxshim_delay_sink_last;
-assign rmiirxshim_delay_buffer0_sink_sink_payload_data = rmiirxshim_delay_sink_payload_data;
-assign rmiirxshim_delay_buffer1_sink_sink_valid = rmiirxshim_delay_buffer0_source_source_valid;
-assign rmiirxshim_delay_buffer0_source_source_ready = rmiirxshim_delay_buffer1_sink_sink_ready;
-assign rmiirxshim_delay_buffer1_sink_sink_first = rmiirxshim_delay_buffer0_source_source_first;
-assign rmiirxshim_delay_buffer1_sink_sink_last = rmiirxshim_delay_buffer0_source_source_last;
-assign rmiirxshim_delay_buffer1_sink_sink_payload_data = rmiirxshim_delay_buffer0_source_source_payload_data;
-assign rmiirxshim_delay_source_valid = rmiirxshim_delay_buffer1_source_source_valid;
-assign rmiirxshim_delay_buffer1_source_source_ready = rmiirxshim_delay_source_ready;
-assign rmiirxshim_delay_source_first = rmiirxshim_delay_buffer1_source_source_first;
-assign rmiirxshim_delay_source_last = rmiirxshim_delay_buffer1_source_source_last;
-assign rmiirxshim_delay_source_payload_data = rmiirxshim_delay_buffer1_source_source_payload_data;
+assign rmiirxshim_cap = (rmiirxshim_crs_first | rmiirxshim_crs_run);
+assign rmiirxshim_sfd_hit = (((rmiirxshim_e1 & (rmiirxshim_mode == 1'd0)) & (rmiirxshim_sreg[5:0] == 5'd21)) & (rmiirxshim_d1 == 2'd3));
+assign rmiirxshim_pre_byte = ((rmiirxshim_pre_cnt == 3'd7) ? 8'd213 : 7'd85);
+assign rmiirxshim_source_valid = ((rmiirxshim_mode == 1'd1) | ((rmiirxshim_mode == 2'd2) & rmiirxshim_f0_valid));
+assign rmiirxshim_source_payload_data = ((rmiirxshim_mode == 1'd1) ? rmiirxshim_pre_byte : rmiirxshim_f0_data);
+assign rmiirxshim_source_last = ((rmiirxshim_mode == 2'd2) & rmiirxshim_f0_last);
+assign rmiirxshim_consume = (rmiirxshim_source_valid & rmiirxshim_source_ready);
+assign rmiirxshim_new_byte = {rmiirxshim_d1, rmiirxshim_shift[7:2]};
+assign rmiirxshim_pushing = (((rmiirxshim_mode != 1'd0) & rmiirxshim_e1) & (rmiirxshim_bits == 2'd3));
 assign cdc_rst = txdatapath_ext_rst_to;
 assign tx_packet_fifo_reset = cdc_rst;
 assign tx_gap_reset = cdc_rst;
 assign tx_padding_counter_done = (tx_padding_counter >= 6'd59);
 
 // synthesis translate_off
-reg dummy_d_3;
+reg dummy_d;
 // synthesis translate_on
 always @(*) begin
 	tx_padding_sink_ready <= 1'd0;
@@ -982,7 +798,7 @@ always @(*) begin
 		end
 	endcase
 // synthesis translate_off
-	dummy_d_3 <= dummy_s;
+	dummy_d <= dummy_s;
 // synthesis translate_on
 end
 assign tx_crc_data0 = tx_crc_sink_payload_data;
@@ -999,7 +815,7 @@ assign tx_crc_data1 = tx_crc_data0;
 assign tx_crc_crc_prev = tx_crc_reg;
 
 // synthesis translate_off
-reg dummy_d_4;
+reg dummy_d_1;
 // synthesis translate_on
 always @(*) begin
 	tx_crc_value <= 32'd0;
@@ -1009,12 +825,12 @@ always @(*) begin
 		tx_crc_error <= (tx_crc_crc_next != 32'd3338984827);
 	end
 // synthesis translate_off
-	dummy_d_4 <= dummy_s;
+	dummy_d_1 <= dummy_s;
 // synthesis translate_on
 end
 
 // synthesis translate_off
-reg dummy_d_5;
+reg dummy_d_2;
 // synthesis translate_on
 always @(*) begin
 	tx_crc_crc_next <= 32'd0;
@@ -1051,12 +867,12 @@ always @(*) begin
 	tx_crc_crc_next[30] <= ((((tx_crc_crc_prev[22] ^ tx_crc_crc_prev[31]) ^ tx_crc_data1[0]) ^ tx_crc_crc_prev[28]) ^ tx_crc_data1[3]);
 	tx_crc_crc_next[31] <= ((tx_crc_crc_prev[23] ^ tx_crc_crc_prev[29]) ^ tx_crc_data1[2]);
 // synthesis translate_off
-	dummy_d_5 <= dummy_s;
+	dummy_d_2 <= dummy_s;
 // synthesis translate_on
 end
 
 // synthesis translate_off
-reg dummy_d_6;
+reg dummy_d_3;
 // synthesis translate_on
 always @(*) begin
 	tx_crc_sink_ready <= 1'd0;
@@ -1150,7 +966,7 @@ always @(*) begin
 		end
 	endcase
 // synthesis translate_off
-	dummy_d_6 <= dummy_s;
+	dummy_d_3 <= dummy_s;
 // synthesis translate_on
 end
 assign tx_crc_pipe_valid_sink_ready = ((~tx_crc_pipe_valid_source_valid) | tx_crc_pipe_valid_source_ready);
@@ -1170,7 +986,7 @@ assign tx_crc_source_source_payload_be = tx_crc_pipe_valid_source_payload_be;
 assign tx_crc_source_source_payload_error = tx_crc_pipe_valid_source_payload_error;
 
 // synthesis translate_off
-reg dummy_d_7;
+reg dummy_d_4;
 // synthesis translate_on
 always @(*) begin
 	tx_preamble_sink_ready <= 1'd0;
@@ -1246,7 +1062,7 @@ always @(*) begin
 		end
 	endcase
 // synthesis translate_off
-	dummy_d_7 <= dummy_s;
+	dummy_d_4 <= dummy_s;
 // synthesis translate_on
 end
 assign txdatapath_write_rst = (sys_rst | txdatapath_write_ext_rst);
@@ -1293,7 +1109,7 @@ assign txdatapath_cdc_rdport_adr = txdatapath_cdc_graycounter1_q_next_binary[4:0
 assign txdatapath_cdc_asyncfifo_dout = txdatapath_cdc_rdport_dat_r;
 
 // synthesis translate_off
-reg dummy_d_8;
+reg dummy_d_5;
 // synthesis translate_on
 always @(*) begin
 	txdatapath_cdc_graycounter0_q_next_binary <= 6'd0;
@@ -1303,13 +1119,13 @@ always @(*) begin
 		txdatapath_cdc_graycounter0_q_next_binary <= txdatapath_cdc_graycounter0_q_binary;
 	end
 // synthesis translate_off
-	dummy_d_8 <= dummy_s;
+	dummy_d_5 <= dummy_s;
 // synthesis translate_on
 end
 assign txdatapath_cdc_graycounter0_q_next = (txdatapath_cdc_graycounter0_q_next_binary ^ txdatapath_cdc_graycounter0_q_next_binary[5:1]);
 
 // synthesis translate_off
-reg dummy_d_9;
+reg dummy_d_6;
 // synthesis translate_on
 always @(*) begin
 	txdatapath_cdc_graycounter1_q_next_binary <= 6'd0;
@@ -1319,7 +1135,7 @@ always @(*) begin
 		txdatapath_cdc_graycounter1_q_next_binary <= txdatapath_cdc_graycounter1_q_binary;
 	end
 // synthesis translate_off
-	dummy_d_9 <= dummy_s;
+	dummy_d_6 <= dummy_s;
 // synthesis translate_on
 end
 assign txdatapath_cdc_graycounter1_q_next = (txdatapath_cdc_graycounter1_q_next_binary ^ txdatapath_cdc_graycounter1_q_next_binary[5:1]);
@@ -1334,14 +1150,14 @@ assign tx_packet_fifo_sink_sink_ready = (tx_packet_fifo_param_fifo_sink_ready & 
 assign tx_packet_fifo_source_source_valid = tx_packet_fifo_param_fifo_source_valid;
 
 // synthesis translate_off
-reg dummy_d_10;
+reg dummy_d_7;
 // synthesis translate_on
 always @(*) begin
 	tx_packet_fifo_source_source_first <= 1'd0;
 	tx_packet_fifo_source_source_first <= tx_packet_fifo_param_fifo_source_first;
 	tx_packet_fifo_source_source_first <= tx_packet_fifo_payload_fifo_source_first;
 // synthesis translate_off
-	dummy_d_10 <= dummy_s;
+	dummy_d_7 <= dummy_s;
 // synthesis translate_on
 end
 assign tx_packet_fifo_source_source_last = tx_packet_fifo_payload_fifo_source_last;
@@ -1370,7 +1186,7 @@ assign tx_packet_fifo_payload_fifo_syncfifo_re = (tx_packet_fifo_payload_fifo_sy
 assign tx_packet_fifo_payload_fifo_level1 = (tx_packet_fifo_payload_fifo_level0 + tx_packet_fifo_payload_fifo_readable);
 
 // synthesis translate_off
-reg dummy_d_11;
+reg dummy_d_8;
 // synthesis translate_on
 always @(*) begin
 	tx_packet_fifo_payload_fifo_wrport_adr <= 11'd0;
@@ -1380,7 +1196,7 @@ always @(*) begin
 		tx_packet_fifo_payload_fifo_wrport_adr <= tx_packet_fifo_payload_fifo_produce;
 	end
 // synthesis translate_off
-	dummy_d_11 <= dummy_s;
+	dummy_d_8 <= dummy_s;
 // synthesis translate_on
 end
 assign tx_packet_fifo_payload_fifo_wrport_dat_w = tx_packet_fifo_payload_fifo_syncfifo_din;
@@ -1407,7 +1223,7 @@ assign tx_packet_fifo_param_fifo_syncfifo_re = (tx_packet_fifo_param_fifo_syncfi
 assign tx_packet_fifo_param_fifo_level1 = (tx_packet_fifo_param_fifo_level0 + tx_packet_fifo_param_fifo_readable);
 
 // synthesis translate_off
-reg dummy_d_12;
+reg dummy_d_9;
 // synthesis translate_on
 always @(*) begin
 	tx_packet_fifo_param_fifo_wrport_adr <= 3'd0;
@@ -1417,7 +1233,7 @@ always @(*) begin
 		tx_packet_fifo_param_fifo_wrport_adr <= tx_packet_fifo_param_fifo_produce;
 	end
 // synthesis translate_off
-	dummy_d_12 <= dummy_s;
+	dummy_d_9 <= dummy_s;
 // synthesis translate_on
 end
 assign tx_packet_fifo_param_fifo_wrport_dat_w = tx_packet_fifo_param_fifo_syncfifo_din;
@@ -1430,7 +1246,7 @@ assign tx_packet_fifo_param_fifo_syncfifo_writable = (tx_packet_fifo_param_fifo_
 assign tx_packet_fifo_param_fifo_syncfifo_readable = (tx_packet_fifo_param_fifo_level0 != 1'd0);
 
 // synthesis translate_off
-reg dummy_d_13;
+reg dummy_d_10;
 // synthesis translate_on
 always @(*) begin
 	tx_gap_sink_ready <= 1'd0;
@@ -1468,7 +1284,7 @@ always @(*) begin
 		end
 	endcase
 // synthesis translate_off
-	dummy_d_13 <= dummy_s;
+	dummy_d_10 <= dummy_s;
 // synthesis translate_on
 end
 assign tx_padding_sink_valid = sink_valid;
@@ -1555,7 +1371,7 @@ assign rx_packet_fifo_param_fifo_source_param_dummy = rx_packet_fifo_param_fifo_
 assign rx_packet_fifo_param_fifo_syncfifo_re = rx_packet_fifo_param_fifo_source_ready;
 
 // synthesis translate_off
-reg dummy_d_14;
+reg dummy_d_11;
 // synthesis translate_on
 always @(*) begin
 	rx_packet_fifo_param_fifo_wrport_adr <= 2'd0;
@@ -1565,7 +1381,7 @@ always @(*) begin
 		rx_packet_fifo_param_fifo_wrport_adr <= rx_packet_fifo_param_fifo_produce;
 	end
 // synthesis translate_off
-	dummy_d_14 <= dummy_s;
+	dummy_d_11 <= dummy_s;
 // synthesis translate_on
 end
 assign rx_packet_fifo_param_fifo_wrport_dat_w = rx_packet_fifo_param_fifo_syncfifo_din;
@@ -1620,7 +1436,7 @@ assign rx_cdc_cdc_rdport_adr = rx_cdc_cdc_graycounter1_q_next_binary[4:0];
 assign rx_cdc_cdc_asyncfifo_dout = rx_cdc_cdc_rdport_dat_r;
 
 // synthesis translate_off
-reg dummy_d_15;
+reg dummy_d_12;
 // synthesis translate_on
 always @(*) begin
 	rx_cdc_cdc_graycounter0_q_next_binary <= 6'd0;
@@ -1630,13 +1446,13 @@ always @(*) begin
 		rx_cdc_cdc_graycounter0_q_next_binary <= rx_cdc_cdc_graycounter0_q_binary;
 	end
 // synthesis translate_off
-	dummy_d_15 <= dummy_s;
+	dummy_d_12 <= dummy_s;
 // synthesis translate_on
 end
 assign rx_cdc_cdc_graycounter0_q_next = (rx_cdc_cdc_graycounter0_q_next_binary ^ rx_cdc_cdc_graycounter0_q_next_binary[5:1]);
 
 // synthesis translate_off
-reg dummy_d_16;
+reg dummy_d_13;
 // synthesis translate_on
 always @(*) begin
 	rx_cdc_cdc_graycounter1_q_next_binary <= 6'd0;
@@ -1646,7 +1462,7 @@ always @(*) begin
 		rx_cdc_cdc_graycounter1_q_next_binary <= rx_cdc_cdc_graycounter1_q_binary;
 	end
 // synthesis translate_off
-	dummy_d_16 <= dummy_s;
+	dummy_d_13 <= dummy_s;
 // synthesis translate_on
 end
 assign rx_cdc_cdc_graycounter1_q_next = (rx_cdc_cdc_graycounter1_q_next_binary ^ rx_cdc_cdc_graycounter1_q_next_binary[5:1]);
@@ -1654,7 +1470,7 @@ assign rx_preamble_source_payload_data = rx_preamble_sink_payload_data;
 assign rx_preamble_source_payload_be = rx_preamble_sink_payload_be;
 
 // synthesis translate_off
-reg dummy_d_17;
+reg dummy_d_14;
 // synthesis translate_on
 always @(*) begin
 	rx_preamble_sink_ready <= 1'd0;
@@ -1687,7 +1503,7 @@ always @(*) begin
 		end
 	endcase
 // synthesis translate_off
-	dummy_d_17 <= dummy_s;
+	dummy_d_14 <= dummy_s;
 // synthesis translate_on
 end
 assign pulsesynchronizer0_o = (pulsesynchronizer0_toggle_o ^ pulsesynchronizer0_toggle_o_r);
@@ -1700,26 +1516,26 @@ assign liteethmaccrc32checker_syncfifo_sink_payload_be = liteethmaccrc32checker_
 assign liteethmaccrc32checker_syncfifo_sink_payload_error = liteethmaccrc32checker_sink_sink_payload_error;
 
 // synthesis translate_off
-reg dummy_d_18;
+reg dummy_d_15;
 // synthesis translate_on
 always @(*) begin
 	liteethmaccrc32checker_syncfifo_sink_valid <= 1'd0;
 	liteethmaccrc32checker_syncfifo_sink_valid <= liteethmaccrc32checker_sink_sink_valid;
 	liteethmaccrc32checker_syncfifo_sink_valid <= liteethmaccrc32checker_fifo_in;
 // synthesis translate_off
-	dummy_d_18 <= dummy_s;
+	dummy_d_15 <= dummy_s;
 // synthesis translate_on
 end
 
 // synthesis translate_off
-reg dummy_d_19;
+reg dummy_d_16;
 // synthesis translate_on
 always @(*) begin
 	liteethmaccrc32checker_sink_sink_ready <= 1'd0;
 	liteethmaccrc32checker_sink_sink_ready <= liteethmaccrc32checker_syncfifo_sink_ready;
 	liteethmaccrc32checker_sink_sink_ready <= liteethmaccrc32checker_fifo_in;
 // synthesis translate_off
-	dummy_d_19 <= dummy_s;
+	dummy_d_16 <= dummy_s;
 // synthesis translate_on
 end
 assign liteethmaccrc32checker_fifo_in = (((liteethmaccrc32checker_sink_sink_valid & ((~liteethmaccrc32checker_fifo_full) | liteethmaccrc32checker_fifo_out)) & (~liteethmaccrc32checker_is_ongoing0)) & (~liteethmaccrc32checker_is_ongoing1));
@@ -1738,7 +1554,7 @@ assign liteethmaccrc32checker_sink_sink_payload_error = bufferizeendpoints_sourc
 assign liteethmaccrc32checker_crc_crc_prev = liteethmaccrc32checker_crc_reg;
 
 // synthesis translate_off
-reg dummy_d_20;
+reg dummy_d_17;
 // synthesis translate_on
 always @(*) begin
 	liteethmaccrc32checker_crc_error <= 1'd0;
@@ -1749,12 +1565,12 @@ always @(*) begin
 		liteethmaccrc32checker_crc_error <= (liteethmaccrc32checker_crc_crc_next != 32'd3338984827);
 	end
 // synthesis translate_off
-	dummy_d_20 <= dummy_s;
+	dummy_d_17 <= dummy_s;
 // synthesis translate_on
 end
 
 // synthesis translate_off
-reg dummy_d_21;
+reg dummy_d_18;
 // synthesis translate_on
 always @(*) begin
 	liteethmaccrc32checker_crc_crc_next <= 32'd0;
@@ -1791,7 +1607,7 @@ always @(*) begin
 	liteethmaccrc32checker_crc_crc_next[30] <= ((((liteethmaccrc32checker_crc_crc_prev[22] ^ liteethmaccrc32checker_crc_crc_prev[31]) ^ liteethmaccrc32checker_crc_data1[0]) ^ liteethmaccrc32checker_crc_crc_prev[28]) ^ liteethmaccrc32checker_crc_data1[3]);
 	liteethmaccrc32checker_crc_crc_next[31] <= ((liteethmaccrc32checker_crc_crc_prev[23] ^ liteethmaccrc32checker_crc_crc_prev[29]) ^ liteethmaccrc32checker_crc_data1[2]);
 // synthesis translate_off
-	dummy_d_21 <= dummy_s;
+	dummy_d_18 <= dummy_s;
 // synthesis translate_on
 end
 assign liteethmaccrc32checker_syncfifo_syncfifo_din = {liteethmaccrc32checker_syncfifo_fifo_in_last, liteethmaccrc32checker_syncfifo_fifo_in_first, liteethmaccrc32checker_syncfifo_fifo_in_payload_error, liteethmaccrc32checker_syncfifo_fifo_in_payload_be, liteethmaccrc32checker_syncfifo_fifo_in_payload_data};
@@ -1812,7 +1628,7 @@ assign liteethmaccrc32checker_syncfifo_source_payload_error = liteethmaccrc32che
 assign liteethmaccrc32checker_syncfifo_syncfifo_re = liteethmaccrc32checker_syncfifo_source_ready;
 
 // synthesis translate_off
-reg dummy_d_22;
+reg dummy_d_19;
 // synthesis translate_on
 always @(*) begin
 	liteethmaccrc32checker_syncfifo_wrport_adr <= 3'd0;
@@ -1822,7 +1638,7 @@ always @(*) begin
 		liteethmaccrc32checker_syncfifo_wrport_adr <= liteethmaccrc32checker_syncfifo_produce;
 	end
 // synthesis translate_off
-	dummy_d_22 <= dummy_s;
+	dummy_d_19 <= dummy_s;
 // synthesis translate_on
 end
 assign liteethmaccrc32checker_syncfifo_wrport_dat_w = liteethmaccrc32checker_syncfifo_syncfifo_din;
@@ -1834,7 +1650,7 @@ assign liteethmaccrc32checker_syncfifo_syncfifo_writable = (liteethmaccrc32check
 assign liteethmaccrc32checker_syncfifo_syncfifo_readable = (liteethmaccrc32checker_syncfifo_level != 1'd0);
 
 // synthesis translate_off
-reg dummy_d_23;
+reg dummy_d_20;
 // synthesis translate_on
 always @(*) begin
 	liteethmaccrc32checker_source_source_valid <= 1'd0;
@@ -1916,7 +1732,7 @@ always @(*) begin
 		end
 	endcase
 // synthesis translate_off
-	dummy_d_23 <= dummy_s;
+	dummy_d_20 <= dummy_s;
 // synthesis translate_on
 end
 assign bufferizeendpoints_pipe_valid_sink_ready = ((~bufferizeendpoints_pipe_valid_source_valid) | bufferizeendpoints_pipe_valid_source_ready);
@@ -1944,7 +1760,7 @@ assign rx_padding_source_payload_data = rx_padding_sink_payload_data;
 assign rx_padding_source_payload_be = rx_padding_sink_payload_be;
 
 // synthesis translate_off
-reg dummy_d_24;
+reg dummy_d_21;
 // synthesis translate_on
 always @(*) begin
 	rx_padding_source_payload_error <= 1'd0;
@@ -1954,16 +1770,16 @@ always @(*) begin
 		rx_padding_source_payload_error <= rx_padding_sink_payload_error;
 	end
 // synthesis translate_off
-	dummy_d_24 <= dummy_s;
+	dummy_d_21 <= dummy_s;
 // synthesis translate_on
 end
-assign rx_packet_fifo_sink_sink_valid = rmiirxshim_source_source_valid0;
-assign rmiirxshim_source_source_ready0 = rx_packet_fifo_sink_sink_ready;
-assign rx_packet_fifo_sink_sink_first = rmiirxshim_source_source_first0;
-assign rx_packet_fifo_sink_sink_last = rmiirxshim_source_source_last0;
-assign rx_packet_fifo_sink_sink_payload_data = rmiirxshim_source_source_payload_data0;
-assign rx_packet_fifo_sink_sink_payload_be = rmiirxshim_source_source_payload_be;
-assign rx_packet_fifo_sink_sink_payload_error = rmiirxshim_source_source_payload_error;
+assign rx_packet_fifo_sink_sink_valid = rmiirxshim_source_valid;
+assign rmiirxshim_source_ready = rx_packet_fifo_sink_sink_ready;
+assign rx_packet_fifo_sink_sink_first = rmiirxshim_source_first;
+assign rx_packet_fifo_sink_sink_last = rmiirxshim_source_last;
+assign rx_packet_fifo_sink_sink_payload_data = rmiirxshim_source_payload_data;
+assign rx_packet_fifo_sink_sink_payload_be = rmiirxshim_source_payload_be;
+assign rx_packet_fifo_sink_sink_payload_error = rmiirxshim_source_payload_error;
 assign rx_cdc_sink_sink_valid = rx_packet_fifo_source_source_valid;
 assign rx_packet_fifo_source_source_ready = rx_cdc_sink_sink_ready;
 assign rx_cdc_sink_sink_first = rx_packet_fifo_source_source_first;
@@ -2020,61 +1836,84 @@ always @(posedge eth_rx_clk) begin
 	if (rmiirxshim_crs_last) begin
 		rmiirxshim_crs_run <= 1'd0;
 	end
-	if (rmiirxshim_converter_source_ready) begin
-		rmiirxshim_converter_strobe_all <= 1'd0;
+	rmiirxshim_d0 <= rmiirxshim_rx_data;
+	rmiirxshim_d1 <= rmiirxshim_d0;
+	rmiirxshim_e0 <= rmiirxshim_cap;
+	rmiirxshim_e1 <= rmiirxshim_e0;
+	if ((rmiirxshim_e1 & (rmiirxshim_mode == 1'd0))) begin
+		rmiirxshim_sreg <= {rmiirxshim_sreg[5:0], rmiirxshim_d1};
 	end
-	if (rmiirxshim_converter_load_part) begin
-		if (((rmiirxshim_converter_demux == 2'd3) | rmiirxshim_converter_sink_last)) begin
-			rmiirxshim_converter_demux <= 1'd0;
-			rmiirxshim_converter_strobe_all <= 1'd1;
-		end else begin
-			rmiirxshim_converter_demux <= (rmiirxshim_converter_demux + 1'd1);
-		end
-	end
-	if ((rmiirxshim_converter_source_valid & rmiirxshim_converter_source_ready)) begin
-		if ((rmiirxshim_converter_sink_valid & rmiirxshim_converter_sink_ready)) begin
-			rmiirxshim_converter_source_first <= rmiirxshim_converter_sink_first;
-			rmiirxshim_converter_source_last <= rmiirxshim_converter_sink_last;
-		end else begin
-			rmiirxshim_converter_source_first <= 1'd0;
-			rmiirxshim_converter_source_last <= 1'd0;
+	if ((rmiirxshim_mode == 1'd0)) begin
+		if (rmiirxshim_sfd_hit) begin
+			rmiirxshim_mode <= 1'd1;
+			rmiirxshim_pre_cnt <= 1'd0;
+			rmiirxshim_bits <= 1'd0;
 		end
 	end else begin
-		if ((rmiirxshim_converter_sink_valid & rmiirxshim_converter_sink_ready)) begin
-			rmiirxshim_converter_source_first <= (rmiirxshim_converter_sink_first | rmiirxshim_converter_source_first);
-			rmiirxshim_converter_source_last <= (rmiirxshim_converter_sink_last | rmiirxshim_converter_source_last);
+		if ((rmiirxshim_mode == 1'd1)) begin
+			if (rmiirxshim_consume) begin
+				if ((rmiirxshim_pre_cnt == 3'd7)) begin
+					rmiirxshim_mode <= 2'd2;
+				end else begin
+					rmiirxshim_pre_cnt <= (rmiirxshim_pre_cnt + 1'd1);
+				end
+			end
 		end
 	end
-	if (rmiirxshim_converter_load_part) begin
-		case (rmiirxshim_converter_demux)
-			1'd0: begin
-				rmiirxshim_converter_source_payload_data[1:0] <= rmiirxshim_converter_sink_payload_data;
+	if (((rmiirxshim_mode == 2'd2) & rmiirxshim_consume)) begin
+		if ((rmiirxshim_pushing & (~rmiirxshim_f1_valid))) begin
+			rmiirxshim_f0_valid <= 1'd1;
+			rmiirxshim_f0_data <= rmiirxshim_new_byte;
+			rmiirxshim_f0_last <= rmiirxshim_crs_last;
+			rmiirxshim_f1_valid <= 1'd0;
+		end else begin
+			if (rmiirxshim_pushing) begin
+				rmiirxshim_f0_valid <= 1'd1;
+				rmiirxshim_f0_data <= rmiirxshim_f1_data;
+				rmiirxshim_f0_last <= rmiirxshim_f1_last;
+				rmiirxshim_f1_valid <= 1'd1;
+				rmiirxshim_f1_data <= rmiirxshim_new_byte;
+				rmiirxshim_f1_last <= rmiirxshim_crs_last;
+			end else begin
+				rmiirxshim_f0_valid <= rmiirxshim_f1_valid;
+				rmiirxshim_f0_data <= rmiirxshim_f1_data;
+				rmiirxshim_f0_last <= rmiirxshim_f1_last;
+				rmiirxshim_f1_valid <= 1'd0;
 			end
-			1'd1: begin
-				rmiirxshim_converter_source_payload_data[3:2] <= rmiirxshim_converter_sink_payload_data;
+		end
+	end else begin
+		if ((rmiirxshim_pushing & (~(((rmiirxshim_mode == 2'd2) & rmiirxshim_f0_valid) & rmiirxshim_f1_valid)))) begin
+			if ((~rmiirxshim_f0_valid)) begin
+				rmiirxshim_f0_valid <= 1'd1;
+				rmiirxshim_f0_data <= rmiirxshim_new_byte;
+				rmiirxshim_f0_last <= rmiirxshim_crs_last;
+			end else begin
+				if ((~rmiirxshim_f1_valid)) begin
+					rmiirxshim_f1_valid <= 1'd1;
+					rmiirxshim_f1_data <= rmiirxshim_new_byte;
+					rmiirxshim_f1_last <= rmiirxshim_crs_last;
+				end
 			end
-			2'd2: begin
-				rmiirxshim_converter_source_payload_data[5:4] <= rmiirxshim_converter_sink_payload_data;
-			end
-			2'd3: begin
-				rmiirxshim_converter_source_payload_data[7:6] <= rmiirxshim_converter_sink_payload_data;
-			end
-		endcase
+		end
 	end
-	if (rmiirxshim_converter_load_part) begin
-		rmiirxshim_converter_source_payload_valid_token_count <= (rmiirxshim_converter_demux + 1'd1);
+	if (((rmiirxshim_mode != 1'd0) & rmiirxshim_e1)) begin
+		rmiirxshim_shift <= rmiirxshim_new_byte;
+		if ((rmiirxshim_bits == 2'd3)) begin
+			rmiirxshim_bits <= 1'd0;
+		end else begin
+			rmiirxshim_bits <= (rmiirxshim_bits + 1'd1);
+		end
+	end else begin
+		if ((~rmiirxshim_e1)) begin
+			rmiirxshim_bits <= 1'd0;
+		end
 	end
-	if (((~rmiirxshim_delay_buffer0_pipe_valid_source_valid) | rmiirxshim_delay_buffer0_pipe_valid_source_ready)) begin
-		rmiirxshim_delay_buffer0_pipe_valid_source_valid <= rmiirxshim_delay_buffer0_pipe_valid_sink_valid;
-		rmiirxshim_delay_buffer0_pipe_valid_source_first <= rmiirxshim_delay_buffer0_pipe_valid_sink_first;
-		rmiirxshim_delay_buffer0_pipe_valid_source_last <= rmiirxshim_delay_buffer0_pipe_valid_sink_last;
-		rmiirxshim_delay_buffer0_pipe_valid_source_payload_data <= rmiirxshim_delay_buffer0_pipe_valid_sink_payload_data;
-	end
-	if (((~rmiirxshim_delay_buffer1_pipe_valid_source_valid) | rmiirxshim_delay_buffer1_pipe_valid_source_ready)) begin
-		rmiirxshim_delay_buffer1_pipe_valid_source_valid <= rmiirxshim_delay_buffer1_pipe_valid_sink_valid;
-		rmiirxshim_delay_buffer1_pipe_valid_source_first <= rmiirxshim_delay_buffer1_pipe_valid_sink_first;
-		rmiirxshim_delay_buffer1_pipe_valid_source_last <= rmiirxshim_delay_buffer1_pipe_valid_sink_last;
-		rmiirxshim_delay_buffer1_pipe_valid_source_payload_data <= rmiirxshim_delay_buffer1_pipe_valid_sink_payload_data;
+	if ((rmiirxshim_consume & rmiirxshim_source_last)) begin
+		rmiirxshim_mode <= 1'd0;
+		rmiirxshim_sreg <= 1'd0;
+		rmiirxshim_bits <= 1'd0;
+		rmiirxshim_f0_valid <= 1'd0;
+		rmiirxshim_f1_valid <= 1'd0;
 	end
 	if (rx_packet_fifo_sink_sink_valid) begin
 		rx_packet_fifo_invalid <= (rx_packet_fifo_invalid | rx_packet_fifo_discard);
@@ -2126,12 +1965,23 @@ always @(posedge eth_rx_clk) begin
 		rx_cdc_cdc_graycounter0_q_binary <= 6'd0;
 	end
 	if (eth_rx_rst) begin
-		rmiirxshim_converter_demux <= 2'd0;
-		rmiirxshim_converter_strobe_all <= 1'd0;
-		rmiirxshim_delay_buffer0_pipe_valid_source_valid <= 1'd0;
-		rmiirxshim_delay_buffer1_pipe_valid_source_valid <= 1'd0;
 		rmiirxshim_crs_run <= 1'd0;
 		rmiirxshim_crs_dv_d <= 1'd0;
+		rmiirxshim_d0 <= 2'd0;
+		rmiirxshim_d1 <= 2'd0;
+		rmiirxshim_e0 <= 1'd0;
+		rmiirxshim_e1 <= 1'd0;
+		rmiirxshim_mode <= 2'd0;
+		rmiirxshim_f0_valid <= 1'd0;
+		rmiirxshim_f0_data <= 8'd0;
+		rmiirxshim_f0_last <= 1'd0;
+		rmiirxshim_f1_valid <= 1'd0;
+		rmiirxshim_f1_data <= 8'd0;
+		rmiirxshim_f1_last <= 1'd0;
+		rmiirxshim_sreg <= 8'd0;
+		rmiirxshim_pre_cnt <= 3'd0;
+		rmiirxshim_shift <= 8'd0;
+		rmiirxshim_bits <= 2'd0;
 		rx_packet_fifo_param_fifo_level <= 3'd0;
 		rx_packet_fifo_param_fifo_produce <= 2'd0;
 		rx_packet_fifo_param_fifo_consume <= 2'd0;
@@ -2151,11 +2001,13 @@ always @(posedge eth_rx_clk) begin
 end
 
 always @(posedge eth_tx_clk) begin
-	if ((rmiitxshim_converter_source_valid & rmiitxshim_converter_source_ready)) begin
-		if (rmiitxshim_converter_last) begin
-			rmiitxshim_converter_mux <= 1'd0;
-		end else begin
-			rmiitxshim_converter_mux <= (rmiitxshim_converter_mux + 1'd1);
+	if ((rmiitxshim_sink_valid & rmiitxshim_sink_ready)) begin
+		rmiitxshim_shift <= rmiitxshim_sink_payload_data;
+		rmiitxshim_count <= 3'd4;
+	end else begin
+		if ((rmiitxshim_count != 1'd0)) begin
+			rmiitxshim_shift <= (rmiitxshim_shift >>> 2'd2);
+			rmiitxshim_count <= (rmiitxshim_count - 1'd1);
 		end
 	end
 	txdatapath_cdc_graycounter1_q_binary <= txdatapath_cdc_graycounter1_q_next_binary;
@@ -2234,7 +2086,8 @@ always @(posedge eth_tx_clk) begin
 		txdatapath_resetinserter_state <= 1'd0;
 	end
 	if (eth_tx_rst) begin
-		rmiitxshim_converter_mux <= 2'd0;
+		rmiitxshim_shift <= 8'd0;
+		rmiitxshim_count <= 3'd0;
 		txdatapath_cdc_graycounter1_q <= 6'd0;
 		txdatapath_cdc_graycounter1_q_binary <= 6'd0;
 		tx_packet_fifo_payload_fifo_readable <= 1'd0;
@@ -2428,113 +2281,95 @@ end
 
 reg [11:0] storage[0:31];
 reg [4:0] memadr;
-reg [4:0] memadr_1;
 always @(posedge sys_clk) begin : mem_write_block
 	if (txdatapath_cdc_wrport_we)
 		storage[txdatapath_cdc_wrport_adr] <= txdatapath_cdc_wrport_dat_w;
-	memadr <= txdatapath_cdc_wrport_adr;
 end
 
 always @(posedge eth_tx_clk) begin : mem_write_block_1
-	memadr_1 <= txdatapath_cdc_rdport_adr;
+	memadr <= txdatapath_cdc_rdport_adr;
 end
 
-assign txdatapath_cdc_wrport_dat_r = storage[memadr];
-assign txdatapath_cdc_rdport_dat_r = storage[memadr_1];
+assign txdatapath_cdc_rdport_dat_r = storage[memadr];
 
 reg [11:0] storage_1[0:2047];
 reg [11:0] memdat;
-reg [11:0] memdat_1;
 always @(posedge eth_tx_clk) begin : mem_write_block_2
 	if (tx_packet_fifo_payload_fifo_wrport_we)
 		storage_1[tx_packet_fifo_payload_fifo_wrport_adr] <= tx_packet_fifo_payload_fifo_wrport_dat_w;
-	memdat <= storage_1[tx_packet_fifo_payload_fifo_wrport_adr];
 end
 
 always @(posedge eth_tx_clk) begin : mem_write_block_3
 	if (tx_packet_fifo_payload_fifo_rdport_re)
-		memdat_1 <= storage_1[tx_packet_fifo_payload_fifo_rdport_adr];
+		memdat <= storage_1[tx_packet_fifo_payload_fifo_rdport_adr];
 end
 
-assign tx_packet_fifo_payload_fifo_wrport_dat_r = memdat;
-assign tx_packet_fifo_payload_fifo_rdport_dat_r = memdat_1;
+assign tx_packet_fifo_payload_fifo_rdport_dat_r = memdat;
 
 reg [2:0] storage_2[0:4];
-reg [2:0] memdat_2;
-reg [2:0] memdat_3;
+reg [2:0] memdat_1;
 always @(posedge eth_tx_clk) begin : mem_write_block_4
 	if (tx_packet_fifo_param_fifo_wrport_we)
 		storage_2[tx_packet_fifo_param_fifo_wrport_adr] <= tx_packet_fifo_param_fifo_wrport_dat_w;
-	memdat_2 <= storage_2[tx_packet_fifo_param_fifo_wrport_adr];
 end
 
 always @(posedge eth_tx_clk) begin : mem_write_block_5
 	if (tx_packet_fifo_param_fifo_rdport_re)
-		memdat_3 <= storage_2[tx_packet_fifo_param_fifo_rdport_adr];
+		memdat_1 <= storage_2[tx_packet_fifo_param_fifo_rdport_adr];
 end
 
-assign tx_packet_fifo_param_fifo_wrport_dat_r = memdat_2;
-assign tx_packet_fifo_param_fifo_rdport_dat_r = memdat_3;
+assign tx_packet_fifo_param_fifo_rdport_dat_r = memdat_1;
 
 reg [2:0] storage_3[0:3];
-reg [2:0] memdat_4;
 always @(posedge eth_rx_clk) begin : mem_write_block_6
 	if (rx_packet_fifo_param_fifo_wrport_we)
 		storage_3[rx_packet_fifo_param_fifo_wrport_adr] <= rx_packet_fifo_param_fifo_wrport_dat_w;
-	memdat_4 <= storage_3[rx_packet_fifo_param_fifo_wrport_adr];
 end
 
 always @(posedge eth_rx_clk) begin : mem_write_block_7
 end
 
-assign rx_packet_fifo_param_fifo_wrport_dat_r = memdat_4;
 assign rx_packet_fifo_param_fifo_rdport_dat_r = storage_3[rx_packet_fifo_param_fifo_rdport_adr];
 
 reg [11:0] mem[0:2047];
+reg [10:0] memadr_1;
 reg [10:0] memadr_2;
-reg [10:0] memadr_3;
 always @(posedge eth_rx_clk) begin : mem_write_block_8
 	if (rx_packet_fifo_wr_port_we)
 		mem[rx_packet_fifo_wr_port_adr] <= rx_packet_fifo_wr_port_dat_w;
-	memadr_2 <= rx_packet_fifo_wr_port_adr;
+	memadr_1 <= rx_packet_fifo_wr_port_adr;
 end
 
 always @(posedge eth_rx_clk) begin : mem_write_block_9
 	if (rx_packet_fifo_rd_port_re)
-		memadr_3 <= rx_packet_fifo_rd_port_adr;
+		memadr_2 <= rx_packet_fifo_rd_port_adr;
 end
 
-assign rx_packet_fifo_wr_port_dat_r = mem[memadr_2];
-assign rx_packet_fifo_rd_port_dat_r = mem[memadr_3];
+assign rx_packet_fifo_wr_port_dat_r = mem[memadr_1];
+assign rx_packet_fifo_rd_port_dat_r = mem[memadr_2];
 
 reg [11:0] storage_4[0:31];
-reg [4:0] memadr_4;
-reg [4:0] memadr_5;
+reg [4:0] memadr_3;
 always @(posedge eth_rx_clk) begin : mem_write_block_10
 	if (rx_cdc_cdc_wrport_we)
 		storage_4[rx_cdc_cdc_wrport_adr] <= rx_cdc_cdc_wrport_dat_w;
-	memadr_4 <= rx_cdc_cdc_wrport_adr;
 end
 
 always @(posedge sys_clk) begin : mem_write_block_11
-	memadr_5 <= rx_cdc_cdc_rdport_adr;
+	memadr_3 <= rx_cdc_cdc_rdport_adr;
 end
 
-assign rx_cdc_cdc_wrport_dat_r = storage_4[memadr_4];
-assign rx_cdc_cdc_rdport_dat_r = storage_4[memadr_5];
+assign rx_cdc_cdc_rdport_dat_r = storage_4[memadr_3];
 
 reg [11:0] storage_5[0:4];
-reg [11:0] memdat_5;
 always @(posedge sys_clk) begin : mem_write_block_12
 	if (liteethmaccrc32checker_syncfifo_wrport_we)
 		storage_5[liteethmaccrc32checker_syncfifo_wrport_adr] <= liteethmaccrc32checker_syncfifo_wrport_dat_w;
-	memdat_5 <= storage_5[liteethmaccrc32checker_syncfifo_wrport_adr];
 end
 
 always @(posedge sys_clk) begin : mem_write_block_13
 end
 
-assign liteethmaccrc32checker_syncfifo_wrport_dat_r = memdat_5;
 assign liteethmaccrc32checker_syncfifo_rdport_dat_r = storage_5[liteethmaccrc32checker_syncfifo_rdport_adr];
 
 endmodule
