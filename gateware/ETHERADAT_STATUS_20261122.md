@@ -159,6 +159,8 @@ die bisherige `f1 → f0`-Weiterleitung nur noch bei `f1_valid = 1`.
 
 ### Verifikation
 
+- `test_baseline.py`: `test_arp_reply` und `test_udp_echo` OK
+  (2 Tests, 834 s).
 - Shim-Standalone-Sim mit periodischem `ready`-Stall: vorher 73 Bytes
  _output_ für 72 Bytes _input_ (dupliziertes `0xad`), nachher 72 = 72.
 - Full-Stack-Sim (`sim_ping.py`, ARP-Priming + ICMP-Echo): Reply ist
@@ -171,3 +173,6 @@ die bisherige `f1 → f0`-Weiterleitung nur noch bei `f1_valid = 1`.
 - Hardware (EP4CGX150, LAN8720, Build 19:45):
   `ping -c 5 -W 1 192.168.42.2` → 5 gesendet, 5 empfangen, 0 % Verlust;
   UDP-Echo Port 1234 → `b'hello-etheradat'` byte-exakt.
+- Wie im Stock-LiteEth: ICMP-Echo-Puffer `fifo_depth=128`, deshalb
+  `ping -s > 128` unbeantwortet (UDP-Echo mit 256 Bytes OK). Default-Ping
+  (56 Bytes) und alle gängigen Größen ≤ 128 Bytes laufen.
