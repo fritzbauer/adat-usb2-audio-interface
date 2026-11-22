@@ -83,10 +83,33 @@ tx_last, rx_bytes, tx_bytes.
 - Sim (`test_baseline.py`: ARP-Reply + UDP-Echo) läuft mit den Fixes grün;
   der 1-Byte-Shift tritt nur auf Hardware auf.
 
+## Ping-Debug (Nachtrag 22.11., Commit 5b62a14 + Follow-up)
+
+UART-Byte-Taps (im Dump `ipdep`, `iprx`, `icmpdep`, `icmprx`, `icmphdr`)
+zeigen: `core.ip.rx.source` liefert den ICMP-Header korrekt
+(`08 00 <cksum> <id> <seq>`), aber die Payload des ICMP-Depacketizers
+beginnt mit dem **letzten Header-Byte** (z. B. Seq-Low), und das letzte
+Payload-Byte fehlt. Deshalb ist der ICMP-Reply-Checksum falsch: LiteEth
+bildet ihn als `request_checksum + 0x800`, was nur bei byte-identischer
+Payload gilt. tcpdump zeigt z. B. Wire-Checksum `0x880b`, korrekt wäre
+`0x7650` — der Kernel verwirft die Replies, `ping` zählt 0 Antworten.
+
+Im Sim wurde der Fehler mit einem um eine Cycle verzögerten Datenpfad
+reproduziert (`01 20 21 … 2e` statt `20 21 … 2f`). Folgende Versuche
+auf Hardware haben **nicht** geholfen und wurden wieder entfernt:
+`drop_first` im Depacketizer, `skip_bytes`, Valid-Verzögerung,
+Daten-Verzögerung, Austausch des Echo-Buffers und eine dynamische
+ICMP-Checksum-Berechnung (Quench-Byte-Reihenfolge/IEEE-Fold war nicht
+konsistent mit dem gesendeten Paket).
+
+Der Stand ist deshalb wieder auf den funktionierenden Zustand von Commit
+`5b62a14` zurückgesetzt: ARP + UDP-Echo laufen, ICMP/Ping weiterhin nicht.
+
 ## Nächste Schritte
 
-1. Payload-Shift im LiteEth IP/UDP/ICMP-Pfad lokalisieren (UART-Byte-Taps
-   an `ip_rx.source`, `udp_rx.depacketizer.source`, `icmp_echo.sink`),
-   vermutlich eine weitere registrierte Valid/Data-Fehlausrichtung.
-2. Danach Ping und byte-exakten UDP-Echo verifizieren und dieses Dokument
-   aktualisieren.
+1. ICMP-Checksum **über die tatsächlich gesendeten Bytes** berechnen und
+   am `LiteEthICMPEcho.source.checksum` anlegen (die alte Annahme
+   `request_cksum + 0x800` ist bei verschobener Payload falsch).
+2. Alternativ die 1-Byte-Verschiebung direkt an `icmp_rx.depacketizer.sink`
+   beheben (Valid/Data sind dort auf Hardware anders ausgerichtet als im
+   Sim) und danach Ping + byte-exakten UDP-Echo verifizieren.

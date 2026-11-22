@@ -40,8 +40,9 @@ from litex.soc.interconnect import stream
 from liteeth.common import (eth_phy_description, eth_udp_user_description,
                             eth_mac_description, eth_arp_description,
                             eth_ipv4_description, eth_ipv4_user_description,
-                            eth_icmp_description, eth_udp_description, mac_header, arp_header,
-                            ipv4_header, icmp_header, udp_header)
+                            eth_icmp_description, eth_udp_description,
+                            mac_header, arp_header, ipv4_header, icmp_header,
+                            udp_header)
 from liteeth.core import LiteEthUDPIPCore
 from liteeth.mac.common import LiteEthMACDepacketizer
 from liteeth.core.arp import LiteEthARPDepacketizer
@@ -104,6 +105,10 @@ LiteEthUDPDepacketizer.__init__ = (
     lambda self, dw=8: FixedDepacketizer.__init__(
         self, eth_ipv4_user_description(dw), eth_udp_description(dw),
         udp_header))
+LiteEthICMPDepacketizer.__init__ = (
+    lambda self, dw=8: FixedDepacketizer.__init__(
+        self, eth_ipv4_user_description(dw), eth_icmp_description(dw),
+        icmp_header))
 LiteEthIPV4Depacketizer.__init__ = (
     lambda self, dw=8: FixedDepacketizer.__init__(
         self, eth_mac_description(dw), eth_ipv4_description(dw), ipv4_header))

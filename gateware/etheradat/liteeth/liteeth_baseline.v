@@ -1112,7 +1112,7 @@ wire icmp_rx_depacketizer_source_ready;
 reg icmp_rx_depacketizer_source_first;
 reg icmp_rx_depacketizer_source_last;
 reg [7:0] icmp_rx_depacketizer_source_payload_data;
-wire icmp_rx_depacketizer_source_payload_be;
+reg icmp_rx_depacketizer_source_payload_be;
 wire icmp_rx_depacketizer_source_payload_error;
 wire [15:0] icmp_rx_depacketizer_source_param_checksum;
 wire [7:0] icmp_rx_depacketizer_source_param_code;
@@ -1120,21 +1120,21 @@ wire [7:0] icmp_rx_depacketizer_source_param_msgtype;
 wire [31:0] icmp_rx_depacketizer_source_param_quench;
 wire [63:0] icmp_rx_depacketizer_header;
 reg [63:0] icmp_rx_depacketizer_sr = 64'd0;
-reg icmp_rx_depacketizer_sr_shift;
-reg icmp_rx_depacketizer_sr_shift_leftover = 1'd0;
 reg [2:0] icmp_rx_depacketizer_count = 3'd0;
-reg icmp_rx_depacketizer_data_copy_first = 1'd0;
-wire icmp_rx_depacketizer_sink_be;
-reg icmp_rx_depacketizer_source_be;
-reg icmp_rx_depacketizer_fsm_from_idle = 1'd0;
+reg icmp_rx_depacketizer_skip_cnt = 1'd0;
+reg icmp_rx_depacketizer_data_copy_first = 1'd1;
+wire icmp_rx_depacketizer_sr_shift;
+reg icmp_rx_depacketizer_is_ongoing0;
+reg icmp_rx_depacketizer_is_ongoing1;
+reg icmp_rx_depacketizer_send_dummy = 1'd0;
 reg icmp_rx_active = 1'd0;
 reg [15:0] icmp_rx_length = 16'd0;
 reg [7:0] icmp_rx_protocol = 8'd0;
 reg [31:0] icmp_rx_ip_address = 32'd0;
 reg [16:0] icmp_rx_count = 17'd0;
-reg icmp_rx_is_ongoing0;
-reg icmp_rx_is_ongoing1;
-reg icmp_rx_is_ongoing2;
+reg icmp_rx_fsm_is_ongoing0;
+reg icmp_rx_fsm_is_ongoing1;
+reg icmp_rx_fsm_is_ongoing2;
 wire icmp_echo_sink_sink_valid;
 wire icmp_echo_sink_sink_ready;
 wire icmp_echo_sink_sink_first;
@@ -1809,12 +1809,14 @@ reg [2:0] icmp_tx_packetizer_count_liteethicmp_next_value;
 reg icmp_tx_packetizer_count_liteethicmp_next_value_ce;
 reg [1:0] liteethicmp_liteethicmpdepacketizer_state = 2'd0;
 reg [1:0] liteethicmp_liteethicmpdepacketizer_next_state;
-reg [2:0] icmp_rx_depacketizer_count_liteethicmp_liteethicmpdepacketizer_next_value0;
-reg icmp_rx_depacketizer_count_liteethicmp_liteethicmpdepacketizer_next_value_ce0;
-reg icmp_rx_depacketizer_fsm_from_idle_liteethicmp_liteethicmpdepacketizer_next_value1;
-reg icmp_rx_depacketizer_fsm_from_idle_liteethicmp_liteethicmpdepacketizer_next_value_ce1;
-reg icmp_rx_depacketizer_data_copy_first_liteethicmp_liteethicmpdepacketizer_next_value2;
-reg icmp_rx_depacketizer_data_copy_first_liteethicmp_liteethicmpdepacketizer_next_value_ce2;
+reg [2:0] icmp_rx_depacketizer_count_liteethicmp_liteethicmpdepacketizer_next_value;
+reg icmp_rx_depacketizer_count_liteethicmp_liteethicmpdepacketizer_next_value_ce;
+reg icmp_rx_depacketizer_data_copy_first_liteethicmp_liteethicmpdepacketizer_t_next_value0;
+reg icmp_rx_depacketizer_data_copy_first_liteethicmp_liteethicmpdepacketizer_t_next_value_ce0;
+reg icmp_rx_depacketizer_send_dummy_liteethicmp_liteethicmpdepacketizer_t_next_value1;
+reg icmp_rx_depacketizer_send_dummy_liteethicmp_liteethicmpdepacketizer_t_next_value_ce1;
+reg icmp_rx_depacketizer_skip_cnt_liteethicmp_liteethicmpdepacketizer_f_next_value;
+reg icmp_rx_depacketizer_skip_cnt_liteethicmp_liteethicmpdepacketizer_f_next_value_ce;
 reg [1:0] liteethicmp_fsm_state = 2'd2;
 reg [1:0] liteethicmp_fsm_next_state;
 reg [16:0] icmp_rx_count_liteethicmp_fsm_next_value;
@@ -4926,8 +4928,8 @@ assign icmp_rx_depacketizer_sink_payload_error = icmp_rx_sink_sink_payload_error
 assign icmp_rx_depacketizer_sink_param_length = icmp_rx_sink_sink_param_length;
 assign icmp_rx_depacketizer_sink_param_protocol = icmp_rx_sink_sink_param_protocol;
 assign icmp_rx_depacketizer_sink_param_ip_address = icmp_rx_sink_sink_param_ip_address;
-assign icmp_rx_source_source_valid = (icmp_rx_depacketizer_source_valid & icmp_rx_is_ongoing0);
-assign icmp_rx_depacketizer_source_ready = (icmp_rx_is_ongoing1 | (icmp_rx_is_ongoing2 & icmp_rx_source_source_ready));
+assign icmp_rx_source_source_valid = (icmp_rx_depacketizer_source_valid & icmp_rx_fsm_is_ongoing0);
+assign icmp_rx_depacketizer_source_ready = (icmp_rx_fsm_is_ongoing1 | (icmp_rx_fsm_is_ongoing2 & icmp_rx_source_source_ready));
 assign icmp_rx_source_source_payload_data = icmp_rx_depacketizer_source_payload_data;
 assign icmp_rx_source_source_param_checksum = icmp_rx_depacketizer_source_param_checksum;
 assign icmp_rx_source_source_param_code = icmp_rx_depacketizer_source_param_code;
@@ -4940,9 +4942,8 @@ assign icmp_rx_depacketizer_source_param_checksum = {rhs_slice_proxy63[7:0], rhs
 assign icmp_rx_depacketizer_source_param_code = {rhs_slice_proxy64[7:0]};
 assign icmp_rx_depacketizer_source_param_msgtype = {rhs_slice_proxy65[7:0]};
 assign icmp_rx_depacketizer_source_param_quench = {rhs_slice_proxy69[7:0], rhs_slice_proxy68[15:8], rhs_slice_proxy67[23:16], rhs_slice_proxy66[31:24]};
-assign icmp_rx_depacketizer_sink_be = icmp_rx_depacketizer_sink_payload_be;
-assign icmp_rx_depacketizer_source_payload_be = icmp_rx_depacketizer_source_be;
 assign icmp_rx_depacketizer_source_payload_error = icmp_rx_depacketizer_sink_payload_error;
+assign icmp_rx_depacketizer_sr_shift = ((((icmp_rx_depacketizer_is_ongoing0 | icmp_rx_depacketizer_is_ongoing1) & icmp_rx_depacketizer_sink_valid) & icmp_rx_depacketizer_sink_ready) & (icmp_rx_depacketizer_skip_cnt >= 1'd0));
 
 // synthesis translate_off
 reg dummy_d_52;
@@ -4953,70 +4954,79 @@ always @(*) begin
 	icmp_rx_depacketizer_source_first <= 1'd0;
 	icmp_rx_depacketizer_source_last <= 1'd0;
 	icmp_rx_depacketizer_source_payload_data <= 8'd0;
-	icmp_rx_depacketizer_sr_shift <= 1'd0;
-	icmp_rx_depacketizer_source_be <= 1'd1;
+	icmp_rx_depacketizer_source_payload_be <= 1'd0;
+	icmp_rx_depacketizer_is_ongoing0 <= 1'd0;
+	icmp_rx_depacketizer_is_ongoing1 <= 1'd0;
 	liteethicmp_liteethicmpdepacketizer_next_state <= 2'd0;
-	icmp_rx_depacketizer_count_liteethicmp_liteethicmpdepacketizer_next_value0 <= 3'd0;
-	icmp_rx_depacketizer_count_liteethicmp_liteethicmpdepacketizer_next_value_ce0 <= 1'd0;
-	icmp_rx_depacketizer_fsm_from_idle_liteethicmp_liteethicmpdepacketizer_next_value1 <= 1'd0;
-	icmp_rx_depacketizer_fsm_from_idle_liteethicmp_liteethicmpdepacketizer_next_value_ce1 <= 1'd0;
-	icmp_rx_depacketizer_data_copy_first_liteethicmp_liteethicmpdepacketizer_next_value2 <= 1'd0;
-	icmp_rx_depacketizer_data_copy_first_liteethicmp_liteethicmpdepacketizer_next_value_ce2 <= 1'd0;
+	icmp_rx_depacketizer_count_liteethicmp_liteethicmpdepacketizer_next_value <= 3'd0;
+	icmp_rx_depacketizer_count_liteethicmp_liteethicmpdepacketizer_next_value_ce <= 1'd0;
+	icmp_rx_depacketizer_data_copy_first_liteethicmp_liteethicmpdepacketizer_t_next_value0 <= 1'd0;
+	icmp_rx_depacketizer_data_copy_first_liteethicmp_liteethicmpdepacketizer_t_next_value_ce0 <= 1'd0;
+	icmp_rx_depacketizer_send_dummy_liteethicmp_liteethicmpdepacketizer_t_next_value1 <= 1'd0;
+	icmp_rx_depacketizer_send_dummy_liteethicmp_liteethicmpdepacketizer_t_next_value_ce1 <= 1'd0;
+	icmp_rx_depacketizer_skip_cnt_liteethicmp_liteethicmpdepacketizer_f_next_value <= 1'd0;
+	icmp_rx_depacketizer_skip_cnt_liteethicmp_liteethicmpdepacketizer_f_next_value_ce <= 1'd0;
+	icmp_rx_depacketizer_source_payload_data <= icmp_rx_depacketizer_sink_payload_data;
+	icmp_rx_depacketizer_source_payload_be <= icmp_rx_depacketizer_sink_payload_be;
 	liteethicmp_liteethicmpdepacketizer_next_state <= liteethicmp_liteethicmpdepacketizer_state;
 	case (liteethicmp_liteethicmpdepacketizer_state)
 		1'd1: begin
+			icmp_rx_depacketizer_is_ongoing1 <= 1'd1;
 			icmp_rx_depacketizer_sink_ready <= 1'd1;
-			if (icmp_rx_depacketizer_sink_valid) begin
-				icmp_rx_depacketizer_count_liteethicmp_liteethicmpdepacketizer_next_value0 <= (icmp_rx_depacketizer_count + 1'd1);
-				icmp_rx_depacketizer_count_liteethicmp_liteethicmpdepacketizer_next_value_ce0 <= 1'd1;
-				icmp_rx_depacketizer_sr_shift <= 1'd1;
+			if ((icmp_rx_depacketizer_sink_valid & icmp_rx_depacketizer_sink_ready)) begin
+				icmp_rx_depacketizer_count_liteethicmp_liteethicmpdepacketizer_next_value <= (icmp_rx_depacketizer_count + 1'd1);
+				icmp_rx_depacketizer_count_liteethicmp_liteethicmpdepacketizer_next_value_ce <= 1'd1;
 				if ((icmp_rx_depacketizer_count == 3'd7)) begin
-					icmp_rx_depacketizer_data_copy_first_liteethicmp_liteethicmpdepacketizer_next_value2 <= 1'd1;
-					icmp_rx_depacketizer_data_copy_first_liteethicmp_liteethicmpdepacketizer_next_value_ce2 <= 1'd1;
+					icmp_rx_depacketizer_data_copy_first_liteethicmp_liteethicmpdepacketizer_t_next_value0 <= 1'd1;
+					icmp_rx_depacketizer_data_copy_first_liteethicmp_liteethicmpdepacketizer_t_next_value_ce0 <= 1'd1;
 					liteethicmp_liteethicmpdepacketizer_next_state <= 2'd2;
-					icmp_rx_depacketizer_count_liteethicmp_liteethicmpdepacketizer_next_value0 <= (icmp_rx_depacketizer_count + 1'd1);
-					icmp_rx_depacketizer_count_liteethicmp_liteethicmpdepacketizer_next_value_ce0 <= 1'd1;
+					icmp_rx_depacketizer_count_liteethicmp_liteethicmpdepacketizer_next_value <= (icmp_rx_depacketizer_count + 1'd1);
+					icmp_rx_depacketizer_count_liteethicmp_liteethicmpdepacketizer_next_value_ce <= 1'd1;
 				end
-				if (icmp_rx_depacketizer_sink_last) begin
+				if ((icmp_rx_depacketizer_sink_last & icmp_rx_depacketizer_sink_ready)) begin
 					liteethicmp_liteethicmpdepacketizer_next_state <= 1'd0;
 				end
 			end
 		end
 		2'd2: begin
-			icmp_rx_depacketizer_source_valid <= icmp_rx_depacketizer_sink_valid;
-			icmp_rx_depacketizer_source_first <= icmp_rx_depacketizer_data_copy_first;
-			icmp_rx_depacketizer_source_last <= icmp_rx_depacketizer_sink_last;
-			icmp_rx_depacketizer_sink_ready <= icmp_rx_depacketizer_source_ready;
-			icmp_rx_depacketizer_source_payload_data <= icmp_rx_depacketizer_sink_payload_data;
-			icmp_rx_depacketizer_source_be <= icmp_rx_depacketizer_sink_be;
-			if ((icmp_rx_depacketizer_source_valid & icmp_rx_depacketizer_source_ready)) begin
-				icmp_rx_depacketizer_data_copy_first_liteethicmp_liteethicmpdepacketizer_next_value2 <= 1'd0;
-				icmp_rx_depacketizer_data_copy_first_liteethicmp_liteethicmpdepacketizer_next_value_ce2 <= 1'd1;
-				icmp_rx_depacketizer_fsm_from_idle_liteethicmp_liteethicmpdepacketizer_next_value1 <= 1'd0;
-				icmp_rx_depacketizer_fsm_from_idle_liteethicmp_liteethicmpdepacketizer_next_value_ce1 <= 1'd1;
-				if (icmp_rx_depacketizer_source_last) begin
-					liteethicmp_liteethicmpdepacketizer_next_state <= 1'd0;
+			if ((1'd0 & icmp_rx_depacketizer_send_dummy)) begin
+				icmp_rx_depacketizer_source_valid <= 1'd1;
+				icmp_rx_depacketizer_source_payload_data <= 1'd0;
+				icmp_rx_depacketizer_source_first <= 1'd1;
+				icmp_rx_depacketizer_source_last <= 1'd0;
+				icmp_rx_depacketizer_source_payload_be <= 1'd1;
+				icmp_rx_depacketizer_sink_ready <= 1'd0;
+				if (icmp_rx_depacketizer_source_ready) begin
+					icmp_rx_depacketizer_send_dummy_liteethicmp_liteethicmpdepacketizer_t_next_value1 <= 1'd0;
+					icmp_rx_depacketizer_send_dummy_liteethicmp_liteethicmpdepacketizer_t_next_value_ce1 <= 1'd1;
+				end
+			end else begin
+				icmp_rx_depacketizer_source_valid <= icmp_rx_depacketizer_sink_valid;
+				icmp_rx_depacketizer_source_last <= icmp_rx_depacketizer_sink_last;
+				icmp_rx_depacketizer_source_first <= (icmp_rx_depacketizer_data_copy_first & icmp_rx_depacketizer_sink_valid);
+				icmp_rx_depacketizer_sink_ready <= icmp_rx_depacketizer_source_ready;
+				if ((icmp_rx_depacketizer_source_valid & icmp_rx_depacketizer_source_ready)) begin
+					icmp_rx_depacketizer_data_copy_first_liteethicmp_liteethicmpdepacketizer_t_next_value0 <= 1'd0;
+					icmp_rx_depacketizer_data_copy_first_liteethicmp_liteethicmpdepacketizer_t_next_value_ce0 <= 1'd1;
+					if (icmp_rx_depacketizer_source_last) begin
+						icmp_rx_depacketizer_skip_cnt_liteethicmp_liteethicmpdepacketizer_f_next_value <= 1'd0;
+						icmp_rx_depacketizer_skip_cnt_liteethicmp_liteethicmpdepacketizer_f_next_value_ce <= 1'd1;
+						if (1'd0) begin
+							icmp_rx_depacketizer_send_dummy_liteethicmp_liteethicmpdepacketizer_t_next_value1 <= 1'd1;
+							icmp_rx_depacketizer_send_dummy_liteethicmp_liteethicmpdepacketizer_t_next_value_ce1 <= 1'd1;
+						end
+						liteethicmp_liteethicmpdepacketizer_next_state <= 1'd0;
+					end
 				end
 			end
 		end
 		default: begin
+			icmp_rx_depacketizer_is_ongoing0 <= 1'd1;
 			icmp_rx_depacketizer_sink_ready <= 1'd1;
-			icmp_rx_depacketizer_count_liteethicmp_liteethicmpdepacketizer_next_value0 <= 1'd1;
-			icmp_rx_depacketizer_count_liteethicmp_liteethicmpdepacketizer_next_value_ce0 <= 1'd1;
-			if (icmp_rx_depacketizer_sink_valid) begin
-				icmp_rx_depacketizer_sr_shift <= 1'd1;
-				icmp_rx_depacketizer_fsm_from_idle_liteethicmp_liteethicmpdepacketizer_next_value1 <= 1'd1;
-				icmp_rx_depacketizer_fsm_from_idle_liteethicmp_liteethicmpdepacketizer_next_value_ce1 <= 1'd1;
-				icmp_rx_depacketizer_data_copy_first_liteethicmp_liteethicmpdepacketizer_next_value2 <= 1'd1;
-				icmp_rx_depacketizer_data_copy_first_liteethicmp_liteethicmpdepacketizer_next_value_ce2 <= 1'd1;
-				if (1'd0) begin
-					liteethicmp_liteethicmpdepacketizer_next_state <= 2'd2;
-				end else begin
-					liteethicmp_liteethicmpdepacketizer_next_state <= 1'd1;
-				end
-				if (($signed({1'd0, icmp_rx_depacketizer_sink_last}) & 1'sd1)) begin
-					liteethicmp_liteethicmpdepacketizer_next_state <= 1'd0;
-				end
+			icmp_rx_depacketizer_count_liteethicmp_liteethicmpdepacketizer_next_value <= 1'd1;
+			icmp_rx_depacketizer_count_liteethicmp_liteethicmpdepacketizer_next_value_ce <= 1'd1;
+			if ((icmp_rx_depacketizer_sink_valid & icmp_rx_depacketizer_sink_ready)) begin
+				liteethicmp_liteethicmpdepacketizer_next_state <= 1'd1;
 			end
 		end
 	endcase
@@ -5032,9 +5042,9 @@ always @(*) begin
 	icmp_rx_source_source_last <= 1'd0;
 	icmp_rx_source_source_payload_be <= 1'd0;
 	icmp_rx_source_source_payload_error <= 1'd0;
-	icmp_rx_is_ongoing0 <= 1'd0;
-	icmp_rx_is_ongoing1 <= 1'd0;
-	icmp_rx_is_ongoing2 <= 1'd0;
+	icmp_rx_fsm_is_ongoing0 <= 1'd0;
+	icmp_rx_fsm_is_ongoing1 <= 1'd0;
+	icmp_rx_fsm_is_ongoing2 <= 1'd0;
 	liteethicmp_fsm_next_state <= 2'd0;
 	icmp_rx_count_liteethicmp_fsm_next_value <= 17'd0;
 	icmp_rx_count_liteethicmp_fsm_next_value_ce <= 1'd0;
@@ -5044,8 +5054,8 @@ always @(*) begin
 	liteethicmp_fsm_next_state <= liteethicmp_fsm_state;
 	case (liteethicmp_fsm_state)
 		1'd0: begin
-			icmp_rx_is_ongoing0 <= 1'd1;
-			icmp_rx_is_ongoing2 <= 1'd1;
+			icmp_rx_fsm_is_ongoing0 <= 1'd1;
+			icmp_rx_fsm_is_ongoing2 <= 1'd1;
 			icmp_rx_source_source_last <= (icmp_rx_depacketizer_source_last | (icmp_rx_count >= icmp_rx_source_source_param_length));
 			if ((icmp_rx_count >= icmp_rx_source_source_param_length)) begin
 				icmp_rx_source_source_payload_be <= (icmp_rx_depacketizer_source_payload_be & {((((icmp_rx_source_source_param_length & 1'd0) == 1'd0) ? 1'd1 : (icmp_rx_source_source_param_length & 1'd0)) > 1'd0)});
@@ -5066,7 +5076,7 @@ always @(*) begin
 			end
 		end
 		1'd1: begin
-			icmp_rx_is_ongoing1 <= 1'd1;
+			icmp_rx_fsm_is_ongoing1 <= 1'd1;
 			if (((icmp_rx_depacketizer_source_valid & icmp_rx_depacketizer_source_last) & icmp_rx_depacketizer_source_ready)) begin
 				liteethicmp_fsm_next_state <= 2'd2;
 			end
@@ -6592,21 +6602,24 @@ always @(posedge sys_clk) begin
 		end
 		icmp_rx_active <= (~icmp_rx_sink_sink_last);
 	end
+	if (((icmp_rx_depacketizer_sink_valid & icmp_rx_depacketizer_sink_ready) & (icmp_rx_depacketizer_skip_cnt < 1'd0))) begin
+		icmp_rx_depacketizer_skip_cnt <= (icmp_rx_depacketizer_skip_cnt + 1'd1);
+	end
 	if (icmp_rx_depacketizer_sr_shift) begin
 		icmp_rx_depacketizer_sr <= {icmp_rx_depacketizer_sink_payload_data, icmp_rx_depacketizer_sr[63:8]};
 	end
-	if (icmp_rx_depacketizer_sr_shift_leftover) begin
-		icmp_rx_depacketizer_sr <= {icmp_rx_depacketizer_sink_payload_data, icmp_rx_depacketizer_sr[63:0]};
-	end
 	liteethicmp_liteethicmpdepacketizer_state <= liteethicmp_liteethicmpdepacketizer_next_state;
-	if (icmp_rx_depacketizer_count_liteethicmp_liteethicmpdepacketizer_next_value_ce0) begin
-		icmp_rx_depacketizer_count <= icmp_rx_depacketizer_count_liteethicmp_liteethicmpdepacketizer_next_value0;
+	if (icmp_rx_depacketizer_count_liteethicmp_liteethicmpdepacketizer_next_value_ce) begin
+		icmp_rx_depacketizer_count <= icmp_rx_depacketizer_count_liteethicmp_liteethicmpdepacketizer_next_value;
 	end
-	if (icmp_rx_depacketizer_fsm_from_idle_liteethicmp_liteethicmpdepacketizer_next_value_ce1) begin
-		icmp_rx_depacketizer_fsm_from_idle <= icmp_rx_depacketizer_fsm_from_idle_liteethicmp_liteethicmpdepacketizer_next_value1;
+	if (icmp_rx_depacketizer_data_copy_first_liteethicmp_liteethicmpdepacketizer_t_next_value_ce0) begin
+		icmp_rx_depacketizer_data_copy_first <= icmp_rx_depacketizer_data_copy_first_liteethicmp_liteethicmpdepacketizer_t_next_value0;
 	end
-	if (icmp_rx_depacketizer_data_copy_first_liteethicmp_liteethicmpdepacketizer_next_value_ce2) begin
-		icmp_rx_depacketizer_data_copy_first <= icmp_rx_depacketizer_data_copy_first_liteethicmp_liteethicmpdepacketizer_next_value2;
+	if (icmp_rx_depacketizer_send_dummy_liteethicmp_liteethicmpdepacketizer_t_next_value_ce1) begin
+		icmp_rx_depacketizer_send_dummy <= icmp_rx_depacketizer_send_dummy_liteethicmp_liteethicmpdepacketizer_t_next_value1;
+	end
+	if (icmp_rx_depacketizer_skip_cnt_liteethicmp_liteethicmpdepacketizer_f_next_value_ce) begin
+		icmp_rx_depacketizer_skip_cnt <= icmp_rx_depacketizer_skip_cnt_liteethicmp_liteethicmpdepacketizer_f_next_value;
 	end
 	liteethicmp_fsm_state <= liteethicmp_fsm_next_state;
 	if (icmp_rx_count_liteethicmp_fsm_next_value_ce) begin
@@ -6881,8 +6894,9 @@ always @(posedge sys_clk) begin
 		icmp_tx_length <= 16'd0;
 		icmp_tx_ip_address <= 32'd0;
 		icmp_rx_depacketizer_count <= 3'd0;
-		icmp_rx_depacketizer_data_copy_first <= 1'd0;
-		icmp_rx_depacketizer_fsm_from_idle <= 1'd0;
+		icmp_rx_depacketizer_skip_cnt <= 1'd0;
+		icmp_rx_depacketizer_data_copy_first <= 1'd1;
+		icmp_rx_depacketizer_send_dummy <= 1'd0;
 		icmp_rx_active <= 1'd0;
 		icmp_rx_length <= 16'd0;
 		icmp_rx_protocol <= 8'd0;
