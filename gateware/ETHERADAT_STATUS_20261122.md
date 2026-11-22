@@ -113,3 +113,27 @@ Der Stand ist deshalb wieder auf den funktionierenden Zustand von Commit
 2. Alternativ die 1-Byte-Verschiebung direkt an `icmp_rx.depacketizer.sink`
    beheben (Valid/Data sind dort auf Hardware anders ausgerichtet als im
    Sim) und danach Ping + byte-exakten UDP-Echo verifizieren.
+
+## Zyklus-Trace zur Eingrenzung (Nachtrag, 22.11.)
+
+UART-Trace mit je 40 Zyklen an vier Punkten (`valid/ready/last/be/data`
+pro Takt); Dump-Format `[0xAA][8 Zähler][4×40 Flags][4×40 Daten]`:
+
+1. `core.ip.rx.depacketizer.source` (IP-Header entfernt)
+2. `core.ip.rx.source` (IP-RX → Crossbar)
+3. Crossbar-Benutzerport → `core.icmp.rx.depacketizer.sink`
+4. `core.icmp.rx.depacketizer.source` (ICMP-Payload)
+
+**Ergebnis:** Im stationären Betrieb sind alle vier Ströme byte-identisch;
+die Crossbar fügt genau einen Takt Latenz ein, aber **kein Byte**. Ein
+zweiter Trace mit `icmp.rx.depacketizer.source`, `icmp.echo.sink`,
+`icmp.echo.source`, `icmp.tx.sink` zeigt ebenfalls identische Bytes bis
+zum Echo-Eingang.
+
+Damit ist die Fehlerstelle eingegrenzt: der zusätzliche Byte entsteht
+**am Übergang Header→Payload innerhalb des ICMP-Depacketizers**
+(`FixedDepacketizer` in `fixed_depacketizer.py`), nicht in Crossbar,
+IP-RX oder Echo. Der Simulator zeigt dort korrektes Verhalten; auf
+Hardware beginnt die Payload mit dem letzten Header-Byte. Eine direkte
+Ursache (z. B. anderes FSM-Timing durch Synthese/Constraint) ist noch
+nicht gefunden.
