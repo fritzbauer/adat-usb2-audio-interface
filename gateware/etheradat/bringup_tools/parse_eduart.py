@@ -12,16 +12,24 @@ Usage:
 """
 import sys
 
-NAMES = ["tx_frames", "rx_frames", "hello_tx", "hello_rx", "build", "feed",
-         "rx_err", "tx_drop", "filtered", "underflow", "status0", "status1",
-         "linked", "hello_due", "mac_sfn", "mac_sfs", "mac_pfn", "mac_pfs",
-         "sink_len", "sink_count", "mac_len", "mac_count",
-         "pin_len", "pin_count"]
+NAMES = (["tx_frames", "rx_frames", "hello_tx", "hello_rx", "build", "feed",
+          "rx_err", "tx_drop", "filtered", "underflow", "status0", "status1",
+          "linked", "hello_due", "mac_sfn", "mac_sfs", "mac_pfn", "mac_pfs",
+          "sink_len", "sink_count", "mac_len", "mac_count",
+          "pin_len", "pin_count"]
+         # indices 24..55: 3 x 16 captured bytes (8 x u16) + 16 payload bytes
+         + [f"sink_cap{i}" for i in range(8)]
+         + [f"mac_cap{i}" for i in range(8)]
+         + [f"pin_cap{i}" for i in range(8)]
+         + [f"sink_pay{i}" for i in range(8)]
+         # indices 56..65: RX-side bring-up taps (input0)
+         + ["c_rx_en", "c_rx_ch7", "c_rx_q", "c_rx_fdone", "c_rx_finc",
+            "c_rx_wrap", "rx_int", "rx_addr", "rx_user", "rx_state"])
 CAP_SINK = 24          # first u16 of sink_cap (16 bytes -> 8 u16)
 CAP_MAC = 32
 CAP_PIN = 40
 CAP_PAY = 48
-NV = 56                # 24 named + 8*4 tap u16
+NV = 66                # 24 named + 32 tap u16 + 10 RX taps
 TOTAL = 2 + 2 * NV + 1
 
 

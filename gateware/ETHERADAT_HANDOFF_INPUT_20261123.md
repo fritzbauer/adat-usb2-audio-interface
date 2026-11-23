@@ -12,6 +12,51 @@ commit `038afcf` ("fix corrupt audio frames on the wire").
 
 ---
 
+## 0. RESOLVED (same day, evening) — ADAT IN now works end-to-end
+
+Two independent bugs, both required:
+
+1. **Fast clock was 9x the ADAT bit rate, not 8x.** The shared
+   `adat`/`ADATReceiver`/`NRZIDecoder` hardcodes `bit_time = 8` fast cycles
+   per ADAT bit. The Cyclone V platform declares `fast_multiplier = 8`
+   (fast PLL actual = 98.304 MHz), but the Cyclone IV platforms
+   (`ADATFaceCycloneIV`, `..._EP4CGX150`, `ADATFaceCyclone10`) had
+   `fast_multiplier = 9`; `car.py` feeds that straight into the fast PLL
+   `CLK0_MULTIPLY_BY`, so the fit produced **110.61 MHz** (confirmed in
+   `top.fit.rpt`). The receiver "synced" (the lock window is wide) but its
+   free-running bit counter ran 12.5 % too fast and lost/duplicated bits,
+   decoding EMPTY/garbage. Fixed: `fast_multiplier = 8` on the Cyclone IV
+   platforms. Reproduced in simulation: the wire->receiver->collector chain
+   decodes exactly at 8x and returns the seeded EMPTY frame at 9x.
+   Regression guard: `etheradat/tests/test_platform_clocks.py`.
+
+2. **Block builder never triggered on a synced input.** Once `sync0` became
+   solid, `free_run` went to 0 and the builder's wrap trigger
+   `Array([wrap0,wrap1,wrap2])[master]` never fired (`build = 0`, while the
+   collector ring wrapped at 3200/s and the receiver decoded 48 kHz frames).
+   Amaranth lowers `Array-with-Signal-index` to a `casez(master)` with a
+   wildcard default; on Cyclone IV / Quartus 25.1 that mux did **not**
+   select element 0 even with `master == 0`. Fixed: explicit priority
+   AND/OR for the master wrap (and explicit `Mux` for the synced-path input
+   byte select, same lowering target).
+
+Verified on hardware (bitstream checksum `0x01503569`) with the UART taps
+and the full loop:
+- UART: `tx_frames == build ≈ 3200/s`, `sync0 = 1`;
+  `c_rx_fdone ≈ 48000/s`, `c_rx_wrap ≈ 3200/s`, `c_rx_finc = 0`;
+  `rx_state = 0` (DECODE).
+- `loop_sniff_all.py` (OUT2=2 kHz -> IN1): input0 ch0-7 = **2008 Hz**.
+- `loop_full.py`: AdatNet capture ch0-7 = **2002 Hz**; Audient ADAT
+  ch2-9 = **1002 Hz** (OUT1 path unchanged).
+
+Known, pre-existing test caveat: the `test_bridge.py` *byte-exact payload*
+assertions (`test_free_run_silent_blocks`,
+`test_tx_frames_match_reference_layout`, full loop) still fail in the
+Amaranth sim by one byte — this is the documented sim-vs-fit block-RAM read
+offset (§5.2), independent of this fix. `test_discovery`'s
+`test_hello_frame_matches_reference` also fails pre-existing/unrelated.
+
+
 ## 1. TL;DR / current state
 
 | Area | Status |
@@ -22,8 +67,8 @@ commit `038afcf` ("fix corrupt audio frames on the wire").
 | Kernel driver `adatnet` link + free-run decode | **link up**, `hello_rx` rising, `eth_rx_frames` ~3200/s |
 | Ethernet link duplex/bandwidth | **100 Mb/s FULL**, NIC on USB2 480 M |
 | **ADAT OUT** (PC → Ethernet → FPGA → ADAT OUT1 → Audient iD14) | **VERIFIED**: Audient ADAT ch2-9 shows the 1 kHz tone at full level (rms ≈ 1.5e8) |
-| **ADAT IN** (OUT2 → IN1 → FPGA → Ethernet → PC) | **BROKEN**: IN1 is clock-synced but the FPGA recovers silence/garbage; matches the user's "manual tests show silence" |
-| **Next action** | debug the ADAT **receive-decode** (receiver → collector → builder), §9 |
+| **ADAT IN** (OUT2 → IN1 → FPGA → Ethernet → PC) | **VERIFIED**: input0 ch0-7 = 2008 Hz (sniff) / 2002 Hz (AdatNet capture) — see §0 |
+| **Next action** | none — ADAT IN fixed and verified; see §0 for the two root causes |
 
 ---
 

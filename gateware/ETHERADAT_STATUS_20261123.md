@@ -351,3 +351,30 @@ beschreibt.
 - Debug-Taps (`dbg_cap`, `dbg_pin`, `sink_cap`, `sink_pay`) sind noch im
   Top (Bring-up); sie kosten ~600 FFs und vergroessern den UART-Dump.
   Fuer einen finalen Build koennen sie entfernt werden.
+
+## Nachtrag 4: ADAT-INPUT GELOEST (23.11.2026 abends)
+
+Zwei unabhaengige Ursachen (Details in
+`ETHERADAT_HANDOFF_INPUT_20261123.md` §0):
+
+1. **Fast-Clock 9x statt 8x.** `platforms.py` setzte fuer die Cyclone-IV-
+   Klassen `fast_multiplier = 9`; `car.py` gibt das direkt als
+   `CLK0_MULTIPLY_BY` an die Fast-PLL, real also 110.61 MHz statt
+   98.304 MHz (im `top.fit.rpt` verifiziert). `NRZIDecoder` hardcodet
+   `bit_time = 8`, d. h. der Bit-Zaehler lief 12.5 % zu schnell ->
+   EMPTY/Garbage trotz `synced`. Fix: `fast_multiplier = 8`
+   (Cyclone IV, EP4CGX150, Cyclone10) + Regressionstest
+   `etheradat/tests/test_platform_clocks.py`.
+2. **Builder-Trigger feuerte nie** (sobald `sync0` stabil war, `build = 0`
+   bei Ring-Wrap 3200/s). `Array([wrap0..2])[master]` wird von Amaranth zu
+   `casez(master)` mit Wildcard-Default; auf Cyclone IV / Quartus 25.1
+   wurde Element 0 bei `master == 0` nicht selektiert. Fix: explizite
+   Prioritaets-AND/OR (`master_wrap`) und explizite `Mux` fuer die
+   Synced-Pfad-Byte-Auswahl.
+
+Hardware-Verifikation (Bitstream `0x01503569`):
+`tx_frames == build ≈ 3200/s`, `sync0 = 1`, `c_rx_fdone ≈ 48000/s`,
+`c_rx_wrap ≈ 3200/s`, `c_rx_finc = 0`; `loop_sniff_all` (OUT2 2 kHz ->
+IN1) input0 = 2008 Hz; `loop_full` AdatNet ch0-7 = 2002 Hz und Audient
+ch2-9 = 1002 Hz. Der bisherige Ein-Byte-Sim-vs-Fit-Versatz in den
+`test_bridge.py`-Payload-Asserts bleibt (dokumentiert, hardware-autoritativ).

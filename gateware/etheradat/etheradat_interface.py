@@ -19,7 +19,7 @@
 #
 # Bring-up UART (115200, pin J_2:34, clocked from the board's 50 MHz
 # oscillator so it survives a dead REF_CLK):
-#   dump = AA 01 <14 x u16 LE> 5A, every 250 ms:
+#   dump = AA 01 <NV x u16 LE> 5A, every 250 ms:
 #     [0] TX audio frames sent to the MAC   [1] RX audio frames parsed
 #     [2] hello frames sent                 [3] valid PC hellos seen
 #     [4] ADAT blocks built (fast domain)   [5] feeder buffer consumes
@@ -29,6 +29,10 @@
 #    [11] status1: feeder active/committing, REF_CLK level, CRS_DV, ...
 #    [12] discovery linked (bridged level)
 #    [13] hello-due pulses (4/s while discovering)
+#    [14..] MAC short-frame counters, TX byte-capture taps
+#    [56..] RX-side bring-up taps for input0 (IN1): channel/frame counts,
+#           collector ring wraps, sync state (see the RX-tap comment below)
+#   etheradat/bringup_tools/parse_eduart.py decodes the whole dump.
 #
 # A dead RMII REF_CLK (PHY unpowered / wrong strap) shows as:
 #   build stalls at 2, tx_frames = 0, hello_tx = 0, tx_drops ~3200/s.
@@ -255,10 +259,12 @@ class EtherADATInterface(Elaboratable):
         #
         toslink = [platform.request("toslink", i + 1) for i in range(3)]
 
+        receivers = []
         for i in range(3):
             receiver = DomainRenamer("fast")(
                 ADATReceiver(platform.fast_domain_clock_freq))
             setattr(m.submodules, f"adat{i}_receiver", receiver)
+            receivers.append(receiver)
             m.d.comb += [
                 receiver.adat_in.eq(toslink[i].rx.i),
                 bridge.builder.sample_in[i].eq(receiver.sample_out),
@@ -432,6 +438,60 @@ class EtherADATInterface(Elaboratable):
                       for i, v in enumerate(sink_pay)]
         for k in range(0, 16, 2):
             values.append(Cat(sink_pay_s[k], sink_pay_s[k + 1]))
+
+        #
+        # RX-side bring-up taps for input0 (IN1).  These answer "is the
+        # ADAT receiver producing samples/frames at all?" independently of
+        # the Ethernet path (signals are crossed into the UART domain the
+        # same way as the other event taps):
+        #   c_rx_en    receiver output_enable pulses while synced
+        #              (~8 x 3200/s = 25600/s when decoding)
+        #   c_rx_ch7   output_enable pulses for channel 7 (one per frame)
+        #   c_rx_q     qualified NRZI edges (bit-clock recovery)
+        #   c_rx_fdone collector latched a complete 8-channel frame
+        #   c_rx_finc  collector saw a frame end with channels missing
+        #   c_rx_wrap  collector ring wrapped (drives the block builder)
+        #   rx_int     sync-counter latch (only meaningful while the
+        #              decoder is acquiring; reads a small stale value in
+        #              steady DECODE, where this counter is not running)
+        #   rx_addr / rx_user / rx_state  last addr/data and decoder state
+        #
+        rx0 = receivers[0]
+        bld = bridge.builder
+        rx_en_pulse = _pulse_to(
+            m, rx0.output_enable & rx0.synced_out, "fast", D, "ev_rx_en")
+        rx_ch7_pulse = _pulse_to(
+            m, rx0.output_enable & rx0.synced_out & (rx0.addr_out == 7),
+            "fast", D, "ev_rx_ch7")
+        rx_q_pulse = _pulse_to(
+            m, rx0.dbg_qualified_edge, "fast", D, "ev_rx_q")
+        rx_fdone_pulse = _pulse_to(
+            m, bld.dbg_frame_done_out, "fast", D, "ev_rx_fdone")
+        rx_finc_pulse = _pulse_to(
+            m, bld.dbg_incomplete_out, "fast", D, "ev_rx_finc")
+        rx_wrap_pulse = _pulse_to(
+            m, bld.dbg_wrap_out, "fast", D, "ev_rx_wrap")
+
+        rx_int = Signal(8, name="rx_int_latch")
+        with m.If(rx0.dbg_qualified_edge):
+            m.d.fast += rx_int.eq(rx0.dbg_interval)
+        rx_int_s = level_sig(rx_int, "st_rx_int")
+        rx_addr_s = level_sig(rx0.addr_out, "st_rx_addr")
+        rx_user_s = level_sig(rx0.user_data_out, "st_rx_user")
+        rx_state_s = level(rx0.dbg_sync_state, "fast", "st_rx_state")
+
+        values += [
+            _count(m, rx_en_pulse, D, "c_rx_en"),
+            _count(m, rx_ch7_pulse, D, "c_rx_ch7"),
+            _count(m, rx_q_pulse, D, "c_rx_q"),
+            _count(m, rx_fdone_pulse, D, "c_rx_fdone"),
+            _count(m, rx_finc_pulse, D, "c_rx_finc"),
+            _count(m, rx_wrap_pulse, D, "c_rx_wrap"),
+            Cat(rx_int_s, Const(0, 8)),
+            Cat(rx_addr_s, Const(0, 13)),
+            Cat(rx_user_s, Const(0, 12)),
+            Cat(rx_state_s, Const(0, 15)),
+        ]
 
         platform.add_resources([Resource("uart_dbg", 0,
             Subsignal("tx", Pins("J_2:34", dir="o"),

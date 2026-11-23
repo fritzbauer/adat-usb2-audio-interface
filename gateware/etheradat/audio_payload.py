@@ -102,6 +102,10 @@ class AudioBlockBuilder(Elaboratable):
         self.tx_drops_out = Signal()
         self.free_run_out = Signal()
         self.dbg_prod_cnt_out = Signal(2)
+        # bring-up taps: collector 0 (first ADAT input) frame activity
+        self.dbg_frame_done_out = Signal()
+        self.dbg_incomplete_out = Signal()
+        self.dbg_wrap_out = Signal()
 
     def elaborate(self, platform):
         m = Module()
@@ -118,11 +122,15 @@ class AudioBlockBuilder(Elaboratable):
             collector.synced_in = self.synced_in[i]
             m.submodules[f"collector{i}"] = collector
             collectors.append(collector)
+        comb += [
+            self.dbg_frame_done_out.eq(collectors[0].dbg_frame_done),
+            self.dbg_incomplete_out.eq(collectors[0].dbg_incomplete),
+            self.dbg_wrap_out.eq(collectors[0].slot_wrapped_out),
+        ]
         read_ports = [collector.ring.read_port(domain=self.domain)
                       for collector in collectors]
         for rp in read_ports:
             m.submodules += rp
-        rp_data = Array([rp.data for rp in read_ports])
 
         write_port = self.block_ram.write_port(domain=self.domain)
         m.submodules += write_port
@@ -146,16 +154,24 @@ class AudioBlockBuilder(Elaboratable):
             in_flight.eq(prod_cnt - Cat(cons_b0, cons_b1)),
         ]
 
-        # master input: the first synced one (bogus if none synced; the
-        # free-run timer takes over the block pace then)
-        master = Signal(2)
-        wrapped_i = Array([c.slot_wrapped_out for c in collectors])
+        # master input: the first synced one. The master ring-wrap is
+        # selected with explicit priority logic rather than
+        # Array([wrap0, wrap1, wrap2])[master]: Amaranth's Array-with-
+        # Signal-index lowering emits a `casez(master)` with a wildcard
+        # default that on Cyclone IV (Quartus 25.1) did NOT select element
+        # 0 even with master == 0, so the block builder never triggered on
+        # a synced input (build stayed 0 on hardware while the receiver
+        # decoded normally). Explicit AND/OR has no such mux.
+        w_wrap = [c.slot_wrapped_out for c in collectors]
         comb += [
-            master.eq(Mux(self.synced_in[0], 0,
-                          Mux(self.synced_in[1], 1, 2))),
             self.free_run_out.eq(~(self.synced_in[0] | self.synced_in[1]
                                    | self.synced_in[2])),
         ]
+        master_wrap = Signal()
+        comb += master_wrap.eq(
+            (self.synced_in[0] & w_wrap[0])
+            | (~self.synced_in[0] & self.synced_in[1] & w_wrap[1])
+            | (~self.synced_in[0] & ~self.synced_in[1] & w_wrap[2]))
 
         # copy state: s/i select the payload slot (s*3+i), w the ring
         # word, lane the byte within the 32-bit ring word
@@ -185,8 +201,19 @@ class AudioBlockBuilder(Elaboratable):
             ]
 
         # block ram write: 4 byte lanes per ring word
-        # byte lane order within the 32-bit ring word: MSB first
+        # byte lane order within the 32-bit ring word: MSB first.
+        # The constant lookups keep their original lowering (these are
+        # proven byte-exact on hardware). Only the input selection for the
+        # *synced* path is written with explicit Muxes instead of
+        # Array([signals])[i_cnt] (the same casez lowering as the trigger
+        # bug above).
         byte_sel = Array([3, 2, 1, 0])[lane]
+        rp_sel = Mux(i_cnt == 0, read_ports[0].data,
+                     Mux(i_cnt == 1, read_ports[1].data,
+                         read_ports[2].data))
+        synced_sel = Mux(i_cnt == 0, self.synced_in[0],
+                         Mux(i_cnt == 1, self.synced_in[1],
+                             self.synced_in[2]))
         # Unsynced inputs MUST go out as the exact silence frame
         # (PROTOCOL.md §6): the collector ring is *seeded* with
         # EMPTY_USER_FRAME, but on hardware a single spurious receiver
@@ -195,13 +222,11 @@ class AudioBlockBuilder(Elaboratable):
         # select the constant silence byte per slot position whenever the
         # input is not synced.
         empty_byte = Array(EMPTY_USER_FRAME)[w_cnt * 4 + lane]
-        synced_arr = Array(self.synced_in)
         comb += [
             write_port.en.eq(copying & got_word),
             write_port.addr.eq(wr_byte),
             write_port.data.eq(
-                Mux(synced_arr[i_cnt],
-                    rp_data[i_cnt].word_select(byte_sel, 8),
+                Mux(synced_sel, rp_sel.word_select(byte_sel, 8),
                     empty_byte)),
         ]
 
@@ -233,8 +258,7 @@ class AudioBlockBuilder(Elaboratable):
 
         # block trigger: master input's ring wrapped, or free-run period
         with m.If(~copying):
-            with m.If((~self.free_run_out & wrapped_i[master])
-                      | (self.free_run_out & free_tick)):
+            with m.If(master_wrap | (self.free_run_out & free_tick)):
                 sync += free_tick.eq(0)
                 with m.If(in_flight == 2):
                     # both buffers still unconsumed: drop the newest

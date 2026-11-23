@@ -71,7 +71,15 @@ class ADATFaceCycloneV(QMTech5CEFA2Platform, LUNAPlatform):
         super().__init__(standalone=False)
 
 class ADATFaceCycloneIV(QMTechEP4CEPlatform, LUNAPlatform):
-    fast_multiplier        = 9
+    # fast_multiplier MUST be 8: car.py's IntelFPGAClockDomainGenerator
+    # feeds this directly into the fast PLL
+    # (p_CLK0_MULTIPLY_BY = platform.fast_multiplier) with the 12.288 MHz
+    # ADAT clock as input, so it sets the *actual* fast frequency. The
+    # shared adat-core ADATReceiver/NRZIDecoder assumes exactly 8 fast
+    # cycles per ADAT bit (bit_time=8); with 9 it samples the wrong bits
+    # and the ADAT input decodes as silence/garbage even while "synced".
+    # The Cyclone V class below carries the same requirement.
+    fast_multiplier        = 8
     clock_domain_generator = IntelFPGAClockDomainGenerator
     fast_domain_clock_freq = int(48e3 * 256 * fast_multiplier)
 
@@ -92,7 +100,14 @@ class ADATFaceCycloneIV(QMTechEP4CEPlatform, LUNAPlatform):
 
 
 class ADATFaceCycloneIV_EP4CGX150(QMTechEP4CGX150Platform, LUNAPlatform):
-    fast_multiplier        = 9
+    # fast_multiplier MUST be 8 (see ADATFaceCycloneIV above): car.py sets
+    # the fast PLL multiply to this value, and adat-core's ADATReceiver
+    # hardcodes bit_time=8 fast cycles per ADAT bit. With 9 the fast clock
+    # is 110.592 MHz instead of 98.304 MHz, the receiver's free-running
+    # bit counter runs 12.5% too fast and the ADAT input is silence/garbage.
+    # Verified in simulation: the wire->receiver->collector chain decodes
+    # frames exactly at 8x and returns the seeded EMPTY frame at 9x.
+    fast_multiplier        = 8
     clock_domain_generator = IntelFPGAClockDomainGenerator
     fast_domain_clock_freq = int(48e3 * 256 * fast_multiplier)
 
@@ -115,7 +130,9 @@ class ADATFaceCycloneIV_EP4CGX150(QMTechEP4CGX150Platform, LUNAPlatform):
 # right now the design probably would not fit into this device anymore
 class ADATFaceCyclone10(QMTech10CL006Platform, LUNAPlatform):
     clock_domain_generator = IntelFPGAClockDomainGenerator
-    fast_multiplier        = 9
+    # 8, not 9: adat-core's ADATReceiver assumes 8 fast cycles/bit (see
+    # ADATFaceCycloneIV_EP4CGX150).
+    fast_multiplier        = 8
     fast_domain_clock_freq = int(48e3 * 256 * fast_multiplier)
 
     @property

@@ -11,9 +11,10 @@ import sys
 import unittest
 
 from etheradat.tests import (test_reference, test_adat_frame_codec,
-                             test_discovery)
+                             test_discovery, test_platform_clocks)
 
-MODULES = [test_reference, test_adat_frame_codec, test_discovery]
+MODULES = [test_reference, test_adat_frame_codec, test_discovery,
+           test_platform_clocks]
 
 
 def main():
