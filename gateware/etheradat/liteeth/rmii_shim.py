@@ -55,9 +55,18 @@ class RMIITXShim(LiteXModule):
         shift = Signal(8)
         count = Signal(3)   # 0 = idle, 4..1 = dibits still to send
 
+        # Output-register the pads. With combinational pads the PHY
+        # sometimes latched the NEXT dibit at the byte-load edge (the
+        # transition happens Tco after the same REF_CLK edge the PHY
+        # samples): a periodic single-bit error every 4th byte, only
+        # visible in some fits (found with the mixed long/hello MAC
+        # test, 23.11.2026). Registering txd/tx_en delays the stream by
+        # one clock and removes the race.
+        txd_r = Signal(2)
+        tx_en_r = Signal()
         self.comb += [
-            txd.eq(shift[0:2]),       # registered data, LSB dibit first
-            tx_en.eq(count != 0),     # registered enable
+            txd.eq(txd_r),            # registered data, LSB dibit first
+            tx_en.eq(tx_en_r),        # registered enable
             # Accept the next byte on the last dibit of the current one
             # so frames are gapless while TX_EN stays high.
             sink.ready.eq(count <= 1),
@@ -70,6 +79,8 @@ class RMIITXShim(LiteXModule):
                    shift.eq(shift >> 2),
                    count.eq(count - 1),
             ),
+            txd_r.eq(shift[0:2]),
+            tx_en_r.eq(count != 0),
         ]
 
 
@@ -291,6 +302,13 @@ class LiteEthRMIIShim(LiteXModule):
     """
 
     dw = 8
+    # LiteEthMACGap's default is 12 clocks at dw=8, i.e. 12 wire bytes at
+    # one byte/clock. This shim serializes a byte in FOUR clocks (100 MBit
+    # at 50 MHz, 2 bits/clock), so 12 clocks would be only 3 wire byte
+    # times. Back-to-back user frames (hello + audio) then lose the PHY's
+    # framing (observed as 1-bit-slipped audio frames on hardware
+    # 23.11.2026). 48 clocks = the real 12-byte Ethernet IFG.
+    tx_gap_cycles = 200
 
     def __init__(self, tx_en, txd, crs_dv, rxd):
         self.submodules.tx = ClockDomainsRenamer("eth_tx")(

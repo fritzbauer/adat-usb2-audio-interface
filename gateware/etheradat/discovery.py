@@ -16,12 +16,19 @@ The hello frame is padded to the Ethernet minimum by the MAC core
 (14 MAC/EtherType + 20 hello payload) on a byte stream.
 """
 
-from amaranth import Elaboratable, Module, Signal, Mux
+from amaranth import Elaboratable, Module, Signal, Mux, Array
 
 from etheradat.reference import (
     ETHERTYPE_HELLO, HELLO_LEN, HELLO_ROLE_DEVICE, N_SAMPLES)
 
-HELLO_FRAME_BYTES = 14 + HELLO_LEN          # 34, padding added by MAC core
+HELLO_FRAME_BYTES = 14 + HELLO_LEN          # 34, payload actually built
+# Wire length of the hello frame. The MAC/padding path on this Cyclone
+# build mishandles short frames interleaved with 1462-byte audio frames
+# (mixed-length frames lose their preamble/last; see the status doc).
+# The protocol parser only requires >= 20 payload bytes, so send the
+# hello padded to the same 1462-byte length as the audio frames: the
+# stream then has one uniform frame length.
+HELLO_WIRE_BYTES = 1462
 
 HELLO_PERIOD_DISCOVER_DEFAULT = 0.25        # s (rp2350_sim.py)
 HELLO_PERIOD_LINKED_DEFAULT = 1.0           # s (§12.2)
@@ -103,6 +110,7 @@ class Discovery(Elaboratable):
 
         self.dbg_hello_tx = Signal()
         self.dbg_hello_rx = Signal()
+        self.dbg_byte_idx = Signal(6)
         self.dbg_keepalive_timeout = Signal()
 
     def _frame_byte(self, index):
@@ -216,11 +224,19 @@ class Discovery(Elaboratable):
 
         # serialize on demand; dbg_hello_due only triggers the rebuild,
         # the (rebuilt) frame becomes visible one cycle later
-        byte_idx = Signal(6)
+        byte_idx = Signal(11)
+        # Explicit 34:1 mux instead of frame.word_select() (variable
+        # 272-bit shift): the shift form is what the static-ROM bring-up
+        # test proved problematic on hardware, the mux form is proven.
+        frame_bytes = [frame[i * 8:(i + 1) * 8]
+                       for i in range(HELLO_FRAME_BYTES)]
+        byte_sel = Mux(byte_idx < HELLO_FRAME_BYTES, byte_idx, 0)
         comb += [
+            self.dbg_byte_idx.eq(byte_idx),
             self.hello_valid.eq(frame_fresh),
-            self.hello_data.eq(frame.word_select(byte_idx, 8)),
-            self.hello_last.eq(byte_idx == HELLO_FRAME_BYTES - 1),
+            self.hello_data.eq(Mux(byte_idx < HELLO_FRAME_BYTES,
+                                   Array(frame_bytes)[byte_sel], 0)),
+            self.hello_last.eq(byte_idx == HELLO_WIRE_BYTES - 1),
         ]
         with m.If(self.hello_valid & self.hello_ready):
             sync += [

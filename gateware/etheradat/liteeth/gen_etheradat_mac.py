@@ -94,6 +94,14 @@ class EtherADATMAC(LiteXModule):
         self.user_sink = stream.Endpoint(eth_phy_description(8))
         self.user_source = stream.Endpoint(eth_phy_description(8))
 
+        # debug: short-frame pulses at the user sink and at the PHY sink
+        # (bring-up: the AdatNet hello frames are 34 bytes and must be
+        # padded; these show where they disappear, if they do)
+        self.dbg_sink_frame = Signal()
+        self.dbg_sink_short = Signal()
+        self.dbg_phy_frame = Signal()
+        self.dbg_phy_short = Signal()
+
         phy = LiteEthRMIIShim(tx_en=self.rmii_tx_en, txd=self.rmii_txd,
                               crs_dv=self.rmii_crs_dv, rxd=self.rmii_rxd)
         self.submodules.shim = phy
@@ -102,7 +110,7 @@ class EtherADATMAC(LiteXModule):
                               with_sys_datapath=True,
                               with_preamble_crc=True,
                               with_padding=True,
-                              with_store_and_forward=True)
+                              with_store_and_forward=False)
         self.submodules.core = core
 
         self.comb += [
@@ -110,6 +118,33 @@ class EtherADATMAC(LiteXModule):
             self.user_sink.error.eq(0),
             self.user_sink.connect(core.sink),
             core.source.connect(self.user_source),
+        ]
+
+        # --- short-frame diagnostics -----------------------------------
+        sink_len = Signal(16)
+        phy_len = Signal(16)
+        sink_acc = self.user_sink.valid & self.user_sink.ready
+        phy_acc = phy.sink.valid & phy.sink.ready
+        self.sync.eth_tx += [
+            If(sink_acc,
+               If(self.user_sink.last, sink_len.eq(0))
+               .Else(sink_len.eq(sink_len + 1))),
+            If(phy_acc,
+               If(phy.sink.last, phy_len.eq(0))
+               .Else(phy_len.eq(phy_len + 1))),
+        ]
+        self.comb += [
+            self.dbg_sink_frame.eq(self.user_sink.valid
+                                   & self.user_sink.ready
+                                   & self.user_sink.last),
+            self.dbg_sink_short.eq(self.user_sink.valid
+                                   & self.user_sink.ready
+                                   & self.user_sink.last
+                                   & (sink_len < 100)),
+            self.dbg_phy_frame.eq(phy.sink.valid & phy.sink.ready
+                                  & phy.sink.last),
+            self.dbg_phy_short.eq(phy.sink.valid & phy.sink.ready
+                                  & phy.sink.last & (phy_len < 100)),
         ]
 
 
@@ -124,6 +159,8 @@ def main():
         dut.user_source.payload.data, dut.user_source.valid,
         dut.user_source.ready, dut.user_source.last,
         dut.user_source.payload.error,
+        dut.dbg_sink_frame, dut.dbg_sink_short,
+        dut.dbg_phy_frame, dut.dbg_phy_short,
         dut.cd_eth_tx.clk, dut.cd_eth_tx.rst,
         dut.cd_eth_rx.clk, dut.cd_eth_rx.rst,
     }

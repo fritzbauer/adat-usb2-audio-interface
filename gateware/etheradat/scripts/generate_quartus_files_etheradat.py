@@ -34,6 +34,11 @@ def main():
                         choices=["input", "output"],
                         help="who sources the 50 MHz RMII reference "
                              "(default: the LAN8720 module, REF_CLK-OUT)")
+    parser.add_argument("--no-audio-tx", action="store_true",
+                        help="debug: suppress TX audio frames (hello-only)")
+    parser.add_argument("--tx-rising", action="store_true",
+                        help="drive RMII TX on the rising REF_CLK edge "
+                             "(default: falling edge, half-cycle setup)")
     args = parser.parse_args()
 
     platform = get_appropriate_platform()
@@ -45,7 +50,9 @@ def main():
         plat_name = platform.__class__.__name__.lower()
         build_dir = f"build_etheradat_{plat_name}"
 
-    top = EtherADATInterface(ref_clk_mode=args.ref_clk_mode)
+    top = EtherADATInterface(ref_clk_mode=args.ref_clk_mode,
+                             audio_tx_enable=not args.no_audio_tx,
+                             tx_negedge=not args.tx_rising)
     plan = platform.build(top, do_build=False)
     plan.execute_local(build_dir, run_script=False)
 

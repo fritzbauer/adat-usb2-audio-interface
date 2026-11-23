@@ -98,9 +98,12 @@ class EtherADATInterface(Elaboratable):
     """
 
     def __init__(self, ref_clk_mode="input", own_mac=0x02AD6E657401,
-                 device_serial=0x41444146, session_nonce=0):
+                 device_serial=0x41444146, session_nonce=0,
+                 audio_tx_enable=True, tx_negedge=False):
         assert ref_clk_mode in ("input", "output")
         self.ref_clk_mode = ref_clk_mode
+        self.audio_tx_enable = audio_tx_enable
+        self.tx_negedge = tx_negedge
         self.own_mac = own_mac
         self.device_serial = device_serial
         self.session_nonce = session_nonce
@@ -149,6 +152,7 @@ class EtherADATInterface(Elaboratable):
             session_nonce=self.session_nonce,
             fast_clk_freq=platform.fast_domain_clock_freq,
             rmii_clk_freq=50_000_000,
+            audio_tx_enable=self.audio_tx_enable,
         )
 
         #
@@ -158,10 +162,14 @@ class EtherADATInterface(Elaboratable):
                               "liteeth", "liteeth_etheradat_mac.v")
         platform.add_file("liteeth_etheradat_mac.v", open(_mac_v, "rb"))
 
+        eth_tx_clk = Signal(name="eth_tx_clk_neg")
+        m.d.comb += eth_tx_clk.eq(~rmii_clk if self.tx_negedge else rmii_clk)
+        mac_dbg = {n: Signal(name="mac_dbg_" + n) for n in
+                   ("sink_frame", "sink_short", "phy_frame", "phy_short")}
         m.submodules.liteeth_mac = Instance("liteeth_etheradat_mac",
             i_sys_clk        = ClockSignal("rmii"),
             i_sys_rst        = ResetSignal("rmii"),
-            i_eth_tx_clk     = ClockSignal("rmii"),
+            i_eth_tx_clk     = eth_tx_clk,
             i_eth_tx_rst     = ResetSignal("rmii"),
             i_eth_rx_clk     = ClockSignal("rmii"),
             i_eth_rx_rst     = ResetSignal("rmii"),
@@ -178,6 +186,10 @@ class EtherADATInterface(Elaboratable):
             o_user_source_last         = bridge.mac_rx_last,
             o_user_source_payload_error = bridge.mac_rx_error,
             i_user_source_ready        = bridge.mac_rx_ready,
+            o_dbg_sink_frame = mac_dbg["sink_frame"],
+            o_dbg_sink_short = mac_dbg["sink_short"],
+            o_dbg_phy_frame  = mac_dbg["phy_frame"],
+            o_dbg_phy_short  = mac_dbg["phy_short"],
         )
 
         #
@@ -333,6 +345,15 @@ class EtherADATInterface(Elaboratable):
             level(bridge.discovery.linked_out, "rmii", "st_linked"),
             _count(m, _pulse_to(m, bridge.discovery.dbg_hello_due,
                                 "rmii", D, "ev_hdue"), D, "c_hdue"),
+            # MAC short-frame diagnostics (hello bring-up)
+            _count(m, _pulse_to(m, mac_dbg["sink_frame"], "rmii", D,
+                                "ev_mac_sfn"), D, "c_mac_sfn"),
+            _count(m, _pulse_to(m, mac_dbg["sink_short"], "rmii", D,
+                                "ev_mac_sfs"), D, "c_mac_sfs"),
+            _count(m, _pulse_to(m, mac_dbg["phy_frame"], "rmii", D,
+                                "ev_mac_pfn"), D, "c_mac_pfn"),
+            _count(m, _pulse_to(m, mac_dbg["phy_short"], "rmii", D,
+                                "ev_mac_pfs"), D, "c_mac_pfs"),
         ]
 
         platform.add_resources([Resource("uart_dbg", 0,

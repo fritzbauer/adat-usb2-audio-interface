@@ -25,7 +25,7 @@ Audio payloads (PROTOCOL.md §4, mode A):
 """
 
 from amaranth import (Elaboratable, Module, Signal, Array, Mux, Memory, Cat,
-                      ClockDomain, ClockSignal, ResetSignal)
+                      ClockDomain, ClockSignal, ResetSignal, DomainRenamer)
 from amaranth.lib.cdc import FFSynchronizer, ResetSynchronizer
 
 from etheradat.audio_payload import (AudioBlockBuilder, AudioFeeder,
@@ -113,8 +113,10 @@ class EtherADATBridge(Elaboratable):
     def __init__(self, *, own_mac, device_serial=0, session_nonce=0,
                  fast_clk_freq=98_304_000, rmii_clk_freq=50_000_000,
                  hello_discover_cycles=None, hello_linked_cycles=None,
-                 keepalive_cycles=None, mdio_poll_cycles=None):
+                 keepalive_cycles=None, mdio_poll_cycles=None,
+                 audio_tx_enable=True):
         self.own_mac = own_mac & 0xFFFFFFFFFFFF
+        self.audio_tx_enable = audio_tx_enable
         self.fast_clk_freq = fast_clk_freq
         self.rmii_clk_freq = rmii_clk_freq
 
@@ -185,8 +187,14 @@ class EtherADATBridge(Elaboratable):
         mdio = self.mdio
         m.submodules.builder = builder
         m.submodules.feeder = feeder
-        m.submodules.discovery = discovery
-        m.submodules.mdio = mdio
+        # Discovery and MDIO use m.d.sync internally; in this bridge they
+        # belong to the RMII domain (hello handshake with the TX arbiter,
+        # MDC/MDIO pads). Without the renamer they ran in the board's
+        # 'sync' (61.44 MHz audio-PLL) domain, so the hello stream
+        # crossed clock domains unsynchronised and bytes were
+        # dropped/skipped (found in sim: fragmented 27/28-byte hellos).
+        m.submodules.discovery = DomainRenamer("rmii")(discovery)
+        m.submodules.mdio = DomainRenamer("rmii")(mdio)
 
         #
         # gray-counter CDCs between the three domains
@@ -240,7 +248,8 @@ class EtherADATBridge(Elaboratable):
         have_tx_work = Signal()
         comb += [
             tx_prod_val.eq(Cat(tx_prod_b0, tx_prod_b1)),
-            have_tx_work.eq(tx_prod_val != tx_cons_cnt),
+            have_tx_work.eq((tx_prod_val != tx_cons_cnt)
+                            & self.audio_tx_enable),
         ]
 
         tx_ram_read = builder.block_ram.read_port(domain="rmii")
@@ -290,8 +299,14 @@ class EtherADATBridge(Elaboratable):
                           tx_ram_read.data)
         tx_fsm_last = tx_byte == TX_FRAME_BYTES - 1
 
-        # TX arbiter: audio frames first, then hello
-        hello_grant = ~tx_sending & discovery.hello_valid
+        # TX arbiter: a hello owns the MAC until its last byte. Without
+        # hello_active the audio FSM could start in the same cycle a
+        # hello is granted and the next cycle preempt it, merging one
+        # hello byte into an audio frame (broken framing, no hello on
+        # the wire). A 1462-byte hello costs at most one frame period.
+        hello_active = Signal()
+        hello_start = ~tx_sending & ~hello_active & discovery.hello_valid
+        hello_grant = (hello_active | hello_start) & discovery.hello_valid
         comb += [
             self.mac_tx_valid.eq(tx_fsm_valid | hello_grant),
             self.mac_tx_data.eq(Mux(tx_sending, tx_fsm_data,
@@ -301,7 +316,13 @@ class EtherADATBridge(Elaboratable):
             discovery.hello_ready.eq(self.mac_tx_ready & hello_grant),
             discovery.hello_granted.eq(hello_grant),
         ]
-
+        with m.If(hello_start):
+            rmii += hello_active.eq(1)
+        with m.If(discovery.hello_valid & discovery.hello_ready
+                  & discovery.hello_last):
+            rmii += hello_active.eq(0)
+        with m.If(hello_active & ~discovery.hello_valid):
+            rmii += hello_active.eq(0)      # safety
         tx_consume = tx_fsm_valid & self.mac_tx_ready
         with m.If(tx_sending):
             with m.If(tx_consume):
@@ -318,7 +339,8 @@ class EtherADATBridge(Elaboratable):
                         sample_cntr.eq(sample_cntr + N_SAMPLES),
                         self.stats_tx_frames.eq(self.stats_tx_frames + 1),
                     ]
-        with m.If(~tx_sending & have_tx_work):
+        with m.If(~tx_sending & have_tx_work & ~hello_active
+                  & ~discovery.hello_valid):
             rmii += [
                 tx_sending.eq(1),
                 tx_buf.eq(tx_cons_cnt[0]),

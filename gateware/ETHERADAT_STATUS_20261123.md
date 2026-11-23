@@ -211,3 +211,63 @@ gesampelt) und ggf. `--ref-clk-mode input` flashen.
 - `gen_etheradat_mac.py`-Regeneration: Scratch-venv
   `/tmp/etheradat-scratch/liteenv` (Symlink auf
   `etheradat-scratch-saved`).
+
+## Nachtrag 2: Integrations-Debugging (nach Hardware-Power-Up)
+
+Nach dem Power-Up des LAN8720 (der Blocker oben war echt: Modul ohne Strom)
+wurde die Integration Schritt fuer Schritt debuggt. Verifizierte Meilensteine:
+
+- **Baseline**: exakt der 22.11.-Bitstream (0x00A8666A) laeuft wieder,
+  ping 5/5, UART-Zaehler steigen.
+- **Kernel-Treiber** (neu gebaut, 6.12.118): veth-Discovery-Test PASS,
+  24 Kanaele bit-exakt.
+- **Hello-only MAC-Test** (statisches ROM): saubere 60-Byte-Hellos im
+  tcpdump, Treiber `link up`, PC antwortet (role=2).
+- **Discovery+MAC** (ohne Bridge/Audio): nach den Fixes saubere
+  1462-Byte-Hellos, Treiber `link up` (`hello_rx` steigt).
+
+Dabei gefundene und behobene Fehler:
+
+1. **Discovery/MDIO im falschen Clock-Domain** (`bridge.py`): beide
+   nutzen intern `m.d.sync`, liefen also im 61,44-MHz-`sync`-Domain der
+   Audio-PLL, waehrend der TX-Arbiter in `rmii` (REF_CLK) laeuft. Der
+   Hello-Handshake kreuzte Clock-Domains unsynchronisiert → Byte-Ausfaelle
+   (fehlende Bytes, Fragmente). Fix: `DomainRenamer("rmii")` fuer beide.
+2. **Hello-Daten-Mux**: `frame.word_select()` (272-Bit-Variablen-Shift)
+   durch einen expliziten 34:1-`Array`-Mux ersetzt.
+3. **RMII-TX-Pads registriert** (`rmii_shim.py`): kombinatorische Pads
+   liessen die PHY am Byte-Lade-Rand gelegentlich den NAECHSTEN Dibit
+   latchen (periodischer Bit-6-Fehler jedes 4. Byte, fit-abhaengig;
+   mit gemischt lang/kurz nachgewiesen). `txd_r`/`tx_en_r` verzoegern den
+   Strom um einen Takt.
+4. **IFG**: `tx_gap_cycles = 200` am Shim (LiteEth-Gap zaehlt Takte, der
+   Shim braucht 4 Takte/Byte; Default 12 = 3 Wire-Bytes statt 12).
+5. **MAC-Konfiguration wie Baseline**: `with_store_and_forward=False`
+   (Baseline hat keinen TX-Packet-FIFO; unser FIFO verhielt sich auf
+   Hardware anders).
+6. **Uniforme Hello-Laenge**: Der MAC/Padding-Pfad verschluckt kurze
+   Frames in einem Strom aus 1462-Byte-Audioframes. Das Protokoll
+   verlangt nur ≥20 Payload-Bytes → der Hello wird auf 1462 Byte
+   aufgefuellt (wie ein Audioframe, kein Mixed-Length-Pfad).
+7. **Atomarer Hello-Arbiter**: ohne `hello_active` konnte der Audio-FSM
+   im selben Takt starten, in dem der Hello grantet wurde, und ihn im
+   naechsten Takt preempten (ein Hello-Byte landet im Audioframe).
+   Jetzt besitzt ein Hello den Pfad bis zu seinem `last`.
+   Der Bridge-Sim liefert damit nur noch wohlgeformte 1462-Byte-Frames
+   (72 Hellos + 18 Audio, 0 fehlerhaft).
+
+**Verbleibender Fehler (offen):** Im vollen Bridge-Build sind die
+Audioframes auf der Leitung noch korrupt: die vom PC empfangenen Frames
+beginnen mit dem ADAT-Payload-Muster statt mit dst/src/EtherType — es
+fehlen die **ersten 22 Bytes (der Ethernet+AdatNet-Header)**; die Laengen
+sind 1443/1444 statt 1462. Der MAC-User-Stream der Bridge ist im
+Amaranth-Sim byte-exakt, und der Discovery+MAC-Standalone-Build
+uebertraegt auf derselben Hardware saubere 1462-Byte-Frames. Der
+Unterschied ist der Bridge-Datenpfad (Header aus `hdr_byte`-Array +
+Payload aus dem Block-RAM) bzw. der kontinuierliche 3200-fps-Strom.
+
+**Naechster Schritt:** den Bridge-TX-Header auf Hardware sichtbar machen
+(z. B. die ersten 22 User-Stream-Bytes in ein Debug-RAM schreiben und per
+UART ausgeben) und mit dem ROM-Test vergleichen; alternativ den Header
+testweise aus einem ROM statt aus dem Array speisen. Danach den
+Audio-Payload-Pfad (BRAM-Read-Timing) pruefen.
