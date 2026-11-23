@@ -168,6 +168,22 @@ OUT2→IN2-Loopback ist der verlässliche ADAT-Nachweis.
 **Nicht bestätigt** ist nur die reale Ethernet-Strecke FPGA↔PC: dafür
 muss das LAN8720-Modul wieder elektrisch leben (siehe Blocker).
 
+### Kontrollversuch: exakt die funktionierende Baseline
+
+Der am 22.11. verifizierte Baseline-Bitstream wurde zu Sessionbeginn
+gesichert (`/tmp/baseline_top.sof`, Checksumme `0x00A8666A`) und am
+23.11. erneut geflasht; zusätzlich neu aus den Quellen gebaut
+(`generate_quartus_files_baseline.py --ref-clk-mode input`) — **identische
+Checksumme `0x00A8666A`**, aber:
+
+- PC-NIC: `NO-CARRIER`, `ping 192.168.42.2` 0/3,
+- UART: still (die Baseline wird vollständig vom REF_CLK getaktet).
+
+Da exakt derselbe, am 22.11. funktionierende Bitstream heute keinen Link
+mehr bekommt, liegt die Ursache **nicht** in der neuen Gateware, sondern
+in der PHY-Versorgung/Verbindung. Der Zustand war schon beim ersten
+Flash am 23.11. 07:21 so (vor allen Output-Mode-Experimenten).
+
 ## Letzte PHY-Rettungsversuche (23.11., ohne Erfolg)
 
 - `J_2:22` (laut README NC, evtl. RST#) auf HIGH treiben: kein Effekt.
