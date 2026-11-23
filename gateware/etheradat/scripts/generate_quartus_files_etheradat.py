@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
-"""Generate the Quartus project files for the EtherADAT bridge top
-without running the synthesis toolchain (same flow as
-scripts/generate_quartus_files.py, but for etheradat/).
+"""Generate the Quartus project files for the full EtherADAT bridge top
+without running the synthesis toolchain.
 
 Usage (from the gateware directory, project venv activated):
-    ./venv/bin/python etheradat/scripts/generate_quartus_files_etheradat.py [BUILD_DIR]
+    LUNA_PLATFORM=platforms:ADATFaceCycloneIV_EP4CGX150 \
+        ./venv/bin/python etheradat/scripts/generate_quartus_files_etheradat.py \
+        [BUILD_DIR] [--ref-clk-mode input|output]
 
-The FPGA platform is selected with the LUNA_PLATFORM environment
-variable; default: platforms:ADATFaceCycloneV.
-
-Afterwards, on the synthesis host: cd BUILD_DIR && ./build_top.sh
+Afterwards, on the synthesis host: ~/quartus_build_host.sh (the build
+directory must be gateware/build).
 """
 
 import argparse
@@ -17,7 +16,8 @@ import os
 import sys
 
 # Must be set before luna/amaranth are imported.
-os.environ.setdefault("LUNA_PLATFORM", "platforms:ADATFaceCycloneV")
+os.environ.setdefault("LUNA_PLATFORM",
+                      "platforms:ADATFaceCycloneIV_EP4CGX150")
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(
     os.path.abspath(__file__)))))
@@ -30,14 +30,10 @@ from etheradat.etheradat_interface import EtherADATInterface
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("build_dir", nargs="?", default=None)
-    parser.add_argument("--ref-clk-mode", default="output",
+    parser.add_argument("--ref-clk-mode", default="input",
                         choices=["input", "output"],
                         help="who sources the 50 MHz RMII reference "
-                             "(default: the FPGA)")
-    parser.add_argument("--debug-leds", action="store_true",
-                        help="map RMII-domain debug signals onto the LEDs")
-    parser.add_argument("--led-test", action="store_true",
-                        help="minimal PLL/LED blink test, no rmii/bridge")
+                             "(default: the LAN8720 module, REF_CLK-OUT)")
     args = parser.parse_args()
 
     platform = get_appropriate_platform()
@@ -49,17 +45,35 @@ def main():
         plat_name = platform.__class__.__name__.lower()
         build_dir = f"build_etheradat_{plat_name}"
 
-    top = EtherADATInterface(ref_clk_mode=args.ref_clk_mode,
-                             debug_leds=args.debug_leds,
-                             led_test=args.led_test)
+    top = EtherADATInterface(ref_clk_mode=args.ref_clk_mode)
     plan = platform.build(top, do_build=False)
     plan.execute_local(build_dir, run_script=False)
+
+    # The RMII REF_CLK is not a Clock() resource: constrain it here. The
+    # name must match the platform's set_clock_groups filter
+    # (rmii_0__ref_clk*) so the asynchronous CDC groups are real. The
+    # constraint MUST precede set_clock_groups: SDC is evaluated in
+    # order, and the group filter silently matches nothing otherwise
+    # (observed as negative setup slack on every cross-domain path).
+    sdc_path = os.path.join(build_dir, "top.sdc")
+    with open(sdc_path) as f:
+        sdc = f.read()
+    clock_line = ('create_clock -name "rmii_0__ref_clk" -period 20.0 '
+                  '[get_ports "rmii_0__ref_clk__io"]\n')
+    marker = "set_clock_groups"
+    idx = sdc.find(marker)
+    if idx < 0:
+        sdc = sdc + "\n" + clock_line
+    else:
+        sdc = sdc[:idx] + clock_line + "\n" + sdc[idx:]
+    with open(sdc_path, "w") as f:
+        f.write(sdc)
 
     print(f"Wrote {len(plan.files)} files to {build_dir}/:")
     for filename in plan.files:
         print(f"  {filename}")
-    print("\nNext step (on the synthesis host):")
-    print(f"  cd {build_dir} && ./build_top.sh")
+    print("\nNext step: copy to gateware/build and run "
+          "~/quartus_build_host.sh")
 
 
 if __name__ == "__main__":

@@ -22,7 +22,8 @@ to two CRS_DV-low cycles; the byte stream starts with the preamble (the
 MAC core's preamble checker strips it) and the last byte carries
 `last`.
 
-This module is imported ONLY by gen_liteeth_core.py and its tests, in
+This module is imported ONLY by the Verilog generators
+(gen_etheradat_mac.py, gen_baseline.py) and their tests, in
 an environment that has migen/litex/liteeth installed (NOT the
 adatface project venv).
 """

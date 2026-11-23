@@ -23,7 +23,7 @@ toslink 1..3 (RX-Optik)  →  ADATReceiver ×3  ─┐        „fast“ (98,304
                             (Header/MAC-Lernen/Hello/Arbitrierung)
                                               │
                             LiteEth-MAC-Core (Verilog-Blackbox,
-                            liteeth_rmii_mac.v: Preamble, FCS-CRC32,
+                            liteeth_etheradat_mac.v: Preamble, FCS-CRC32,
                             Padding auf 60 B, IFG)
                                               │
                             RMII-Pins → LAN8720 → CAT-Kabel
@@ -126,8 +126,8 @@ python -m etheradat.tests.test_discovery          # Hello/MAC-Lernen/Keepalive
 python -m unittest etheradat.tests.test_bridge -v # End-to-End an der MAC-Grenze
 ```
 
-Zusätzlich (Separates venv mit migen/litex/liteeth, siehe
-`liteeth/gen_liteeth_core.py`): der RMII-Loopback des LiteEth-MAC-Cores:
+Zusätzlich (Separates venv mit migen/litex/liteeth): der RMII-Shim-Test
+aus der Baseline:
 
 ```
 /tmp/etheradat-scratch/liteenv/bin/python etheradat/liteeth/test_rmii_shim.py
@@ -135,27 +135,33 @@ Zusätzlich (Separates venv mit migen/litex/liteeth, siehe
 
 ## Erzeugen der LiteEth-Blackbox (nur bei Bedarf neu)
 
-Die Datei `liteeth/liteeth_rmii_mac.v` ist eingecheckt; neu generieren:
+Die Datei `liteeth/liteeth_etheradat_mac.v` ist eingecheckt; neu
+generieren (Scratch-venv mit gepinnten migen/litex/liteeth-Commits,
+siehe `gen_baseline.py`):
 
 ```
-python3 -m venv /tmp/etheradat-scratch/liteenv
-/tmp/etheradat-scratch/liteenv/bin/pip install migen liteeth
-/tmp/etheradat-scratch/liteenv/bin/python etheradat/liteeth/gen_liteeth_core.py
+/tmp/etheradat-scratch/liteenv/bin/python etheradat/liteeth/gen_etheradat_mac.py
 ```
 
-## Build
-
-Wie gehabt über den LUNA-Flow, Default-Plattform Cyclone V:
+## Build (VM-Dateien → Host-Synthese)
 
 ```
-cd gateware && . venv/bin/activate
-python etheradat/etheradat_interface.py            # oder:
-LUNA_PLATFORM=platforms:ADATFaceCycloneIV python etheradat/etheradat_interface.py
+cd gateware
+LUNA_PLATFORM=platforms:ADATFaceCycloneIV_EP4CGX150 \
+  venv/bin/python etheradat/scripts/generate_quartus_files_etheradat.py \
+  --ref-clk-mode input /tmp/edbuild
+rm -rf build && mkdir build && cp /tmp/edbuild/* build/
+~/quartus_build_host.sh          # Synthese auf dem Host
 ```
 
-Die Quartus-Projektdateien inkl. der Blackbox entstehen wie bei
-`scripts/generate_quartus_files.py` (die Blackbox wird per
-`platform.add_file` in den Build-Plan aufgenommen).
+`--ref-clk-mode input` (Default): das LAN8720 liefert REF_CLK
+(REF_CLK-OUT-Strap, verifizierter Zustand). `output`: die FPGA treibt
+REF_CLK aus dem Board-Oszillator (REF_CLK-IN-Strap / Diagnose).
+
+Bring-up-Werkzeuge: `clock_probe.py` (REF_CLK/MDIO/Pin-Pegel über UART)
+und `adat_pattern_test.py` (1-/2-kHz-Sinus auf den ADAT-Ausgängen,
+OUT2→IN2-Loopback). Status, Messergebnisse und der aktuelle
+PHY-Hardware-Blocker: `../ETHERADAT_STATUS_20261123.md`.
 
 ## Bewusste Einschränkungen (v1)
 

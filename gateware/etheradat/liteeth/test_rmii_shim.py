@@ -9,8 +9,8 @@ project venv):
 
     /tmp/etheradat-scratch/liteenv/bin/python test_rmii_shim.py
 
-The DUT is exactly the design that gen_liteeth_core.py renders to
-liteeth_rmii_mac.v; the RMII pads are looped back (tx_en -> crs_dv,
+The DUT is the same shim/MAC combination as gen_etheradat_mac.py /
+gen_baseline.py; the RMII pads are looped back (tx_en -> crs_dv,
 txd -> rxd) like a PHY reflecting our own frames. This verifies:
 
 - TX: preamble + SFD insertion, FCS append, minimum-length padding,

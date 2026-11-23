@@ -1,5 +1,5 @@
 /* Machine-generated using Migen */
-module liteeth_rmii_mac(
+module liteeth_etheradat_mac(
 	output rmii_tx_en,
 	output [1:0] rmii_txd,
 	input rmii_crs_dv,
@@ -174,6 +174,21 @@ reg tx_preamble_source_payload_be;
 reg tx_preamble_source_payload_error;
 reg [63:0] tx_preamble_preamble = 64'd15372286728091293013;
 reg [2:0] tx_preamble_count = 3'd0;
+wire txdatapath_sink_valid;
+wire txdatapath_sink_ready;
+wire txdatapath_sink_first;
+wire txdatapath_sink_last;
+wire [7:0] txdatapath_sink_payload_data;
+wire txdatapath_sink_payload_be;
+wire txdatapath_sink_payload_error;
+wire txdatapath_source_valid;
+wire txdatapath_source_ready;
+wire txdatapath_source_first;
+wire txdatapath_source_last;
+wire [7:0] txdatapath_source_payload_data;
+wire txdatapath_source_payload_be;
+wire txdatapath_source_payload_error;
+reg txdatapath_ext_rst_to = 1'd0;
 wire txdatapath_sink_sink_valid;
 wire txdatapath_sink_sink_ready;
 wire txdatapath_sink_sink_first;
@@ -188,58 +203,20 @@ wire txdatapath_source_source_last;
 wire [7:0] txdatapath_source_source_payload_data;
 wire txdatapath_source_source_payload_be;
 wire txdatapath_source_source_payload_error;
-wire txdatapath_ext_rst_to;
-wire txdatapath_write_ext_rst;
-wire txdatapath_write_rst;
-wire txdatapath_cdc_sink_valid;
-wire txdatapath_cdc_sink_ready;
-wire txdatapath_cdc_sink_first;
-wire txdatapath_cdc_sink_last;
-wire [7:0] txdatapath_cdc_sink_payload_data;
-wire txdatapath_cdc_sink_payload_be;
-wire txdatapath_cdc_sink_payload_error;
-wire txdatapath_cdc_source_valid;
-wire txdatapath_cdc_source_ready;
-wire txdatapath_cdc_source_first;
-wire txdatapath_cdc_source_last;
-wire [7:0] txdatapath_cdc_source_payload_data;
-wire txdatapath_cdc_source_payload_be;
-wire txdatapath_cdc_source_payload_error;
-wire txdatapath_cdc_asyncfifo_we;
-wire txdatapath_cdc_asyncfifo_writable;
-wire txdatapath_cdc_asyncfifo_re;
-wire txdatapath_cdc_asyncfifo_readable;
-wire [11:0] txdatapath_cdc_asyncfifo_din;
-wire [11:0] txdatapath_cdc_asyncfifo_dout;
-wire txdatapath_cdc_graycounter0_ce;
-(* no_retiming = "true" *) reg [5:0] txdatapath_cdc_graycounter0_q = 6'd0;
-wire [5:0] txdatapath_cdc_graycounter0_q_next;
-reg [5:0] txdatapath_cdc_graycounter0_q_binary = 6'd0;
-reg [5:0] txdatapath_cdc_graycounter0_q_next_binary;
-wire txdatapath_cdc_graycounter1_ce;
-(* no_retiming = "true" *) reg [5:0] txdatapath_cdc_graycounter1_q = 6'd0;
-wire [5:0] txdatapath_cdc_graycounter1_q_next;
-reg [5:0] txdatapath_cdc_graycounter1_q_binary = 6'd0;
-reg [5:0] txdatapath_cdc_graycounter1_q_next_binary;
-wire [5:0] txdatapath_cdc_produce_rdomain;
-wire [5:0] txdatapath_cdc_consume_wdomain;
-wire [4:0] txdatapath_cdc_wrport_adr;
-wire txdatapath_cdc_wrport_we;
-wire [11:0] txdatapath_cdc_wrport_dat_w;
-wire [4:0] txdatapath_cdc_rdport_adr;
-wire [11:0] txdatapath_cdc_rdport_dat_r;
-wire [7:0] txdatapath_cdc_fifo_in_payload_data;
-wire txdatapath_cdc_fifo_in_payload_be;
-wire txdatapath_cdc_fifo_in_payload_error;
-wire txdatapath_cdc_fifo_in_first;
-wire txdatapath_cdc_fifo_in_last;
-wire [7:0] txdatapath_cdc_fifo_out_payload_data;
-wire txdatapath_cdc_fifo_out_payload_be;
-wire txdatapath_cdc_fifo_out_payload_error;
-wire txdatapath_cdc_fifo_out_first;
-wire txdatapath_cdc_fifo_out_last;
-wire txdatapath_cdc_reset_write;
-wire txdatapath_cdc_reset_read;
+wire txdatapath_pipe_valid_sink_valid;
+wire txdatapath_pipe_valid_sink_ready;
+wire txdatapath_pipe_valid_sink_first;
+wire txdatapath_pipe_valid_sink_last;
+wire [7:0] txdatapath_pipe_valid_sink_payload_data;
+wire txdatapath_pipe_valid_sink_payload_be;
+wire txdatapath_pipe_valid_sink_payload_error;
+reg txdatapath_pipe_valid_source_valid = 1'd0;
+wire txdatapath_pipe_valid_source_ready;
+reg txdatapath_pipe_valid_source_first = 1'd0;
+reg txdatapath_pipe_valid_source_last = 1'd0;
+reg [7:0] txdatapath_pipe_valid_source_payload_data = 8'd0;
+reg txdatapath_pipe_valid_source_payload_be = 1'd0;
+reg txdatapath_pipe_valid_source_payload_error = 1'd0;
 wire tx_packet_fifo_sink_sink_valid;
 wire tx_packet_fifo_sink_sink_ready;
 wire tx_packet_fifo_sink_sink_first;
@@ -424,6 +401,20 @@ wire o;
 reg toggle_i = 1'd0;
 wire toggle_o;
 reg toggle_o_r = 1'd0;
+wire rx_cdc_sink_valid;
+wire rx_cdc_sink_ready;
+wire rx_cdc_sink_first;
+wire rx_cdc_sink_last;
+wire [7:0] rx_cdc_sink_payload_data;
+wire rx_cdc_sink_payload_be;
+wire rx_cdc_sink_payload_error;
+wire rx_cdc_source_valid;
+wire rx_cdc_source_ready;
+wire rx_cdc_source_first;
+wire rx_cdc_source_last;
+wire [7:0] rx_cdc_source_payload_data;
+wire rx_cdc_source_payload_be;
+wire rx_cdc_source_payload_error;
 wire rx_cdc_sink_sink_valid;
 wire rx_cdc_sink_sink_ready;
 wire rx_cdc_sink_sink_first;
@@ -438,58 +429,20 @@ wire rx_cdc_source_source_last;
 wire [7:0] rx_cdc_source_source_payload_data;
 wire rx_cdc_source_source_payload_be;
 wire rx_cdc_source_source_payload_error;
-wire rx_cdc_ext_rst_to;
-wire rx_cdc_write_ext_rst;
-wire rx_cdc_write_rst;
-wire rx_cdc_cdc_sink_valid;
-wire rx_cdc_cdc_sink_ready;
-wire rx_cdc_cdc_sink_first;
-wire rx_cdc_cdc_sink_last;
-wire [7:0] rx_cdc_cdc_sink_payload_data;
-wire rx_cdc_cdc_sink_payload_be;
-wire rx_cdc_cdc_sink_payload_error;
-wire rx_cdc_cdc_source_valid;
-wire rx_cdc_cdc_source_ready;
-wire rx_cdc_cdc_source_first;
-wire rx_cdc_cdc_source_last;
-wire [7:0] rx_cdc_cdc_source_payload_data;
-wire rx_cdc_cdc_source_payload_be;
-wire rx_cdc_cdc_source_payload_error;
-wire rx_cdc_cdc_asyncfifo_we;
-wire rx_cdc_cdc_asyncfifo_writable;
-wire rx_cdc_cdc_asyncfifo_re;
-wire rx_cdc_cdc_asyncfifo_readable;
-wire [11:0] rx_cdc_cdc_asyncfifo_din;
-wire [11:0] rx_cdc_cdc_asyncfifo_dout;
-wire rx_cdc_cdc_graycounter0_ce;
-(* no_retiming = "true" *) reg [5:0] rx_cdc_cdc_graycounter0_q = 6'd0;
-wire [5:0] rx_cdc_cdc_graycounter0_q_next;
-reg [5:0] rx_cdc_cdc_graycounter0_q_binary = 6'd0;
-reg [5:0] rx_cdc_cdc_graycounter0_q_next_binary;
-wire rx_cdc_cdc_graycounter1_ce;
-(* no_retiming = "true" *) reg [5:0] rx_cdc_cdc_graycounter1_q = 6'd0;
-wire [5:0] rx_cdc_cdc_graycounter1_q_next;
-reg [5:0] rx_cdc_cdc_graycounter1_q_binary = 6'd0;
-reg [5:0] rx_cdc_cdc_graycounter1_q_next_binary;
-wire [5:0] rx_cdc_cdc_produce_rdomain;
-wire [5:0] rx_cdc_cdc_consume_wdomain;
-wire [4:0] rx_cdc_cdc_wrport_adr;
-wire rx_cdc_cdc_wrport_we;
-wire [11:0] rx_cdc_cdc_wrport_dat_w;
-wire [4:0] rx_cdc_cdc_rdport_adr;
-wire [11:0] rx_cdc_cdc_rdport_dat_r;
-wire [7:0] rx_cdc_cdc_fifo_in_payload_data;
-wire rx_cdc_cdc_fifo_in_payload_be;
-wire rx_cdc_cdc_fifo_in_payload_error;
-wire rx_cdc_cdc_fifo_in_first;
-wire rx_cdc_cdc_fifo_in_last;
-wire [7:0] rx_cdc_cdc_fifo_out_payload_data;
-wire rx_cdc_cdc_fifo_out_payload_be;
-wire rx_cdc_cdc_fifo_out_payload_error;
-wire rx_cdc_cdc_fifo_out_first;
-wire rx_cdc_cdc_fifo_out_last;
-wire rx_cdc_cdc_reset_write;
-wire rx_cdc_cdc_reset_read;
+wire rx_cdc_pipe_valid_sink_valid;
+wire rx_cdc_pipe_valid_sink_ready;
+wire rx_cdc_pipe_valid_sink_first;
+wire rx_cdc_pipe_valid_sink_last;
+wire [7:0] rx_cdc_pipe_valid_sink_payload_data;
+wire rx_cdc_pipe_valid_sink_payload_be;
+wire rx_cdc_pipe_valid_sink_payload_error;
+reg rx_cdc_pipe_valid_source_valid = 1'd0;
+wire rx_cdc_pipe_valid_source_ready;
+reg rx_cdc_pipe_valid_source_first = 1'd0;
+reg rx_cdc_pipe_valid_source_last = 1'd0;
+reg [7:0] rx_cdc_pipe_valid_source_payload_data = 8'd0;
+reg rx_cdc_pipe_valid_source_payload_be = 1'd0;
+reg rx_cdc_pipe_valid_source_payload_error = 1'd0;
 wire rx_preamble_sink_valid;
 reg rx_preamble_sink_ready;
 wire rx_preamble_sink_first;
@@ -666,24 +619,8 @@ wire [39:0] slice_proxy;
 (* no_retiming = "true" *) reg multiregimpl01 = 1'd0;
 (* no_retiming = "true" *) reg multiregimpl10 = 1'd0;
 (* no_retiming = "true" *) reg multiregimpl11 = 1'd0;
-(* no_retiming = "true" *) reg [5:0] multiregimpl20 = 6'd0;
-(* no_retiming = "true" *) reg [5:0] multiregimpl21 = 6'd0;
-(* no_retiming = "true" *) reg [5:0] multiregimpl30 = 6'd0;
-(* no_retiming = "true" *) reg [5:0] multiregimpl31 = 6'd0;
-(* no_retiming = "true" *) reg multiregimpl40 = 1'd0;
-(* no_retiming = "true" *) reg multiregimpl41 = 1'd0;
-(* no_retiming = "true" *) reg multiregimpl50 = 1'd0;
-(* no_retiming = "true" *) reg multiregimpl51 = 1'd0;
-(* no_retiming = "true" *) reg multiregimpl60 = 1'd0;
-(* no_retiming = "true" *) reg multiregimpl61 = 1'd0;
-(* no_retiming = "true" *) reg [5:0] multiregimpl70 = 6'd0;
-(* no_retiming = "true" *) reg [5:0] multiregimpl71 = 6'd0;
-(* no_retiming = "true" *) reg [5:0] multiregimpl80 = 6'd0;
-(* no_retiming = "true" *) reg [5:0] multiregimpl81 = 6'd0;
-(* no_retiming = "true" *) reg multiregimpl90 = 1'd0;
-(* no_retiming = "true" *) reg multiregimpl91 = 1'd0;
-(* no_retiming = "true" *) reg multiregimpl100 = 1'd0;
-(* no_retiming = "true" *) reg multiregimpl101 = 1'd0;
+(* no_retiming = "true" *) reg multiregimpl20 = 1'd0;
+(* no_retiming = "true" *) reg multiregimpl21 = 1'd0;
 
 // synthesis translate_off
 reg dummy_s;
@@ -1065,80 +1002,35 @@ always @(*) begin
 	dummy_d_4 <= dummy_s;
 // synthesis translate_on
 end
-assign txdatapath_write_rst = (sys_rst | txdatapath_write_ext_rst);
-assign txdatapath_cdc_reset_write = txdatapath_write_ext_rst;
-assign txdatapath_cdc_reset_read = txdatapath_ext_rst_to;
-assign txdatapath_cdc_sink_valid = txdatapath_sink_sink_valid;
-assign txdatapath_sink_sink_ready = txdatapath_cdc_sink_ready;
-assign txdatapath_cdc_sink_first = txdatapath_sink_sink_first;
-assign txdatapath_cdc_sink_last = txdatapath_sink_sink_last;
-assign txdatapath_cdc_sink_payload_data = txdatapath_sink_sink_payload_data;
-assign txdatapath_cdc_sink_payload_be = txdatapath_sink_sink_payload_be;
-assign txdatapath_cdc_sink_payload_error = txdatapath_sink_sink_payload_error;
-assign txdatapath_cdc_source_ready = txdatapath_source_source_ready;
-assign txdatapath_source_source_first = txdatapath_cdc_source_first;
-assign txdatapath_source_source_last = txdatapath_cdc_source_last;
-assign txdatapath_source_source_payload_data = txdatapath_cdc_source_payload_data;
-assign txdatapath_source_source_payload_be = txdatapath_cdc_source_payload_be;
-assign txdatapath_source_source_payload_error = txdatapath_cdc_source_payload_error;
-assign txdatapath_source_source_valid = ((txdatapath_cdc_source_valid & (~txdatapath_ext_rst_to)) & (~eth_tx_rst));
-assign txdatapath_cdc_asyncfifo_din = {txdatapath_cdc_fifo_in_last, txdatapath_cdc_fifo_in_first, txdatapath_cdc_fifo_in_payload_error, txdatapath_cdc_fifo_in_payload_be, txdatapath_cdc_fifo_in_payload_data};
-assign {txdatapath_cdc_fifo_out_last, txdatapath_cdc_fifo_out_first, txdatapath_cdc_fifo_out_payload_error, txdatapath_cdc_fifo_out_payload_be, txdatapath_cdc_fifo_out_payload_data} = txdatapath_cdc_asyncfifo_dout;
-assign txdatapath_cdc_sink_ready = txdatapath_cdc_asyncfifo_writable;
-assign txdatapath_cdc_asyncfifo_we = txdatapath_cdc_sink_valid;
-assign txdatapath_cdc_fifo_in_first = txdatapath_cdc_sink_first;
-assign txdatapath_cdc_fifo_in_last = txdatapath_cdc_sink_last;
-assign txdatapath_cdc_fifo_in_payload_data = txdatapath_cdc_sink_payload_data;
-assign txdatapath_cdc_fifo_in_payload_be = txdatapath_cdc_sink_payload_be;
-assign txdatapath_cdc_fifo_in_payload_error = txdatapath_cdc_sink_payload_error;
-assign txdatapath_cdc_source_valid = txdatapath_cdc_asyncfifo_readable;
-assign txdatapath_cdc_source_first = txdatapath_cdc_fifo_out_first;
-assign txdatapath_cdc_source_last = txdatapath_cdc_fifo_out_last;
-assign txdatapath_cdc_source_payload_data = txdatapath_cdc_fifo_out_payload_data;
-assign txdatapath_cdc_source_payload_be = txdatapath_cdc_fifo_out_payload_be;
-assign txdatapath_cdc_source_payload_error = txdatapath_cdc_fifo_out_payload_error;
-assign txdatapath_cdc_asyncfifo_re = txdatapath_cdc_source_ready;
-assign txdatapath_cdc_graycounter0_ce = (txdatapath_cdc_asyncfifo_writable & txdatapath_cdc_asyncfifo_we);
-assign txdatapath_cdc_graycounter1_ce = (txdatapath_cdc_asyncfifo_readable & txdatapath_cdc_asyncfifo_re);
-assign txdatapath_cdc_asyncfifo_writable = (((txdatapath_cdc_graycounter0_q[5] == txdatapath_cdc_consume_wdomain[5]) | (txdatapath_cdc_graycounter0_q[4] == txdatapath_cdc_consume_wdomain[4])) | (txdatapath_cdc_graycounter0_q[3:0] != txdatapath_cdc_consume_wdomain[3:0]));
-assign txdatapath_cdc_asyncfifo_readable = (txdatapath_cdc_graycounter1_q != txdatapath_cdc_produce_rdomain);
-assign txdatapath_cdc_wrport_adr = txdatapath_cdc_graycounter0_q_binary[4:0];
-assign txdatapath_cdc_wrport_dat_w = txdatapath_cdc_asyncfifo_din;
-assign txdatapath_cdc_wrport_we = txdatapath_cdc_graycounter0_ce;
-assign txdatapath_cdc_rdport_adr = txdatapath_cdc_graycounter1_q_next_binary[4:0];
-assign txdatapath_cdc_asyncfifo_dout = txdatapath_cdc_rdport_dat_r;
-
-// synthesis translate_off
-reg dummy_d_5;
-// synthesis translate_on
-always @(*) begin
-	txdatapath_cdc_graycounter0_q_next_binary <= 6'd0;
-	if (txdatapath_cdc_graycounter0_ce) begin
-		txdatapath_cdc_graycounter0_q_next_binary <= (txdatapath_cdc_graycounter0_q_binary + 1'd1);
-	end else begin
-		txdatapath_cdc_graycounter0_q_next_binary <= txdatapath_cdc_graycounter0_q_binary;
-	end
-// synthesis translate_off
-	dummy_d_5 <= dummy_s;
-// synthesis translate_on
-end
-assign txdatapath_cdc_graycounter0_q_next = (txdatapath_cdc_graycounter0_q_next_binary ^ txdatapath_cdc_graycounter0_q_next_binary[5:1]);
-
-// synthesis translate_off
-reg dummy_d_6;
-// synthesis translate_on
-always @(*) begin
-	txdatapath_cdc_graycounter1_q_next_binary <= 6'd0;
-	if (txdatapath_cdc_graycounter1_ce) begin
-		txdatapath_cdc_graycounter1_q_next_binary <= (txdatapath_cdc_graycounter1_q_binary + 1'd1);
-	end else begin
-		txdatapath_cdc_graycounter1_q_next_binary <= txdatapath_cdc_graycounter1_q_binary;
-	end
-// synthesis translate_off
-	dummy_d_6 <= dummy_s;
-// synthesis translate_on
-end
-assign txdatapath_cdc_graycounter1_q_next = (txdatapath_cdc_graycounter1_q_next_binary ^ txdatapath_cdc_graycounter1_q_next_binary[5:1]);
+assign txdatapath_sink_sink_valid = txdatapath_sink_valid;
+assign txdatapath_sink_ready = txdatapath_sink_sink_ready;
+assign txdatapath_sink_sink_first = txdatapath_sink_first;
+assign txdatapath_sink_sink_last = txdatapath_sink_last;
+assign txdatapath_sink_sink_payload_data = txdatapath_sink_payload_data;
+assign txdatapath_sink_sink_payload_be = txdatapath_sink_payload_be;
+assign txdatapath_sink_sink_payload_error = txdatapath_sink_payload_error;
+assign txdatapath_source_valid = txdatapath_source_source_valid;
+assign txdatapath_source_source_ready = txdatapath_source_ready;
+assign txdatapath_source_first = txdatapath_source_source_first;
+assign txdatapath_source_last = txdatapath_source_source_last;
+assign txdatapath_source_payload_data = txdatapath_source_source_payload_data;
+assign txdatapath_source_payload_be = txdatapath_source_source_payload_be;
+assign txdatapath_source_payload_error = txdatapath_source_source_payload_error;
+assign txdatapath_pipe_valid_sink_ready = ((~txdatapath_pipe_valid_source_valid) | txdatapath_pipe_valid_source_ready);
+assign txdatapath_pipe_valid_sink_valid = txdatapath_sink_sink_valid;
+assign txdatapath_sink_sink_ready = txdatapath_pipe_valid_sink_ready;
+assign txdatapath_pipe_valid_sink_first = txdatapath_sink_sink_first;
+assign txdatapath_pipe_valid_sink_last = txdatapath_sink_sink_last;
+assign txdatapath_pipe_valid_sink_payload_data = txdatapath_sink_sink_payload_data;
+assign txdatapath_pipe_valid_sink_payload_be = txdatapath_sink_sink_payload_be;
+assign txdatapath_pipe_valid_sink_payload_error = txdatapath_sink_sink_payload_error;
+assign txdatapath_source_source_valid = txdatapath_pipe_valid_source_valid;
+assign txdatapath_pipe_valid_source_ready = txdatapath_source_source_ready;
+assign txdatapath_source_source_first = txdatapath_pipe_valid_source_first;
+assign txdatapath_source_source_last = txdatapath_pipe_valid_source_last;
+assign txdatapath_source_source_payload_data = txdatapath_pipe_valid_source_payload_data;
+assign txdatapath_source_source_payload_be = txdatapath_pipe_valid_source_payload_be;
+assign txdatapath_source_source_payload_error = txdatapath_pipe_valid_source_payload_error;
 assign tx_packet_fifo_payload_fifo_sink_first = tx_packet_fifo_sink_sink_first;
 assign tx_packet_fifo_payload_fifo_sink_last = tx_packet_fifo_sink_sink_last;
 assign tx_packet_fifo_payload_fifo_sink_payload_data = tx_packet_fifo_sink_sink_payload_data;
@@ -1150,14 +1042,14 @@ assign tx_packet_fifo_sink_sink_ready = (tx_packet_fifo_param_fifo_sink_ready & 
 assign tx_packet_fifo_source_source_valid = tx_packet_fifo_param_fifo_source_valid;
 
 // synthesis translate_off
-reg dummy_d_7;
+reg dummy_d_5;
 // synthesis translate_on
 always @(*) begin
 	tx_packet_fifo_source_source_first <= 1'd0;
 	tx_packet_fifo_source_source_first <= tx_packet_fifo_param_fifo_source_first;
 	tx_packet_fifo_source_source_first <= tx_packet_fifo_payload_fifo_source_first;
 // synthesis translate_off
-	dummy_d_7 <= dummy_s;
+	dummy_d_5 <= dummy_s;
 // synthesis translate_on
 end
 assign tx_packet_fifo_source_source_last = tx_packet_fifo_payload_fifo_source_last;
@@ -1186,7 +1078,7 @@ assign tx_packet_fifo_payload_fifo_syncfifo_re = (tx_packet_fifo_payload_fifo_sy
 assign tx_packet_fifo_payload_fifo_level1 = (tx_packet_fifo_payload_fifo_level0 + tx_packet_fifo_payload_fifo_readable);
 
 // synthesis translate_off
-reg dummy_d_8;
+reg dummy_d_6;
 // synthesis translate_on
 always @(*) begin
 	tx_packet_fifo_payload_fifo_wrport_adr <= 11'd0;
@@ -1196,7 +1088,7 @@ always @(*) begin
 		tx_packet_fifo_payload_fifo_wrport_adr <= tx_packet_fifo_payload_fifo_produce;
 	end
 // synthesis translate_off
-	dummy_d_8 <= dummy_s;
+	dummy_d_6 <= dummy_s;
 // synthesis translate_on
 end
 assign tx_packet_fifo_payload_fifo_wrport_dat_w = tx_packet_fifo_payload_fifo_syncfifo_din;
@@ -1223,7 +1115,7 @@ assign tx_packet_fifo_param_fifo_syncfifo_re = (tx_packet_fifo_param_fifo_syncfi
 assign tx_packet_fifo_param_fifo_level1 = (tx_packet_fifo_param_fifo_level0 + tx_packet_fifo_param_fifo_readable);
 
 // synthesis translate_off
-reg dummy_d_9;
+reg dummy_d_7;
 // synthesis translate_on
 always @(*) begin
 	tx_packet_fifo_param_fifo_wrport_adr <= 3'd0;
@@ -1233,7 +1125,7 @@ always @(*) begin
 		tx_packet_fifo_param_fifo_wrport_adr <= tx_packet_fifo_param_fifo_produce;
 	end
 // synthesis translate_off
-	dummy_d_9 <= dummy_s;
+	dummy_d_7 <= dummy_s;
 // synthesis translate_on
 end
 assign tx_packet_fifo_param_fifo_wrport_dat_w = tx_packet_fifo_param_fifo_syncfifo_din;
@@ -1246,7 +1138,7 @@ assign tx_packet_fifo_param_fifo_syncfifo_writable = (tx_packet_fifo_param_fifo_
 assign tx_packet_fifo_param_fifo_syncfifo_readable = (tx_packet_fifo_param_fifo_level0 != 1'd0);
 
 // synthesis translate_off
-reg dummy_d_10;
+reg dummy_d_8;
 // synthesis translate_on
 always @(*) begin
 	tx_gap_sink_ready <= 1'd0;
@@ -1284,7 +1176,7 @@ always @(*) begin
 		end
 	endcase
 // synthesis translate_off
-	dummy_d_10 <= dummy_s;
+	dummy_d_8 <= dummy_s;
 // synthesis translate_on
 end
 assign tx_padding_sink_valid = sink_valid;
@@ -1308,20 +1200,20 @@ assign tx_preamble_sink_last = tx_crc_source_last;
 assign tx_preamble_sink_payload_data = tx_crc_source_payload_data;
 assign tx_preamble_sink_payload_be = tx_crc_source_payload_be;
 assign tx_preamble_sink_payload_error = tx_crc_source_payload_error;
-assign txdatapath_sink_sink_valid = tx_preamble_source_valid;
-assign tx_preamble_source_ready = txdatapath_sink_sink_ready;
-assign txdatapath_sink_sink_first = tx_preamble_source_first;
-assign txdatapath_sink_sink_last = tx_preamble_source_last;
-assign txdatapath_sink_sink_payload_data = tx_preamble_source_payload_data;
-assign txdatapath_sink_sink_payload_be = tx_preamble_source_payload_be;
-assign txdatapath_sink_sink_payload_error = tx_preamble_source_payload_error;
-assign tx_packet_fifo_sink_sink_valid = txdatapath_source_source_valid;
-assign txdatapath_source_source_ready = tx_packet_fifo_sink_sink_ready;
-assign tx_packet_fifo_sink_sink_first = txdatapath_source_source_first;
-assign tx_packet_fifo_sink_sink_last = txdatapath_source_source_last;
-assign tx_packet_fifo_sink_sink_payload_data = txdatapath_source_source_payload_data;
-assign tx_packet_fifo_sink_sink_payload_be = txdatapath_source_source_payload_be;
-assign tx_packet_fifo_sink_sink_payload_error = txdatapath_source_source_payload_error;
+assign txdatapath_sink_valid = tx_preamble_source_valid;
+assign tx_preamble_source_ready = txdatapath_sink_ready;
+assign txdatapath_sink_first = tx_preamble_source_first;
+assign txdatapath_sink_last = tx_preamble_source_last;
+assign txdatapath_sink_payload_data = tx_preamble_source_payload_data;
+assign txdatapath_sink_payload_be = tx_preamble_source_payload_be;
+assign txdatapath_sink_payload_error = tx_preamble_source_payload_error;
+assign tx_packet_fifo_sink_sink_valid = txdatapath_source_valid;
+assign txdatapath_source_ready = tx_packet_fifo_sink_sink_ready;
+assign tx_packet_fifo_sink_sink_first = txdatapath_source_first;
+assign tx_packet_fifo_sink_sink_last = txdatapath_source_last;
+assign tx_packet_fifo_sink_sink_payload_data = txdatapath_source_payload_data;
+assign tx_packet_fifo_sink_sink_payload_be = txdatapath_source_payload_be;
+assign tx_packet_fifo_sink_sink_payload_error = txdatapath_source_payload_error;
 assign tx_gap_sink_valid = tx_packet_fifo_source_source_valid;
 assign tx_packet_fifo_source_source_ready = tx_gap_sink_ready;
 assign tx_gap_sink_first = tx_packet_fifo_source_source_first;
@@ -1371,7 +1263,7 @@ assign rx_packet_fifo_param_fifo_source_param_dummy = rx_packet_fifo_param_fifo_
 assign rx_packet_fifo_param_fifo_syncfifo_re = rx_packet_fifo_param_fifo_source_ready;
 
 // synthesis translate_off
-reg dummy_d_11;
+reg dummy_d_9;
 // synthesis translate_on
 always @(*) begin
 	rx_packet_fifo_param_fifo_wrport_adr <= 2'd0;
@@ -1381,7 +1273,7 @@ always @(*) begin
 		rx_packet_fifo_param_fifo_wrport_adr <= rx_packet_fifo_param_fifo_produce;
 	end
 // synthesis translate_off
-	dummy_d_11 <= dummy_s;
+	dummy_d_9 <= dummy_s;
 // synthesis translate_on
 end
 assign rx_packet_fifo_param_fifo_wrport_dat_w = rx_packet_fifo_param_fifo_syncfifo_din;
@@ -1392,85 +1284,40 @@ assign rx_packet_fifo_param_fifo_syncfifo_dout = rx_packet_fifo_param_fifo_rdpor
 assign rx_packet_fifo_param_fifo_syncfifo_writable = (rx_packet_fifo_param_fifo_level != 3'd4);
 assign rx_packet_fifo_param_fifo_syncfifo_readable = (rx_packet_fifo_param_fifo_level != 1'd0);
 assign o = (toggle_o ^ toggle_o_r);
-assign rx_cdc_write_rst = (eth_rx_rst | rx_cdc_write_ext_rst);
-assign rx_cdc_cdc_reset_write = rx_cdc_write_ext_rst;
-assign rx_cdc_cdc_reset_read = rx_cdc_ext_rst_to;
-assign rx_cdc_cdc_sink_valid = rx_cdc_sink_sink_valid;
-assign rx_cdc_sink_sink_ready = rx_cdc_cdc_sink_ready;
-assign rx_cdc_cdc_sink_first = rx_cdc_sink_sink_first;
-assign rx_cdc_cdc_sink_last = rx_cdc_sink_sink_last;
-assign rx_cdc_cdc_sink_payload_data = rx_cdc_sink_sink_payload_data;
-assign rx_cdc_cdc_sink_payload_be = rx_cdc_sink_sink_payload_be;
-assign rx_cdc_cdc_sink_payload_error = rx_cdc_sink_sink_payload_error;
-assign rx_cdc_cdc_source_ready = rx_cdc_source_source_ready;
-assign rx_cdc_source_source_first = rx_cdc_cdc_source_first;
-assign rx_cdc_source_source_last = rx_cdc_cdc_source_last;
-assign rx_cdc_source_source_payload_data = rx_cdc_cdc_source_payload_data;
-assign rx_cdc_source_source_payload_be = rx_cdc_cdc_source_payload_be;
-assign rx_cdc_source_source_payload_error = rx_cdc_cdc_source_payload_error;
-assign rx_cdc_source_source_valid = ((rx_cdc_cdc_source_valid & (~rx_cdc_ext_rst_to)) & (~sys_rst));
-assign rx_cdc_cdc_asyncfifo_din = {rx_cdc_cdc_fifo_in_last, rx_cdc_cdc_fifo_in_first, rx_cdc_cdc_fifo_in_payload_error, rx_cdc_cdc_fifo_in_payload_be, rx_cdc_cdc_fifo_in_payload_data};
-assign {rx_cdc_cdc_fifo_out_last, rx_cdc_cdc_fifo_out_first, rx_cdc_cdc_fifo_out_payload_error, rx_cdc_cdc_fifo_out_payload_be, rx_cdc_cdc_fifo_out_payload_data} = rx_cdc_cdc_asyncfifo_dout;
-assign rx_cdc_cdc_sink_ready = rx_cdc_cdc_asyncfifo_writable;
-assign rx_cdc_cdc_asyncfifo_we = rx_cdc_cdc_sink_valid;
-assign rx_cdc_cdc_fifo_in_first = rx_cdc_cdc_sink_first;
-assign rx_cdc_cdc_fifo_in_last = rx_cdc_cdc_sink_last;
-assign rx_cdc_cdc_fifo_in_payload_data = rx_cdc_cdc_sink_payload_data;
-assign rx_cdc_cdc_fifo_in_payload_be = rx_cdc_cdc_sink_payload_be;
-assign rx_cdc_cdc_fifo_in_payload_error = rx_cdc_cdc_sink_payload_error;
-assign rx_cdc_cdc_source_valid = rx_cdc_cdc_asyncfifo_readable;
-assign rx_cdc_cdc_source_first = rx_cdc_cdc_fifo_out_first;
-assign rx_cdc_cdc_source_last = rx_cdc_cdc_fifo_out_last;
-assign rx_cdc_cdc_source_payload_data = rx_cdc_cdc_fifo_out_payload_data;
-assign rx_cdc_cdc_source_payload_be = rx_cdc_cdc_fifo_out_payload_be;
-assign rx_cdc_cdc_source_payload_error = rx_cdc_cdc_fifo_out_payload_error;
-assign rx_cdc_cdc_asyncfifo_re = rx_cdc_cdc_source_ready;
-assign rx_cdc_cdc_graycounter0_ce = (rx_cdc_cdc_asyncfifo_writable & rx_cdc_cdc_asyncfifo_we);
-assign rx_cdc_cdc_graycounter1_ce = (rx_cdc_cdc_asyncfifo_readable & rx_cdc_cdc_asyncfifo_re);
-assign rx_cdc_cdc_asyncfifo_writable = (((rx_cdc_cdc_graycounter0_q[5] == rx_cdc_cdc_consume_wdomain[5]) | (rx_cdc_cdc_graycounter0_q[4] == rx_cdc_cdc_consume_wdomain[4])) | (rx_cdc_cdc_graycounter0_q[3:0] != rx_cdc_cdc_consume_wdomain[3:0]));
-assign rx_cdc_cdc_asyncfifo_readable = (rx_cdc_cdc_graycounter1_q != rx_cdc_cdc_produce_rdomain);
-assign rx_cdc_cdc_wrport_adr = rx_cdc_cdc_graycounter0_q_binary[4:0];
-assign rx_cdc_cdc_wrport_dat_w = rx_cdc_cdc_asyncfifo_din;
-assign rx_cdc_cdc_wrport_we = rx_cdc_cdc_graycounter0_ce;
-assign rx_cdc_cdc_rdport_adr = rx_cdc_cdc_graycounter1_q_next_binary[4:0];
-assign rx_cdc_cdc_asyncfifo_dout = rx_cdc_cdc_rdport_dat_r;
-
-// synthesis translate_off
-reg dummy_d_12;
-// synthesis translate_on
-always @(*) begin
-	rx_cdc_cdc_graycounter0_q_next_binary <= 6'd0;
-	if (rx_cdc_cdc_graycounter0_ce) begin
-		rx_cdc_cdc_graycounter0_q_next_binary <= (rx_cdc_cdc_graycounter0_q_binary + 1'd1);
-	end else begin
-		rx_cdc_cdc_graycounter0_q_next_binary <= rx_cdc_cdc_graycounter0_q_binary;
-	end
-// synthesis translate_off
-	dummy_d_12 <= dummy_s;
-// synthesis translate_on
-end
-assign rx_cdc_cdc_graycounter0_q_next = (rx_cdc_cdc_graycounter0_q_next_binary ^ rx_cdc_cdc_graycounter0_q_next_binary[5:1]);
-
-// synthesis translate_off
-reg dummy_d_13;
-// synthesis translate_on
-always @(*) begin
-	rx_cdc_cdc_graycounter1_q_next_binary <= 6'd0;
-	if (rx_cdc_cdc_graycounter1_ce) begin
-		rx_cdc_cdc_graycounter1_q_next_binary <= (rx_cdc_cdc_graycounter1_q_binary + 1'd1);
-	end else begin
-		rx_cdc_cdc_graycounter1_q_next_binary <= rx_cdc_cdc_graycounter1_q_binary;
-	end
-// synthesis translate_off
-	dummy_d_13 <= dummy_s;
-// synthesis translate_on
-end
-assign rx_cdc_cdc_graycounter1_q_next = (rx_cdc_cdc_graycounter1_q_next_binary ^ rx_cdc_cdc_graycounter1_q_next_binary[5:1]);
+assign rx_cdc_sink_sink_valid = rx_cdc_sink_valid;
+assign rx_cdc_sink_ready = rx_cdc_sink_sink_ready;
+assign rx_cdc_sink_sink_first = rx_cdc_sink_first;
+assign rx_cdc_sink_sink_last = rx_cdc_sink_last;
+assign rx_cdc_sink_sink_payload_data = rx_cdc_sink_payload_data;
+assign rx_cdc_sink_sink_payload_be = rx_cdc_sink_payload_be;
+assign rx_cdc_sink_sink_payload_error = rx_cdc_sink_payload_error;
+assign rx_cdc_source_valid = rx_cdc_source_source_valid;
+assign rx_cdc_source_source_ready = rx_cdc_source_ready;
+assign rx_cdc_source_first = rx_cdc_source_source_first;
+assign rx_cdc_source_last = rx_cdc_source_source_last;
+assign rx_cdc_source_payload_data = rx_cdc_source_source_payload_data;
+assign rx_cdc_source_payload_be = rx_cdc_source_source_payload_be;
+assign rx_cdc_source_payload_error = rx_cdc_source_source_payload_error;
+assign rx_cdc_pipe_valid_sink_ready = ((~rx_cdc_pipe_valid_source_valid) | rx_cdc_pipe_valid_source_ready);
+assign rx_cdc_pipe_valid_sink_valid = rx_cdc_sink_sink_valid;
+assign rx_cdc_sink_sink_ready = rx_cdc_pipe_valid_sink_ready;
+assign rx_cdc_pipe_valid_sink_first = rx_cdc_sink_sink_first;
+assign rx_cdc_pipe_valid_sink_last = rx_cdc_sink_sink_last;
+assign rx_cdc_pipe_valid_sink_payload_data = rx_cdc_sink_sink_payload_data;
+assign rx_cdc_pipe_valid_sink_payload_be = rx_cdc_sink_sink_payload_be;
+assign rx_cdc_pipe_valid_sink_payload_error = rx_cdc_sink_sink_payload_error;
+assign rx_cdc_source_source_valid = rx_cdc_pipe_valid_source_valid;
+assign rx_cdc_pipe_valid_source_ready = rx_cdc_source_source_ready;
+assign rx_cdc_source_source_first = rx_cdc_pipe_valid_source_first;
+assign rx_cdc_source_source_last = rx_cdc_pipe_valid_source_last;
+assign rx_cdc_source_source_payload_data = rx_cdc_pipe_valid_source_payload_data;
+assign rx_cdc_source_source_payload_be = rx_cdc_pipe_valid_source_payload_be;
+assign rx_cdc_source_source_payload_error = rx_cdc_pipe_valid_source_payload_error;
 assign rx_preamble_source_payload_data = rx_preamble_sink_payload_data;
 assign rx_preamble_source_payload_be = rx_preamble_sink_payload_be;
 
 // synthesis translate_off
-reg dummy_d_14;
+reg dummy_d_10;
 // synthesis translate_on
 always @(*) begin
 	rx_preamble_sink_ready <= 1'd0;
@@ -1503,7 +1350,7 @@ always @(*) begin
 		end
 	endcase
 // synthesis translate_off
-	dummy_d_14 <= dummy_s;
+	dummy_d_10 <= dummy_s;
 // synthesis translate_on
 end
 assign pulsesynchronizer0_o = (pulsesynchronizer0_toggle_o ^ pulsesynchronizer0_toggle_o_r);
@@ -1516,26 +1363,26 @@ assign liteethmaccrc32checker_syncfifo_sink_payload_be = liteethmaccrc32checker_
 assign liteethmaccrc32checker_syncfifo_sink_payload_error = liteethmaccrc32checker_sink_sink_payload_error;
 
 // synthesis translate_off
-reg dummy_d_15;
+reg dummy_d_11;
 // synthesis translate_on
 always @(*) begin
 	liteethmaccrc32checker_syncfifo_sink_valid <= 1'd0;
 	liteethmaccrc32checker_syncfifo_sink_valid <= liteethmaccrc32checker_sink_sink_valid;
 	liteethmaccrc32checker_syncfifo_sink_valid <= liteethmaccrc32checker_fifo_in;
 // synthesis translate_off
-	dummy_d_15 <= dummy_s;
+	dummy_d_11 <= dummy_s;
 // synthesis translate_on
 end
 
 // synthesis translate_off
-reg dummy_d_16;
+reg dummy_d_12;
 // synthesis translate_on
 always @(*) begin
 	liteethmaccrc32checker_sink_sink_ready <= 1'd0;
 	liteethmaccrc32checker_sink_sink_ready <= liteethmaccrc32checker_syncfifo_sink_ready;
 	liteethmaccrc32checker_sink_sink_ready <= liteethmaccrc32checker_fifo_in;
 // synthesis translate_off
-	dummy_d_16 <= dummy_s;
+	dummy_d_12 <= dummy_s;
 // synthesis translate_on
 end
 assign liteethmaccrc32checker_fifo_in = (((liteethmaccrc32checker_sink_sink_valid & ((~liteethmaccrc32checker_fifo_full) | liteethmaccrc32checker_fifo_out)) & (~liteethmaccrc32checker_is_ongoing0)) & (~liteethmaccrc32checker_is_ongoing1));
@@ -1554,7 +1401,7 @@ assign liteethmaccrc32checker_sink_sink_payload_error = bufferizeendpoints_sourc
 assign liteethmaccrc32checker_crc_crc_prev = liteethmaccrc32checker_crc_reg;
 
 // synthesis translate_off
-reg dummy_d_17;
+reg dummy_d_13;
 // synthesis translate_on
 always @(*) begin
 	liteethmaccrc32checker_crc_error <= 1'd0;
@@ -1565,12 +1412,12 @@ always @(*) begin
 		liteethmaccrc32checker_crc_error <= (liteethmaccrc32checker_crc_crc_next != 32'd3338984827);
 	end
 // synthesis translate_off
-	dummy_d_17 <= dummy_s;
+	dummy_d_13 <= dummy_s;
 // synthesis translate_on
 end
 
 // synthesis translate_off
-reg dummy_d_18;
+reg dummy_d_14;
 // synthesis translate_on
 always @(*) begin
 	liteethmaccrc32checker_crc_crc_next <= 32'd0;
@@ -1607,7 +1454,7 @@ always @(*) begin
 	liteethmaccrc32checker_crc_crc_next[30] <= ((((liteethmaccrc32checker_crc_crc_prev[22] ^ liteethmaccrc32checker_crc_crc_prev[31]) ^ liteethmaccrc32checker_crc_data1[0]) ^ liteethmaccrc32checker_crc_crc_prev[28]) ^ liteethmaccrc32checker_crc_data1[3]);
 	liteethmaccrc32checker_crc_crc_next[31] <= ((liteethmaccrc32checker_crc_crc_prev[23] ^ liteethmaccrc32checker_crc_crc_prev[29]) ^ liteethmaccrc32checker_crc_data1[2]);
 // synthesis translate_off
-	dummy_d_18 <= dummy_s;
+	dummy_d_14 <= dummy_s;
 // synthesis translate_on
 end
 assign liteethmaccrc32checker_syncfifo_syncfifo_din = {liteethmaccrc32checker_syncfifo_fifo_in_last, liteethmaccrc32checker_syncfifo_fifo_in_first, liteethmaccrc32checker_syncfifo_fifo_in_payload_error, liteethmaccrc32checker_syncfifo_fifo_in_payload_be, liteethmaccrc32checker_syncfifo_fifo_in_payload_data};
@@ -1628,7 +1475,7 @@ assign liteethmaccrc32checker_syncfifo_source_payload_error = liteethmaccrc32che
 assign liteethmaccrc32checker_syncfifo_syncfifo_re = liteethmaccrc32checker_syncfifo_source_ready;
 
 // synthesis translate_off
-reg dummy_d_19;
+reg dummy_d_15;
 // synthesis translate_on
 always @(*) begin
 	liteethmaccrc32checker_syncfifo_wrport_adr <= 3'd0;
@@ -1638,7 +1485,7 @@ always @(*) begin
 		liteethmaccrc32checker_syncfifo_wrport_adr <= liteethmaccrc32checker_syncfifo_produce;
 	end
 // synthesis translate_off
-	dummy_d_19 <= dummy_s;
+	dummy_d_15 <= dummy_s;
 // synthesis translate_on
 end
 assign liteethmaccrc32checker_syncfifo_wrport_dat_w = liteethmaccrc32checker_syncfifo_syncfifo_din;
@@ -1650,7 +1497,7 @@ assign liteethmaccrc32checker_syncfifo_syncfifo_writable = (liteethmaccrc32check
 assign liteethmaccrc32checker_syncfifo_syncfifo_readable = (liteethmaccrc32checker_syncfifo_level != 1'd0);
 
 // synthesis translate_off
-reg dummy_d_20;
+reg dummy_d_16;
 // synthesis translate_on
 always @(*) begin
 	liteethmaccrc32checker_source_source_valid <= 1'd0;
@@ -1732,7 +1579,7 @@ always @(*) begin
 		end
 	endcase
 // synthesis translate_off
-	dummy_d_20 <= dummy_s;
+	dummy_d_16 <= dummy_s;
 // synthesis translate_on
 end
 assign bufferizeendpoints_pipe_valid_sink_ready = ((~bufferizeendpoints_pipe_valid_source_valid) | bufferizeendpoints_pipe_valid_source_ready);
@@ -1760,7 +1607,7 @@ assign rx_padding_source_payload_data = rx_padding_sink_payload_data;
 assign rx_padding_source_payload_be = rx_padding_sink_payload_be;
 
 // synthesis translate_off
-reg dummy_d_21;
+reg dummy_d_17;
 // synthesis translate_on
 always @(*) begin
 	rx_padding_source_payload_error <= 1'd0;
@@ -1770,7 +1617,7 @@ always @(*) begin
 		rx_padding_source_payload_error <= rx_padding_sink_payload_error;
 	end
 // synthesis translate_off
-	dummy_d_21 <= dummy_s;
+	dummy_d_17 <= dummy_s;
 // synthesis translate_on
 end
 assign rx_packet_fifo_sink_sink_valid = rmiirxshim_source_valid;
@@ -1780,20 +1627,20 @@ assign rx_packet_fifo_sink_sink_last = rmiirxshim_source_last;
 assign rx_packet_fifo_sink_sink_payload_data = rmiirxshim_source_payload_data;
 assign rx_packet_fifo_sink_sink_payload_be = rmiirxshim_source_payload_be;
 assign rx_packet_fifo_sink_sink_payload_error = rmiirxshim_source_payload_error;
-assign rx_cdc_sink_sink_valid = rx_packet_fifo_source_source_valid;
-assign rx_packet_fifo_source_source_ready = rx_cdc_sink_sink_ready;
-assign rx_cdc_sink_sink_first = rx_packet_fifo_source_source_first;
-assign rx_cdc_sink_sink_last = rx_packet_fifo_source_source_last;
-assign rx_cdc_sink_sink_payload_data = rx_packet_fifo_source_source_payload_data;
-assign rx_cdc_sink_sink_payload_be = rx_packet_fifo_source_source_payload_be;
-assign rx_cdc_sink_sink_payload_error = rx_packet_fifo_source_source_payload_error;
-assign rx_preamble_sink_valid = rx_cdc_source_source_valid;
-assign rx_cdc_source_source_ready = rx_preamble_sink_ready;
-assign rx_preamble_sink_first = rx_cdc_source_source_first;
-assign rx_preamble_sink_last = rx_cdc_source_source_last;
-assign rx_preamble_sink_payload_data = rx_cdc_source_source_payload_data;
-assign rx_preamble_sink_payload_be = rx_cdc_source_source_payload_be;
-assign rx_preamble_sink_payload_error = rx_cdc_source_source_payload_error;
+assign rx_cdc_sink_valid = rx_packet_fifo_source_source_valid;
+assign rx_packet_fifo_source_source_ready = rx_cdc_sink_ready;
+assign rx_cdc_sink_first = rx_packet_fifo_source_source_first;
+assign rx_cdc_sink_last = rx_packet_fifo_source_source_last;
+assign rx_cdc_sink_payload_data = rx_packet_fifo_source_source_payload_data;
+assign rx_cdc_sink_payload_be = rx_packet_fifo_source_source_payload_be;
+assign rx_cdc_sink_payload_error = rx_packet_fifo_source_source_payload_error;
+assign rx_preamble_sink_valid = rx_cdc_source_valid;
+assign rx_cdc_source_ready = rx_preamble_sink_ready;
+assign rx_preamble_sink_first = rx_cdc_source_first;
+assign rx_preamble_sink_last = rx_cdc_source_last;
+assign rx_preamble_sink_payload_data = rx_cdc_source_payload_data;
+assign rx_preamble_sink_payload_be = rx_cdc_source_payload_be;
+assign rx_preamble_sink_payload_error = rx_cdc_source_payload_error;
 assign bufferizeendpoints_sink_sink_valid = rx_preamble_source_valid;
 assign rx_preamble_source_ready = bufferizeendpoints_sink_sink_ready;
 assign bufferizeendpoints_sink_sink_first = rx_preamble_source_first;
@@ -1816,17 +1663,9 @@ assign source_payload_data = rx_padding_source_payload_data;
 assign source_payload_be = rx_padding_source_payload_be;
 assign source_payload_error = rx_padding_source_payload_error;
 assign slice_proxy = {tx_crc_value, tx_crc_sink_payload_data[7:0]};
-assign txdatapath_write_ext_rst = multiregimpl01;
-assign txdatapath_ext_rst_to = multiregimpl11;
-assign txdatapath_cdc_produce_rdomain = multiregimpl21;
-assign txdatapath_cdc_consume_wdomain = multiregimpl31;
-assign toggle_o = multiregimpl41;
-assign rx_cdc_write_ext_rst = multiregimpl51;
-assign rx_cdc_ext_rst_to = multiregimpl61;
-assign rx_cdc_cdc_produce_rdomain = multiregimpl71;
-assign rx_cdc_cdc_consume_wdomain = multiregimpl81;
-assign pulsesynchronizer0_toggle_o = multiregimpl91;
-assign pulsesynchronizer1_toggle_o = multiregimpl101;
+assign toggle_o = multiregimpl01;
+assign pulsesynchronizer0_toggle_o = multiregimpl11;
+assign pulsesynchronizer1_toggle_o = multiregimpl21;
 
 always @(posedge eth_rx_clk) begin
 	rmiirxshim_crs_dv_d <= rmiirxshim_crs_dv;
@@ -1915,6 +1754,14 @@ always @(posedge eth_rx_clk) begin
 		rmiirxshim_f0_valid <= 1'd0;
 		rmiirxshim_f1_valid <= 1'd0;
 	end
+	if (((~txdatapath_pipe_valid_source_valid) | txdatapath_pipe_valid_source_ready)) begin
+		txdatapath_pipe_valid_source_valid <= txdatapath_pipe_valid_sink_valid;
+		txdatapath_pipe_valid_source_first <= txdatapath_pipe_valid_sink_first;
+		txdatapath_pipe_valid_source_last <= txdatapath_pipe_valid_sink_last;
+		txdatapath_pipe_valid_source_payload_data <= txdatapath_pipe_valid_sink_payload_data;
+		txdatapath_pipe_valid_source_payload_be <= txdatapath_pipe_valid_sink_payload_be;
+		txdatapath_pipe_valid_source_payload_error <= txdatapath_pipe_valid_sink_payload_error;
+	end
 	if (rx_packet_fifo_sink_sink_valid) begin
 		rx_packet_fifo_invalid <= (rx_packet_fifo_invalid | rx_packet_fifo_discard);
 		if (((~rx_packet_fifo_overflow) & (~rx_packet_fifo_full))) begin
@@ -1958,11 +1805,13 @@ always @(posedge eth_rx_clk) begin
 	if (i) begin
 		toggle_i <= (~toggle_i);
 	end
-	rx_cdc_cdc_graycounter0_q_binary <= rx_cdc_cdc_graycounter0_q_next_binary;
-	rx_cdc_cdc_graycounter0_q <= rx_cdc_cdc_graycounter0_q_next;
-	if (rx_cdc_cdc_reset_write) begin
-		rx_cdc_cdc_graycounter0_q <= 6'd0;
-		rx_cdc_cdc_graycounter0_q_binary <= 6'd0;
+	if (((~rx_cdc_pipe_valid_source_valid) | rx_cdc_pipe_valid_source_ready)) begin
+		rx_cdc_pipe_valid_source_valid <= rx_cdc_pipe_valid_sink_valid;
+		rx_cdc_pipe_valid_source_first <= rx_cdc_pipe_valid_sink_first;
+		rx_cdc_pipe_valid_source_last <= rx_cdc_pipe_valid_sink_last;
+		rx_cdc_pipe_valid_source_payload_data <= rx_cdc_pipe_valid_sink_payload_data;
+		rx_cdc_pipe_valid_source_payload_be <= rx_cdc_pipe_valid_sink_payload_be;
+		rx_cdc_pipe_valid_source_payload_error <= rx_cdc_pipe_valid_sink_payload_error;
 	end
 	if (eth_rx_rst) begin
 		rmiirxshim_crs_run <= 1'd0;
@@ -1982,6 +1831,7 @@ always @(posedge eth_rx_clk) begin
 		rmiirxshim_pre_cnt <= 3'd0;
 		rmiirxshim_shift <= 8'd0;
 		rmiirxshim_bits <= 2'd0;
+		txdatapath_pipe_valid_source_valid <= 1'd0;
 		rx_packet_fifo_param_fifo_level <= 3'd0;
 		rx_packet_fifo_param_fifo_produce <= 2'd0;
 		rx_packet_fifo_param_fifo_consume <= 2'd0;
@@ -1991,13 +1841,8 @@ always @(posedge eth_rx_clk) begin
 		rx_packet_fifo_out_valid <= 1'd0;
 		rx_packet_fifo_overflow <= 1'd0;
 		rx_packet_fifo_invalid <= 1'd0;
-		rx_cdc_cdc_graycounter0_q <= 6'd0;
-		rx_cdc_cdc_graycounter0_q_binary <= 6'd0;
+		rx_cdc_pipe_valid_source_valid <= 1'd0;
 	end
-	multiregimpl50 <= sys_rst;
-	multiregimpl51 <= multiregimpl50;
-	multiregimpl80 <= rx_cdc_cdc_graycounter1_q;
-	multiregimpl81 <= multiregimpl80;
 end
 
 always @(posedge eth_tx_clk) begin
@@ -2009,12 +1854,6 @@ always @(posedge eth_tx_clk) begin
 			rmiitxshim_shift <= (rmiitxshim_shift >>> 2'd2);
 			rmiitxshim_count <= (rmiitxshim_count - 1'd1);
 		end
-	end
-	txdatapath_cdc_graycounter1_q_binary <= txdatapath_cdc_graycounter1_q_next_binary;
-	txdatapath_cdc_graycounter1_q <= txdatapath_cdc_graycounter1_q_next;
-	if (txdatapath_cdc_reset_read) begin
-		txdatapath_cdc_graycounter1_q <= 6'd0;
-		txdatapath_cdc_graycounter1_q_binary <= 6'd0;
 	end
 	if (tx_packet_fifo_payload_fifo_syncfifo_re) begin
 		tx_packet_fifo_payload_fifo_readable <= 1'd1;
@@ -2088,8 +1927,6 @@ always @(posedge eth_tx_clk) begin
 	if (eth_tx_rst) begin
 		rmiitxshim_shift <= 8'd0;
 		rmiitxshim_count <= 3'd0;
-		txdatapath_cdc_graycounter1_q <= 6'd0;
-		txdatapath_cdc_graycounter1_q_binary <= 6'd0;
 		tx_packet_fifo_payload_fifo_readable <= 1'd0;
 		tx_packet_fifo_payload_fifo_level0 <= 12'd0;
 		tx_packet_fifo_payload_fifo_produce <= 11'd0;
@@ -2100,10 +1937,6 @@ always @(posedge eth_tx_clk) begin
 		tx_packet_fifo_param_fifo_consume <= 3'd0;
 		txdatapath_resetinserter_state <= 1'd0;
 	end
-	multiregimpl10 <= txdatapath_write_rst;
-	multiregimpl11 <= multiregimpl10;
-	multiregimpl20 <= txdatapath_cdc_graycounter0_q;
-	multiregimpl21 <= multiregimpl20;
 end
 
 always @(posedge sys_clk) begin
@@ -2143,12 +1976,6 @@ always @(posedge sys_clk) begin
 	if (tx_preamble_count_clockdomainsrenamer2_next_value_ce) begin
 		tx_preamble_count <= tx_preamble_count_clockdomainsrenamer2_next_value;
 	end
-	txdatapath_cdc_graycounter0_q_binary <= txdatapath_cdc_graycounter0_q_next_binary;
-	txdatapath_cdc_graycounter0_q <= txdatapath_cdc_graycounter0_q_next;
-	if (txdatapath_cdc_reset_write) begin
-		txdatapath_cdc_graycounter0_q <= 6'd0;
-		txdatapath_cdc_graycounter0_q_binary <= 6'd0;
-	end
 	if (o) begin
 		drops_status <= (drops_status + 1'd1);
 	end
@@ -2159,12 +1986,6 @@ always @(posedge sys_clk) begin
 		crc_errors_status <= (crc_errors_status + 1'd1);
 	end
 	toggle_o_r <= toggle_o;
-	rx_cdc_cdc_graycounter1_q_binary <= rx_cdc_cdc_graycounter1_q_next_binary;
-	rx_cdc_cdc_graycounter1_q <= rx_cdc_cdc_graycounter1_q_next;
-	if (rx_cdc_cdc_reset_read) begin
-		rx_cdc_cdc_graycounter1_q <= 6'd0;
-		rx_cdc_cdc_graycounter1_q_binary <= 6'd0;
-	end
 	rxdatapath_liteethmacpreamblechecker_state <= rxdatapath_liteethmacpreamblechecker_next_state;
 	if (pulsesynchronizer0_i) begin
 		pulsesynchronizer0_toggle_i <= (~pulsesynchronizer0_toggle_i);
@@ -2242,13 +2063,9 @@ always @(posedge sys_clk) begin
 		tx_crc_reg <= 32'd4294967295;
 		tx_crc_cnt <= 2'd3;
 		tx_crc_pipe_valid_source_valid <= 1'd0;
-		txdatapath_cdc_graycounter0_q <= 6'd0;
-		txdatapath_cdc_graycounter0_q_binary <= 6'd0;
 		preamble_errors_status <= 32'd0;
 		crc_errors_status <= 32'd0;
 		drops_status <= 32'd0;
-		rx_cdc_cdc_graycounter1_q <= 6'd0;
-		rx_cdc_cdc_graycounter1_q_binary <= 6'd0;
 		liteethmaccrc32checker_crc_reg <= 32'd4294967295;
 		liteethmaccrc32checker_syncfifo_level <= 3'd0;
 		liteethmaccrc32checker_syncfifo_produce <= 3'd0;
@@ -2263,113 +2080,79 @@ always @(posedge sys_clk) begin
 		rxdatapath_liteethmacpreamblechecker_state <= 1'd0;
 		rxdatapath_bufferizeendpoints_state <= 2'd0;
 	end
-	multiregimpl00 <= eth_tx_rst;
+	multiregimpl00 <= toggle_i;
 	multiregimpl01 <= multiregimpl00;
-	multiregimpl30 <= txdatapath_cdc_graycounter1_q;
-	multiregimpl31 <= multiregimpl30;
-	multiregimpl40 <= toggle_i;
-	multiregimpl41 <= multiregimpl40;
-	multiregimpl60 <= rx_cdc_write_rst;
-	multiregimpl61 <= multiregimpl60;
-	multiregimpl70 <= rx_cdc_cdc_graycounter0_q;
-	multiregimpl71 <= multiregimpl70;
-	multiregimpl90 <= pulsesynchronizer0_toggle_i;
-	multiregimpl91 <= multiregimpl90;
-	multiregimpl100 <= pulsesynchronizer1_toggle_i;
-	multiregimpl101 <= multiregimpl100;
+	multiregimpl10 <= pulsesynchronizer0_toggle_i;
+	multiregimpl11 <= multiregimpl10;
+	multiregimpl20 <= pulsesynchronizer1_toggle_i;
+	multiregimpl21 <= multiregimpl20;
 end
 
-reg [11:0] storage[0:31];
-reg [4:0] memadr;
-always @(posedge sys_clk) begin : mem_write_block
-	if (txdatapath_cdc_wrport_we)
-		storage[txdatapath_cdc_wrport_adr] <= txdatapath_cdc_wrport_dat_w;
+reg [11:0] storage[0:2047];
+reg [11:0] memdat;
+always @(posedge eth_tx_clk) begin : mem_write_block
+	if (tx_packet_fifo_payload_fifo_wrport_we)
+		storage[tx_packet_fifo_payload_fifo_wrport_adr] <= tx_packet_fifo_payload_fifo_wrport_dat_w;
 end
 
 always @(posedge eth_tx_clk) begin : mem_write_block_1
-	memadr <= txdatapath_cdc_rdport_adr;
-end
-
-assign txdatapath_cdc_rdport_dat_r = storage[memadr];
-
-reg [11:0] storage_1[0:2047];
-reg [11:0] memdat;
-always @(posedge eth_tx_clk) begin : mem_write_block_2
-	if (tx_packet_fifo_payload_fifo_wrport_we)
-		storage_1[tx_packet_fifo_payload_fifo_wrport_adr] <= tx_packet_fifo_payload_fifo_wrport_dat_w;
-end
-
-always @(posedge eth_tx_clk) begin : mem_write_block_3
 	if (tx_packet_fifo_payload_fifo_rdport_re)
-		memdat <= storage_1[tx_packet_fifo_payload_fifo_rdport_adr];
+		memdat <= storage[tx_packet_fifo_payload_fifo_rdport_adr];
 end
 
 assign tx_packet_fifo_payload_fifo_rdport_dat_r = memdat;
 
-reg [2:0] storage_2[0:4];
+reg [2:0] storage_1[0:4];
 reg [2:0] memdat_1;
-always @(posedge eth_tx_clk) begin : mem_write_block_4
+always @(posedge eth_tx_clk) begin : mem_write_block_2
 	if (tx_packet_fifo_param_fifo_wrport_we)
-		storage_2[tx_packet_fifo_param_fifo_wrport_adr] <= tx_packet_fifo_param_fifo_wrport_dat_w;
+		storage_1[tx_packet_fifo_param_fifo_wrport_adr] <= tx_packet_fifo_param_fifo_wrport_dat_w;
 end
 
-always @(posedge eth_tx_clk) begin : mem_write_block_5
+always @(posedge eth_tx_clk) begin : mem_write_block_3
 	if (tx_packet_fifo_param_fifo_rdport_re)
-		memdat_1 <= storage_2[tx_packet_fifo_param_fifo_rdport_adr];
+		memdat_1 <= storage_1[tx_packet_fifo_param_fifo_rdport_adr];
 end
 
 assign tx_packet_fifo_param_fifo_rdport_dat_r = memdat_1;
 
-reg [2:0] storage_3[0:3];
-always @(posedge eth_rx_clk) begin : mem_write_block_6
+reg [2:0] storage_2[0:3];
+always @(posedge eth_rx_clk) begin : mem_write_block_4
 	if (rx_packet_fifo_param_fifo_wrport_we)
-		storage_3[rx_packet_fifo_param_fifo_wrport_adr] <= rx_packet_fifo_param_fifo_wrport_dat_w;
+		storage_2[rx_packet_fifo_param_fifo_wrport_adr] <= rx_packet_fifo_param_fifo_wrport_dat_w;
+end
+
+always @(posedge eth_rx_clk) begin : mem_write_block_5
+end
+
+assign rx_packet_fifo_param_fifo_rdport_dat_r = storage_2[rx_packet_fifo_param_fifo_rdport_adr];
+
+reg [11:0] mem[0:2047];
+reg [10:0] memadr;
+reg [10:0] memadr_1;
+always @(posedge eth_rx_clk) begin : mem_write_block_6
+	if (rx_packet_fifo_wr_port_we)
+		mem[rx_packet_fifo_wr_port_adr] <= rx_packet_fifo_wr_port_dat_w;
+	memadr <= rx_packet_fifo_wr_port_adr;
 end
 
 always @(posedge eth_rx_clk) begin : mem_write_block_7
-end
-
-assign rx_packet_fifo_param_fifo_rdport_dat_r = storage_3[rx_packet_fifo_param_fifo_rdport_adr];
-
-reg [11:0] mem[0:2047];
-reg [10:0] memadr_1;
-reg [10:0] memadr_2;
-always @(posedge eth_rx_clk) begin : mem_write_block_8
-	if (rx_packet_fifo_wr_port_we)
-		mem[rx_packet_fifo_wr_port_adr] <= rx_packet_fifo_wr_port_dat_w;
-	memadr_1 <= rx_packet_fifo_wr_port_adr;
-end
-
-always @(posedge eth_rx_clk) begin : mem_write_block_9
 	if (rx_packet_fifo_rd_port_re)
-		memadr_2 <= rx_packet_fifo_rd_port_adr;
+		memadr_1 <= rx_packet_fifo_rd_port_adr;
 end
 
-assign rx_packet_fifo_wr_port_dat_r = mem[memadr_1];
-assign rx_packet_fifo_rd_port_dat_r = mem[memadr_2];
+assign rx_packet_fifo_wr_port_dat_r = mem[memadr];
+assign rx_packet_fifo_rd_port_dat_r = mem[memadr_1];
 
-reg [11:0] storage_4[0:31];
-reg [4:0] memadr_3;
-always @(posedge eth_rx_clk) begin : mem_write_block_10
-	if (rx_cdc_cdc_wrport_we)
-		storage_4[rx_cdc_cdc_wrport_adr] <= rx_cdc_cdc_wrport_dat_w;
-end
-
-always @(posedge sys_clk) begin : mem_write_block_11
-	memadr_3 <= rx_cdc_cdc_rdport_adr;
-end
-
-assign rx_cdc_cdc_rdport_dat_r = storage_4[memadr_3];
-
-reg [11:0] storage_5[0:4];
-always @(posedge sys_clk) begin : mem_write_block_12
+reg [11:0] storage_3[0:4];
+always @(posedge sys_clk) begin : mem_write_block_8
 	if (liteethmaccrc32checker_syncfifo_wrport_we)
-		storage_5[liteethmaccrc32checker_syncfifo_wrport_adr] <= liteethmaccrc32checker_syncfifo_wrport_dat_w;
+		storage_3[liteethmaccrc32checker_syncfifo_wrport_adr] <= liteethmaccrc32checker_syncfifo_wrport_dat_w;
 end
 
-always @(posedge sys_clk) begin : mem_write_block_13
+always @(posedge sys_clk) begin : mem_write_block_9
 end
 
-assign liteethmaccrc32checker_syncfifo_rdport_dat_r = storage_5[liteethmaccrc32checker_syncfifo_rdport_adr];
+assign liteethmaccrc32checker_syncfifo_rdport_dat_r = storage_3[liteethmaccrc32checker_syncfifo_rdport_adr];
 
 endmodule

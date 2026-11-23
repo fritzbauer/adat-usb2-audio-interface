@@ -8,7 +8,7 @@ Clock domains (real names, must exist; see RMIIClockDomain):
   streams, discovery and MDIO
 
 The MAC boundary is the LiteEth MAC core user-stream contract
-(generated Verilog module `liteeth_rmii_mac`, see liteeth/):
+(generated Verilog module `liteeth_etheradat_mac`, see liteeth/):
 - TX sink: frame bytes WITHOUT preamble/SFD and WITHOUT FCS, `last` on
   the final payload byte; the core pads short frames to the Ethernet
   minimum, appends the CRC-32 FCS, prepends the preamble and enforces

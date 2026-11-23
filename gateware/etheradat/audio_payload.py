@@ -194,16 +194,17 @@ class AudioBlockBuilder(Elaboratable):
         ]
 
         timer = Signal(16)
-        trigger = Signal()
+        # pending free-run tick: set at each free-run period and consumed
+        # by the block trigger. The timer must reset at the period even
+        # while a block copy is in flight; resetting only on the trigger
+        # let the 16-bit timer run to 65536 whenever the exact period
+        # edge fell into a copy (measured 23.11.2026: ~1600 blocks/s
+        # instead of 3200/s, i.e. exactly every other period).
+        free_tick = Signal()
         # drop strobe stretch: a 1-cycle fast pulse can fall entirely
         # between two rmii sampling edges; hold drops for 4 cycles so
         # the bridge's edge detector cannot miss them
         drop_hold = Signal(2)
-
-        # default strobes (conditional assignments below override)
-        sync += [
-            trigger.eq(0),
-        ]
 
         # drop strobe stretch: the drop site sets drop_hold for one
         # cycle; holding it for 4 fast cycles guarantees the bridge's
@@ -212,16 +213,17 @@ class AudioBlockBuilder(Elaboratable):
             sync += drop_hold.eq(drop_hold - 1)
         comb += self.tx_drops_out.eq(drop_hold != 0)
 
-        # free-run timer
-        with m.If(trigger | (timer == block_cycles - 1)):
-            sync += timer.eq(0)
+        # free-run timer (always contiguous)
+        with m.If(timer == block_cycles - 1):
+            sync += [timer.eq(0), free_tick.eq(1)]
         with m.Else():
             sync += timer.eq(timer + 1)
 
         # block trigger: master input's ring wrapped, or free-run period
         with m.If(~copying):
             with m.If((~self.free_run_out & wrapped_i[master])
-                      | (self.free_run_out & (timer == block_cycles - 1))):
+                      | (self.free_run_out & free_tick)):
+                sync += free_tick.eq(0)
                 with m.If(in_flight == 2):
                     # both buffers still unconsumed: drop the newest
                     sync += drop_hold.eq(3)

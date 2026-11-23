@@ -89,8 +89,8 @@ class MDIOMaster(Elaboratable):
 
         # sequencer
         state = Signal(3, reset=S_LOAD)
-        op_bits = Signal(44)               # driven bits, MSB first
-        op_cnt = Signal(_width_for(43))
+        op_bits = Signal(46)               # driven bits, MSB first
+        op_cnt = Signal(_width_for(45))
         ta_cnt = Signal(2)
         data_shift = Signal(16)
         data_cnt = Signal(_width_for(15))
@@ -114,7 +114,7 @@ class MDIOMaster(Elaboratable):
         # MDIO open-drain drive: 1 = release (pull-up provides the level)
         comb += [
             self.mdio_o.eq(0),
-            self.mdio_oe.eq((state == S_DRIVE) & ~op_bits[43]),
+            self.mdio_oe.eq((state == S_DRIVE) & ~op_bits[45]),
         ]
 
         # frame shift register, MSB first
@@ -125,7 +125,7 @@ class MDIOMaster(Elaboratable):
                     op_bits.eq(op_bits << 1),
                     op_cnt.eq(op_cnt + 1),
                 ]
-                with m.If(op_cnt == 43):
+                with m.If(op_cnt == 45):
                     sync += [
                         state.eq(S_TA),
                         ta_cnt.eq(0),
