@@ -166,6 +166,15 @@ class EtherADATInterface(Elaboratable):
         m.d.comb += eth_tx_clk.eq(~rmii_clk if self.tx_negedge else rmii_clk)
         mac_dbg = {n: Signal(name="mac_dbg_" + n) for n in
                    ("sink_frame", "sink_short", "phy_frame", "phy_short")}
+        # MAC TX line tap: first 16 bytes entering the RMII serializer
+        # (after preamble/CRC) + frame length/count (eth_tx domain)
+        mac_cap = [Signal(8, name=f"mac_cap{i}") for i in range(16)]
+        mac_cap_len = Signal(16, name="mac_cap_len")
+        mac_cap_count = Signal(16, name="mac_cap_count")
+        # RMII pin-level reassembly (serializer -> PHY pads)
+        mac_pin = [Signal(8, name=f"mac_pin{i}") for i in range(16)]
+        mac_pin_len = Signal(16, name="mac_pin_len")
+        mac_pin_count = Signal(16, name="mac_pin_count")
         m.submodules.liteeth_mac = Instance("liteeth_etheradat_mac",
             i_sys_clk        = ClockSignal("rmii"),
             i_sys_rst        = ResetSignal("rmii"),
@@ -190,6 +199,12 @@ class EtherADATInterface(Elaboratable):
             o_dbg_sink_short = mac_dbg["sink_short"],
             o_dbg_phy_frame  = mac_dbg["phy_frame"],
             o_dbg_phy_short  = mac_dbg["phy_short"],
+            o_dbg_cap_len    = mac_cap_len,
+            o_dbg_cap_count  = mac_cap_count,
+            **{f"o_dbg_cap{i}": mac_cap[i] for i in range(16)},
+            o_dbg_pin_len    = mac_pin_len,
+            o_dbg_pin_count  = mac_pin_count,
+            **{f"o_dbg_pin{i}": mac_pin[i] for i in range(16)},
         )
 
         #
@@ -201,6 +216,39 @@ class EtherADATInterface(Elaboratable):
             rmii.mdio.oe.eq(bridge.mdio.mdio_oe),
             bridge.mdio.mdio_i.eq(rmii.mdio.i),
         ]
+
+        #
+        # TX frame taps (bring-up): the first 16 bytes + length/count of
+        # every frame, captured independently on the bridge->MAC side
+        # ("sink") and, inside the blackbox, on the MAC->RMII side
+        # ("mac"). UART-dumped to locate where leading header bytes go.
+        #
+        sink_cap = [Signal(8, name=f"sink_cap{i}") for i in range(16)]
+        sink_cap_len = Signal(16, name="sink_cap_len")
+        sink_cap_count = Signal(16, name="sink_cap_count")
+        # first 16 PAYLOAD bytes (frame byte 22..37) as the bridge hands
+        # them to the MAC — separates builder/BRAM read from MAC/shim
+        sink_pay = [Signal(8, name=f"sink_pay{i}") for i in range(16)]
+        sink_idx = Signal(5)
+        sink_n = Signal(16)
+        with m.If(bridge.mac_tx_valid & bridge.mac_tx_ready):
+            with m.If(sink_idx < 16):
+                m.d.rmii += Array(sink_cap)[sink_idx[:4]].eq(
+                    bridge.mac_tx_data)
+            with m.If((sink_n >= 22) & (sink_n < 38)):
+                m.d.rmii += Array(sink_pay)[(sink_n - 22)[:4]].eq(
+                    bridge.mac_tx_data)
+            with m.If(bridge.mac_tx_last):
+                m.d.rmii += [
+                    sink_cap_len.eq(sink_n + 1),
+                    sink_cap_count.eq(sink_cap_count + 1),
+                    sink_n.eq(0),
+                    sink_idx.eq(0),
+                ]
+            with m.Else():
+                m.d.rmii += sink_n.eq(sink_n + 1)
+                with m.If(sink_idx < 16):
+                    m.d.rmii += sink_idx.eq(sink_idx + 1)
 
         #
         # ADAT: 3 receivers (inputs), 2 transmitters (outputs)
@@ -305,6 +353,11 @@ class EtherADATInterface(Elaboratable):
             m.submodules += FFSynchronizer(sig, s, o_domain=D)
             return s
 
+        def level_sig(sig, name):
+            s = Signal.like(sig, name=name)
+            m.submodules += FFSynchronizer(sig, s, o_domain=D)
+            return s
+
         link_up = level(bridge.link_up, "sync", "st_link")
         phy_found = level(bridge.mdio.phy_found_out, "sync", "st_phy")
         pc_linked = level(bridge.pc_linked, "rmii", "st_pc")
@@ -355,6 +408,30 @@ class EtherADATInterface(Elaboratable):
             _count(m, _pulse_to(m, mac_dbg["phy_short"], "rmii", D,
                                 "ev_mac_pfs"), D, "c_mac_pfs"),
         ]
+
+        # TX tap values: [sink_len, sink_count, mac_len, mac_count] then
+        # the 16 captured bytes of each side as 8 u16 (little-endian).
+        sink_cap_s = [level_sig(v, f"st_scap{i}")
+                      for i, v in enumerate(sink_cap)]
+        mac_cap_s = [level_sig(v, f"st_mcap{i}")
+                     for i, v in enumerate(mac_cap)]
+        mac_pin_s = [level_sig(v, f"st_mpin{i}")
+                     for i, v in enumerate(mac_pin)]
+        values += [
+            level_sig(sink_cap_len, "st_slen"),
+            level_sig(sink_cap_count, "st_scnt"),
+            level_sig(mac_cap_len, "st_mlen"),
+            level_sig(mac_cap_count, "st_mcnt"),
+            level_sig(mac_pin_len, "st_plen"),
+            level_sig(mac_pin_count, "st_pcnt"),
+        ]
+        for arr in (sink_cap_s, mac_cap_s, mac_pin_s):
+            for k in range(0, 16, 2):
+                values.append(Cat(arr[k], arr[k + 1]))
+        sink_pay_s = [level_sig(v, f"st_spay{i}")
+                      for i, v in enumerate(sink_pay)]
+        for k in range(0, 16, 2):
+            values.append(Cat(sink_pay_s[k], sink_pay_s[k + 1]))
 
         platform.add_resources([Resource("uart_dbg", 0,
             Subsignal("tx", Pins("J_2:34", dir="o"),

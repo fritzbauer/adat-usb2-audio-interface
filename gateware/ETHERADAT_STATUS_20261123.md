@@ -271,3 +271,83 @@ Payload aus dem Block-RAM) bzw. der kontinuierliche 3200-fps-Strom.
 UART ausgeben) und mit dem ROM-Test vergleichen; alternativ den Header
 testweise aus einem ROM statt aus dem Array speisen. Danach den
 Audio-Payload-Pfad (BRAM-Read-Timing) pruefen.
+
+## Nachtrag 3: Wire-Bug GELOEST (23.11.2026 abends)
+
+Die beiden verbleibenden Fehler sind gefunden und behoben. Der
+UART-Debug-Tap (erste 16 Header-Bytes bridge->MAC, MAC->Serializer und
+Serializer->Pads, plus erster Payload-Block, `dbg_cap`/`dbg_pin`/
+`sink_pay` in `etheradat_interface.py`) hat sie direkt auf Hardware
+lokalisiert — ohne Sim.
+
+### Fehler A: invertierter `~REF_CLK` als MAC-`eth_tx`-Clock
+
+Der Top trieb `i_eth_tx_clk = ~rmii_clk` (`tx_negedge`, bisher Default).
+Quartus leitet diesen invertierten Clock nicht sauber als Takt weiter;
+der TX-Serializer gab dadurch einen **bit-verschobenen Strom** aus: die
+ersten ~18-20 Byte jedes Frames fehlten (Header weg), der Payload erschien
+verrauscht/verschoben. Der Tap zeigte: SINK (bridge->MAC) und MAC-Eingang
+sind byte-korrekt (Header + `EMPTY`), erst am Serializer kam Muell heraus.
+Der Standalone-Mixed-Test (gleicher MAC, **steigende** Flanke) war
+sauber — der Unterschied war genau die Clock-Flanke.
+
+**Fix:** TX laeuft jetzt auf der **steigenden** REF_CLK-Flanke (gleiche
+Clock wie MAC). `generate_quartus_files_etheradat.py` nutzt Rising als
+Default (`--tx-negedge` nur noch als Diagnose-Option).
+Verifiziert: Frames kommen als korrekte 1462-Byte-`0x88b5`-Frames mit
+Header und in-order `sample_cntr` (+15) an; PC empfaengt nur
+`dir=0`-Frames, Treiber `link up`, `hello_bad 0`.
+
+### Fehler B: Audio-Payload-Read um ein Byte verschoben
+
+Selbst mit A kam der Payload um **ein Byte rotiert** an
+(`EMPTY[1:]+EMPTY[:1]` pro Slot), der ADAT-Decoder des Treibers verwarf
+jeden Frame (`decode_frame`: `frame[0] != 0` -> Err(Sync)) =>
+`eth_rx_errors` ~ Frame-Rate, `eth_rx_frames = 0`. Ursache: der TX-Block-
+RAM-Read in `bridge.py` adressierte eine Cycle zu weit vorne. Der
+M9K-Inferenz im Fit hat **Input-Register, aber kein Output-Register**
+(siehe `top.fit.rpt`: "Port B Input Registers yes / Output Registers no"),
+d. h. das Read-Timing weicht um einen Takt vom Amaranth-Modell ab (Sim
+war byte-exakt). Die alte Adresse `(tx_byte-TX_HDR_BYTES)+1` unterlief
+bei `tx_byte=21` zusaetzlich unsigned.
+
+**Fix:** Read-Adresse direkt fuer die **Praesentations-Cycle** berechnen:
+`read_next = tx_byte - TX_HDR_BYTES`, `en` ab `tx_byte >= TX_HDR_BYTES`.
+Damit liefert der Fit `block[tx_byte-22]`. Verifiziert: alle 45 Slots
+byte-exakt `EMPTY_USER_FRAME` (0/45 -> 45/45), Treiber
+`eth_rx_frames` ~3200/s, `eth_rx_errors` ~0.05 % (nur Host-Drops),
+`frames_copied` steigt bei offenem `arecord`.
+
+Zusaetzlich: `AudioBlockBuilder` schreibt fuer **unsynchrone** Eingaenge
+jetzt explizit das exakte `EMPTY_USER_FRAME` in den Block (statt sich auf
+den Ring-Init zu verlassen); das haelt PROTOCOL §6 ein, selbst wenn ein
+verrauschter Receiver-Eingang den Ring einmal mit einem rotierten Frame
+beschreibt.
+
+### Verifizierter Zustand (Hardware)
+
+- `link up`, `hello_rx` steigt, `hello_bad 0`, `pc_linked = 1`.
+- TX: 1462-Byte-`0x88b5`-Frames, Header korrekt, Payload = exaktes
+  `EMPTY_USER_FRAME` (Free-Run), `sample_cntr` +15; 34-Byte-`0x88b6`-
+  Hellos.
+- Treiber (mode=1): `eth_rx_frames` ~3200/s, `eth_rx_errors` ~0.05 %.
+- `arecord -D hw:1,0 -f S32_LE -r 48000 -c 24` liefert 24 Kanaele; Inhalt
+  im Free-Run korrekt still (0 Nicht-Null-Samples); `frames_copied`
+  steigt. PC->ADAT: `eth_tx_frames`/FPGA-`rx_frames`/`feed` steigen.
+
+### Offen / Hinweis
+
+- Der Payload-Read ist auf das **Fit-Read-Timing** (M9K Input-Reg, kein
+  Output-Reg) abgestimmt; das Amaranth-Sim-Modell ist 1 Cycle spaeter.
+  Bei einem kuenftigen Fit mit Output-Register muss der Offset
+  (`TX_HDR_BYTES`) entsprechend gedreht werden — sauber waere, das
+  Read-Timing per Attribut festzunageln. Auf Hardware ist der aktuelle
+  Stand verifiziert.
+- `phy_found = 0` (MDIO antwortet nicht) und Link **100 Mbit Half/AN off**
+  bleiben: vermutlich MDIO-Verdrahtung/Strap, beeinflusst den Datenpfad
+  aber nicht. Der frueher vermutete Leitungs-/Noise-Fehler ist
+  ausgeschlossen (0 CRC-/Length-Fehler; der Mixed-Rom-Test ist ueber
+  dieselbe Verkabelung sauber).
+- Debug-Taps (`dbg_cap`, `dbg_pin`, `sink_cap`, `sink_pay`) sind noch im
+  Top (Bring-up); sie kosten ~600 FFs und vergroessern den UART-Dump.
+  Fuer einen finalen Build koennen sie entfernt werden.

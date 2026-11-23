@@ -187,10 +187,22 @@ class AudioBlockBuilder(Elaboratable):
         # block ram write: 4 byte lanes per ring word
         # byte lane order within the 32-bit ring word: MSB first
         byte_sel = Array([3, 2, 1, 0])[lane]
+        # Unsynced inputs MUST go out as the exact silence frame
+        # (PROTOCOL.md §6): the collector ring is *seeded* with
+        # EMPTY_USER_FRAME, but on hardware a single spurious receiver
+        # write while unsynced can leave a 1-byte-rotated copy in the
+        # ring, which the PC's ADAT decoder rejects (frame[0] != 0). So
+        # select the constant silence byte per slot position whenever the
+        # input is not synced.
+        empty_byte = Array(EMPTY_USER_FRAME)[w_cnt * 4 + lane]
+        synced_arr = Array(self.synced_in)
         comb += [
             write_port.en.eq(copying & got_word),
             write_port.addr.eq(wr_byte),
-            write_port.data.eq(rp_data[i_cnt].word_select(byte_sel, 8)),
+            write_port.data.eq(
+                Mux(synced_arr[i_cnt],
+                    rp_data[i_cnt].word_select(byte_sel, 8),
+                    empty_byte)),
         ]
 
         timer = Signal(16)

@@ -278,19 +278,23 @@ class EtherADATBridge(Elaboratable):
         hdr_byte = Array(hdr_terms)
         hdr_index = Mux(tx_byte < TX_HDR_BYTES, tx_byte, 0)
 
-        tx_pres = tx_byte - TX_HDR_BYTES  # payload byte index (>= 22)
-
-        # Payload presentation: the sync read port's registered output
-        # IS the byte currently being presented (addr always runs one
-        # byte ahead, so during cycle C the port outputs the byte that
-        # this cycle presents). The first payload byte's read is issued
-        # during the header's last byte (addr = byte 0 there).
-        next_pres = tx_pres + 1
+        # Payload presentation: the byte presented during cycle C is
+        # block[C - TX_HDR_BYTES]. On hardware this block RAM read is
+        # COMBINATIONAL (0-cycle): with the address computed for cycle C
+        # the port returns block[C-21] one byte too far (verified with
+        # the TX tap 23.11.2026: payload started at block[1]). The
+        # Amaranth model registers the port (1-cycle), which is why the
+        # sim was byte-exact. Address the PRESENTATION cycle directly so
+        # the fit's combinational read yields block[C - TX_HDR_BYTES].
+        read_next = tx_byte - TX_HDR_BYTES
         comb += [
             tx_ram_read.addr.eq(tx_buf * TX_BUFFER_BYTES
-                                + Mux(next_pres < 1440, next_pres, 1439)),
-            tx_ram_read.en.eq(tx_sending & (tx_byte >= TX_HDR_BYTES - 1)
-                              & (tx_byte < TX_FRAME_BYTES - 1)),
+                                + Mux(tx_byte >= TX_HDR_BYTES,
+                                      Mux(read_next < TX_BUFFER_BYTES,
+                                          read_next, TX_BUFFER_BYTES - 1),
+                                      0)),
+            tx_ram_read.en.eq(tx_sending & (tx_byte >= TX_HDR_BYTES)
+                              & (tx_byte < TX_FRAME_BYTES)),
         ]
 
         # byte currently presented by the audio TX FSM

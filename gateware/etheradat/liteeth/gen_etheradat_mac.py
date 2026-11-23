@@ -147,6 +147,86 @@ class EtherADATMAC(LiteXModule):
                                   & phy.sink.last & (phy_len < 100)),
         ]
 
+        # --- TX line tap (bring-up) -------------------------------------
+        # Capture the first 16 bytes of every frame AS THEY ENTER THE RMII
+        # SERIALIZER (i.e. after preamble/CRC insertion), plus the frame
+        # length and a frame counter. Comparing this against the bridge's
+        # user-stream bytes shows whether the MAC (or the bridge) drops
+        # any leading header bytes. Sampled in eth_tx.
+        self.dbg_cap = [Signal(8, name="dbg_cap%d" % i)
+                        for i in range(16)]
+        self.dbg_cap_len = Signal(16)
+        self.dbg_cap_count = Signal(16)
+        cap_arr = Array(self.dbg_cap)
+        cap_idx = Signal(5)          # write slot 0..15, then hold
+        cap_n = Signal(16)           # bytes in the current frame
+        line_acc = Signal()
+        self.comb += line_acc.eq(phy.sink.valid & phy.sink.ready)
+        self.sync.eth_tx += [
+            If(line_acc,
+                If(cap_idx < 16,
+                    cap_arr[cap_idx[:4]].eq(phy.sink.payload.data),
+                ),
+                If(phy.sink.last,
+                    self.dbg_cap_len.eq(cap_n + 1),
+                    self.dbg_cap_count.eq(self.dbg_cap_count + 1),
+                    cap_n.eq(0),
+                    cap_idx.eq(0),
+                ).Else(
+                    cap_n.eq(cap_n + 1),
+                    If(cap_idx < 16,
+                        cap_idx.eq(cap_idx + 1),
+                    ),
+                ),
+            ),
+        ]
+
+        # --- RMII PIN monitor (bring-up) --------------------------------
+        # Reassemble the serialized TX dibits EXACTLY as driven to the PHY
+        # (rmii_tx_en / rmii_txd pads): first 16 wire bytes + length/count.
+        # If this matches dbg_cap (serializer input), the FPGA pins are
+        # correct and any remaining corruption is on the PHY/cable side.
+        self.dbg_pin = [Signal(8, name="dbg_pin%d" % i)
+                        for i in range(16)]
+        self.dbg_pin_len = Signal(16)
+        self.dbg_pin_count = Signal(16)
+        pin_arr = Array(self.dbg_pin)
+        pin_bits = Signal(2)
+        pin_byte = Signal(8)
+        pin_idx = Signal(5)
+        pin_n = Signal(16)
+        pin_active = Signal()
+        pin_byte_now = Signal(8)
+        self.comb += pin_byte_now.eq(
+            pin_byte | (self.rmii_txd << (pin_bits * 2)))
+        self.sync.eth_tx += [
+            If(self.rmii_tx_en,
+                pin_active.eq(1),
+                If(pin_bits == 3,
+                    pin_bits.eq(0),
+                    pin_byte.eq(0),
+                    pin_n.eq(pin_n + 1),
+                    If(pin_idx < 16,
+                        pin_arr[pin_idx[:4]].eq(pin_byte_now),
+                        pin_idx.eq(pin_idx + 1),
+                    ),
+                ).Else(
+                    pin_bits.eq(pin_bits + 1),
+                    pin_byte.eq(pin_byte_now),
+                ),
+            ).Else(
+                pin_bits.eq(0),
+                pin_byte.eq(0),
+                If(pin_active,
+                    self.dbg_pin_len.eq(pin_n),
+                    self.dbg_pin_count.eq(self.dbg_pin_count + 1),
+                    pin_n.eq(0),
+                    pin_idx.eq(0),
+                    pin_active.eq(0),
+                ),
+            ),
+        ]
+
 
 def main():
     here = os.path.dirname(os.path.abspath(__file__))
@@ -164,6 +244,10 @@ def main():
         dut.cd_eth_tx.clk, dut.cd_eth_tx.rst,
         dut.cd_eth_rx.clk, dut.cd_eth_rx.rst,
     }
+    ios |= set(dut.dbg_cap)
+    ios |= {dut.dbg_cap_len, dut.dbg_cap_count}
+    ios |= set(dut.dbg_pin)
+    ios |= {dut.dbg_pin_len, dut.dbg_pin_count}
 
     out = os.path.join(here, "liteeth_etheradat_mac.v")
     result = convert(dut, ios=ios, name="liteeth_etheradat_mac")

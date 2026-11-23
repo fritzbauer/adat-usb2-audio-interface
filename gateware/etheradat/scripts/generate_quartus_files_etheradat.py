@@ -36,9 +36,12 @@ def main():
                              "(default: the LAN8720 module, REF_CLK-OUT)")
     parser.add_argument("--no-audio-tx", action="store_true",
                         help="debug: suppress TX audio frames (hello-only)")
-    parser.add_argument("--tx-rising", action="store_true",
-                        help="drive RMII TX on the rising REF_CLK edge "
-                             "(default: falling edge, half-cycle setup)")
+    parser.add_argument("--tx-negedge", action="store_true",
+                        help="drive RMII TX on the falling REF_CLK edge "
+                             "(default: rising edge / same clock as the "
+                             "MAC; the inverted ~REF_CLK clock was found "
+                             "NOT to work on hardware 23.11.2026 — frames "
+                             "lost their header)")
     args = parser.parse_args()
 
     platform = get_appropriate_platform()
@@ -52,7 +55,7 @@ def main():
 
     top = EtherADATInterface(ref_clk_mode=args.ref_clk_mode,
                              audio_tx_enable=not args.no_audio_tx,
-                             tx_negedge=not args.tx_rising)
+                             tx_negedge=args.tx_negedge)
     plan = platform.build(top, do_build=False)
     plan.execute_local(build_dir, run_script=False)
 

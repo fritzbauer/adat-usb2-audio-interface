@@ -21,6 +21,42 @@ module liteeth_etheradat_mac(
 	output dbg_sink_short,
 	output dbg_phy_frame,
 	output dbg_phy_short,
+	output reg [7:0] dbg_cap0,
+	output reg [7:0] dbg_cap1,
+	output reg [7:0] dbg_cap2,
+	output reg [7:0] dbg_cap3,
+	output reg [7:0] dbg_cap4,
+	output reg [7:0] dbg_cap5,
+	output reg [7:0] dbg_cap6,
+	output reg [7:0] dbg_cap7,
+	output reg [7:0] dbg_cap8,
+	output reg [7:0] dbg_cap9,
+	output reg [7:0] dbg_cap10,
+	output reg [7:0] dbg_cap11,
+	output reg [7:0] dbg_cap12,
+	output reg [7:0] dbg_cap13,
+	output reg [7:0] dbg_cap14,
+	output reg [7:0] dbg_cap15,
+	output reg [15:0] dbg_cap_len,
+	output reg [15:0] dbg_cap_count,
+	output reg [7:0] dbg_pin0,
+	output reg [7:0] dbg_pin1,
+	output reg [7:0] dbg_pin2,
+	output reg [7:0] dbg_pin3,
+	output reg [7:0] dbg_pin4,
+	output reg [7:0] dbg_pin5,
+	output reg [7:0] dbg_pin6,
+	output reg [7:0] dbg_pin7,
+	output reg [7:0] dbg_pin8,
+	output reg [7:0] dbg_pin9,
+	output reg [7:0] dbg_pin10,
+	output reg [7:0] dbg_pin11,
+	output reg [7:0] dbg_pin12,
+	output reg [7:0] dbg_pin13,
+	output reg [7:0] dbg_pin14,
+	output reg [7:0] dbg_pin15,
+	output reg [15:0] dbg_pin_len,
+	output reg [15:0] dbg_pin_count,
 	input sys_clk,
 	input sys_rst
 );
@@ -430,6 +466,15 @@ reg [10:0] rx_padding_length = 11'd0;
 wire [3:0] rx_padding_length_inc;
 reg [15:0] sink_len = 16'd0;
 reg [15:0] phy_len = 16'd0;
+reg [4:0] cap_idx = 5'd0;
+reg [15:0] cap_n = 16'd0;
+wire line_acc;
+reg [1:0] pin_bits = 2'd0;
+reg [7:0] pin_byte = 8'd0;
+reg [4:0] pin_idx = 5'd0;
+reg [15:0] pin_n = 16'd0;
+reg pin_active = 1'd0;
+wire [7:0] pin_byte_now;
 reg txdatapath_liteethmacpaddinginserter_state = 1'd0;
 reg txdatapath_liteethmacpaddinginserter_next_state;
 reg [15:0] tx_padding_counter_clockdomainsrenamer0_next_value;
@@ -457,6 +502,8 @@ reg liteethmaccrc32checker_be_next_value_ce0;
 reg liteethmaccrc32checker_last_error_next_value1;
 reg liteethmaccrc32checker_last_error_next_value_ce1;
 wire [39:0] slice_proxy;
+reg [7:0] lhs_self = 8'd0;
+reg [7:0] t_self = 8'd0;
 (* no_retiming = "true" *) reg multiregimpl00 = 1'd0;
 (* no_retiming = "true" *) reg multiregimpl01 = 1'd0;
 (* no_retiming = "true" *) reg multiregimpl10 = 1'd0;
@@ -487,6 +534,8 @@ assign dbg_sink_frame = ((user_sink_valid & user_sink_ready) & user_sink_last);
 assign dbg_sink_short = (((user_sink_valid & user_sink_ready) & user_sink_last) & (sink_len < 7'd100));
 assign dbg_phy_frame = ((rmiitxshim_sink_valid & rmiitxshim_sink_ready) & rmiitxshim_sink_last);
 assign dbg_phy_short = (((rmiitxshim_sink_valid & rmiitxshim_sink_ready) & rmiitxshim_sink_last) & (phy_len < 7'd100));
+assign line_acc = (rmiitxshim_sink_valid & rmiitxshim_sink_ready);
+assign pin_byte_now = (pin_byte | (rmii_txd <<< (pin_bits * 2'd2)));
 assign rmii_txd = rmiitxshim_txd_r;
 assign rmii_tx_en = rmiitxshim_tx_en_r;
 assign rmiitxshim_sink_ready = (rmiitxshim_count <= 1'd1);
@@ -1477,6 +1526,147 @@ always @(posedge eth_tx_clk) begin
 			phy_len <= (phy_len + 1'd1);
 		end
 	end
+	if (line_acc) begin
+		if ((cap_idx < 5'd16)) begin
+			lhs_self = rmiitxshim_sink_payload_data;
+			case (cap_idx[3:0])
+				1'd0: begin
+					dbg_cap0 <= lhs_self;
+				end
+				1'd1: begin
+					dbg_cap1 <= lhs_self;
+				end
+				2'd2: begin
+					dbg_cap2 <= lhs_self;
+				end
+				2'd3: begin
+					dbg_cap3 <= lhs_self;
+				end
+				3'd4: begin
+					dbg_cap4 <= lhs_self;
+				end
+				3'd5: begin
+					dbg_cap5 <= lhs_self;
+				end
+				3'd6: begin
+					dbg_cap6 <= lhs_self;
+				end
+				3'd7: begin
+					dbg_cap7 <= lhs_self;
+				end
+				4'd8: begin
+					dbg_cap8 <= lhs_self;
+				end
+				4'd9: begin
+					dbg_cap9 <= lhs_self;
+				end
+				4'd10: begin
+					dbg_cap10 <= lhs_self;
+				end
+				4'd11: begin
+					dbg_cap11 <= lhs_self;
+				end
+				4'd12: begin
+					dbg_cap12 <= lhs_self;
+				end
+				4'd13: begin
+					dbg_cap13 <= lhs_self;
+				end
+				4'd14: begin
+					dbg_cap14 <= lhs_self;
+				end
+				default: begin
+					dbg_cap15 <= lhs_self;
+				end
+			endcase
+		end
+		if (rmiitxshim_sink_last) begin
+			dbg_cap_len <= (cap_n + 1'd1);
+			dbg_cap_count <= (dbg_cap_count + 1'd1);
+			cap_n <= 1'd0;
+			cap_idx <= 1'd0;
+		end else begin
+			cap_n <= (cap_n + 1'd1);
+			if ((cap_idx < 5'd16)) begin
+				cap_idx <= (cap_idx + 1'd1);
+			end
+		end
+	end
+	if (rmii_tx_en) begin
+		pin_active <= 1'd1;
+		if ((pin_bits == 2'd3)) begin
+			pin_bits <= 1'd0;
+			pin_byte <= 1'd0;
+			pin_n <= (pin_n + 1'd1);
+			if ((pin_idx < 5'd16)) begin
+				t_self = pin_byte_now;
+				case (pin_idx[3:0])
+					1'd0: begin
+						dbg_pin0 <= t_self;
+					end
+					1'd1: begin
+						dbg_pin1 <= t_self;
+					end
+					2'd2: begin
+						dbg_pin2 <= t_self;
+					end
+					2'd3: begin
+						dbg_pin3 <= t_self;
+					end
+					3'd4: begin
+						dbg_pin4 <= t_self;
+					end
+					3'd5: begin
+						dbg_pin5 <= t_self;
+					end
+					3'd6: begin
+						dbg_pin6 <= t_self;
+					end
+					3'd7: begin
+						dbg_pin7 <= t_self;
+					end
+					4'd8: begin
+						dbg_pin8 <= t_self;
+					end
+					4'd9: begin
+						dbg_pin9 <= t_self;
+					end
+					4'd10: begin
+						dbg_pin10 <= t_self;
+					end
+					4'd11: begin
+						dbg_pin11 <= t_self;
+					end
+					4'd12: begin
+						dbg_pin12 <= t_self;
+					end
+					4'd13: begin
+						dbg_pin13 <= t_self;
+					end
+					4'd14: begin
+						dbg_pin14 <= t_self;
+					end
+					default: begin
+						dbg_pin15 <= t_self;
+					end
+				endcase
+				pin_idx <= (pin_idx + 1'd1);
+			end
+		end else begin
+			pin_bits <= (pin_bits + 1'd1);
+			pin_byte <= pin_byte_now;
+		end
+	end else begin
+		pin_bits <= 1'd0;
+		pin_byte <= 1'd0;
+		if (pin_active) begin
+			dbg_pin_len <= pin_n;
+			dbg_pin_count <= (dbg_pin_count + 1'd1);
+			pin_n <= 1'd0;
+			pin_idx <= 1'd0;
+			pin_active <= 1'd0;
+		end
+	end
 	if ((rmiitxshim_sink_valid & rmiitxshim_sink_ready)) begin
 		rmiitxshim_shift <= rmiitxshim_sink_payload_data;
 		rmiitxshim_count <= 3'd4;
@@ -1502,6 +1692,49 @@ always @(posedge eth_tx_clk) begin
 		rmiitxshim_tx_en_r <= 1'd0;
 		sink_len <= 16'd0;
 		phy_len <= 16'd0;
+		dbg_cap0 <= 8'd0;
+		dbg_cap1 <= 8'd0;
+		dbg_cap2 <= 8'd0;
+		dbg_cap3 <= 8'd0;
+		dbg_cap4 <= 8'd0;
+		dbg_cap5 <= 8'd0;
+		dbg_cap6 <= 8'd0;
+		dbg_cap7 <= 8'd0;
+		dbg_cap8 <= 8'd0;
+		dbg_cap9 <= 8'd0;
+		dbg_cap10 <= 8'd0;
+		dbg_cap11 <= 8'd0;
+		dbg_cap12 <= 8'd0;
+		dbg_cap13 <= 8'd0;
+		dbg_cap14 <= 8'd0;
+		dbg_cap15 <= 8'd0;
+		dbg_cap_len <= 16'd0;
+		dbg_cap_count <= 16'd0;
+		cap_idx <= 5'd0;
+		cap_n <= 16'd0;
+		dbg_pin0 <= 8'd0;
+		dbg_pin1 <= 8'd0;
+		dbg_pin2 <= 8'd0;
+		dbg_pin3 <= 8'd0;
+		dbg_pin4 <= 8'd0;
+		dbg_pin5 <= 8'd0;
+		dbg_pin6 <= 8'd0;
+		dbg_pin7 <= 8'd0;
+		dbg_pin8 <= 8'd0;
+		dbg_pin9 <= 8'd0;
+		dbg_pin10 <= 8'd0;
+		dbg_pin11 <= 8'd0;
+		dbg_pin12 <= 8'd0;
+		dbg_pin13 <= 8'd0;
+		dbg_pin14 <= 8'd0;
+		dbg_pin15 <= 8'd0;
+		dbg_pin_len <= 16'd0;
+		dbg_pin_count <= 16'd0;
+		pin_bits <= 2'd0;
+		pin_byte <= 8'd0;
+		pin_idx <= 5'd0;
+		pin_n <= 16'd0;
+		pin_active <= 1'd0;
 		txdatapath_resetinserter_state <= 1'd0;
 	end
 end
