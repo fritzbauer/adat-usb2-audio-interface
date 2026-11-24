@@ -56,6 +56,10 @@ Amaranth sim by one byte — this is the documented sim-vs-fit block-RAM read
 offset (§5.2), independent of this fix. `test_discovery`'s
 `test_hello_frame_matches_reference` also fails pre-existing/unrelated.
 
+**Next open bug:** the FPGA TX path still wedges after a link disturbance
+(concurrent capture+playback) and needs a reflash. Full task description:
+`gateware/ETHERADAT_HANDOFF_TXWEDGE_20261124.md`.
+
 
 ## 1. TL;DR / current state
 
