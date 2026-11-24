@@ -16,6 +16,7 @@ All are meant to run from `gateware/` with the project venv
 | `slot_by_input.py`| yes | check TX payload slots == exact `EMPTY_USER_FRAME` (free-run) |
 | `loop_sniff_tx.py`| yes | decode the PC's own playback frames (confirms the driver encodes the tone) |
 | `loop_sniff_all.py`| yes | **main RX-debug tool**: decode IN1/IN2/IN3 from the FPGA TX frames while playing a tone |
+| `loop_exact.py`   | yes | **bit-exact** loopback test: injects a self-describing codeword pattern and checks every returned slot/sample byte-for-byte (not just an FFT peak) |
 | `loop_full.py`    | no  | play tone16 while capturing AdatNet + Audient (output path / full-duplex test) |
 
 Common usage:
@@ -36,7 +37,17 @@ sudo venv/bin/python etheradat/bringup_tools/loop_sniff_all.py /tmp/edtools/tone
 
 # TX payload sanity
 sudo venv/bin/python etheradat/bringup_tools/slot_by_input.py
+
+# Bit-exact ADAT OUT -> IN loopback (no ALSA/driver): [seconds] [blocks/s]
+sudo venv/bin/python etheradat/bringup_tools/loop_exact.py 5 3200
 ```
+
+`loop_exact.py` reports `RESULT: BIT-EXACT` only if every returned 32-byte
+ADAT slot equals a sent one and every decoded sample equals its codeword.
+Measured 2026-11-24 on bitstream `0x01503569`: bit-exact at 400/800/50/s,
+but ~0.02 % of slots corrupt at the nominal 3200/s when Ethernet RX
+traffic is active (see the handoff). That is the cause of the audible
+distortion; the tone tools cannot see it.
 
 Defaults (override via env / args): interface `enxf8e43b907775`
 (`ADATNET_IF`), AdatNet PCM `hw:1,0` (`ADATNET_PCM`), Audient `hw:0,0`
