@@ -36,6 +36,11 @@ def main():
                              "(default: the LAN8720 module, REF_CLK-OUT)")
     parser.add_argument("--no-audio-tx", action="store_true",
                         help="debug: suppress TX audio frames (hello-only)")
+    parser.add_argument("--mon-source", default="ref",
+                        choices=["ref", "clk50"],
+                        help="REF_CLK integrity monitor source: ref (the "
+                             "REF_CLK pin) or clk50 (control: the board "
+                             "oscillator that also feeds the monitor PLL)")
     parser.add_argument("--tx-negedge", action="store_true",
                         help="drive RMII TX on the falling REF_CLK edge "
                              "(default: rising edge / same clock as the "
@@ -55,7 +60,8 @@ def main():
 
     top = EtherADATInterface(ref_clk_mode=args.ref_clk_mode,
                              audio_tx_enable=not args.no_audio_tx,
-                             tx_negedge=args.tx_negedge)
+                             tx_negedge=args.tx_negedge,
+                             mon_source=args.mon_source)
     plan = platform.build(top, do_build=False)
     plan.execute_local(build_dir, run_script=False)
 

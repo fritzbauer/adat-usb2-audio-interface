@@ -25,6 +25,7 @@ DUMP_PERIOD = 0.25          # the top dumps every 250 ms
 SKIP = set(range(24, 56))   # byte-capture tap u16s (not scalar counters)
 # level / length values whose "rate" is meaningless
 SKIP |= {10, 11, 12, 13, 15, 17, 19, 20, 21, 22, 23}
+SKIP |= {71, 72, 73}        # REF_CLK monitor: prev/last event + marker
 
 
 def main():

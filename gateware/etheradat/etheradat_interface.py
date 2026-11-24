@@ -70,6 +70,18 @@ def _pulse_to(m, sig, src, dst, name, cycles=4):
     return s & ~prev
 
 
+def _toggle_to(m, tg, dst, name):
+    """Synchronize a toggle bit from a fast domain into `dst` and return a
+    one-cycle pulse in `dst` for every toggle.  Used for rare events
+    (anomalies) where the source may be many times faster than `dst`; the
+    event rate itself must stay below the `dst` rate."""
+    s = Signal(name=name + "_s")
+    m.submodules += FFSynchronizer(tg, s, o_domain=dst)
+    prev = Signal(name=name + "_prev")
+    m.d[dst] += prev.eq(s)
+    return s ^ prev
+
+
 def _count(m, event, dst, name, width=16):
     cnt = Signal(width, name=name)
     with m.If(event):
@@ -103,8 +115,16 @@ class EtherADATInterface(Elaboratable):
 
     def __init__(self, ref_clk_mode="input", own_mac=0x02AD6E657401,
                  device_serial=0x41444146, session_nonce=0,
-                 audio_tx_enable=True, tx_negedge=False):
+                 audio_tx_enable=True, tx_negedge=False,
+                 mon_source="ref"):
         assert ref_clk_mode in ("input", "output")
+        # REF_CLK integrity monitor source: "ref" = the RMII REF_CLK pin,
+        # "clk50" = the board's own 50 MHz oscillator (control build: the
+        # monitor PLL is fed by that same oscillator, so every interval
+        # must be exactly 6 ticks unless the monitor itself produces
+        # artifacts).
+        assert mon_source in ("ref", "clk50")
+        self.mon_source = mon_source
         self.ref_clk_mode = ref_clk_mode
         self.audio_tx_enable = audio_tx_enable
         self.tx_negedge = tx_negedge
@@ -146,6 +166,149 @@ class EtherADATInterface(Elaboratable):
             rmii_domain.clk_in.eq(rmii_clk),
             rmii_domain.rst_in.eq(0),
         ]
+
+        #
+        # REF_CLK integrity monitor (diagnostic).
+        #
+        # The observed TX/RX corruption is a serializer slip that needs an
+        # occasional skipped REF_CLK edge.  A 150 MHz oversampler saw
+        # intervals stretched from 3 to 6 ticks; this monitor re-measures
+        # the same input at 250 MHz (dedicated ALTPLL, VCO 750 MHz / 3),
+        # 4 ns per tick, which also exposes *short*/runt pulses that the
+        # 150 MHz monitor could not resolve.
+        #
+        # In the 250 MHz domain a 50 MHz period is nominally 5 ticks.
+        # The 2-FF synchronizer adds 0..2 ticks of edge-position jitter,
+        # so normal intervals are 3..7 ticks, and a *synchronous* source
+        # (the --mon-source clk50 control build) shows no events at all.
+        # Bins (validated against that control):
+        #   <=2    short   : synchronizer jitter, NOT a line defect
+        #   8..9   stretch : 32-36 ns, slow edge / threshold shift
+        #   10..12 skip    : 40-48 ns = exactly one missing REF_CLK edge
+        #   >=13   vlong   : two or more missing edges
+        # Only stretch/skip/vlong exceed the jitter bound.  The counters
+        # and the last event (its gap, the gap before it, the kind, and
+        # the monitor-PLL lock) are crossed into the UART domain via
+        # toggle bits.  8 extra dump values:
+        #   c_ref_alive, c_ref_short, c_ref_stretch, c_ref_skip,
+        #   c_ref_vlong, prev_gap, gap | kind[11:8] | locked[12],
+        #   build marker.
+        # The monitor only exists in input mode (in output mode the pin
+        # is driven by the FPGA and there is nothing to observe).
+        #
+        ref_mon_values = [Const(0, 16)] * 8
+        if self.ref_clk_mode == "input":
+            mon_clk = Signal(name="mon_clk_250")
+            mon_locked = Signal(name="mon_locked")
+            m.submodules.mon_pll = Instance("ALTPLL",
+                p_BANDWIDTH_TYPE         = "AUTO",
+                p_CLK0_DIVIDE_BY         = 3,
+                p_CLK0_DUTY_CYCLE        = 50,
+                p_CLK0_MULTIPLY_BY       = 15,
+                p_CLK0_PHASE_SHIFT       = 0,
+                p_INCLK0_INPUT_FREQUENCY = 20000,
+                p_OPERATION_MODE         = "NORMAL",
+                i_inclk  = clk_pin.i,
+                o_clk    = mon_clk,
+                o_locked = mon_locked,
+            )
+            m.domains.mon = ClockDomain()
+            m.d.comb += ClockSignal("mon").eq(mon_clk)
+
+            # 2-FF synchronizer (FFSynchronizer) + one history FF in the
+            # monitor domain.  The edge MUST be derived from the
+            # synchronizer output, not from the first sampling FF: the
+            # first FF can go metastable and then both loses real edges
+            # and fabricates short ones (measured as a 55k/s "short gap"
+            # storm at idle before this was fixed).
+            mon_sig = (clk_pin.i if self.mon_source == "clk50"
+                       else rmii.ref_clk.i)
+            ref_f = Signal(name="mon_ref")
+            m.submodules += FFSynchronizer(mon_sig, ref_f, o_domain="mon")
+            ref_fd = Signal(name="mon_ref_d")
+            m.d.mon += ref_fd.eq(ref_f)
+            ref_edge = Signal(name="mon_ref_edge")
+            m.d.comb += ref_edge.eq(ref_f & ~ref_fd)
+
+            gap_cnt = Signal(8, name="mon_gap_cnt")
+            last_gap = Signal(8, name="mon_last_gap")
+            prev_gap_l = Signal(8, name="mon_prev_gap")
+            last_kind = Signal(4, name="mon_last_kind")
+            short_tg = Signal(name="mon_short_tg")
+            stretch_tg = Signal(name="mon_stretch_tg")
+            skip_tg = Signal(name="mon_skip_tg")
+            vlong_tg = Signal(name="mon_vlong_tg")
+            last_tg = Signal(name="mon_last_tg")
+            alive_div = Signal(12, name="mon_alive_div")
+            alive_tg = Signal(name="mon_alive_tg")
+
+            m.d.mon += alive_div.eq(alive_div + 1)
+            with m.If(alive_div == 0):
+                m.d.mon += alive_tg.eq(~alive_tg)
+
+            with m.If(ref_edge):
+                m.d.mon += [last_gap.eq(gap_cnt), gap_cnt.eq(0)]
+            with m.Else():
+                m.d.mon += gap_cnt.eq(gap_cnt + 1)
+
+            is_short = gap_cnt <= 2
+            is_stretch = (gap_cnt >= 8) & (gap_cnt < 10)
+            is_skip = (gap_cnt >= 10) & (gap_cnt < 13)
+            is_vlong = gap_cnt >= 13
+            with m.If(ref_edge & is_short):
+                m.d.mon += short_tg.eq(~short_tg)
+            with m.If(ref_edge & is_stretch):
+                m.d.mon += stretch_tg.eq(~stretch_tg)
+            with m.If(ref_edge & is_skip):
+                m.d.mon += skip_tg.eq(~skip_tg)
+            with m.If(ref_edge & is_vlong):
+                m.d.mon += vlong_tg.eq(~vlong_tg)
+            with m.If(ref_edge & (is_short | is_stretch | is_skip | is_vlong)):
+                m.d.mon += [
+                    last_tg.eq(~last_tg),
+                    last_kind.eq(Cat(is_short, is_stretch, is_skip,
+                                     is_vlong)),
+                    prev_gap_l.eq(last_gap),
+                ]
+
+            gap_d = Signal(8, name="mon_gap_d")
+            prev_d = Signal(8, name="mon_prev_d")
+            kind_d = Signal(4, name="mon_kind_d")
+            locked_d = Signal(name="mon_locked_d")
+            m.submodules += [
+                FFSynchronizer(last_gap, gap_d, o_domain=D),
+                FFSynchronizer(prev_gap_l, prev_d, o_domain=D),
+                FFSynchronizer(last_kind, kind_d, o_domain=D),
+                FFSynchronizer(mon_locked, locked_d, o_domain=D),
+            ]
+            gap_latch = Signal(8, name="mon_gap_latch")
+            prev_latch = Signal(8, name="mon_prev_latch")
+            kind_latch = Signal(4, name="mon_kind_latch")
+            lock_latch = Signal(name="mon_lock_latch")
+            last_ev = _toggle_to(m, last_tg, D, "ev_ref_last")
+            with m.If(last_ev):
+                m.d[D] += [
+                    gap_latch.eq(gap_d),
+                    prev_latch.eq(prev_d),
+                    kind_latch.eq(kind_d),
+                    lock_latch.eq(locked_d),
+                ]
+
+            ref_mon_values = [
+                _count(m, _toggle_to(m, alive_tg, D, "ev_ref_alive"),
+                       D, "c_ref_alive"),
+                _count(m, _toggle_to(m, short_tg, D, "ev_ref_short"),
+                       D, "c_ref_short"),
+                _count(m, _toggle_to(m, stretch_tg, D, "ev_ref_stretch"),
+                       D, "c_ref_stretch"),
+                _count(m, _toggle_to(m, skip_tg, D, "ev_ref_skip"),
+                       D, "c_ref_skip"),
+                _count(m, _toggle_to(m, vlong_tg, D, "ev_ref_vlong"),
+                       D, "c_ref_vlong"),
+                Cat(prev_latch, Const(0, 8)),
+                Cat(gap_latch, kind_latch, lock_latch, Const(0, 3)),
+                Const(0xCA35, 16),
+            ]
 
         #
         # Bridge core
@@ -492,6 +655,8 @@ class EtherADATInterface(Elaboratable):
             Cat(rx_user_s, Const(0, 12)),
             Cat(rx_state_s, Const(0, 15)),
         ]
+
+        values += ref_mon_values
 
         platform.add_resources([Resource("uart_dbg", 0,
             Subsignal("tx", Pins("J_2:34", dir="o"),

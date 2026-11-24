@@ -89,13 +89,15 @@ tried during this investigation and did not help (§6.4).
 
 ### 6.1 Summary
 
-The LAN8720's RMII **REF_CLK output occasionally skips one 50 MHz
-period under PC→FPGA (RX) traffic**. The FPGA's `rmii` domain is clocked
-by that REF_CLK, so the miss stalls the RMII TX serializer for one
-clock. The PHY keeps clocking and samples the held TXD/TX_EN twice, so
-**2 bits are inserted into the frame at a random offset** and the rest of
-the frame is shifted by 2 bits. The PC decodes the shifted ADAT slots as
-garbage — the audible distortion.
+The LAN8720's RMII **REF_CLK output occasionally stretches a 20 ns
+period to 32–36 ns under PC→FPGA (RX) traffic** (measured at 250 MHz,
+§6.6: ~20/s loaded, 0/s idle). The FPGA's `rmii` domain is clocked by
+that REF_CLK, so the late edge delays the RMII TX serializer by
+12–16 ns. Depending on where the stretched interval falls relative to
+the PHY's own clean internal clock, the PHY can then sample the held
+TXD/TX_EN twice, so **2 bits are inserted into the frame at a random
+offset** and the rest of the frame is shifted by 2 bits. The PC decodes
+the shifted ADAT slots as garbage — the audible distortion.
 
 It is a hardware clock-integrity issue. It is **not** the kernel driver,
 not the ADAT receiver, and not the bridge/MAC payload logic.
@@ -130,16 +132,14 @@ not the ADAT receiver, and not the bridge/MAC payload logic.
    falling edges matched frames (`txen_falls == tx_frames + 1`). There
    were **no mid-frame valid gaps and no extra TX_EN deassertions**.
 
-5. **REF_CLK skips edges.** REF_CLK was oversampled with a 150 MHz clock
-   (mainpll `clk[4]`, VCO/2). Normal REF_CLK period = 3 monitor cycles
-   (2–4 with sampling jitter); under RX traffic the observed maximum was
-   **6 cycles** (a 20 ns period stretched to ~40 ns = one missing edge).
-   Rate: **0 events/s idle**, **≈0.4–2/s while the PC sends audio**,
-   matching the corrupted-frame rate in the same windows (e.g. 5 REF_CLK
-   gaps vs 6 corrupted frames; a looser threshold counted 57 candidate
-   intervals vs 26 corrupted frames, so the tight `>= 6` count is the
-   real signal). The FPGA's own full-rate TX does **not** trigger it —
-   only PC→FPGA RX activity does.
+5. **REF_CLK intervals stretch under load.** First seen with a 150 MHz
+   oversampler (mainpll `clk[4]`, VCO/2): normal period 3 monitor
+   cycles, under RX traffic up to 6. Re-measured 2026-11-24 at 250 MHz
+   with a validated measurement chain (§6.6): **0 events/s idle, ~20/s
+   stretched intervals (32–36 ns) while the PC sends 3200 frames/s; no
+   full 40 ns "missing edge" was seen at this resolution**. The FPGA's
+   own full-rate TX does **not** trigger it — only PC→FPGA RX activity
+   does.
 
 6. **The FPGA cannot clean REF_CLK in gateware.** REF_CLK is on pin
    `J_2:20`, which is **not connected to any PLL `INCLK`** on the
@@ -244,15 +244,69 @@ Remaining options (all board-level), in increasing effort:
    PLL. No J_2 pin is INCLK-capable (all 54 fail with error 176554);
    this needs a pin on another connector and a new pin assignment.
 
-### 6.6 Reproduce the measurement
+### 6.6 250 MHz REF_CLK monitor (validated, 2026-11-24)
+
+The 150 MHz numbers were threshold-sensitive, so REF_CLK is now
+oversampled by a **dedicated ALTPLL at 250 MHz** (VCO 750 MHz / 3, one
+free GPLL; 4 ns per tick) and the monitor is part of the interface
+(`EtherADATInterface`, input mode only; UART values 66..73, build marker
+`0xCA35`, parser `NV = 74`).
+
+Measurement chain and pitfalls (both were hit and fixed):
+
+- The edge must be taken from the **`FFSynchronizer` output plus one
+  history FF**. Deriving it from the first sampling FF (hand-rolled
+  2-bit shift register) produced a bogus 55k/s "short gap" storm at idle
+  and spurious "long" gaps under load — a metastable first stage loses
+  and fabricates edges.
+- A 2-FF synchronizer adds **0..2 ticks of edge jitter**: at 250 MHz the
+  normal interval is 5 ticks and 3..7 is still normal. The bins are
+  chosen so jitter cannot masquerade as a defect: `short <=2` (jitter),
+  `stretch 8..9` (32–36 ns), `skip 10..12` (40–48 ns = one missing
+  edge), `vlong >=13`. Only stretch/skip/vlong exceed the jitter bound.
+
+Control experiment: `--mon-source clk50` monitors the board's own 50 MHz
+oscillator, which also feeds the monitor PLL (source and sampler
+synchronous). Under the same 3200 frames/s load this control build
+reports **zero** stretch/skip/vlong events, so the monitor itself cannot
+fabricate them.
+
+REF_CLK results (marker `0xCA35`, `loop_exact.py 12 3200`):
+
+| state | c_ref_short (≤8 ns) | c_ref_stretch (32–36 ns) | c_ref_skip (40–48 ns) | vlong |
+|-------|--------------------|--------------------------|-----------------------|-------|
+| idle  | 0/s                | **0/s**                  | 0/s                   | 0/s   |
+| load  | ~4/s               | **~20/s**                | 0/s                   | 0/s   |
+
+The last events were gap = 9 ticks (36 ns) with the previous interval
+4 ticks, monitor PLL locked. So the clock does not lose a whole cycle;
+its **edge arrives 12–16 ns late ~20 times/s under RX traffic**. That is
+enough for the phase between the FPGA serializer and the PHY's internal
+clean clock to cross a sampling boundary, producing the 2-bit slips.
+The effect is RX-activity-correlated (crosstalk on the REF_CLK line),
+which is why hardware mitigation (signal integrity, external buffer,
+FPGA-as-master) is the fix — see §6.3.
+
+### 6.7 Reproduce the measurement
 
 ```
 # the payload shift (needs an optical OUT2->IN1 cable)
 sudo venv/bin/python etheradat/bringup_tools/loop_exact.py 10 3200
 
-# REF_CLK edge-interval monitor (bring-up build): 150 MHz oversample
-# of REF_CLK, counts intervals >= 6 monitor cycles. A diagnostic build
-# adds mainpll clk[4] = VCO/2 and a `ref_gap` UART value; see the
-# discussion in this file's history. 0/s idle, ~0.4-2/s with RX traffic.
+# 250 MHz REF_CLK monitor: build (input mode is the default and
+# includes the monitor), flash, then read the UART as usual:
+LUNA_PLATFORM=platforms:ADATFaceCycloneIV_EP4CGX150 \
+    venv/bin/python etheradat/scripts/generate_quartus_files_etheradat.py \
+    /tmp/rebuild_mon
+sudo stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb raw -echo
+timeout 8 sudo cat /dev/ttyUSB0 >| /tmp/uart_load.bin   # while loop_exact runs
+venv/bin/python etheradat/bringup_tools/uart_rates.py < /tmp/uart_load.bin
+
+# control run on the same PLL's own source (must show zero events):
+#   ... generate_quartus_files_etheradat.py /tmp/rebuild_ctrl --mon-source clk50
+
+# Values: c_ref_alive heartbeat; c_ref_short/stretch/skip/vlong bins;
+# c_ref_prev (gap before the last event); c_ref_last (gap | kind |
+# PLL lock); marker 0xCA35.
 ```
 
