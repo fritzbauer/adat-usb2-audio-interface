@@ -193,7 +193,58 @@ The board is back on the committed baseline bitstream (`0x01503569`
 logic, rebuilt from `HEAD`); it still shows the documented ~0.02 %
 corruption until the REF_CLK fix above is applied.
 
-### 6.5 Reproduce the measurement
+### 6.5 Schmitt-trigger input attempt (negative — hardware option)
+
+Goal: reject the crosstalk-induced excursions on the REF_CLK line with
+input hysteresis, without changing the board.
+
+On Cyclone IV the Schmitt trigger is **not** a separate assignment
+(`set_instance_assignment -name SCHMITT_TRIGGER ...` is rejected as an
+illegal assignment name). It is only exposed as an **I/O standard**, and
+the only names Quartus recognizes are:
+
+- `3.3V Schmitt Trigger Input`
+- `3.3 V Schmitt Trigger` (standalone-input variant)
+
+Both were applied to `rmii_0__ref_clk__io` (PIN_B18, input mode) in a
+build. The fitter accepts the names (the error changes from 169216
+"not a valid I/O standard name" to 169059) but then refuses them:
+
+```
+Error (169059): I/O standard assignment 3.3 V Schmitt Trigger to pin
+  rmii_0__ref_clk__io is not supported by device
+Error (171000): Can't fit design in device
+```
+
+So the EP4CGX150 DF27 (Cyclone IV GX) has no user-selectable Schmitt
+trigger I/O standard. The generator patch was reverted; the clean
+input-mode baseline was rebuilt (fitter successful, B18 = input,
+`3.3-V LVCMOS`, used as clock). This closes the cheap in-FPGA option.
+
+Remaining options (all board-level), in increasing effort:
+
+1. **Signal integrity on the REF_CLK wire**: short wire with a ground
+   return / twisted pair, routed away from RXD0/RXD1/CRS_DV/TXD, and a
+   ~33–68 Ω series resistor at the source. The module's REF_CLK copy is
+   the only signal that glitches, under RX traffic only, which is
+   consistent with crosstalk/ringing on that one line.
+2. **External Schmitt buffer** (e.g. 74AHC1G14 / 74LVC1G17) directly at
+   the FPGA REF_CLK pin. Adds ~2–5 ns of clock delay, which shifts all
+   RMII TX transitions later within the 20 ns period; that direction is
+   the safe one (more setup margin, still inside the PHY hold window),
+   but keep the part fast and the wire short.
+3. **Make the FPGA the clock master** (fixes it completely): the module
+   oscillator drives both the PHY clock input and the header REF_CLK
+   pin. Remove/disable that oscillator and drive the same net from the
+   FPGA REF_CLK output (`--ref-clk-mode output`); the FPGA then clocks
+   the `rmii` domain from the same net it drives, so there is no
+   second copy left to glitch. Requires desoldering the oscillator can
+   or cutting its output trace.
+4. **Rework REF_CLK onto a PLL-capable input pin** and clean it with a
+   PLL. No J_2 pin is INCLK-capable (all 54 fail with error 176554);
+   this needs a pin on another connector and a new pin assignment.
+
+### 6.6 Reproduce the measurement
 
 ```
 # the payload shift (needs an optical OUT2->IN1 cable)
