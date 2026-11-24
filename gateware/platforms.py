@@ -45,6 +45,13 @@ class IntelFPGAParameters:
         """
 
 class ADATFaceCycloneV(QMTech5CEFA2Platform, LUNAPlatform):
+    # The A2 is nearly full with the EtherADAT top: area optimization plus
+    # normal physical synthesis saves the ~2.5% LABs needed to fit.
+    CV_QSF_ADDITIONS = r"""
+            set_global_assignment -name OPTIMIZATION_MODE "AGGRESSIVE AREA"
+            set_global_assignment -name PHYSICAL_SYNTHESIS_EFFORT NORMAL
+        """
+
     # NOTE: fast_multiplier must be 8, not 9: car.py's
     # IntelCycloneVFPGAClockDomainGenerator generates the fast domain at
     # 98.304 MHz = 48 kHz * 256 * 8 (same PLL VCO as the 12.288 MHz ADAT
@@ -59,6 +66,7 @@ class ADATFaceCycloneV(QMTech5CEFA2Platform, LUNAPlatform):
     def file_templates(self):
         templates = super().file_templates
         templates["{{name}}.qsf"] += IntelFPGAParameters.QSF_ADDITIONS
+        templates["{{name}}.qsf"] += self.CV_QSF_ADDITIONS
         templates["{{name}}.sdc"] += IntelFPGAParameters.SDC_ADDITIONS
         return templates
 

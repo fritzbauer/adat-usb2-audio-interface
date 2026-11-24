@@ -116,15 +116,26 @@ class EtherADATInterface(Elaboratable):
     def __init__(self, ref_clk_mode="input", own_mac=0x02AD6E657401,
                  device_serial=0x41444146, session_nonce=0,
                  audio_tx_enable=True, tx_negedge=False,
-                 mon_source="ref"):
+                 mon_source="ref", debug_taps=True, mon_pll_src="clk50"):
         assert ref_clk_mode in ("input", "output")
         # REF_CLK integrity monitor source: "ref" = the RMII REF_CLK pin,
         # "clk50" = the board's own 50 MHz oscillator (control build: the
         # monitor PLL is fed by that same oscillator, so every interval
         # must be exactly 6 ticks unless the monitor itself produces
-        # artifacts).
-        assert mon_source in ("ref", "clk50")
+        # artifacts); "none" = no monitor PLL (Cyclone V has a tight PLL
+        # budget / for production builds).
+        assert mon_source in ("ref", "clk50", "none")
         self.mon_source = mon_source
+        # mon_pll_src: monitor PLL reference.  "clk50" is the normal
+        # independent reference; "ref" feeds the PLL from the REF_CLK pin
+        # itself (capability probe: is that pin a PLL input on this
+        # device?  Also the basis for a REF_CLK cleanup PLL).
+        assert mon_pll_src in ("clk50", "ref")
+        self.mon_pll_src = mon_pll_src
+        # debug_taps: dump the 16-byte TX captures/payload taps.  Turning
+        # them off saves the per-byte CDC registers and lets the design
+        # fit the Cyclone V A2 (943 LABs).
+        self.debug_taps = debug_taps
         self.ref_clk_mode = ref_clk_mode
         self.audio_tx_enable = audio_tx_enable
         self.tx_negedge = tx_negedge
@@ -197,7 +208,7 @@ class EtherADATInterface(Elaboratable):
         # is driven by the FPGA and there is nothing to observe).
         #
         ref_mon_values = [Const(0, 16)] * 8
-        if self.ref_clk_mode == "input":
+        if self.ref_clk_mode == "input" and self.mon_source != "none":
             mon_clk = Signal(name="mon_clk_250")
             mon_locked = Signal(name="mon_locked")
             m.submodules.mon_pll = Instance("ALTPLL",
@@ -580,27 +591,32 @@ class EtherADATInterface(Elaboratable):
 
         # TX tap values: [sink_len, sink_count, mac_len, mac_count] then
         # the 16 captured bytes of each side as 8 u16 (little-endian).
-        sink_cap_s = [level_sig(v, f"st_scap{i}")
-                      for i, v in enumerate(sink_cap)]
-        mac_cap_s = [level_sig(v, f"st_mcap{i}")
-                     for i, v in enumerate(mac_cap)]
-        mac_pin_s = [level_sig(v, f"st_mpin{i}")
-                     for i, v in enumerate(mac_pin)]
-        values += [
-            level_sig(sink_cap_len, "st_slen"),
-            level_sig(sink_cap_count, "st_scnt"),
-            level_sig(mac_cap_len, "st_mlen"),
-            level_sig(mac_cap_count, "st_mcnt"),
-            level_sig(mac_pin_len, "st_plen"),
-            level_sig(mac_pin_count, "st_pcnt"),
-        ]
-        for arr in (sink_cap_s, mac_cap_s, mac_pin_s):
+        if self.debug_taps:
+            sink_cap_s = [level_sig(v, f"st_scap{i}")
+                          for i, v in enumerate(sink_cap)]
+            mac_cap_s = [level_sig(v, f"st_mcap{i}")
+                         for i, v in enumerate(mac_cap)]
+            mac_pin_s = [level_sig(v, f"st_mpin{i}")
+                         for i, v in enumerate(mac_pin)]
+            values += [
+                level_sig(sink_cap_len, "st_slen"),
+                level_sig(sink_cap_count, "st_scnt"),
+                level_sig(mac_cap_len, "st_mlen"),
+                level_sig(mac_cap_count, "st_mcnt"),
+                level_sig(mac_pin_len, "st_plen"),
+                level_sig(mac_pin_count, "st_pcnt"),
+            ]
+            for arr in (sink_cap_s, mac_cap_s, mac_pin_s):
+                for k in range(0, 16, 2):
+                    values.append(Cat(arr[k], arr[k + 1]))
+            sink_pay_s = [level_sig(v, f"st_spay{i}")
+                          for i, v in enumerate(sink_pay)]
             for k in range(0, 16, 2):
-                values.append(Cat(arr[k], arr[k + 1]))
-        sink_pay_s = [level_sig(v, f"st_spay{i}")
-                      for i, v in enumerate(sink_pay)]
-        for k in range(0, 16, 2):
-            values.append(Cat(sink_pay_s[k], sink_pay_s[k + 1]))
+                values.append(Cat(sink_pay_s[k], sink_pay_s[k + 1]))
+        else:
+            # keep the dump layout identical (6 lengths/counts, three
+            # 16-byte captures, 16 payload bytes = 38 u16)
+            values += [Const(0, 16)] * 38
 
         #
         # RX-side bring-up taps for input0 (IN1).  These answer "is the

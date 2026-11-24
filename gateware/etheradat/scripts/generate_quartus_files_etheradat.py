@@ -37,10 +37,20 @@ def main():
     parser.add_argument("--no-audio-tx", action="store_true",
                         help="debug: suppress TX audio frames (hello-only)")
     parser.add_argument("--mon-source", default="ref",
-                        choices=["ref", "clk50"],
+                        choices=["ref", "clk50", "none"],
                         help="REF_CLK integrity monitor source: ref (the "
-                             "REF_CLK pin) or clk50 (control: the board "
-                             "oscillator that also feeds the monitor PLL)")
+                             "REF_CLK pin), clk50 (control: the board "
+                             "oscillator that also feeds the monitor PLL) "
+                             "or none (no monitor PLL; Cyclone V PLL budget)")
+    parser.add_argument("--mon-pll-src", default="clk50",
+                        choices=["clk50", "ref"],
+                        help="monitor PLL reference: clk50 (default) or "
+                             "ref (the REF_CLK pin; capability probe for a "
+                             "REF_CLK cleanup PLL)")
+    parser.add_argument("--no-debug-taps", action="store_true",
+                        help="drop the 16-byte TX capture/payload UART "
+                             "taps (saves the per-byte CDC registers; "
+                             "needed to fit the Cyclone V A2)")
     parser.add_argument("--tx-negedge", action="store_true",
                         help="drive RMII TX on the falling REF_CLK edge "
                              "(default: rising edge / same clock as the "
@@ -61,7 +71,9 @@ def main():
     top = EtherADATInterface(ref_clk_mode=args.ref_clk_mode,
                              audio_tx_enable=not args.no_audio_tx,
                              tx_negedge=args.tx_negedge,
-                             mon_source=args.mon_source)
+                             mon_source=args.mon_source,
+                             debug_taps=not args.no_debug_taps,
+                             mon_pll_src=args.mon_pll_src)
     plan = platform.build(top, do_build=False)
     plan.execute_local(build_dir, run_script=False)
 

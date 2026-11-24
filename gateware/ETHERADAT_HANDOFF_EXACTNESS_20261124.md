@@ -310,3 +310,83 @@ venv/bin/python etheradat/bringup_tools/uart_rates.py < /tmp/uart_load.bin
 # PLL lock); marker 0xCA35.
 ```
 
+
+## 7. Cyclone V (5CEFA2F23C8) attempt — 2026-11-24
+
+Goal: check whether the Cyclone V core board handles the REF_CLK edge
+problem better, and whether it offers the Schmitt-trigger or cleanup-PLL
+option that the Cyclone IV lacks.
+
+### 7.1 Build
+
+The top does **not** fit the A2 as-is: 1004 LABs needed / 943, 105 % of
+the ALMs; with the 250 MHz monitor PLL it also fails to place the PLL
+(`Error 14566/175001`, FRACTIONALPLL_X0_Y1_N0 conflict with mainpll).
+
+With `--no-debug-taps --mon-source none` and the Cyclone V platform
+now forcing `OPTIMIZATION_MODE "AGGRESSIVE AREA"` +
+`PHYSICAL_SYNTHESIS_EFFORT NORMAL` (added to `platforms.py`), it fits:
+**8221 / 9430 ALMs (87 %)**, 15887 registers, all setup slacks positive
+(min 1.638 ns). The monitor is not included in this build (PLL budget).
+
+### 7.2 Bring-up result: RX works, TX framing is broken
+
+- UART dump works; FPGA RX side receives the full PC stream
+  (`rx_frames` = 3200/s, `rx_err` = 0), so PHY, cable and the FPGA's
+  RX/REF_CLK sampling are fine on Cyclone V.
+- The MAC TX side counts `tx_frames` ≈ 3256/s, but the PC receives
+  almost nothing: `loop_exact` sniffs 0 frames at 50/s and 400/s (3
+  frames in 10 s at 3200/s). `tcpdump` *does* see the frames, but with
+  **variable lengths 1468–1472 bytes instead of 1462** (broadcast,
+  since the PC MAC is not linked). `rx_errors` stays 0 — the AX88179
+  drops the malformed frames internally.
+- `--tx-negedge` does not change it. This is a Cyclone V **porting
+  issue in the TX path**, most likely the documented fit-specific
+  block-RAM read behaviour that `bridge.py` compensates for
+  (§6.4/§5): on the M10K the frame on the wire gets 6–10 extra bytes.
+  It blocks any corruption comparison on this board and needs its own
+  fix (not attempted here).
+
+### 7.3 Schmitt trigger: not available either
+
+Both `3.3V Schmitt Trigger Input` and `3.3 V Schmitt Trigger` on
+`rmii_0__ref_clk__io` (PIN_AA19) are rejected by the fitter:
+
+```
+Error (169059): I/O standard assignment ... is not supported by device
+```
+
+Same result as the Cyclone IV (§6.5) — the Cyclone V A2 has no usable
+Schmitt-trigger I/O standard for this pin.
+
+### 7.4 Cleanup PLL: REF_CLK pin is not PLL-capable
+
+A minimal probe (an `ALTPLL` fed directly by the REF_CLK pin, plus a
+counter on a debug pin) fails with:
+
+```
+Error (177020): The PLL reference clock was not placed in a dedicated
+  input pin that can reach the fractional PLL
+```
+
+So AA19 cannot drive a PLL on the 5CEFA2 either. The "rework REF_CLK
+onto a PLL-capable pin" option still requires a *different* pin (a
+dedicated CLK input), not just a different core board.
+
+### 7.5 Conclusion
+
+Cyclone V offers neither the Schmitt trigger nor a cleanup PLL for this
+pin, and the EtherADAT top needs a TX-path port before it can even be
+compared on the same loopback test. A family change alone does not
+address the module's REF_CLK line, which is the actual problem (§6).
+The practical fixes remain the hardware measures in §6.3/§6.5.
+
+Reproduce the probe:
+
+```bash
+# the probe script is kept in the conversation; the essential check is
+# an ALTPLL with i_inclk = the rmii ref_clk pin.  Build with:
+LUNA_PLATFORM=platforms:ADATFaceCycloneV \
+    venv/bin/python etheradat/scripts/generate_quartus_files_etheradat.py \
+    /tmp/rebuild_cv --mon-source none --no-debug-taps
+```
