@@ -11,6 +11,7 @@ All are meant to run from `gateware/` with the project venv
 | tool | needs root | purpose |
 |------|-----------|---------|
 | `parse_eduart.py` | (sudo cat) | decode the 250 ms UART status dump on `/dev/ttyUSB0` (AA 01 … 5A) |
+| `uart_rates.py`   | (sudo cat) | compute per-second rates of the UART counters (rejects wrapping/aliasing) |
 | `gen_tones.py`    | no  | create `/tmp/edtools/tone{16,out1,out2}.wav` (run after every reboot) |
 | `slot_by_input.py`| yes | check TX payload slots == exact `EMPTY_USER_FRAME` (free-run) |
 | `loop_sniff_tx.py`| yes | decode the PC's own playback frames (confirms the driver encodes the tone) |
@@ -26,6 +27,9 @@ venv/bin/python etheradat/bringup_tools/gen_tones.py
 # UART status
 sudo stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb raw -echo
 timeout 3 sudo cat /dev/ttyUSB0 | venv/bin/python etheradat/bringup_tools/parse_eduart.py
+
+# per-second rates of the same counters
+timeout 3 sudo cat /dev/ttyUSB0 | venv/bin/python etheradat/bringup_tools/uart_rates.py
 
 # ADAT-input decode (play OUT2=2 kHz, decode each input from Ethernet)
 sudo venv/bin/python etheradat/bringup_tools/loop_sniff_all.py /tmp/edtools/tone_out2.wav
